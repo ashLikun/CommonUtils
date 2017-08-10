@@ -51,6 +51,24 @@ public class DrawableUtils {
 
     /**
      * 作者　　: 李坤
+     * 创建时间: 2017/7/11 17:41
+     * 邮箱　　：496546144@qq.com
+     * 方法功能：获取StateListDrawable实例
+     *
+     * @param normal 默认的资源
+     * @param select 选择的资源
+     */
+    public ColorStateList createColorSelect(@ColorRes int normal, @ColorRes int select) {
+        int[] colors = new int[]{getColor(normal), getColor(select)};
+        int[][] states = new int[4][];
+        states[0] = new int[]{};
+        states[2] = new int[]{android.R.attr.state_selected};
+        ColorStateList colorList = new ColorStateList(states, colors);
+        return colorList;
+    }
+
+    /**
+     * 作者　　: 李坤
      * 创建时间: 2017/7/12 9:49
      * 邮箱　　：496546144@qq.com
      * <p>
@@ -131,6 +149,22 @@ public class DrawableUtils {
         StateListDrawable bg = new StateListDrawable();
         bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
         bg.addState(new int[]{-android.R.attr.state_enabled}, enabled);
+        bg.addState(new int[]{}, normal);
+        return bg;
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/7/11 17:41
+     * 邮箱　　：496546144@qq.com
+     * 方法功能：获取StateListDrawable实例
+     *
+     * @param normal 默认的资源
+     * @param select 选择的资源
+     */
+    public StateListDrawable getSelectDrawable(Drawable normal, Drawable select) {
+        StateListDrawable bg = new StateListDrawable();
+        bg.addState(new int[]{android.R.attr.selectable}, select);
         bg.addState(new int[]{}, normal);
         return bg;
     }
