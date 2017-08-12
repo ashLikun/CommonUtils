@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -125,6 +126,11 @@ public class SpannableUtils {
          * @param color 前景色
          * @return {@link Builder}
          */
+        public Builder setForegroundColorRes(@ColorRes int color) {
+            this.foregroundColor = Utils.getApp().getResources().getColor(color);
+            return this;
+        }
+
         public Builder setForegroundColor(@ColorInt int color) {
             this.foregroundColor = color;
             return this;
@@ -139,6 +145,11 @@ public class SpannableUtils {
          * @param color 背景色
          * @return {@link Builder}
          */
+        public Builder setBackgroundColorRes(@ColorRes int color) {
+            this.backgroundColor = Utils.getApp().getResources().getColor(color);
+            return this;
+        }
+
         public Builder setBackgroundColor(@ColorInt int color) {
             this.backgroundColor = color;
             return this;
