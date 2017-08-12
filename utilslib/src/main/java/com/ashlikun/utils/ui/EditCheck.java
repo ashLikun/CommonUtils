@@ -3,8 +3,9 @@ package com.ashlikun.utils.ui;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.SparseArray;
 import android.widget.EditText;
+
+import java.util.ArrayList;
 
 
 /**
@@ -22,7 +23,7 @@ public class EditCheck {
     private Context context;
     private IEditCheck mIEditCheck;
     private IEditStatusChang mIEditStatusChang;
-    private SparseArray<EditText> mEdithelpdatas;
+    private ArrayList<EditText> mEdithelpdatas;
     private Boolean mCurrentStatus = null;//当前的状态
 
     /**
@@ -52,20 +53,17 @@ public class EditCheck {
      * @param edits 多个被检测的EditView对象
      */
     public void setEditText(EditText... edits) {
-        if (mEdithelpdatas == null) mEdithelpdatas = new SparseArray<>();
+        if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
         mEdithelpdatas.clear();
         for (EditText e : edits) {
-            if (e != null) {
-                mEdithelpdatas.put(e.getId(), e);
-                addTextChangedListener(e);
-            }
+            addEditText(e);
         }
     }
 
     public void addEditText(EditText edits) {
         if (edits != null) {
-            if (mEdithelpdatas == null) mEdithelpdatas = new SparseArray<>();
-            mEdithelpdatas.put(edits.getId(), edits);
+            if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
+            mEdithelpdatas.add(edits);
             addTextChangedListener(edits);
         }
     }

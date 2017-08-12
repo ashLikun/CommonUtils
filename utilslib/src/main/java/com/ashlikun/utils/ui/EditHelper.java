@@ -6,12 +6,15 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashlikun.utils.animator.AnimUtils;
+
+import java.util.ArrayList;
+
+import static android.R.attr.id;
 
 
 /**
@@ -28,7 +31,7 @@ public class EditHelper {
 
     public Context context;
 
-    private SparseArray<EditHelperData> mEdithelpdatas;
+    private ArrayList<EditHelperData> mEdithelpdatas;
 
     public EditHelper(Context context) {
         this.context = context;
@@ -44,13 +47,10 @@ public class EditHelper {
      * @param edits 多个被检测的EditView对象
      */
     public void setEditText(EditHelperData... edits) {
-        if (mEdithelpdatas == null) mEdithelpdatas = new SparseArray<>();
+        if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
         mEdithelpdatas.clear();
         for (EditHelperData e : edits) {
-            if (e != null && e.getTextView() != null) {
-                mEdithelpdatas.put(e.getTextView().getId(), e);
-                addTextChangedListener(e);
-            }
+            addEditHelperData(e);
         }
     }
 
@@ -69,8 +69,8 @@ public class EditHelper {
 
     public void addEditHelperData(EditHelperData edits) {
         if (edits != null) {
-            if (mEdithelpdatas == null) mEdithelpdatas = new SparseArray<>();
-            mEdithelpdatas.put(edits.getView().getId(), edits);
+            if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
+            mEdithelpdatas.add(edits);
             addTextChangedListener(edits);
         }
     }
@@ -84,22 +84,9 @@ public class EditHelper {
         }
     }
 
-    public String getText(int id) {
-        TextView textView = mEdithelpdatas.get(id).getTextView();
-        if (textView != null) {
-            return textView.getText().toString().trim();
-        } else {
-            return "";
-        }
-    }
 
-    public TextView getTextView(int id) {
-        TextView textView = mEdithelpdatas.get(id).getTextView();
-        return textView;
-    }
-
-    public EditHelperData getEditHelperData(int id) {
-        return mEdithelpdatas.get(id);
+    public EditHelperData getEditHelperData(int index) {
+        return mEdithelpdatas.get(index);
     }
 
     /**
@@ -112,7 +99,7 @@ public class EditHelper {
         try {
             if (mEdithelpdatas == null) return false;
             for (int i = 0; i < mEdithelpdatas.size(); i++) {
-                EditHelperData e = mEdithelpdatas.valueAt(i);
+                EditHelperData e = mEdithelpdatas.get(i);
                 if (!e.check(context)) {
                     return false;
                 }
@@ -132,7 +119,7 @@ public class EditHelper {
      * 方法功能：检查某个view是否满足
      */
 
-    public boolean check(int id) {
+    public boolean check(int index) {
         try {
             if (mEdithelpdatas == null) return false;
             EditHelperData e = mEdithelpdatas.get(id);
