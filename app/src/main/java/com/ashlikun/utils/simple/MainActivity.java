@@ -5,6 +5,8 @@ import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.ashlikun.utils.ui.StatusBarCompat;
+
 import java.util.Map;
 
 
@@ -13,7 +15,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new StatusBarCompat(this).setTransparentBar(android.R.color.transparent);
         setContentView(R.layout.main_activity);
+
         aaa.put(11111111, 1);
         aaa.put(2, 2);
         aaa.put(3, 3);

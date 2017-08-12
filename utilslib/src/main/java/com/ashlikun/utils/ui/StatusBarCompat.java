@@ -48,11 +48,10 @@ public class StatusBarCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.setStatusBarColor(color);
         }
         //4.4版本
-        else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             ViewGroup contentView = (ViewGroup) activity.getWindow().getDecorView();
             contentView.addView(createStatusBarView(color));
@@ -71,24 +70,19 @@ public class StatusBarCompat {
      * 方法功能：设置透明的状态栏，实际布局内容在状态栏里面
      */
     public void setTransparentBar(@ColorRes int statusColor, int alpha) {
-        //4.4以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        //5.0以下不设置
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         Window window = activity.getWindow();
         int colorInt = activity.getResources().getColor(statusColor);
         //计算最终颜色
         int color = (alpha == 0 || colorInt == 0) ? Color.TRANSPARENT :
                 Color.argb(alpha, Color.red(colorInt), Color.green(colorInt), Color.blue(colorInt));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            View decorView = window.getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            window.setStatusBarColor(color);
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            ViewGroup decorView = (ViewGroup) window.getDecorView();
-            decorView.addView(createStatusBarView(color));
-        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        View decorView = window.getDecorView();
+        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        decorView.setSystemUiVisibility(option);
+        window.setStatusBarColor(color);
 
     }
 
@@ -109,13 +103,8 @@ public class StatusBarCompat {
 
     private void setFitsSystemWindows(boolean fit) {
         ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
-        for (int i = 0, count = parent.getChildCount(); i < count; i++) {
-            View childView = parent.getChildAt(i);
-            if (childView instanceof ViewGroup) {
-                childView.setFitsSystemWindows(fit);
-                ((ViewGroup) childView).setClipToPadding(fit);
-            }
-        }
+        parent.setFitsSystemWindows(fit);
+        parent.setClipToPadding(fit);
     }
 
     private View createStatusBarView(@ColorInt int color) {
