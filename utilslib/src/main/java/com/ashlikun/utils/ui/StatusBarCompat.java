@@ -28,6 +28,7 @@ public class StatusBarCompat {
         this.activity = activity;
     }
 
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/7/5 13:42
@@ -180,5 +181,13 @@ public class StatusBarCompat {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    public static void setTextDarkColor(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity.getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 }
