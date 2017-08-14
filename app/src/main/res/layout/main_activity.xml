@@ -6,13 +6,30 @@
     android:layout_height="match_parent"
     tools:context="com.ashlikun.utils.simple.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff000000">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello ​国家主席习近平12日应约同美国总统特朗普通电话。
+　　【环球网综合报道】据四川阿坝州委外宣办官方微博@阿坝微博晚间消息，阿坝州九寨沟县于8月8日晚发生7.0级地震，震源深度20公里。灾情发生后，在党中央、国务院的亲切关怀下，按照省委、省政府的统一部署，全州各族各界紧急动员，与时间赛跑，以抢救生命为第一要务，在72小时黄金救援期间，争分夺秒打了一场抢险救援攻坚战。
+　　截止8月11日21时，地震共造成24人死亡、493人受伤(重伤45人)，转移疏散游客、外来务工人员共计61500余人(含126名外国游客)，临时安置群众23477人。
+　　目前掌握，还有3人失联，接群众反映，新增2人失踪，现已基本锁定区域，正继续全力搜救，不放弃任何一丝希望，不抛弃任何一个生命。
+习近平指出，我同总统先生上个月在德国汉堡举行了很好的会晤。我们作为中美两国的领导人，就共同关心的问题保持密切沟通，对中美关系发展十分重要。双方应该继续按照我和总统先生达成的共识，加强对话与沟通，推进各领域交流合作，妥善处理彼此关心的问题，推动中美关系健康稳定向前发展。中方重视总统先生年内将对中国进行的国事访问，两国工作团队要共同努力做好准备工作。
+
+特朗普表示，很高兴汉堡会晤后再次同习近平主席通话。我同习主席就重大问题保持沟通和协调、两国加强各层级和各领域交往十分重要。当前，美中关系发展态势良好，我相信可以发展得更好。我期待着对中国进行国事访问。
+
+两国元首就当前朝鲜半岛局势交换了意见。习近平强调，中美在实现朝鲜半岛无核化、维护朝鲜半岛和平稳定方面拥有共同利益。当前，有关方面要保持克制，避免加剧朝鲜半岛局势紧张的言行。解决朝鲜半岛核问题，归根结底还是要坚持对话谈判、政治解决的大方向。中方愿在相互尊重的基础上同美方保持沟通，共同推动朝鲜半岛核问题妥善解决。
+
+特朗普表示，充分理解中方在朝鲜半岛核问题上发挥的作用，美方愿同中方继续就共同关心的重大国际和地区问题保持密切沟通!"
+            android:textColor="#ffffffff"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>
