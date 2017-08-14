@@ -28,7 +28,6 @@ public class StatusBarCompat {
         this.activity = activity;
     }
 
-<<<<<<< HEAD
     //设置状态栏字体颜色为深色
     public void setStatusDarkColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -37,8 +36,6 @@ public class StatusBarCompat {
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
-=======
->>>>>>> 930f9a2fa0a77a8a3bc5e5ed30021cd7eb103537
 
     /**
      * 作者　　: 李坤
@@ -82,20 +79,49 @@ public class StatusBarCompat {
      * 方法功能：设置透明的状态栏，实际布局内容在状态栏里面
      */
     public void setTransparentBar(@ColorRes int statusColor, int alpha) {
-        //5.0以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        //4.4以下不设置
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
         Window window = activity.getWindow();
         int colorInt = activity.getResources().getColor(statusColor);
         //计算最终颜色
         int color = (alpha == 0 || colorInt == 0) ? Color.TRANSPARENT :
                 Color.argb(alpha, Color.red(colorInt), Color.green(colorInt), Color.blue(colorInt));
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        View decorView = window.getDecorView();
-        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        decorView.setSystemUiVisibility(option);
-        window.setStatusBarColor(color);
+        //5.0以上
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            View decorView = window.getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            window.setStatusBarColor(color);
+        }
+        //4.4版本
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
 
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/8/14 17:52
+     * 邮箱　　：496546144@qq.com
+     * 方法功能：一般用于fragment是透明状态栏得时候,调用这个方法
+     */
+
+    public static void setTransparentViewMargin(View viewTop) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ViewGroup.LayoutParams params = viewTop.getLayoutParams();
+            if (params instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) params).setMargins(
+                        ((ViewGroup.MarginLayoutParams) params).leftMargin
+                        , StatusBarCompat.getStatusBarHeight(viewTop.getContext())
+                        , ((ViewGroup.MarginLayoutParams) params).rightMargin
+                        , ((ViewGroup.MarginLayoutParams) params).bottomMargin);
+            }
+            viewTop.setLayoutParams(params);
+            ToastUtils.showLong(viewTop.getContext(), Build.VERSION.SDK_INT + " aaa ");
+        }
     }
 
     public void setTransparentBar(@ColorRes int statusColor) {
