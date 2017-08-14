@@ -28,6 +28,15 @@ public class StatusBarCompat {
         this.activity = activity;
     }
 
+    //设置状态栏字体颜色为深色
+    public void setStatusDarkColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = activity.getWindow();
+            // 状态栏字体设置为深色，SYSTEM_UI_FLAG_LIGHT_STATUS_BAR 为SDK23增加
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+    }
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/7/5 13:42
@@ -57,6 +66,7 @@ public class StatusBarCompat {
             contentView.addView(createStatusBarView(color));
             setFitsSystemWindows(true);
         }
+
     }
 
     public void setColorBar(@ColorRes int statusColor) {
