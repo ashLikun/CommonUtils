@@ -120,7 +120,6 @@ public class StatusBarCompat {
                         , ((ViewGroup.MarginLayoutParams) params).bottomMargin);
             }
             viewTop.setLayoutParams(params);
-            ToastUtils.showLong(viewTop.getContext(), Build.VERSION.SDK_INT + " aaa ");
         }
     }
 
