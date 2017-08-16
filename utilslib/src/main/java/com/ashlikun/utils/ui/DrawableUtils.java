@@ -13,6 +13,8 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.view.View;
+import android.widget.TextView;
 
 import com.ashlikun.utils.other.DimensUtils;
 
@@ -377,4 +379,33 @@ public class DrawableUtils {
         DrawableCompat.setTint(wrapDrawable, color);
         return wrapDrawable;
     }
+
+    public static void setBackground(View view, Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(drawable);
+        } else {
+            view.setBackgroundDrawable(drawable);
+        }
+    }
+
+    public static void setCompoundDrawables(TextView view, Drawable drawLeft,
+                                            Drawable drawTop,
+                                            Drawable drawRight,
+                                            Drawable drawBottom) {
+        if (drawLeft != null) {
+            drawLeft.setBounds(0, 0, drawLeft.getMinimumWidth(), drawLeft.getMinimumHeight());
+        }
+        if (drawTop != null) {
+            drawTop.setBounds(0, 0, drawTop.getMinimumWidth(), drawTop.getMinimumHeight());
+        }
+        if (drawRight != null) {
+            drawRight.setBounds(0, 0, drawRight.getMinimumWidth(), drawRight.getMinimumHeight());
+        }
+        if (drawBottom != null) {
+            drawBottom.setBounds(0, 0, drawBottom.getMinimumWidth(), drawBottom.getMinimumHeight());
+        }
+        view.setCompoundDrawables(drawLeft, drawTop, drawRight, drawBottom);
+    }
+
+
 }
