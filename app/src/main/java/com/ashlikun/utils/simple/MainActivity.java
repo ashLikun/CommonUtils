@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.ashlikun.utils.other.DeviceUtil;
 import com.ashlikun.utils.ui.StatusBarCompat;
 
 import java.util.Map;
@@ -43,5 +44,6 @@ public class MainActivity extends AppCompatActivity {
         for (Map.Entry<Integer, Integer> e : aaa.entrySet()) {
             Log.e("aaa", e.getKey() + "   " + e.getValue());
         }
+        Log.e("aaa", DeviceUtil.getInstance(this).getSoleDeviceId());
     }
 }

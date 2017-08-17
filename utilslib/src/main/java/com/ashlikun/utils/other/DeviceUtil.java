@@ -9,6 +9,7 @@ package com.ashlikun.utils.other;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -16,6 +17,9 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+
+import java.util.UUID;
 
 /**
  * 作者　　: 李坤
@@ -35,8 +39,6 @@ public class DeviceUtil {
     private String mNetType;// 当前的连网类型
     private String mDeviceID;// 唯一设备号
     Context context;
-
-
 
 
     private TelephonyManager telephonyManager = null;// 很多关于手机的信息可以用此类得到
@@ -325,5 +327,47 @@ public class DeviceUtil {
         context.startActivity(intent);
     }
 
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/8/16 15:00
+     * 邮箱　　：496546144@qq.com
+     * 方法功能：androidId > imeiId > UUID
+     * 组合设备唯一标识符，防止为空
+     */
+    public String getSoleDeviceId() {
+        String res = getDeviceId();//androidId
+        if (!TextUtils.isEmpty(res)) {
+            return res;
+        }
+        res = getImei();//imei标识符
+        if (!TextUtils.isEmpty(res)) {
+            return res;
+        }
+        //如果一个都没有，就生成一个UUID并持久化保存
+        res = getUUID();
+        return res;
+    }
+
+    /**
+     * 创建一个UUID并保存
+     */
+    public String getUUID() {
+        String uuid = null;
+        SharedPreferences sp = context.getSharedPreferences("Cache",
+                context.MODE_PRIVATE);
+        if (sp != null) {
+            uuid = sp.getString("uuid", "");
+        }
+        if (TextUtils.isEmpty(uuid)) {
+            uuid = UUID.randomUUID().toString();
+            if (sp != null) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("uuid", uuid);
+                editor.commit();
+            }
+        }
+        return uuid;
+    }
 
 }
