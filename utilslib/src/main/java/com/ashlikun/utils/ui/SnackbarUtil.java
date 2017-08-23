@@ -63,7 +63,7 @@ public class SnackbarUtil {
             return null;
         }
         UiUtils.exitInput(activity);
-        Snackbar snackbar = Snackbar.make(UiUtils.getDecorView(activity), message, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(UiUtils.getRootView(activity), message, Snackbar.LENGTH_SHORT);
         switchType(snackbar, type);
         return snackbar;
     }
@@ -73,7 +73,7 @@ public class SnackbarUtil {
             return null;
         }
         UiUtils.exitInput(activity);
-        Snackbar snackbar = Snackbar.make(UiUtils.getDecorView(activity), message, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(UiUtils.getRootView(activity), message, Snackbar.LENGTH_LONG);
         switchType(snackbar, type);
         return snackbar;
     }
@@ -83,7 +83,7 @@ public class SnackbarUtil {
             return null;
         }
         UiUtils.exitInput(activity);
-        Snackbar snackbar = Snackbar.make(UiUtils.getDecorView(activity), message, Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(UiUtils.getRootView(activity), message, Snackbar.LENGTH_INDEFINITE);
         switchType(snackbar, type);
         return snackbar;
     }

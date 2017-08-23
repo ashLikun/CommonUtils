@@ -109,8 +109,7 @@ public class UiUtils {
     }
 
     public static View getRootView(Activity context) {
-        return context.getWindow().getDecorView()
-                .findViewById(android.R.id.content);
+        return context.findViewById(android.R.id.content);
     }
 
     public static View getDecorView(Activity context) {
