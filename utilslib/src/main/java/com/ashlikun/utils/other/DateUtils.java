@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 public abstract class DateUtils {
     public static final String YMD_HMS = "yyyy-MM-dd HH:mm:ss";
     public static final String YMD = "yyyy-MM-dd";
+    public static final String MD = "MM-dd";
+    public static final String YM = "yyyy-MM";
     public static final String HMS = "HH:mm:ss";
 
     /**
