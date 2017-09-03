@@ -6,12 +6,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 /**
  * 作者　　: 李坤
@@ -49,7 +47,7 @@ public class StatusBarCompat {
      */
     public void setColorBar(@ColorRes int statusColor, int alpha) {
         //4.4以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) return;
         int color = calculateColor(statusColor, alpha);//计算最终颜色
         Window window = activity.getWindow();
         //5.0以上
@@ -58,13 +56,7 @@ public class StatusBarCompat {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(color);
         }
-        //4.4版本
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            ViewGroup contentView = (ViewGroup) activity.getWindow().getDecorView();
-            contentView.addView(createStatusBarView(color));
-            setFitsSystemWindows(true);
-        }
+
 
     }
 
@@ -80,7 +72,7 @@ public class StatusBarCompat {
      */
     public void setTransparentBar(@ColorRes int statusColor, int alpha) {
         //4.4以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) return;
         Window window = activity.getWindow();
         int colorInt = activity.getResources().getColor(statusColor);
         //计算最终颜色
@@ -96,10 +88,7 @@ public class StatusBarCompat {
             decorView.setSystemUiVisibility(option);
             window.setStatusBarColor(color);
         }
-        //4.4版本
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+
     }
 
     /**
@@ -110,7 +99,7 @@ public class StatusBarCompat {
      */
 
     public static void setTransparentViewMargin(View viewTop) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ViewGroup.LayoutParams params = viewTop.getLayoutParams();
             if (params instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) params).setMargins(
@@ -131,28 +120,6 @@ public class StatusBarCompat {
         setTransparentBar(android.R.color.transparent, 0);
     }
 
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/8/3 0003 22:02
-     * <p>
-     * 方法功能：把第一个viewgroup顶到状态栏里面去
-     */
-
-    private void setFitsSystemWindows(boolean fit) {
-        ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
-        parent.setFitsSystemWindows(fit);
-        parent.setClipToPadding(fit);
-    }
-
-    private View createStatusBarView(@ColorInt int color) {
-        View mStatusBarTintView = new View(activity);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-                (FrameLayout.LayoutParams.MATCH_PARENT, getStatusBarHeight(activity));
-        params.gravity = Gravity.TOP;
-        mStatusBarTintView.setLayoutParams(params);
-        mStatusBarTintView.setBackgroundColor(color);
-        return mStatusBarTintView;
-    }
 
     /**
      * 作者　　: 李坤
