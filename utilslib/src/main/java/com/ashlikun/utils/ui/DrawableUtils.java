@@ -388,6 +388,12 @@ public class DrawableUtils {
         }
     }
 
+    public static Drawable setTint(Drawable drawable, int color) {
+        Drawable wrapDrawable = DrawableCompat.wrap(drawable).mutate();
+        DrawableCompat.setTint(wrapDrawable, color);
+        return wrapDrawable;
+    }
+
     public static void setCompoundDrawables(TextView view, Drawable drawLeft,
                                             Drawable drawTop,
                                             Drawable drawRight,
