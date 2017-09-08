@@ -77,29 +77,78 @@ public class SharedPreUtils {
      * @return 对应值
      */
 
-    public static <T> T getValue(Context context,
-                                 String name,
-                                 String key) {
+    public static Object getValue(Context context,
+                                  String name,
+                                  String key, Class type) {
         SharedPreferences sp = context.getSharedPreferences(name,
                 context.MODE_PRIVATE);
-        try {
-            return (T) sp.getAll().get(key);
-        } catch (Exception e) {
-            return null;
+        if (type.isAssignableFrom(Integer.class)) {
+            return sp.getInt(key, 0);
+        } else if (type.isAssignableFrom(String.class)) {
+            return sp.getString(key, "");
+        } else if (type.isAssignableFrom(Boolean.class)) {
+            return sp.getBoolean(key, false);
+        } else if (type.isAssignableFrom(Float.class)) {
+            return sp.getFloat(key, 0);
+        } else if (type.isAssignableFrom(Set.class)) {
+            return sp.getStringSet(key, null);
         }
-
+        return null;
     }
 
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 17:06
-     * <p>
-     * 方法功能：同上，只是文件名写成固定
-     */
+    public static int getInt(Context context,
+                             String name,
+                             String key) {
+        return (int) getValue(context, name, key, Integer.class);
+    }
 
-    public static <T> T getValue(Context context,
+    public static String getString(Context context,
+                                   String name,
+                                   String key) {
+        return (String) getValue(context, name, key, String.class);
+    }
+
+    public static boolean getBoolean(Context context,
+                                     String name,
+                                     String key) {
+        return (boolean) getValue(context, name, key, Boolean.class);
+    }
+
+    public static float getFloat(Context context,
+                                 String name,
                                  String key) {
-        return getValue(context, CACHE_DATA, key);
+        return (float) getValue(context, name, key, Float.class);
+    }
+
+    public static Set<String> getSet(Context context,
+                                     String name,
+                                     String key) {
+        return (Set<String>) getValue(context, name, key, Set.class);
+    }
+
+    public static int getInt(Context context,
+                             String key) {
+        return (int) getValue(context, CACHE_DATA, key, Integer.class);
+    }
+
+    public static String getString(Context context,
+                                   String key) {
+        return (String) getValue(context, CACHE_DATA, key, String.class);
+    }
+
+    public static boolean getBoolean(Context context,
+                                     String key) {
+        return (boolean) getValue(context, CACHE_DATA, key, Boolean.class);
+    }
+
+    public static float getFloat(Context context,
+                                 String key) {
+        return (float) getValue(context, CACHE_DATA, key, Float.class);
+    }
+
+    public static Set<String> getSet(Context context,
+                                     String key) {
+        return (Set<String>) getValue(context, CACHE_DATA, key, Set.class);
     }
 
 }

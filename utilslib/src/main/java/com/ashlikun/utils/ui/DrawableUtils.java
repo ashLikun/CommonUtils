@@ -62,9 +62,9 @@ public class DrawableUtils {
      */
     public ColorStateList createColorSelect(@ColorRes int normal, @ColorRes int select) {
         int[] colors = new int[]{getColor(normal), getColor(select)};
-        int[][] states = new int[4][];
+        int[][] states = new int[2][];
         states[0] = new int[]{};
-        states[2] = new int[]{android.R.attr.state_selected};
+        states[1] = new int[]{android.R.attr.state_selected};
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
     }
@@ -386,6 +386,12 @@ public class DrawableUtils {
         } else {
             view.setBackgroundDrawable(drawable);
         }
+    }
+
+    public static Drawable setTint(Drawable drawable, int color) {
+        Drawable wrapDrawable = DrawableCompat.wrap(drawable).mutate();
+        DrawableCompat.setTint(wrapDrawable, color);
+        return wrapDrawable;
     }
 
     public static void setCompoundDrawables(TextView view, Drawable drawLeft,

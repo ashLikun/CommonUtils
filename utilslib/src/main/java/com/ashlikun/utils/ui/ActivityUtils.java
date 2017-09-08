@@ -76,7 +76,7 @@ public class ActivityUtils {
      */
     public static boolean isForeground(Class classs) {
         if (Activity.class.isAssignableFrom(classs)) {
-            String className = classs.getClass().getName();
+            String className = classs.getName();
             if (classs == null || TextUtils.isEmpty(className)) {
                 return false;
             }

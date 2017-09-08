@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 public abstract class DateUtils {
     public static final String YMD_HMS = "yyyy-MM-dd HH:mm:ss";
     public static final String YMD = "yyyy-MM-dd";
+    public static final String MD = "MM-dd";
+    public static final String YM = "yyyy-MM";
     public static final String HMS = "HH:mm:ss";
 
     /**
@@ -137,14 +139,14 @@ public abstract class DateUtils {
      * 作者　　: 李坤
      * 创建时间: 2017/6/28 10:41
      * <p>
-     * 方法功能：根据日期对象来获取日期中的时间(HH:mm:ss)
+     * 方法功能：根据日期对象来获取日期中的时间(YMD)
      *
      * @param calender 日期对象
-     * @return 时间字符串, 格式为: HH:mm:ss
+     * @return 时间字符串, 格式为: YMD
      */
     @SuppressLint("SimpleDateFormat")
     public static String getTimeSimple(Calendar calender) {
-        return getFormatTime(calender, HMS);
+        return getFormatTime(calender, YMD);
     }
 
 
