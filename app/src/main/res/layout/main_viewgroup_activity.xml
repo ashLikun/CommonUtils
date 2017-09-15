@@ -7,5 +7,11 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        android:layout_height="300dp"></android.support.v4.view.ViewPager>
+
+    <TextView
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        android:layout_height="100dp"></TextView>
 </LinearLayout>

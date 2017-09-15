@@ -41,12 +41,12 @@ public class DrawableUtils {
      * 方法功能：获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
      */
     public ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int select, @ColorRes int enable) {
-        int[] colors = new int[]{getColor(normal), getColor(pressed), getColor(select), getColor(enable)};
+        int[] colors = new int[]{getColor(pressed), getColor(select), getColor(enable), getColor(normal)};
         int[][] states = new int[4][];
-        states[0] = new int[]{};
-        states[1] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
-        states[2] = new int[]{android.R.attr.state_selected};
-        states[3] = new int[]{-android.R.attr.state_enabled};
+        states[0] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
+        states[1] = new int[]{android.R.attr.state_selected};
+        states[2] = new int[]{-android.R.attr.state_enabled};
+        states[3] = new int[]{};
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
     }
@@ -61,10 +61,10 @@ public class DrawableUtils {
      * @param select 选择的资源
      */
     public ColorStateList createColorSelect(@ColorRes int normal, @ColorRes int select) {
-        int[] colors = new int[]{getColor(normal), getColor(select)};
+        int[] colors = new int[]{getColor(select), getColor(normal)};
         int[][] states = new int[2][];
-        states[0] = new int[]{};
-        states[1] = new int[]{android.R.attr.state_selected};
+        states[0] = new int[]{android.R.attr.state_selected};
+        states[1] = new int[]{};
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
     }
@@ -77,10 +77,10 @@ public class DrawableUtils {
      * 方法功能：同上
      */
     public ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed) {
-        int[] colors = new int[]{getColor(normal), getColor(pressed)};
+        int[] colors = new int[]{getColor(pressed), getColor(normal)};
         int[][] states = new int[2][];
-        states[0] = new int[]{};
-        states[1] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
+        states[0] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
+        states[1] = new int[]{};
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
     }
@@ -93,11 +93,11 @@ public class DrawableUtils {
      * 方法功能：同上
      */
     public ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int enable) {
-        int[] colors = new int[]{getColor(normal), getColor(pressed), getColor(enable)};
+        int[] colors = new int[]{getColor(pressed), getColor(enable), getColor(normal)};
         int[][] states = new int[3][];
-        states[0] = new int[]{};
-        states[1] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
-        states[2] = new int[]{-android.R.attr.state_enabled};
+        states[0] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
+        states[1] = new int[]{-android.R.attr.state_enabled};
+        states[2] = new int[]{};
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
     }
@@ -166,7 +166,7 @@ public class DrawableUtils {
      */
     public StateListDrawable getSelectDrawable(Drawable normal, Drawable select) {
         StateListDrawable bg = new StateListDrawable();
-        bg.addState(new int[]{android.R.attr.selectable}, select);
+        bg.addState(new int[]{android.R.attr.state_selected}, select);
         bg.addState(new int[]{}, normal);
         return bg;
     }
@@ -343,8 +343,8 @@ public class DrawableUtils {
             }
             StateListDrawable drawable = new StateListDrawable();
             drawable.addState(new int[]{-android.R.attr.state_enabled}, enableDrawable);
-            drawable.addState(new int[]{}, normalDrawable);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable.addState(new int[]{}, normalDrawable);
                 return new RippleDrawable(rippleColor, normalDrawable.getAlpha() == 0 ? null : normalDrawable,
                         normalDrawable.getAlpha() == 0 ? normalDrawable : null);
             } else {
@@ -354,6 +354,7 @@ public class DrawableUtils {
                         pressedDrawable);
                 drawable.addState(new int[]{android.R.attr.state_selected},
                         pressedDrawable);
+                drawable.addState(new int[]{}, normalDrawable);
                 return drawable;
             }
         }
