@@ -9,9 +9,35 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"></android.support.v4.view.ViewPager>
 
-    <TextView
+    <Button
         android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        android:layout_height="100dp"></TextView>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onView1Click"
+        android:padding="@dimen/fab_margin_10"
+        android:text="info"></Button>
+
+    <Button
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onView2Click"
+        android:padding="@dimen/fab_margin_10"
+        android:text="info"></Button>
+
+    <Button
+        android:id="@+id/view3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onView3Click"
+        android:padding="@dimen/fab_margin_10"
+        android:text="info"></Button>
+
+    <Button
+        android:id="@+id/view4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onView4Click"
+        android:padding="@dimen/fab_margin_10"
+        android:text="info"></Button>
 </LinearLayout>

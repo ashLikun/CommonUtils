@@ -7,16 +7,19 @@ import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import com.ashlikun.utils.Utils;
 import com.ashlikun.utils.other.DeviceUtil;
 import com.ashlikun.utils.ui.DrawableUtils;
 import com.ashlikun.utils.ui.StatusBarCompat;
+import com.ashlikun.utils.ui.SuperToast;
 
 import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Utils.OnNeedListener {
     ArrayMap<Integer, Integer> aaa = new ArrayMap<>();
     ViewPager viewPager;
     DrawableUtils drawableUtils;
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.init(this);
         drawableUtils = new DrawableUtils(this);
         setContentView(R.layout.main_viewgroup_activity);
         new StatusBarCompat(this).setTransparentBar(android.R.color.transparent);
@@ -56,5 +60,31 @@ public class MainActivity extends AppCompatActivity {
         DrawableUtils.setBackground(view, drawableUtils.getSelectDrawable(getResources().getDrawable(R.color.SwipeRefreshLayout_1),
                 getResources().getDrawable(R.color.colorAccent)));
         view.setSelected(false);
+
+//        for (int i = 0; i < 10; i++) {
+//            ToastUtils.showShort("aaa" + i);
+//        }
+        SuperToast.get("aaaaaaa").info();
+    }
+
+    public void onView1Click(View view) {
+        SuperToast.get("aaaaaaa").info();
+    }
+
+    public void onView2Click(View view) {
+        SuperToast.get("aaaaaaa").ok();
+    }
+
+    public void onView3Click(View view) {
+        SuperToast.get("aaaaaaa").warn();
+    }
+
+    public void onView4Click(View view) {
+        SuperToast.get("aaaaaaa").error();
+    }
+
+    @Override
+    public boolean isDebug() {
+        return true;
     }
 }

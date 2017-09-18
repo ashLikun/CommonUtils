@@ -1,6 +1,5 @@
 package com.ashlikun.utils.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
@@ -8,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ashlikun.utils.animator.AnimUtils;
 
@@ -198,16 +196,11 @@ public class EditHelper {
 
         public boolean check(Context context) {
             if (view == null || !getTextView().getText().toString().matches(regex)) {
-
                 if (view instanceof TextInputLayout && ((TextInputLayout) view).isErrorEnabled()) {
                     ((TextInputLayout) view).setError(msg);
                     AnimUtils.shakeLeft(view, 0.95f, 3f);
                 } else {
-                    Activity activity = ActivityUtils.getActivity(context);
-                    if (activity != null && !activity.isFinishing()) {
-                        SnackbarUtil.showLong(view, msg, SnackbarUtil.Warning).show();
-                    } else
-                        ToastUtils.show(context, msg, Toast.LENGTH_SHORT);
+                    SuperToast.get(msg).warn();
                     AnimUtils.shakeLeft(view, 0.85f, 6f);
                 }
                 view.requestFocus();

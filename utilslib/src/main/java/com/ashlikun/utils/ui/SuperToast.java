@@ -1,0 +1,229 @@
+package com.ashlikun.utils.ui;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
+import android.support.annotation.LayoutRes;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.ashlikun.utils.R;
+import com.ashlikun.utils.other.DimensUtils;
+
+import java.lang.annotation.Retention;
+
+import static com.ashlikun.utils.Utils.getApp;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+/**
+ * 作者　　: 李坤
+ * 创建时间: 2017/9/18　10:05
+ * 邮箱　　：496546144@qq.com
+ * <p>
+ * 功能介绍：自定义toast样式
+ */
+
+public class SuperToast {
+    private static final int Info = 1;//正常
+    private static final int Confirm = 2;//完成
+    private static final int Warning = 3;//警告 orange
+    private static final int Error = 4;//错误 red
+    private static final int NO_RES = -1;//
+    private static final float COLOR_DEPTH = 0.92f;//
+    private static final int INIT_GRAVITY = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;//
+
+
+    public static int CHANG_GRAVITY = INIT_GRAVITY;//可以改变
+    public static int INIT_OFFSET_Y = 0;
+
+    @IntDef(value = {Info, Confirm, Warning, Error})
+    @Retention(value = RUNTIME)
+    public @interface Type {
+
+    }
+
+    public static void setGravity(int gravity) {
+        CHANG_GRAVITY = gravity;
+    }
+
+    public static void setGravityToInit() {
+        CHANG_GRAVITY = INIT_GRAVITY;
+    }
+
+    public SuperToast(Builder builder) {
+
+        View mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
+        setViewContent(mView, builder);
+        Toast mToast = ToastUtils.getMyToast();
+        mToast.setGravity(builder.gravity, builder.offsetX, builder.offsetY);
+        mToast.setView(mView);
+        mToast.setDuration(builder.duration);
+        mToast.show();
+    }
+
+    private void setViewContent(View view, Builder builder) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(builder.backgroundColor);
+        drawable.setStroke(DimensUtils.dip2px(getApp(), 1f), getBackgroundShen(builder.backgroundColor));
+        drawable.setCornerRadius(DimensUtils.dip2px(getApp(), 4));
+        DrawableUtils.setBackground(view, drawable);
+
+        ImageView imageView = (ImageView) view.findViewById(R.id.img);
+        if (!builder.isShowIcon) {
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setImageResource(builder.iconRes);
+        }
+        TextView textView = (TextView) view.findViewById(R.id.msg);
+        textView.setText(builder.msg);
+    }
+
+    private int getBackgroundShen(int backgroundColor) {
+        int red = (int) (Color.red(backgroundColor) * COLOR_DEPTH);
+        int green = (int) (Color.green(backgroundColor) * COLOR_DEPTH);
+        int blue = (int) (Color.blue(backgroundColor) * COLOR_DEPTH);
+        return Color.argb(Color.alpha(backgroundColor), red, green, blue);
+    }
+
+    public static Builder get(String msg) {
+        return new Builder(msg);
+    }
+
+    public static class Builder {
+        private boolean isShowIcon = true;
+        @DrawableRes
+        private int iconRes = NO_RES;
+        private int backgroundColor = NO_RES;
+        private String msg;
+        private int duration = Toast.LENGTH_SHORT;
+        private int gravity = CHANG_GRAVITY;
+        private int offsetX = 0;
+        private int offsetY = 0;
+        @Type
+        private int type = Info;
+        @LayoutRes
+        private int layoutId = R.layout.toast_super;
+
+        protected Builder(String msg) {
+            this.msg = msg;
+        }
+
+        public Builder setIconRes(@DrawableRes int iconRes) {
+            this.iconRes = iconRes;
+            return this;
+        }
+
+        public Builder setNoIcon() {
+            this.isShowIcon = false;
+            return this;
+        }
+
+        public Builder setBackgroundColor(@ColorRes int backgroundColor) {
+            this.backgroundColor = getApp().getResources().getColor(backgroundColor);
+            return this;
+        }
+
+
+        public Builder setDuration(int duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public Builder setType(int type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setLayoutId(int layoutId) {
+            this.layoutId = layoutId;
+            return this;
+        }
+
+        public Builder setGravity(int gravity) {
+            this.gravity = gravity;
+            return this;
+        }
+
+        public Builder setOffsetX(int offsetX) {
+            this.offsetX = offsetX;
+            return this;
+        }
+
+        public Builder setOffsetY(int offsetY) {
+            this.offsetY = offsetY;
+            return this;
+        }
+
+        public void ok() {
+            type = Confirm;
+            show();
+        }
+
+        public void info() {
+            type = Info;
+            show();
+        }
+
+        public void error() {
+            type = Error;
+            show();
+        }
+
+        public void warn() {
+            type = Warning;
+            show();
+        }
+
+        public void show() {
+
+            if (type == Info) {
+                if (backgroundColor == NO_RES) {
+                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_info);
+                }
+                if (isShowIcon && iconRes == NO_RES) {
+                    iconRes = R.drawable.ic_toast_super_info;
+                }
+            } else if (type == Confirm) {
+                if (backgroundColor == NO_RES) {
+                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_confirm);
+                }
+                if (isShowIcon && iconRes == NO_RES) {
+                    iconRes = R.drawable.ic_toast_super_confirm;
+                }
+            } else if (type == Warning) {
+                if (backgroundColor == NO_RES) {
+                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_warning);
+                }
+                if (isShowIcon && iconRes == NO_RES) {
+                    iconRes = R.drawable.ic_toast_super_warning;
+                }
+            } else if (type == Error) {
+                if (backgroundColor == NO_RES) {
+                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_error);
+                }
+                if (isShowIcon && iconRes == NO_RES) {
+                    iconRes = R.drawable.ic_toast_super_error;
+                }
+            }
+
+            if (INIT_OFFSET_Y == 0) {
+                int resourceId = getApp().getResources().getIdentifier("toast_y_offset", "dimen", "android");
+                if (resourceId > 0) {
+                    INIT_OFFSET_Y = getApp().getResources().getDimensionPixelSize(resourceId);
+                }
+            }
+
+            if (offsetY == 0 && gravity == INIT_GRAVITY) {
+                offsetY = INIT_OFFSET_Y;
+            }
+
+            new SuperToast(this);
+        }
+    }
+}

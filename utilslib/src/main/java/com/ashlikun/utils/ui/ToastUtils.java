@@ -2,7 +2,6 @@ package com.ashlikun.utils.ui;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -18,6 +17,10 @@ public class ToastUtils {
     public static int LENGTH_SHORT = Toast.LENGTH_SHORT;
     public static int LENGTH_LONG = Toast.LENGTH_LONG;
 
+    public static Toast getMyToast() {
+        initToast();
+        return myToast;
+    }
 
     /**
      * 默认Toast，时间短
@@ -38,12 +41,12 @@ public class ToastUtils {
         myToast.makeText(getApp(), content, Toast.LENGTH_LONG).show();
     }
 
-    public static void show(Context context, String text, int duration) {
+    public static void show(String text, int duration) {
         if (TextUtils.isEmpty(text)) return;
-        initToast(context);
+        initToast();
         if (myToast != null) {
-            myToast.setGravity(Gravity.BOTTOM, DimensUtils.dip2px(context, 0),
-                    DimensUtils.dip2px(context, 60));
+            myToast.setGravity(Gravity.BOTTOM, DimensUtils.dip2px(getApp(), 0),
+                    DimensUtils.dip2px(getApp(), 60));
             myToast.setText(text);
             myToast.setDuration(duration);
             myToast.show();
@@ -51,28 +54,28 @@ public class ToastUtils {
     }
 
 
-    public static void showLong(Context context, String text) {
-        show(context, text, LENGTH_LONG);
+    public static void showLong(String text) {
+        show(text, LENGTH_LONG);
     }
 
-    public static void showShort(Context context, String text) {
-        show(context, text, LENGTH_SHORT);
+    public static void showShort(String text) {
+        show(text, LENGTH_SHORT);
     }
 
     @SuppressLint("ShowToast")
-    private static void initToast(Context context) {
+    private static void initToast() {
         if (myToast == null) {
-            myToast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+            myToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         }
     }
 
-    public static void show(Context context, String text, int duration,
+    public static void show(String text, int duration,
                             int gravity, int xOffsetDp, int yOffsetDp) {
         if (TextUtils.isEmpty(text)) return;
-        initToast(context);
+        initToast();
         if (myToast != null) {
-            myToast.setGravity(gravity, DimensUtils.dip2px(context, xOffsetDp),
-                    DimensUtils.dip2px(context, yOffsetDp));
+            myToast.setGravity(gravity, DimensUtils.dip2px(getApp(), xOffsetDp),
+                    DimensUtils.dip2px(getApp(), yOffsetDp));
             myToast.setText(text);
             myToast.setDuration(duration);
             myToast.show();
