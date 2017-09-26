@@ -1,15 +1,11 @@
 package com.ashlikun.utils.ui;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -250,36 +246,4 @@ public class SnackbarUtil {
         }
     }
 
-    public static class DialogTransparency extends Dialog {
-        private Context context;
-
-        public DialogTransparency(Context context) {
-            this(context, R.style.Dialog_Translucent);
-        }
-
-        public DialogTransparency(Context context, int themeResId) {
-            super(context, themeResId);
-            this.context = context;
-            init();
-        }
-
-        private void init() {
-            View view = new View(context);
-            setContentView(view);
-
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            ScreenInfoUtils screen = new ScreenInfoUtils();
-            lp.width = (screen.getWidth()); //设置宽度
-            lp.height = (screen.getHeight()); //设置宽度
-            getWindow().setAttributes(lp);
-            getWindow().getAttributes().gravity = Gravity.CENTER;
-        }
-
-
-    }
 }
