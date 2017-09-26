@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements Utils.OnNeedListe
         for (Map.Entry<Integer, Integer> e : aaa.entrySet()) {
             Log.e("aaa", e.getKey() + "   " + e.getValue());
         }
-        Log.e("aaa", DeviceUtil.getInstance(this).getSoleDeviceId());
 
         TextView view = (TextView) findViewById(R.id.view);
         view.setTextColor(drawableUtils.createColorSelect(R.color.black, R.color.white));

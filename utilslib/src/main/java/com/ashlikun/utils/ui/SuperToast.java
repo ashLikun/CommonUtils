@@ -1,11 +1,13 @@
 package com.ashlikun.utils.ui;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +58,7 @@ public class SuperToast {
         CHANG_GRAVITY = INIT_GRAVITY;
     }
 
-    public SuperToast(Builder builder) {
+    public SuperToast(final Builder builder) {
 
         View mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
         setViewContent(mView, builder);
@@ -65,6 +67,21 @@ public class SuperToast {
         mToast.setView(mView);
         mToast.setDuration(builder.duration);
         mToast.show();
+        if (builder.isFinish) {
+            final DialogTransparency dialog = new DialogTransparency(builder.activity);
+            dialog.show();
+            MainHandle.get().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (builder.callback != null) {
+                        builder.callback.onDismissed();
+                    }
+                    if (builder.activity != null && !builder.activity.isFinishing()) {
+                        builder.activity.finish();
+                    }
+                }
+            }, mToast.getDuration());
+        }
     }
 
     private void setViewContent(View view, Builder builder) {
@@ -109,6 +126,9 @@ public class SuperToast {
         private int type = Info;
         @LayoutRes
         private int layoutId = R.layout.toast_super;
+        boolean isFinish = false;
+        Activity activity;//要finish的activity
+        Callback callback;//toast销毁的回调
 
         protected Builder(String msg) {
             this.msg = msg;
@@ -157,6 +177,22 @@ public class SuperToast {
 
         public Builder setOffsetY(int offsetY) {
             this.offsetY = offsetY;
+            return this;
+        }
+
+        public Builder setFinish(Activity activity) {
+            if (activity != null) {
+                isFinish = true;
+                this.activity = activity;
+            }
+            return this;
+        }
+
+        public Builder setFinishCallback(Callback callback) {
+            if (callback != null) {
+                this.callback = callback;
+                isFinish = true;
+            }
             return this;
         }
 
@@ -224,6 +260,11 @@ public class SuperToast {
             }
 
             new SuperToast(this);
+        }
+    }
+
+    public static class Callback {
+        public void onDismissed() {
         }
     }
 }
