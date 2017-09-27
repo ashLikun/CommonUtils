@@ -1,5 +1,7 @@
 package com.ashlikun.utils.ui;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -7,7 +9,6 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
-import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 
 public class SuperToast {
+    private static final String TOAST_VIEW_TAG = "TOAST_VIEW_TAG";
     private static final int Info = 1;//正常
     private static final int Confirm = 2;//完成
     private static final int Warning = 3;//警告 orange
@@ -50,6 +52,8 @@ public class SuperToast {
 
     }
 
+    AnimatorSet animSet;
+
     public static void setGravity(int gravity) {
         CHANG_GRAVITY = gravity;
     }
@@ -59,10 +63,15 @@ public class SuperToast {
     }
 
     public SuperToast(final Builder builder) {
-
-        View mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
-        setViewContent(mView, builder);
         Toast mToast = ToastUtils.getMyToast();
+        View mView;
+        if (mToast.getView() != null && TOAST_VIEW_TAG.equals(mToast.getView().getTag())) {
+            mView = mToast.getView();
+        } else {
+            mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
+        }
+        setViewContent(mView, builder);
+        startAnim(mView);
         mToast.setGravity(builder.gravity, builder.offsetX, builder.offsetY);
         mToast.setView(mView);
         mToast.setDuration(builder.duration);
@@ -80,8 +89,23 @@ public class SuperToast {
                         builder.activity.finish();
                     }
                 }
-            }, mToast.getDuration());
+            }, mToast.getDuration() == Toast.LENGTH_SHORT ? 2000 : 3500);
         }
+    }
+
+    private void startAnim(View mView) {
+        mView.clearAnimation();
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(mView, "alpha", 0, 1);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mView, "scaleX", 0, 1);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mView, "scaleY", 0, 1);
+        if (animSet == null) {
+            animSet = new AnimatorSet();
+        } else {
+            animSet.cancel();
+        }
+        animSet.playTogether(scaleX, scaleY, alpha);
+        animSet.setDuration(300);
+        animSet.start();
     }
 
     private void setViewContent(View view, Builder builder) {
