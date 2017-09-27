@@ -1,5 +1,6 @@
 package com.ashlikun.utils.ui;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -71,7 +72,7 @@ public class SuperToast {
             mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
         }
         setViewContent(mView, builder);
-        startAnim(mView);
+        startAnim(builder, mView);
         mToast.setGravity(builder.gravity, builder.offsetX, builder.offsetY);
         mToast.setView(mView);
         mToast.setDuration(builder.duration);
@@ -93,19 +94,24 @@ public class SuperToast {
         }
     }
 
-    private void startAnim(View mView) {
+    private void startAnim(final Builder builder, View mView) {
         mView.clearAnimation();
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(mView, "alpha", 0, 1);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mView, "scaleX", 0, 1);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mView, "scaleY", 0, 1);
+
         if (animSet == null) {
             animSet = new AnimatorSet();
         } else {
             animSet.cancel();
         }
-        animSet.playTogether(scaleX, scaleY, alpha);
-        animSet.setDuration(300);
-        animSet.start();
+        if (builder.animator == null) {
+            builder.animator = new AnimatorSet();
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(mView, "alpha", 0, 1);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mView, "scaleX", 0, 1);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mView, "scaleY", 0, 1);
+            ((AnimatorSet) builder.animator).playTogether(scaleX, scaleY, alpha);
+            ((AnimatorSet) builder.animator).setDuration(300);
+        }
+        builder.animator.start();
+
     }
 
     private void setViewContent(View view, Builder builder) {
@@ -153,6 +159,7 @@ public class SuperToast {
         boolean isFinish = false;
         Activity activity;//要finish的activity
         Callback callback;//toast销毁的回调
+        Animator animator;//toast的动画
 
         protected Builder(String msg) {
             this.msg = msg;
@@ -220,6 +227,11 @@ public class SuperToast {
             return this;
         }
 
+        public Builder setAnimator(Animator animator) {
+            this.animator = animator;
+            return this;
+        }
+
         public void ok() {
             type = Confirm;
             show();
@@ -282,6 +294,7 @@ public class SuperToast {
             if (offsetY == 0 && gravity == INIT_GRAVITY) {
                 offsetY = INIT_OFFSET_Y;
             }
+
 
             new SuperToast(this);
         }
