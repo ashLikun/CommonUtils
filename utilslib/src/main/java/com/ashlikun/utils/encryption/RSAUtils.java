@@ -20,48 +20,17 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
+import static javax.crypto.Cipher.PUBLIC_KEY;
+
 /**
  * 作者　　: 李坤
  * 创建时间: 16:41 Administrator
  * 邮箱　　：496546144@qq.com
- *
+ * <p>
  * 功能介绍：RSA算法   支付宝用的就是RSA   公钥加密，私钥解密
  */
 
 public class RSAUtils {
-    /**
-     * // 加密
-     * byte[] encryptByte = RSAUtils.encryptData("aaasssdddzzxxcc".getBytes());
-     * // 为了方便观察吧加密后的数据用base64加密转一下，要不然看起来是乱码,所以解密是也是要用Base64先转换
-     * String afterencrypt = Base64Utils.encode(encryptByte);
-     * <p/>
-     * LogUtils.e("aaasssdddzzxxcc", afterencrypt);
-     * <p/>
-     * byte[] decryptData = RSAUtils.decryptData(Base64Utils.decode(afterencrypt));
-     * String decryptDataa = new String(decryptData);
-     * <p/>
-     * LogUtils.e("aaasssdddzzxxcc", decryptDataa);
-     */
-
-    public static String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDrqeea3sfy3hP2TnmNX0xd3KeM\r" +
-            "6RerRlEb+zT3HxGQ16LRm14o69Tz2KXbTeRCUw6Wc8FsJ/25sZubJ2DMKTBxlaSO\r" +
-            "iAv3BpduKwVC3/+RpB4s+AU+E3MWqRa77RdN7OnaDoXFcZbbkPNoImnyUL3TgDPN\r" +
-            "BFqmHbd4vN4Rt6PPfQIDAQAB";
-    public static String PRIVATE_KEY = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAOup55rex/LeE/ZO\r" +
-            "eY1fTF3cp4zpF6tGURv7NPcfEZDXotGbXijr1PPYpdtN5EJTDpZzwWwn/bmxm5sn\r" +
-            "YMwpMHGVpI6IC/cGl24rBULf/5GkHiz4BT4TcxapFrvtF03s6doOhcVxltuQ82gi\r" +
-            "afJQvdOAM80EWqYdt3i83hG3o899AgMBAAECgYB8VcMVSa7yq0qa7CJjfUEcUHux\r" +
-            "85UCT3IhsjLqouCwq6SCtFdEfdB36vjusLTabVnH9UC6oIrUOyme/XKrpJuifoNO\r" +
-            "ovohBHVw2fcpGu4u6U0NrCb9KxEjyjNQYpNgfT0shXah3RmLDbMpVN5GW46cTry/\r" +
-            "WergAdok4A4nb8janQJBAP1uGBYjnHbNjBTqDV16t84nj8Pj829rm+SPyGJR1SiL\r" +
-            "WRWs4Ed84TVSP6ax9TXbIp5Xb8itIo/uet7eGpUcZ1cCQQDuDbBkYffSGcopakun\r" +
-            "YVJIuNKL1mo3po7UUZDbrJCjwCssKV8moEf4RPdaBu7xX3IFj7R3fbsEeUjlPZNr\r" +
-            "4h9LAkEAoa+fxmAp7tHs0VsR89XbdrdezYedRDTPXN8u5St4Z0mgKGgHHxTZSf+T\r" +
-            "hHJ9E0Mfrw3xz4JGTrXDxnTFWOSqOQJBAL0vDdbI8Lz9F+eP/S25Lz5x+4l8Tg+K\r" +
-            "A4qCg//AhXZNe0HuYxr8WBXbIURfrDcQ5jm7Oe2Ycy8cAC2GoQkkvD8CQQCGjT/m\r" +
-            "fN0C8zhO4lYte6xyLCxgeitTO7kHaQwI8j+ngpJKP0V+7Ep029meH/GikoEsb4iU\r" +
-            "gt5+6n3izmGRr2e7";
-
     private static String RSA = "RSA";
 
     /**
@@ -112,15 +81,6 @@ public class RSAUtils {
         }
     }
 
-    public static byte[] encryptData(byte[] data) {
-        try {
-            return encryptData(data, loadPublicKey(PUBLIC_KEY));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new byte[0];
-        }
-    }
-
     /**
      * 用私钥解密
      *
@@ -138,14 +98,6 @@ public class RSAUtils {
         }
     }
 
-    public static byte[] decryptData(byte[] data) {
-        try {
-            return decryptData(data, loadPrivateKey(PRIVATE_KEY));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new byte[0];
-        }
-    }
 
     /**
      * 通过公钥byte[](publicKey.getEncoded())将公钥还原，适用于RSA算法

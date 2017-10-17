@@ -1,8 +1,3 @@
-/* 
- * @(#)SecurityUtils.java    Created on 2004-10-9
- * Copyright (c) 2004 ZDSoft Networks, Inc. All rights reserved.
- * $Id: SecurityUtils.java 33450 2012-12-13 08:34:03Z xuan $
- */
 package com.ashlikun.utils.encryption;
 
 import android.annotation.SuppressLint;
@@ -11,32 +6,34 @@ import android.support.annotation.IntDef;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import static com.ashlikun.utils.other.StringUtils.parseByte2HexStr;
 import static com.ashlikun.utils.other.StringUtils.parseHexStr2Byte;
 
-
 /**
  * 作者　　: 李坤
- * 创建时间: 14:48 Administrator
+ * 创建时间: 2016/6/23 17:38
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍： DES加密算法, 对称性得
+ * 功能介绍：AES,加密
+ * AES 是一种可逆加密算法，对用户的敏感信息加密处理 对原始数据进行AES加密后，在进行Base64编码转化；
+ * 对称加密
  */
-
-public abstract class DesUtils {
+public class AESUtils {
+    private final static String SHA1PRNG = "SHA1PRNG";
 
     @IntDef({Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE})
-    @interface DESType {
+    @interface AESType {
     }
 
     /**
@@ -47,7 +44,7 @@ public abstract class DesUtils {
      * @return 加密/解密结果字符串
      */
     public static String encrypt(String content, String password) {
-        return des(content, password, Cipher.ENCRYPT_MODE);
+        return aes(content, password, Cipher.ENCRYPT_MODE);
     }
 
     /**
@@ -58,24 +55,36 @@ public abstract class DesUtils {
      * @return 加密/解密结果字符串
      */
     public static String decrypt(String content, String password) {
-        return des(content, password, Cipher.DECRYPT_MODE);
+        return aes(content, password, Cipher.DECRYPT_MODE);
     }
 
     /**
-     * Des加密/解密
+     * Aes加密/解密
      *
-     * @param content  字符串内容
+     * @param content  字符串
      * @param password 密钥
      * @param type     加密：{@link Cipher#ENCRYPT_MODE}，解密：{@link Cipher#DECRYPT_MODE}
-     * @return 加密/解密结果
+     * @return 加密/解密结果字符串
      */
-    public static String des(String content, String password, @DESType int type) {
+    public static String aes(String content, String password, @AESType int type) {
         try {
-            SecureRandom random = new SecureRandom();
-            DESKeySpec desKey = new DESKeySpec(password.getBytes());
-            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("DES");
-            cipher.init(type, keyFactory.generateSecret(desKey), random);
+            KeyGenerator generator = KeyGenerator.getInstance("AES");
+
+            SecureRandom secureRandom;
+            if (android.os.Build.VERSION.SDK_INT >= 24) {
+                secureRandom = SecureRandom.getInstance(SHA1PRNG, new CryptoProvider());
+            } else if (android.os.Build.VERSION.SDK_INT >= 17) {
+                secureRandom = SecureRandom.getInstance(SHA1PRNG, "Crypto");
+            } else {
+                secureRandom = SecureRandom.getInstance(SHA1PRNG);
+            }
+            secureRandom.setSeed(password.getBytes());
+            generator.init(128, secureRandom);
+            SecretKey secretKey = generator.generateKey();
+            byte[] enCodeFormat = secretKey.getEncoded();
+            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(type, key);
 
             if (type == Cipher.ENCRYPT_MODE) {
                 byte[] byteContent = content.getBytes("utf-8");
@@ -86,7 +95,7 @@ public abstract class DesUtils {
             }
         } catch (NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException |
                 UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException |
-                InvalidKeySpecException e) {
+                NoSuchProviderException e) {
             e.printStackTrace();
         }
         return null;
