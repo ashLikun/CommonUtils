@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.support.annotation.IntDef;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -33,6 +35,7 @@ public class AESUtils {
     private final static String SHA1PRNG = "SHA1PRNG";
 
     @IntDef({Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE})
+    @Retention(RetentionPolicy.SOURCE)
     @interface AESType {
     }
 

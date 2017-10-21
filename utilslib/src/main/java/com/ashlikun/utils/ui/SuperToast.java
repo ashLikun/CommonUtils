@@ -21,9 +21,9 @@ import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
 
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import static com.ashlikun.utils.Utils.getApp;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 作者　　: 李坤
@@ -48,7 +48,7 @@ public class SuperToast {
     public static int INIT_OFFSET_Y = 0;
 
     @IntDef(value = {Info, Confirm, Warning, Error})
-    @Retention(value = RUNTIME)
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
 
     }
