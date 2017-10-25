@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Looper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
@@ -63,7 +64,21 @@ public class SuperToast {
         CHANG_GRAVITY = INIT_GRAVITY;
     }
 
-    public SuperToast(final Builder builder) {
+    private SuperToast(final Builder builder) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            MainHandle.get().post(new Runnable() {
+                @Override
+                public void run() {
+                    cretae(builder);
+                }
+            });
+        } else {
+            cretae(builder);
+        }
+    }
+
+    //要在主线程
+    private void cretae(final Builder builder) {
         Toast mToast = ToastUtils.getMyToast();
         View mView;
         if (mToast.getView() != null && TOAST_VIEW_TAG.equals(mToast.getView().getTag())) {

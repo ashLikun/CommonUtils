@@ -66,7 +66,14 @@ public class MainActivity extends AppCompatActivity implements Utils.OnNeedListe
     }
 
     public void onView1Click(View view) {
-        SuperToast.get("aaaaaaa").info();
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                SuperToast.get("aaaaaaa").info();
+            }
+        }.start();
+
     }
 
     public void onView2Click(View view) {
