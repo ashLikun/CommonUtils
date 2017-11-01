@@ -41,9 +41,23 @@ public abstract class DateUtils {
      * @return 时间字符串
      */
     public static String getFormatTime(Calendar calendar, String format) {
-        if (calendar == null) return null;
+        if (calendar == null) return "";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
         return sdf.format(calendar.getTime());
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/3/27 17:28
+     * 方法功能 按照指定格式把时间转换成字符串，格式的写法类似yyyy-MM-dd HH:mm:ss.SSS
+     *
+     * @param calendar 时间戳
+     * @param format   格式
+     * @return 时间字符串
+     */
+    public static String getFormatTime(long calendar, String format) {
+        if (calendar <= 0) return "";
+        return new SimpleDateFormat(format, Locale.getDefault()).format(calendar);
     }
 
     /**
@@ -66,7 +80,7 @@ public abstract class DateUtils {
             return getFormatTime(calendar, format);
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
 
@@ -392,9 +406,21 @@ public abstract class DateUtils {
         return calender.get(Calendar.DAY_OF_MONTH);
     }
 
-    /**
 
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/6/28 11:08
+     * 方法功能： 是否是今天
+     *
+     * @param calendar 日期
+     * @return 是true，否则false
      */
+    public static boolean isTotay(Calendar calendar) {
+        if (calendar == null) return false;
+        Calendar today = Calendar.getInstance();
+        return today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) || today.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR);
+    }
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/28 11:08
@@ -403,7 +429,6 @@ public abstract class DateUtils {
      * @param year 年份
      * @return 是true，否则false
      */
-
     public static boolean isLeapYear(int year) {
         Calendar calendar = Calendar.getInstance();
         return ((GregorianCalendar) calendar).isLeapYear(year);
@@ -441,9 +466,7 @@ public abstract class DateUtils {
         if (time == 0) {
             return "";
         }
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(time);
-        return getFormatTime(c, pattern);
+        return getFormatTime(time, pattern);
     }
 
     /**
