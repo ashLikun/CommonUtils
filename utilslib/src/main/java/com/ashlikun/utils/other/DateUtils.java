@@ -119,36 +119,6 @@ public abstract class DateUtils {
     public static String getCurrentTimeFull() {
         return getFormatTime(Calendar.getInstance(), YMD_HMS);
     }
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:11
-     * <p>
-     * 方法功能：把字符串转换成日期
-     *
-     * @param calendar 字符串
-     * @param pattern  格式化
-     * @return 返回日期String pattern
-     */
-    public static String getTime(String calendar, String pattern) {
-        return getFormatTime(getFormatTime(calendar, pattern), pattern);
-    }
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:11
-     * <p>
-     * 方法功能：把字符串转换成日期
-     *
-     * @param calendar 字符串
-     * @return 返回日期String YMD_HMS
-     */
-
-    public static String getTime(String calendar) {
-
-        return getFormatTime(getFormatTime(calendar, YMD_HMS), YMD_HMS);
-    }
-
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/28 10:41
