@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
@@ -460,6 +461,9 @@ public class SpannableUtils {
          * 设置样式
          */
         private void setSpan() {
+            if (TextUtils.isEmpty(this.text)) {
+                return;
+            }
             int start = mBuilder.length();//开始位置
             mBuilder.append(this.text);
             int end = mBuilder.length();//结束位置

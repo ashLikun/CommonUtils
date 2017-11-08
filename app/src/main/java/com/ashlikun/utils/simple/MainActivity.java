@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ashlikun.utils.Utils;
+import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.ui.DrawableUtils;
 import com.ashlikun.utils.ui.StatusBarCompat;
 import com.ashlikun.utils.ui.SuperToast;
@@ -62,11 +63,11 @@ public class MainActivity extends AppCompatActivity implements Utils.OnNeedListe
 //        for (int i = 0; i < 10; i++) {
 //            ToastUtils.showShort("aaa" + i);
 //        }
-
+        SpannableUtils.getBuilder("aaa").append(null).create();
     }
 
     public void onView1Click(View view) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
