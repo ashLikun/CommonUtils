@@ -15,6 +15,18 @@ public class ActivityManager {
     private static Stack<Activity> activityStack;
     private static ActivityManager instance;
 
+    //获取指定的运行中的activity
+    public <T> T getTagActivity(Class<? extends Activity> activity) {
+        if (activity != null) {
+            for (Activity a : activityStack) {
+                if (activity.equals(a.getClass())) {
+                    return (T) a;
+                }
+            }
+        }
+        return null;
+    }
+
     private ActivityManager() {
     }
 
