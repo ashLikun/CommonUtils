@@ -192,9 +192,9 @@ public class StringUtils {
      * 方法功能：小数 四舍五入 19.0->19.0    返回Double
      */
     public static Double roundDouble(double val, int precision) {
-        int resQ = (int) Math.round(val * Math.pow(10.0, precision));
-        double res = resQ / Math.pow(10.0, precision);
-        return res;
+        //小数处理，
+        BigDecimal bd = new BigDecimal(val);
+        return bd.setScale(precision, BigDecimal.ROUND_HALF_EVEN).doubleValue();
     }
 
     /**
@@ -243,6 +243,35 @@ public class StringUtils {
      */
     public static String getMoney(int money) {
         return money <= 0 ? "- -" : String.valueOf(money);
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/11/9 0009 22:39
+     * 邮箱　　：496546144@qq.com
+     * <p>
+     * 方法功能：比较2个数字大小（字符串格式）
+     *
+     * @return 1:第一个 > 第二个
+     * 0:第一个 = 第二个
+     * -1:第一个 < 第二个
+     * -2:异常
+     */
+    public static int compareNumber(String number1, String number2) {
+        try {
+            int numberInt1 = Integer.valueOf(number1);
+            int numberInt2 = Integer.valueOf(number2);
+            if (numberInt1 > numberInt2) {
+                return 1;
+            } else if (numberInt1 == numberInt2) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return -2;
+        }
     }
 
 }
