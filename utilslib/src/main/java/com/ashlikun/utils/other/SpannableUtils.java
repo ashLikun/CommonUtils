@@ -2,11 +2,14 @@ package com.ashlikun.utils.other;
 
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +25,7 @@ import android.text.style.ImageSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.MaskFilterSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.ReplacementSpan;
 import android.text.style.ScaleXSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -73,7 +77,8 @@ public class SpannableUtils {
         private boolean isBold;//设置粗体
         private boolean isItalic;//设置斜体
         private Layout.Alignment align;//设置对其
-
+        private boolean isAlignTop;//是否居上对齐
+        private float alignTopOffset;//居上对其的偏移量
         private boolean imageIsBitmap;//是否设置图片
         private Bitmap bitmap;//图片
         private boolean imageIsDrawable;//图片
@@ -279,6 +284,33 @@ public class SpannableUtils {
             return this;
         }
 
+        //自定义居上对其
+        public Builder setAlignTop() {
+            setAlignTop(0);
+            return this;
+        }
+
+        //自定义居上对其
+        public Builder setAlignTop(float alignTopOffset) {
+            isAlignTop = true;
+            this.alignTopOffset = alignTopOffset;
+            return this;
+        }
+
+        //自定义居上对其
+        public Builder setAlignTopDp(float alignTopOffset) {
+            isAlignTop = true;
+            this.alignTopOffset = DimensUtils.dip2px(Utils.getApp(), alignTopOffset);
+            return this;
+        }
+
+        //自定义居上对其
+        public Builder setAlignTopRes(@DimenRes int alignTopOffset) {
+            isAlignTop = true;
+            this.alignTopOffset = Utils.getApp().getResources().getDimensionPixelOffset(alignTopOffset);
+            return this;
+        }
+
         /**
          * 设置图片
          *
@@ -442,6 +474,8 @@ public class SpannableUtils {
             isBold = false;
             isItalic = false;
             align = null;
+            isAlignTop = false;
+            alignTopOffset = 0;
             bitmap = null;
             imageIsBitmap = false;
             drawable = null;
@@ -483,6 +517,10 @@ public class SpannableUtils {
             //文字大小比例
             if (proportion != -1) {
                 mBuilder.setSpan(new RelativeSizeSpan(proportion), start, end, flag);
+            }
+            //是否居上对齐
+            if (isAlignTop) {
+                mBuilder.setSpan(new CustomAlignSpan(alignTopOffset), start, end, flag);
             }
             //文字X缩放
             if (xProportion != -1) {
@@ -531,5 +569,28 @@ public class SpannableUtils {
             }
             clean();
         }
+    }
+
+    public static class CustomAlignSpan extends ReplacementSpan {
+
+        float alignTopOffset;
+
+        public CustomAlignSpan(float alignTopOffset) {
+            this.alignTopOffset = alignTopOffset;
+        }
+
+        @Override
+        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, @Nullable Paint.FontMetricsInt fm) {
+            text = text.subSequence(start, end);
+            return (int) paint.measureText(text.toString());
+        }
+
+        @Override
+        public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
+            text = text.subSequence(start, end);
+            Paint.FontMetricsInt fm = paint.getFontMetricsInt();
+            canvas.drawText(text.toString(), x, y - ((y + fm.descent + y + fm.ascent) - (bottom + top)) + alignTopOffset, paint);    //此处重新计算y坐标，使字体对其
+        }
+
     }
 }

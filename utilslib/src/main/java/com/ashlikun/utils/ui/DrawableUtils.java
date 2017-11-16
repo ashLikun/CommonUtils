@@ -113,7 +113,7 @@ public class DrawableUtils {
      * @param roundRadius:圆角半径   dp
      * @param strokeWidth:边框宽度   dp
      */
-    public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, @ColorRes int strokeColorId, int roundRadius, int strokeWidth) {
+    public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, @ColorRes int strokeColorId, float roundRadius, float strokeWidth) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(getColor(fillColorId));
         if (strokeColorId > 0) {
@@ -133,7 +133,7 @@ public class DrawableUtils {
      * 方法功能：同上
      */
 
-    public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, int roundRadius) {
+    public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, float roundRadius) {
         return getGradientDrawable(fillColorId, -1, roundRadius, -1);
     }
 
@@ -221,7 +221,7 @@ public class DrawableUtils {
      * @return
      */
     public StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled, @ColorRes int strokeColor,
-                                                  int cornerRadius, int strokeWidth) {
+                                                  float cornerRadius, float strokeWidth) {
         StateListDrawable bg = new StateListDrawable();
         Drawable normal = getGradientDrawable(idNormal, strokeColor, cornerRadius, strokeWidth);
         Drawable pressed = getGradientDrawable(idPressed, strokeColor, cornerRadius, strokeWidth);
@@ -239,7 +239,7 @@ public class DrawableUtils {
      * 方法功能：同上
      */
     public StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled,
-                                                  int cornerRadius) {
+                                                  float cornerRadius) {
         Drawable normal = getGradientDrawable(idNormal, cornerRadius);
         Drawable pressed = getGradientDrawable(idPressed, cornerRadius);
         Drawable enabled = getGradientDrawable(idEnabled, cornerRadius);

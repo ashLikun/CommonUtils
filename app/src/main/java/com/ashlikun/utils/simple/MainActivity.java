@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements Utils.OnNeedListe
 //        for (int i = 0; i < 10; i++) {
 //            ToastUtils.showShort("aaa" + i);
 //        }
-        SpannableUtils.getBuilder("aaa").append(null).create();
+        TextView tv = (TextView) findViewById(R.id.view4);
+        tv.setText(SpannableUtils.getBuilder("￥").setProportion(0.6f).setAlignTopDp(7)
+                .append("123.33")
+                .create());
     }
 
     public void onView1Click(View view) {

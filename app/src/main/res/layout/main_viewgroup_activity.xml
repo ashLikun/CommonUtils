@@ -39,5 +39,6 @@
         android:layout_height="wrap_content"
         android:onClick="onView4Click"
         android:padding="@dimen/fab_margin_10"
-        android:text="info"></Button>
+        android:text="info"
+        android:textSize="40dp"></Button>
 </LinearLayout>
