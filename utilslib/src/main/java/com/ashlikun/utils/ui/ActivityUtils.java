@@ -58,7 +58,9 @@ public class ActivityUtils {
      * 方法功能：从context中获取activity，如果context不是activity那么久返回null
      */
     public static Activity getActivity(Context context) {
-        if (context == null) return null;
+        if (context == null) {
+            return null;
+        }
         if (context instanceof Activity) {
             return (Activity) context;
         } else if (context instanceof ContextWrapper) {
@@ -133,7 +135,7 @@ public class ActivityUtils {
      */
     public static int appBackgoundToForeground(Context context) {
         //获取ActivityManager
-        ActivityManager mAm = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+        ActivityManager mAm = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         //获得当前运行的task
         List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
         if (taskList.get(0).topActivity.getPackageName().equals(context.getPackageName())) {

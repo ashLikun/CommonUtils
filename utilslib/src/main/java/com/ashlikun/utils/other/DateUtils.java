@@ -30,6 +30,7 @@ public abstract class DateUtils {
     public static final String MD = "MM-dd";
     public static final String YM = "yyyy-MM";
     public static final String HMS = "HH:mm:ss";
+    public static final String REX_10D = "\\d{10,}";
 
     /**
      * 作者　　: 李坤
@@ -41,7 +42,9 @@ public abstract class DateUtils {
      * @return 时间字符串
      */
     public static String getFormatTime(Calendar calendar, String format) {
-        if (calendar == null) return "";
+        if (calendar == null) {
+            return "";
+        }
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
         return sdf.format(calendar.getTime());
     }
@@ -56,7 +59,9 @@ public abstract class DateUtils {
      * @return 时间字符串
      */
     public static String getFormatTime(long calendar, String format) {
-        if (calendar <= 0) return "";
+        if (calendar <= 0) {
+            return "";
+        }
         return new SimpleDateFormat(format, Locale.getDefault()).format(calendar);
     }
 
@@ -65,23 +70,26 @@ public abstract class DateUtils {
      * 创建时间: 2017/3/27 17:28
      * 方法功能 按照指定格式把时间转换成字符串，格式的写法类似yyyy-MM-dd HH:mm:ss.SSS
      *
-     * @param calendar 时间
-     * @param format   格式
+     * @param calendar     时间
+     * @param originFormat 原来数据的格式
+     * @param format       输出的格式
      * @return 时间字符串
      */
-    public static String getFormatTime(String calendar, String format) {
+    public static String getFormatTime(String calendar, String originFormat, String format) {
         if (TextUtils.isEmpty(calendar)) {
             return "";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
         try {
-            Calendar c = Calendar.getInstance();
-            c.setTime(sdf.parse(calendar));
-            return getFormatTime(calendar, format);
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
+            return sdf.format(new SimpleDateFormat(originFormat, Locale.getDefault()).parse(calendar));
         } catch (ParseException e) {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static String getFormatTime(String calendar, String format) {
+        return getFormatTime(calendar, YMD_HMS, format);
     }
 
     /**
@@ -119,6 +127,7 @@ public abstract class DateUtils {
     public static String getCurrentTimeFull() {
         return getFormatTime(Calendar.getInstance(), YMD_HMS);
     }
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/28 10:41
@@ -386,7 +395,9 @@ public abstract class DateUtils {
      * @return 是true，否则false
      */
     public static boolean isTotay(Calendar calendar) {
-        if (calendar == null) return false;
+        if (calendar == null) {
+            return false;
+        }
         Calendar today = Calendar.getInstance();
         return today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) || today.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR);
     }
@@ -431,7 +442,9 @@ public abstract class DateUtils {
      */
 
     public static String dateToString(String calendar, String pattern) {
-        if (StringUtils.isEmpty(calendar)) return "";
+        if (StringUtils.isEmpty(calendar)) {
+            return "";
+        }
         long time = dateToLong(calendar);
         if (time == 0) {
             return "";
@@ -461,15 +474,17 @@ public abstract class DateUtils {
      */
 
     public static Long dateToLong(String date) {
-        if (StringUtils.isEmpty(date)) return 0l;
-        Pattern p = Pattern.compile("\\d{10,}");
+        if (StringUtils.isEmpty(date)) {
+            return 0L;
+        }
+        Pattern p = Pattern.compile(REX_10D);
         Matcher matcher = p.matcher(date);
         long time = 0;
         while (matcher.find()) { //注意这里，是while不是if
             time = Long.valueOf(matcher.group());
         }
         if (time == 0) {
-            return 0l;
+            return 0L;
         }
         return time;
     }
