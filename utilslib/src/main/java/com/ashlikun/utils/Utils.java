@@ -10,7 +10,8 @@ import android.app.Application;
  * 功能介绍：
  */
 public class Utils {
-    private static OnNeedListener listener;
+    private static boolean isDebug;
+    private static Application myApp;
 
     /**
      * 作者　　: 李坤
@@ -20,31 +21,21 @@ public class Utils {
      * 方法功能：一定要在Application里面调用
      */
 
-    public static void init(OnNeedListener listener) {
-        Utils.listener = listener;
+    public static void init(Application myApp) {
+        Utils.myApp = myApp;
     }
 
-
-    public interface OnNeedListener {
-        public Application getApplication();
-
-        public boolean isDebug();
+    public static void setDebug(boolean isDebug) {
+        Utils.isDebug = isDebug;
     }
+
 
     public static Application getApp() {
-        if (listener == null) {
-            throw new RuntimeException("请在Application调用Utils的init方法");
-        } else {
-            return listener.getApplication();
-        }
+        return Utils.myApp;
     }
 
     public static boolean isDebug() {
-        if (listener == null) {
-            throw new RuntimeException("请在Application调用Utils的init方法");
-        } else {
-            return listener.isDebug();
-        }
+        return Utils.isDebug;
     }
 
 }

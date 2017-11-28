@@ -19,7 +19,7 @@ import com.ashlikun.utils.ui.SuperToast;
 import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity implements Utils.OnNeedListener {
+public class MainActivity extends AppCompatActivity {
     ArrayMap<Integer, Integer> aaa = new ArrayMap<>();
     ViewPager viewPager;
     DrawableUtils drawableUtils;
@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements Utils.OnNeedListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.init(this);
+        Utils.init(getApplication());
+        Utils.setDebug(true);
         drawableUtils = new DrawableUtils(this);
         setContentView(R.layout.main_viewgroup_activity);
         new StatusBarCompat(this).setTransparentBar(android.R.color.transparent);
@@ -92,8 +93,4 @@ public class MainActivity extends AppCompatActivity implements Utils.OnNeedListe
         SuperToast.get("aaaaaaa").error();
     }
 
-    @Override
-    public boolean isDebug() {
-        return true;
-    }
 }

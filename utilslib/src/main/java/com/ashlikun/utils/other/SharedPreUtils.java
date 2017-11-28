@@ -3,6 +3,7 @@ package com.ashlikun.utils.other;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 
 import java.util.Set;
 
@@ -18,6 +19,35 @@ public class SharedPreUtils {
 
     public final static String CACHE_DATA = "cachedata";
 
+    private static void clean(Context context,
+                              String name, String key) {
+        SharedPreferences sp = context.getSharedPreferences(name,
+                Context.MODE_PRIVATE);
+        if (TextUtils.isEmpty(key)) {
+            sp.edit().clear().commit();
+        } else {
+            sp.edit().remove(key).commit();
+        }
+    }
+
+    public static void clean(Context context,
+                             String name) {
+        clean(context, name, null);
+    }
+
+    public static void clean(Context context) {
+        clean(context, CACHE_DATA, null);
+    }
+
+    public static void remove(Context context,
+                              String name, String key) {
+        clean(context, name, key);
+    }
+
+    public static void remove(Context context,
+                              String key) {
+        clean(context, CACHE_DATA, key);
+    }
 
     /**
      * 作者　　: 李坤
@@ -36,7 +66,7 @@ public class SharedPreUtils {
                                          String key,
                                          Object value) {
         SharedPreferences sp = context.getSharedPreferences(name,
-                context.MODE_PRIVATE);
+                Context.MODE_PRIVATE);
         Editor editor = sp.edit();
         if (value instanceof String) {
             editor.putString(key, (String) value);
@@ -81,7 +111,7 @@ public class SharedPreUtils {
                                   String name,
                                   String key, Class type) {
         SharedPreferences sp = context.getSharedPreferences(name,
-                context.MODE_PRIVATE);
+                Context.MODE_PRIVATE);
         if (type.isAssignableFrom(Integer.class)) {
             return sp.getInt(key, 0);
         } else if (type.isAssignableFrom(String.class)) {
