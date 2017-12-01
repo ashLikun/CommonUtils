@@ -496,6 +496,7 @@ public class SpannableUtils {
          */
         private void setSpan() {
             if (TextUtils.isEmpty(this.text)) {
+                clean();
                 return;
             }
             int start = mBuilder.length();//开始位置
