@@ -1,4 +1,4 @@
-[![Release](https://jitpack.io/v/ashLikun/CustomMvp.svg)](https://jitpack.io/#ashLikun/CustomMvp)
+[![Release](https://jitpack.io/v/ashLikun/CommonUtils.svg)](https://jitpack.io/#ashLikun/CommonUtils)
 
 CustomMvp项目简介
     项目Mvp框架
