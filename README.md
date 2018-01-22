@@ -1,10 +1,25 @@
-utils项目简介
+[![Release](https://jitpack.io/v/ashLikun/CustomMvp.svg)](https://jitpack.io/#ashLikun/CustomMvp)
+
+CustomMvp项目简介
+    项目Mvp框架
+    基类activity和fragment
 ## 使用方法
 
 build.gradle文件中添加:
+```gradle
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+并且:
 
-   compile 'com.github.ashLikun:CommonUtils:1.0.0'//工具
-
+```gradle
+dependencies {
+    compile 'com.github.ashLikun:CommonUtils:{latest version}'
+}
+```
 
 ## 详细介绍
 utils是一系列通用类、辅助类、工具类的集合
