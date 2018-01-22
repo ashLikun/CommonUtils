@@ -8,7 +8,6 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:buttonStyle">@null</item>
         <!--<item name="android:requiresFadingEdge">vertical</item>-->
-        <item name="textColorError">@color/design_textinput_error_color_light</item>
 
         <item name="SwipeRefreshLayout_Color1">@color/colorPrimary</item>
         <item name="SwipeRefreshLayout_Color2">#ffEA4335</item>
