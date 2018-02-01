@@ -3,7 +3,6 @@ package com.ashlikun.utils.other;
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
-
 /**
  * 作者　　: 李坤
  * 创建时间: 2016/10/12 10:46
@@ -18,18 +17,22 @@ public class CountdownUtils {
     private long totalTime;
     private long intervalTime;
     private String msg;
+    //结束时候文字的格式化样式
+    private String endTextFomat;
     CountDownTimer countDownTimer;
 
     public CountdownUtils(Bulider bulider) {
         this.totalTime = bulider.totalTime;
         this.intervalTime = bulider.intervalTime;
         this.msg = bulider.msg;
+        this.endTextFomat = bulider.endTextFomat;
     }
 
     public static class Bulider {
         private long totalTime = 180000;
         private long intervalTime = 1000;
         private String msg;
+        private String endTextFomat;
 
 
         public Bulider setTotalTime(long totalTime) {
@@ -44,6 +47,11 @@ public class CountdownUtils {
 
         public Bulider setMsg(String msg) {
             this.msg = msg;
+            return this;
+        }
+
+        public Bulider endTextFomat(String endTextFomat) {
+            this.endTextFomat = endTextFomat;
             return this;
         }
 
@@ -73,7 +81,8 @@ public class CountdownUtils {
             @Override
             public void onTick(long currentTime) {// 计时过程显示
                 hint.setEnabled(false);
-                hint.setText(currentTime / 1000 + "秒");
+                hint.setText(endTextFomat != null ?
+                        String.format(endTextFomat, currentTime / 1000) : currentTime / 1000 + "秒");
             }
         };
         countDownTimer.start();

@@ -1,9 +1,10 @@
 package com.ashlikun.utils.ui;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -21,27 +22,30 @@ import java.util.ArrayList;
 public class EditCheck {
 
     private Context context;
-    private IEditCheck mIEditCheck;
     private IEditStatusChang mIEditStatusChang;
-    private ArrayList<EditText> mEdithelpdatas;
-    private Boolean mCurrentStatus = null;//当前的状态
+    private ArrayList<EditCheckData> mEdithelpdatas;
+    private TextView button;
 
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/28 16:26
      * <p>
      * 方法功能：
-     *
-     * @param mIEditCheck 检测的接口，基本上是实体类实现的
      */
 
-    public EditCheck(Context context, IEditCheck mIEditCheck) {
+    public EditCheck(Context context) {
         this.context = context;
-        this.mIEditCheck = mIEditCheck;
     }
 
-    public void setmIEditStatusChang(IEditStatusChang mIEditStatusChang) {
+    public void setEditStatusChang(IEditStatusChang mIEditStatusChang) {
         this.mIEditStatusChang = mIEditStatusChang;
+    }
+
+    /**
+     * 设置按钮
+     */
+    public void setButton(TextView button) {
+        this.button = button;
     }
 
     /**
@@ -52,19 +56,23 @@ public class EditCheck {
      *
      * @param edits 多个被检测的EditView对象
      */
-    public void setEditText(EditText... edits) {
-        if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
+    public void setEditText(EditCheckData... edits) {
+        if (mEdithelpdatas == null) {
+            mEdithelpdatas = new ArrayList<>();
+        }
         mEdithelpdatas.clear();
-        for (EditText e : edits) {
+        for (EditCheckData e : edits) {
             addEditText(e);
         }
     }
 
-    public void addEditText(EditText edits) {
-        if (edits != null) {
-            if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
+    public void addEditText(EditCheckData edits) {
+        if (edits != null && edits.getTextView() != null) {
+            if (mEdithelpdatas == null) {
+                mEdithelpdatas = new ArrayList<>();
+            }
             mEdithelpdatas.add(edits);
-            addTextChangedListener(edits);
+            edits.getTextView().addTextChangedListener(new MyTextWatcher(edits));
         }
     }
 
@@ -82,19 +90,12 @@ public class EditCheck {
     }
 
 
-    private void addTextChangedListener(EditText edits) {
-        if (edits != null) {
-            edits.addTextChangedListener(new EditCheck.MyTextWatcher(edits));
-        }
-    }
-
-
     public class MyTextWatcher implements TextWatcher {
 
-        EditText editText;
+        EditCheckData edits;
 
-        public MyTextWatcher(EditText editText) {
-            this.editText = editText;
+        public MyTextWatcher(EditCheckData edits) {
+            this.edits = edits;
         }
 
         @Override
@@ -109,15 +110,13 @@ public class EditCheck {
 
         @Override
         public void afterTextChanged(Editable s) {
-            boolean isNoGoCheck = false;
-            if (!isNoGoCheck) {//去检测
-                if (mIEditCheck != null) {
-                    boolean status = mIEditCheck.check();
-                    if (mIEditStatusChang != null && mCurrentStatus != status) {
-                        mCurrentStatus = status;
-                        mIEditStatusChang.onEditChang();
-                    }
-                }
+            boolean isHandle = false;
+            boolean isCheck = edits.check();
+            if (mIEditStatusChang != null) {
+                isHandle = mIEditStatusChang.onEditChang(edits.getTextView(), s, isCheck);
+            }
+            if (!isHandle && button != null) {
+                button.setEnabled(isCheck);
             }
         }
     }
@@ -127,27 +126,7 @@ public class EditCheck {
      * 创建时间: 2017/6/28　16:18
      * 邮箱　　：496546144@qq.com
      * <p>
-     * 功能介绍：{@link EditCheck}
-     * 实体类实现的接口
-     */
-
-    public interface IEditCheck {
-        /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 16:19
-         * 方法功能：当edittext改变的时候调用的方法
-         * 实体类必须实现这个接口，实现具体的逻辑
-         */
-        boolean check();
-    }
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28　16:18
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 功能介绍：{@link IEditStatusChang}
-     * 当edit状态改变的时候,是调用完数据判断后
+     * 功能介绍 文本改变的接口
      */
 
     public interface IEditStatusChang {
@@ -156,7 +135,60 @@ public class EditCheck {
          * 创建时间: 2017/6/28 16:19
          * 方法功能：当edittext改变的时候调用的方法
          * 实体类必须实现这个接口，实现具体的逻辑
+         *
+         * @param textView 宿主控件
+         * @param s        改变的字符串
+         * @param isCheck  是否验证通过
+         * @return 是否消耗了这个处理，（关系到设置button）false设置，true不设置
          */
-        boolean onEditChang();
+        boolean onEditChang(TextView textView, Editable s, boolean isCheck);
+    }
+
+    public static class EditCheckData {
+
+        TextView view;
+        String regex;
+
+        public EditCheckData(TextView textView, String regex, String msg) {
+            this.regex = regex;
+            this.view = textView;
+        }
+
+        public EditCheckData(TextView textView, String regex) {
+            this.regex = regex;
+            this.view = textView;
+        }
+
+
+        public EditCheckData(TextView textView, int regexMaxLenght, @StringRes int msgStringId) {
+            this.regex = "[\\S]{1," + regexMaxLenght + "}";
+            this.view = textView;
+        }
+
+        public TextView getTextView() {
+            return view;
+        }
+
+        public void setView(TextView view) {
+            this.view = view;
+        }
+
+
+        public String getRegex() {
+            return regex;
+        }
+
+        public void setRegex(String regex) {
+            this.regex = regex;
+        }
+
+
+        public boolean check() {
+            if (view == null || !getTextView().getText().toString().matches(regex)) {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

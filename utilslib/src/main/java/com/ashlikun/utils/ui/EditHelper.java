@@ -26,15 +26,20 @@ import static android.R.attr.id;
 
 
 public class EditHelper {
-
+    //全局默认的是否动画
+    public static boolean IS_ANIM = true;
     public Context context;
-
+    private boolean isAnim = IS_ANIM;
     private ArrayList<EditHelperData> mEdithelpdatas;
 
     public EditHelper(Context context) {
         this.context = context;
     }
 
+    public EditHelper setAnim(boolean anim) {
+        isAnim = anim;
+        return this;
+    }
 
     /**
      * 作者　　: 李坤
@@ -44,12 +49,15 @@ public class EditHelper {
      *
      * @param edits 多个被检测的EditView对象
      */
-    public void setEditText(EditHelperData... edits) {
-        if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
+    public EditHelper setEditText(EditHelperData... edits) {
+        if (mEdithelpdatas == null) {
+            mEdithelpdatas = new ArrayList<>();
+        }
         mEdithelpdatas.clear();
         for (EditHelperData e : edits) {
             addEditHelperData(e);
         }
+        return this;
     }
 
     /**
@@ -59,18 +67,25 @@ public class EditHelper {
      * 方法功能：清空
      */
 
-    public void clear() {
+    public EditHelper clear() {
         if (mEdithelpdatas != null) {
             mEdithelpdatas.clear();
         }
+        return this;
     }
 
-    public void addEditHelperData(EditHelperData edits) {
+    public EditHelper addEditHelperData(EditHelperData edits) {
         if (edits != null) {
-            if (mEdithelpdatas == null) mEdithelpdatas = new ArrayList<>();
+            if (mEdithelpdatas == null) {
+                mEdithelpdatas = new ArrayList<>();
+            }
             mEdithelpdatas.add(edits);
+            if (!isAnim) {
+                edits.setAnim(false);
+            }
             addTextChangedListener(edits);
         }
+        return this;
     }
 
     private void addTextChangedListener(EditHelperData edits) {
@@ -95,7 +110,9 @@ public class EditHelper {
      */
     public boolean check() {
         try {
-            if (mEdithelpdatas == null) return false;
+            if (mEdithelpdatas == null) {
+                return false;
+            }
             for (int i = 0; i < mEdithelpdatas.size(); i++) {
                 EditHelperData e = mEdithelpdatas.get(i);
                 if (!e.check(context)) {
@@ -119,7 +136,9 @@ public class EditHelper {
 
     public boolean check(int index) {
         try {
-            if (mEdithelpdatas == null) return false;
+            if (mEdithelpdatas == null) {
+                return false;
+            }
             EditHelperData e = mEdithelpdatas.get(id);
             if (e == null || !e.check(context)) {
                 return false;
@@ -137,6 +156,7 @@ public class EditHelper {
         View view;
         String msg;
         String regex;
+        boolean isAnim = true;
 
         public EditHelperData(View textView, String regex, String msg) {
             this.regex = regex;
@@ -157,40 +177,52 @@ public class EditHelper {
             this.msg = textView.getContext().getString(msgStringId);
         }
 
+        public EditHelperData setAnim(boolean anim) {
+            isAnim = anim;
+            return this;
+        }
+
         public TextView getTextView() {
 
-            if (view instanceof TextInputLayout)
+            if (view instanceof TextInputLayout) {
                 return ((TextInputLayout) view).getEditText();
-            else if (view instanceof TextView) return (TextView) view;
-            else return null;
+            } else if (view instanceof TextView) {
+                return (TextView) view;
+            } else {
+                return null;
+            }
         }
 
         public View getView() {
             return view;
         }
 
-        public void setView(View view) {
+        public EditHelperData setView(View view) {
             this.view = view;
+            return this;
         }
 
         public String getMsg() {
             return msg;
         }
 
-        public void setMsg(String msg) {
+        public EditHelperData setMsg(String msg) {
             this.msg = msg;
+            return this;
         }
 
-        public void setMsg(Context context, @StringRes int msgStringId) {
+        public EditHelperData setMsg(Context context, @StringRes int msgStringId) {
             this.msg = context.getString(msgStringId);
+            return this;
         }
 
         public String getRegex() {
             return regex;
         }
 
-        public void setRegex(String regex) {
+        public EditHelperData setRegex(String regex) {
             this.regex = regex;
+            return this;
         }
 
 
@@ -198,10 +230,14 @@ public class EditHelper {
             if (view == null || !getTextView().getText().toString().matches(regex)) {
                 if (view instanceof TextInputLayout && ((TextInputLayout) view).isErrorEnabled()) {
                     ((TextInputLayout) view).setError(msg);
-                    AnimUtils.shakeLeft(view, 0.95f, 3f);
+                    if (isAnim) {
+                        AnimUtils.shakeLeft(view, 0.95f, 3f);
+                    }
                 } else {
                     SuperToast.get(msg).warn();
-                    AnimUtils.shakeLeft(view, 0.85f, 6f);
+                    if (isAnim) {
+                        AnimUtils.shakeLeft(view, 0.85f, 6f);
+                    }
                 }
                 view.requestFocus();
 
@@ -209,7 +245,6 @@ public class EditHelper {
             }
             if (view instanceof TextInputLayout && ((TextInputLayout) view).isErrorEnabled()) {
                 ((TextInputLayout) view).setError("");
-
             }
             return true;
         }
