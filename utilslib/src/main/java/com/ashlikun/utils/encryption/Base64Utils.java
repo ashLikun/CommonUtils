@@ -2,6 +2,8 @@ package com.ashlikun.utils.encryption;
 
 import android.util.Base64;
 
+import com.ashlikun.utils.other.FileUtils;
+
 /**
  * 作者　　: 李坤
  * 创建时间: 2016/7/4 17:49
@@ -16,6 +18,7 @@ import android.util.Base64;
  */
 
 public class Base64Utils {
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/27 17:47
@@ -24,6 +27,10 @@ public class Base64Utils {
      */
     public static String encode(byte[] data) {
         return Base64.encodeToString(data, Base64.NO_WRAP);
+    }
+
+    public static String getFileToBase64(String path) {
+        return Base64.encodeToString(FileUtils.readByte(path), Base64.NO_WRAP);
     }
 
     /**

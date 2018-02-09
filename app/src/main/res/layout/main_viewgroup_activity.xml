@@ -35,10 +35,10 @@
 
     <Button
         android:id="@+id/view4"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onView4Click"
         android:padding="@dimen/fab_margin_10"
         android:text="info"
-        android:textSize="40dp"></Button>
+        android:textSize="16dp"></Button>
 </LinearLayout>

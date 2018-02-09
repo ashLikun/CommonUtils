@@ -487,7 +487,6 @@ public class SpannableUtils {
             clickSpan = null;
             url = null;
             isBlur = false;
-
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
         }
 
@@ -594,4 +593,5 @@ public class SpannableUtils {
         }
 
     }
+
 }

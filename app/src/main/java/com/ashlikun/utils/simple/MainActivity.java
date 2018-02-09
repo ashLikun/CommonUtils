@@ -6,6 +6,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.AlignmentSpan;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -65,9 +70,19 @@ public class MainActivity extends AppCompatActivity {
 //            ToastUtils.showShort("aaa" + i);
 //        }
         TextView tv = (TextView) findViewById(R.id.view4);
-        tv.setText(SpannableUtils.getBuilder("￥").setProportion(0.6f).setAlignTopDp(7)
-                .append("123.33")
-                .create());
+//        tv.setText(SpannableUtils.getBuilder("￥").setProportion(0.6f).setAlignTopDp(7)
+//                .append("123.33")
+//                .create());
+        SpannableStringBuilder aa = SpannableUtils.getBuilder("第一个:").setAlign(Layout.Alignment.ALIGN_NORMAL)
+                .append("123.33\n").setAlign(Layout.Alignment.ALIGN_OPPOSITE)
+                .append("第二个")
+                .append("aaaaa\n").setAlign(Layout.Alignment.ALIGN_OPPOSITE)
+                .create();
+        String text = "Sometimes I ";
+        AlignmentSpan.Standard alignmentSpan = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL);
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(text);
+        spannableString.setSpan(alignmentSpan, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(spannableString);
     }
 
     public void onView1Click(View view) {

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,10 +76,9 @@ public class FileUtils {
      * <p>
      * 方法功能：读取输入流
      *
-     * @param coding 编码    如：GB2312，GBK,UTF-8
      * @return 文本
      */
-    public static String readInputStream(InputStream is, String coding) {
+    public static byte[] readByte(InputStream is) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int len = 0;
@@ -88,13 +88,21 @@ public class FileUtils {
             }
             is.close();
             baos.close();
-            byte[] result = baos.toByteArray();
-            return new String(result, coding);
+            return baos.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
-            return "获取失败";
+            return "获取失败".getBytes();
         }
 
+    }
+
+    public static byte[] readByte(String path) {
+        try {
+            return readByte(new FileInputStream(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return "获取失败".getBytes();
+        }
     }
 
     /**
@@ -103,8 +111,17 @@ public class FileUtils {
      * <p>
      * 方法功能：同上
      *
-     * @return 文本UTF-8
+     * @param coding 编码    如：GB2312，GBK,UTF-8
      */
+    public static String readInputStream(InputStream is, String coding) {
+        try {
+            return new String(readByte(is), coding);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "失败";
+        }
+    }
+
     public static String readInputStream(InputStream is) {
         return readInputStream(is, "UTF-8");
     }
@@ -179,7 +196,6 @@ public class FileUtils {
                 srcFile.delete();
             }
         } catch (Exception e) {
-            LogUtils.i(e.toString());
             return false;
         } finally {
             FileUtils.close(out);
@@ -230,7 +246,6 @@ public class FileUtils {
                 res = true;
             }
         } catch (Exception e) {
-            LogUtils.i(e.toString());
         } finally {
             FileUtils.close(fos);
             FileUtils.close(is);
@@ -283,6 +298,36 @@ public class FileUtils {
      *
      * @param content 需要写入的字符串
      * @param path    文件路径名称
+     * @return 是否写入成功
+     */
+    public static boolean writeFile(byte[] content, String path) {
+        boolean res = false;
+        File f = new File(path);
+        FileOutputStream fos = null;
+        try {
+            if (f.exists()) {
+                f.delete();
+                f.createNewFile();
+            } else {
+                f.createNewFile();
+            }
+            if (f.canWrite()) {
+                fos = new FileOutputStream(f);
+                fos.write(content);
+                res = true;
+            }
+        } catch (Exception e) {
+        } finally {
+            FileUtils.close(fos);
+        }
+        return res;
+    }
+
+    /**
+     * 把字符串数据写入文件
+     *
+     * @param content 需要写入的字符串
+     * @param path    文件路径名称
      * @param append  是否以添加的模式写入
      * @return 是否写入成功
      */
@@ -306,7 +351,6 @@ public class FileUtils {
                 res = true;
             }
         } catch (Exception e) {
-            LogUtils.i(e.toString());
         } finally {
             FileUtils.close(raf);
         }
@@ -352,7 +396,6 @@ public class FileUtils {
             fos = new FileOutputStream(f);
             p.store(fos, comment);
         } catch (Exception e) {
-            LogUtils.i(e.toString());
         } finally {
             FileUtils.close(fis);
             FileUtils.close(fos);
@@ -379,7 +422,6 @@ public class FileUtils {
             p.load(fis);
             value = p.getProperty(key, defaultValue);
         } catch (IOException e) {
-            LogUtils.i(e.toString());
         } finally {
             FileUtils.close(fis);
         }
@@ -410,7 +452,6 @@ public class FileUtils {
             fos = new FileOutputStream(f);
             p.store(fos, comment);
         } catch (Exception e) {
-            LogUtils.i(e.toString());
         } finally {
             FileUtils.close(fis);
             FileUtils.close(fos);
@@ -438,7 +479,6 @@ public class FileUtils {
             p.load(fis);
             map = new HashMap<String, String>((Map) p);// 因为properties继承了map，所以直接通过p来构造一个map
         } catch (Exception e) {
-            LogUtils.i(e.toString());
         } finally {
             FileUtils.close(fis);
         }
@@ -454,7 +494,6 @@ public class FileUtils {
             try {
                 io.close();
             } catch (IOException e) {
-                LogUtils.i(e.toString());
             }
         }
         return true;
