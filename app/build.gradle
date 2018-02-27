@@ -33,4 +33,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile rootProject.ext.designVersion
     compile project(':utilslib')
+    compile 'com.github.ha-excited:BigNews:0.1.2'
 }

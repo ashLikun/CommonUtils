@@ -23,7 +23,6 @@ import java.util.List;
  */
 
 public class ActivityUtils {
-
     /**
      * 调用系统分享
      */
