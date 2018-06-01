@@ -1,5 +1,6 @@
 package com.ashlikun.utils.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -13,7 +14,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.view.View;
 import android.widget.TextView;
 
 import com.ashlikun.utils.other.DimensUtils;
@@ -113,6 +113,7 @@ public class DrawableUtils {
      * @param roundRadius:圆角半径   dp
      * @param strokeWidth:边框宽度   dp
      */
+    @SuppressLint("ResourceType")
     public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, @ColorRes int strokeColorId, float roundRadius, float strokeWidth) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(getColor(fillColorId));
@@ -123,6 +124,10 @@ public class DrawableUtils {
             drawable.setCornerRadius(DimensUtils.dip2px(context, roundRadius));
         }
         return drawable;
+    }
+
+    public GradientDrawable getGradientDrawableNoStroke(@ColorRes int fillColorId, float roundRadius) {
+        return getGradientDrawable(fillColorId, 0, roundRadius, 0);
     }
 
     /**
@@ -168,6 +173,13 @@ public class DrawableUtils {
         StateListDrawable bg = new StateListDrawable();
         bg.addState(new int[]{android.R.attr.state_selected}, select);
         bg.addState(new int[]{}, normal);
+        return bg;
+    }
+
+    public StateListDrawable getSelectDrawable(@DrawableRes int normalId, @DrawableRes int selectId) {
+        StateListDrawable bg = new StateListDrawable();
+        bg.addState(new int[]{android.R.attr.state_selected}, context.getResources().getDrawable(selectId));
+        bg.addState(new int[]{}, context.getResources().getDrawable(normalId));
         return bg;
     }
 
@@ -258,6 +270,7 @@ public class DrawableUtils {
         ColorStateList rippleColor;
         Drawable normalDrawable;
         Drawable pressedDrawable;
+        Drawable selectDrawable;
         Drawable enableDrawable;
 
         public RippleBuilder(Context context) {
@@ -272,6 +285,11 @@ public class DrawableUtils {
          */
         public RippleBuilder setEnableDrawable(Drawable enableDrawable) {
             this.enableDrawable = enableDrawable;
+            return this;
+        }
+
+        public RippleBuilder setSelectDrawable(Drawable selectDrawable) {
+            this.selectDrawable = selectDrawable;
             return this;
         }
 
@@ -332,29 +350,26 @@ public class DrawableUtils {
             if (normalDrawable == null) {
                 normalDrawable = new ColorDrawable(Color.TRANSPARENT);
             }
-            if (pressedDrawable == null) {
-                pressedDrawable = new ColorDrawable(Color.DKGRAY);
-            }
             if (enableDrawable == null) {
-                enableDrawable = new ColorDrawable(Color.DKGRAY);
+                enableDrawable = new ColorDrawable(Color.GRAY);
             }
             if (rippleColor == null) {
-                rippleColor = ColorStateList.valueOf(Color.GRAY);
+                rippleColor = ColorStateList.valueOf(Color.LTGRAY);
             }
             StateListDrawable drawable = new StateListDrawable();
             drawable.addState(new int[]{-android.R.attr.state_enabled}, enableDrawable);
+            drawable.addState(new int[]{android.R.attr.state_selected},
+                    selectDrawable == null ? pressedDrawable : selectDrawable);
+            drawable.addState(new int[]{}, normalDrawable);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable.addState(new int[]{}, normalDrawable);
-                return new RippleDrawable(rippleColor, normalDrawable.getAlpha() == 0 ? null : normalDrawable,
-                        normalDrawable.getAlpha() == 0 ? normalDrawable : null);
+                return new RippleDrawable(rippleColor, drawable, normalDrawable);
             } else {
-                drawable.addState(new int[]{android.R.attr.state_pressed},
-                        pressedDrawable);
-                drawable.addState(new int[]{android.R.attr.state_focused},
-                        pressedDrawable);
-                drawable.addState(new int[]{android.R.attr.state_selected},
-                        pressedDrawable);
-                drawable.addState(new int[]{}, normalDrawable);
+                if (pressedDrawable != null) {
+                    drawable.addState(new int[]{android.R.attr.state_pressed},
+                            pressedDrawable);
+                    drawable.addState(new int[]{android.R.attr.state_focused},
+                            pressedDrawable);
+                }
                 return drawable;
             }
         }
@@ -374,45 +389,152 @@ public class DrawableUtils {
         return context.getResources().getColor(colorId);
     }
 
-    //把drawable渲染成指定的颜色
-    public Drawable getTintDrawable(Drawable drawable, @ColorInt int color) {
+    /**
+     * 把drawable渲染成指定的颜色
+     */
+    public static Drawable getTintDrawable(Drawable drawable, @ColorInt int color) {
         Drawable wrapDrawable = DrawableCompat.wrap(drawable).mutate();
         DrawableCompat.setTint(wrapDrawable, color);
         return wrapDrawable;
     }
 
-    public static void setBackground(View view, Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawable);
-        } else {
-            view.setBackgroundDrawable(drawable);
-        }
+    /**
+     * 改变Drawable大小
+     */
+    public static Drawable changDrawSize(Drawable drawable, int width, int height) {
+        drawable = DrawableCompat.wrap(drawable).mutate();
+        drawable.setBounds(0, 0, width, height);
+        return drawable;
     }
 
-    public static Drawable setTint(Drawable drawable, int color) {
-        Drawable wrapDrawable = DrawableCompat.wrap(drawable).mutate();
-        DrawableCompat.setTint(wrapDrawable, color);
-        return wrapDrawable;
+    public static Drawable changDrawSizeWidth(Drawable drawable, int width) {
+        //高度被设置了，那么久按照比例设置宽度
+        float drawWidth = drawable.getMinimumWidth();
+        float drawHeight = drawable.getMinimumHeight();
+        return changDrawSize(drawable, width, (int) (width / drawWidth * drawHeight));
     }
 
-    public static void setCompoundDrawables(TextView view, Drawable drawLeft,
-                                            Drawable drawTop,
-                                            Drawable drawRight,
-                                            Drawable drawBottom) {
-        if (drawLeft != null) {
-            drawLeft.setBounds(0, 0, drawLeft.getMinimumWidth(), drawLeft.getMinimumHeight());
-        }
-        if (drawTop != null) {
-            drawTop.setBounds(0, 0, drawTop.getMinimumWidth(), drawTop.getMinimumHeight());
-        }
-        if (drawRight != null) {
-            drawRight.setBounds(0, 0, drawRight.getMinimumWidth(), drawRight.getMinimumHeight());
-        }
-        if (drawBottom != null) {
-            drawBottom.setBounds(0, 0, drawBottom.getMinimumWidth(), drawBottom.getMinimumHeight());
-        }
-        view.setCompoundDrawables(drawLeft, drawTop, drawRight, drawBottom);
+    public static Drawable changDrawHeight(Drawable drawable, int height) {
+        //高度被设置了，那么久按照比例设置宽度
+        float drawWidth = drawable.getMinimumWidth();
+        float drawHeight = drawable.getMinimumHeight();
+        return changDrawSize(drawable, (int) (height / drawHeight * drawWidth), height);
+    }
+
+    /**
+     * 创建一个TextView的上下左右Drawable
+     *
+     * @return
+     */
+    public static BuilderTvd createTextDraw(TextView textView, Drawable drawable) {
+        return new BuilderTvd(textView, drawable);
     }
 
 
+    /**
+     * @author　　: 李坤
+     * 创建时间: 2018/5/28 0028 下午 3:00
+     * 邮箱　　：496546144@qq.com
+     * <p>
+     * 功能介绍：TextView的上下左右Drawable，兼容大小
+     */
+    public static final class BuilderTvd {
+        private Context context;
+        private int width = 0;
+        private int height = 0;
+        private Drawable drawable;
+        private TextView textView;
+        /**
+         * 左：1
+         * 上：2
+         * 右：3
+         * 下：4
+         * 默认 右
+         */
+        int location = 3;
+
+        public BuilderTvd(TextView textView, Drawable drawable) {
+            this.context = textView.getContext();
+            this.textView = textView;
+            this.drawable = drawable;
+        }
+
+        public BuilderTvd width(int val) {
+            width = val;
+            return this;
+        }
+
+        public BuilderTvd height(int val) {
+            height = val;
+            return this;
+        }
+
+        public BuilderTvd widthDp(int val) {
+            width = DimensUtils.dip2px(context, val);
+            return this;
+        }
+
+        public BuilderTvd heightDp(int val) {
+            height = DimensUtils.dip2px(context, val);
+            return this;
+        }
+
+        public BuilderTvd drawable(Drawable val) {
+            drawable = val;
+            return this;
+        }
+
+        public BuilderTvd textView(TextView val) {
+            textView = val;
+            return this;
+        }
+
+        /**
+         * 左：1
+         * 上：2
+         * 右：3
+         * 下：4
+         * 默认 右
+         */
+        public BuilderTvd location(int location) {
+            this.location = location;
+            return this;
+        }
+
+        public void set() {
+            //是否改变宽高
+            boolean isChang = true;
+            float drawWidth = drawable.getMinimumWidth();
+            float drawHeight = drawable.getMinimumHeight();
+            if (width == 0 && height == 0) {
+                width = (int) drawWidth;
+                height = (int) drawHeight;
+                isChang = false;
+            } else if (width == 0) {
+                //高度被设置了，那么久按照比例设置宽度
+                width = (int) (height / drawHeight * drawWidth);
+            } else if (height == 0) {
+                //高度被设置了，那么久按照比例设置宽度
+                height = (int) (width / drawWidth * drawHeight);
+            }
+            if (isChang) {
+                drawable = DrawableCompat.wrap(drawable).mutate();
+            }
+            drawable.setBounds(0, 0, width, height);
+            switch (location) {
+                case 1:
+                    textView.setCompoundDrawables(drawable, null, null, null);
+                    break;
+                case 2:
+                    textView.setCompoundDrawables(null, drawable, null, null);
+                    break;
+                case 3:
+                    textView.setCompoundDrawables(null, null, drawable, null);
+                    break;
+                case 4:
+                    textView.setCompoundDrawables(null, null, null, drawable);
+                    break;
+            }
+        }
+    }
 }

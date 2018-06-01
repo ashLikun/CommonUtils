@@ -4,15 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -33,8 +35,6 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 
 import com.ashlikun.utils.Utils;
-
-import static com.ashlikun.utils.Utils.getApp;
 
 /**
  * 作者　　: 李坤
@@ -80,11 +80,13 @@ public class SpannableUtils {
         private boolean isAlignTop;//是否居上对齐
         private float alignTopOffset;//居上对其的偏移量
         private boolean imageIsBitmap;//是否设置图片
+        /**
+         * 是否改变大小和文字一样大
+         */
+        boolean isChangImageSize = false;
         private Bitmap bitmap;//图片
         private boolean imageIsDrawable;//图片
         private Drawable drawable;//图片
-        private boolean imageIsUri;//图片
-        private Uri uri;//图片
         private boolean imageIsResourceId;//图片
         @DrawableRes
         private int resourceId;//图片
@@ -331,6 +333,7 @@ public class SpannableUtils {
             return this;
         }
 
+
         /**
          * 作者　　: 李坤
          * 创建时间: 2017/6/29 9:58
@@ -342,20 +345,6 @@ public class SpannableUtils {
         public Builder setDrawable(@NonNull Drawable drawable) {
             this.drawable = drawable;
             imageIsDrawable = true;
-            return this;
-        }
-
-        /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * 方法功能：设置图片
-         *
-         * @param uri 图片uri
-         * @return {@link Builder}
-         */
-        public Builder setUri(@NonNull Uri uri) {
-            this.uri = uri;
-            imageIsUri = true;
             return this;
         }
 
@@ -480,14 +469,25 @@ public class SpannableUtils {
             imageIsBitmap = false;
             drawable = null;
             imageIsDrawable = false;
-            uri = null;
-            imageIsUri = false;
             resourceId = 0;
             imageIsResourceId = false;
             clickSpan = null;
             url = null;
             isBlur = false;
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+            isChangImageSize = false;
+        }
+
+        /**
+         * @author　　: 李坤
+         * 创建时间: 2018/6/1 0001 下午 4:22
+         * 邮箱　　：496546144@qq.com
+         * <p>
+         * 方法功能：设置图片与文字高度一致
+         */
+        public Builder changImageSize() {
+            isChangImageSize = true;
+            return this;
         }
 
         /**
@@ -546,16 +546,23 @@ public class SpannableUtils {
                 mBuilder.setSpan(new AlignmentSpan.Standard(align), start, end, flag);
             }
             //设置图片
-            if (imageIsBitmap || imageIsDrawable || imageIsUri || imageIsResourceId) {
+            if (imageIsBitmap || imageIsDrawable || imageIsResourceId) {
+                CentreImageSpan span = null;
                 if (imageIsBitmap) {
-                    mBuilder.setSpan(new ImageSpan(getApp(), bitmap), start, end, flag);
-                } else if (imageIsDrawable) {
-                    mBuilder.setSpan(new ImageSpan(drawable), start, end, flag);
-                } else if (imageIsUri) {
-                    mBuilder.setSpan(new ImageSpan(Utils.getApp(), uri), start, end, flag);
-                } else {
-                    mBuilder.setSpan(new ImageSpan(Utils.getApp(), resourceId), start, end, flag);
+                    drawable = new BitmapDrawable(Utils.getApp().getResources(), bitmap);
+                } else if (imageIsResourceId) {
+                    drawable = Utils.getApp().getResources().getDrawable(resourceId);
                 }
+                if (imageIsBitmap || imageIsResourceId) {
+                    int width = drawable.getIntrinsicWidth();
+                    int height = drawable.getIntrinsicHeight();
+                    drawable.setBounds(0, 0, width > 0 ? width : 0, height > 0 ? height : 0);
+                }
+                if (isChangImageSize) {
+                    drawable = DrawableCompat.wrap(drawable).mutate();
+                }
+                mBuilder.setSpan(span = new CentreImageSpan(drawable), start, end, flag);
+                span.setChangSizeToText(isChangImageSize);
             }
             //设置点击
             if (clickSpan != null) {
@@ -568,6 +575,63 @@ public class SpannableUtils {
                 mBuilder.setSpan(new MaskFilterSpan(new BlurMaskFilter(radius, style)), start, end, flag);
             }
             clean();
+        }
+    }
+
+    public static class CentreImageSpan extends ImageSpan {
+        /**
+         * 是否改变大小和文字一样大
+         */
+        boolean isChangSizeToText = false;
+        boolean isChangOk = false;
+
+
+        public CentreImageSpan(Drawable d) {
+            super(d);
+        }
+
+        public void setChangSizeToText(boolean changSizeToText) {
+            isChangSizeToText = changSizeToText;
+        }
+
+        @Override
+        public int getSize(Paint paint, CharSequence text, int start, int end,
+                           Paint.FontMetricsInt fm) {
+            Drawable d = getDrawable();
+            Rect rect = d.getBounds();
+            if (fm != null) {
+                Paint.FontMetricsInt fmPaint = paint.getFontMetricsInt();
+                if (isChangSizeToText && !isChangOk) {
+                    float drawWidth = d.getMinimumWidth();
+                    float drawHeight = d.getMinimumHeight();
+                    int newHeight = fm.ascent;
+                    d.setBounds(0, 0, (int) (newHeight / drawHeight * drawWidth), newHeight);
+                }
+
+                int fontHeight = fmPaint.bottom - fmPaint.top;
+                int drHeight = rect.bottom - rect.top;
+
+                int top = drHeight / 2 - fontHeight / 4;
+                int bottom = drHeight / 2 + fontHeight / 4;
+
+                fm.ascent = -bottom;
+                fm.top = -bottom;
+                fm.bottom = top;
+                fm.descent = top;
+            }
+            return rect.right;
+        }
+
+        @Override
+        public void draw(Canvas canvas, CharSequence text, int start, int end,
+                         float x, int top, int y, int bottom, Paint paint) {
+            Drawable b = getDrawable();
+            canvas.save();
+            int transY = 0;
+            transY = ((bottom - top) - b.getBounds().bottom) / 2 + top;
+            canvas.translate(x, transY);
+            b.draw(canvas);
+            canvas.restore();
         }
     }
 
