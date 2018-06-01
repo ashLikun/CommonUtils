@@ -604,7 +604,7 @@ public class SpannableUtils {
                 if (isChangSizeToText && !isChangOk) {
                     float drawWidth = d.getMinimumWidth();
                     float drawHeight = d.getMinimumHeight();
-                    int newHeight = fm.ascent;
+                    int newHeight = (int) (((int) Math.ceil(fm.descent - fm.top) + 2) * 0.8);
                     d.setBounds(0, 0, (int) (newHeight / drawHeight * drawWidth), newHeight);
                 }
 
