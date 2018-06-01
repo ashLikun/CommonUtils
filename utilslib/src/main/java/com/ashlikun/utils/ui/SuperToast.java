@@ -11,6 +11,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
+import android.support.v4.view.ViewCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,7 +135,7 @@ public class SuperToast {
         drawable.setColor(builder.backgroundColor);
         drawable.setStroke(DimensUtils.dip2px(getApp(), 1f), getBackgroundShen(builder.backgroundColor));
         drawable.setCornerRadius(DimensUtils.dip2px(getApp(), 4));
-        DrawableUtils.setBackground(view, drawable);
+        ViewCompat.setBackground(view, drawable);
 
         ImageView imageView = (ImageView) view.findViewById(R.id.img);
         if (!builder.isShowIcon) {
