@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -47,7 +48,9 @@ public class StatusBarCompat {
      */
     public void setColorBar(@ColorRes int statusColor, int alpha) {
         //4.4以下不设置
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) return;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            return;
+        }
         int color = calculateColor(statusColor, alpha);//计算最终颜色
         Window window = activity.getWindow();
         //5.0以上
@@ -55,6 +58,14 @@ public class StatusBarCompat {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(color);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+
+            ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+            View mChildView = mContentView.getChildAt(0);
+            if (mChildView != null) {
+                ViewCompat.setFitsSystemWindows(mChildView, false);
+                ViewCompat.requestApplyInsets(mChildView);
+            }
         }
 
 
@@ -72,7 +83,9 @@ public class StatusBarCompat {
      */
     public void setTransparentBar(@ColorRes int statusColor, int alpha) {
         //4.4以下不设置
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) return;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            return;
+        }
         Window window = activity.getWindow();
         int colorInt = activity.getResources().getColor(statusColor);
         //计算最终颜色
@@ -87,6 +100,13 @@ public class StatusBarCompat {
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(option);
             window.setStatusBarColor(color);
+
+            ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+            View mChildView = mContentView.getChildAt(0);
+            if (mChildView != null) {
+                ViewCompat.setFitsSystemWindows(mChildView, false);
+                ViewCompat.requestApplyInsets(mChildView);
+            }
         }
 
     }
@@ -104,11 +124,18 @@ public class StatusBarCompat {
             if (params instanceof ViewGroup.MarginLayoutParams) {
                 ((ViewGroup.MarginLayoutParams) params).setMargins(
                         ((ViewGroup.MarginLayoutParams) params).leftMargin
-                        , StatusBarCompat.getStatusBarHeight(viewTop.getContext())
+                        , ((ViewGroup.MarginLayoutParams) params).topMargin + StatusBarCompat.getStatusBarHeight(viewTop.getContext())
                         , ((ViewGroup.MarginLayoutParams) params).rightMargin
                         , ((ViewGroup.MarginLayoutParams) params).bottomMargin);
             }
             viewTop.setLayoutParams(params);
+        }
+    }
+
+    public static void setTransparentViewPadding(View viewTop) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            viewTop.setPadding(viewTop.getPaddingLeft(), viewTop.getPaddingTop() + getStatusBarHeight(viewTop.getContext())
+                    , viewTop.getPaddingRight(), viewTop.getPaddingBottom());
         }
     }
 
