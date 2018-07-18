@@ -33,6 +33,10 @@ public class DrawableUtils {
         this.context = context;
     }
 
+    public static DrawableUtils get(Context context) {
+        return new DrawableUtils(context);
+    }
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/29 11:30
@@ -122,6 +126,19 @@ public class DrawableUtils {
         }
         if (roundRadius > 0) {
             drawable.setCornerRadius(DimensUtils.dip2px(context, roundRadius));
+        }
+        return drawable;
+    }
+
+    @SuppressLint("ResourceType")
+    public GradientDrawable getGradientDrawablePx(@ColorRes int fillColorId, @ColorRes int strokeColorId, int roundRadius, int strokeWidth) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(getColor(fillColorId));
+        if (strokeColorId > 0) {
+            drawable.setStroke(strokeWidth, getColor(strokeColorId));
+        }
+        if (roundRadius > 0) {
+            drawable.setCornerRadius(roundRadius);
         }
         return drawable;
     }
@@ -430,6 +447,10 @@ public class DrawableUtils {
         return new BuilderTvd(textView, drawable);
     }
 
+    public static BuilderTvd createTextDraw(TextView textView, @DrawableRes int drawable) {
+        return new BuilderTvd(textView, textView.getResources().getDrawable(drawable));
+    }
+
 
     /**
      * @author　　: 李坤
@@ -442,6 +463,7 @@ public class DrawableUtils {
         private Context context;
         private int width = 0;
         private int height = 0;
+        private int tintColor = -1;
         private Drawable drawable;
         private TextView textView;
         /**
@@ -484,6 +506,15 @@ public class DrawableUtils {
             return this;
         }
 
+        public BuilderTvd tintColorId(int val) {
+            return tintColor(context.getResources().getColor(val));
+        }
+
+        public BuilderTvd tintColor(int val) {
+            tintColor = val;
+            return this;
+        }
+
         public BuilderTvd textView(TextView val) {
             textView = val;
             return this;
@@ -501,7 +532,7 @@ public class DrawableUtils {
             return this;
         }
 
-        public void set() {
+        public Drawable getDrawable() {
             //是否改变宽高
             boolean isChang = true;
             float drawWidth = drawable.getMinimumWidth();
@@ -517,24 +548,35 @@ public class DrawableUtils {
                 //高度被设置了，那么久按照比例设置宽度
                 height = (int) (width / drawWidth * drawHeight);
             }
-            if (isChang) {
+            //如果使用tint，必须使用DrawableCompat.wrap
+            if (isChang || tintColor != -1) {
                 drawable = DrawableCompat.wrap(drawable).mutate();
+                if (tintColor != -1) {
+                    DrawableCompat.setTint(drawable, tintColor);
+                }
             }
             drawable.setBounds(0, 0, width, height);
+            return drawable;
+        }
+
+        public void set() {
+            getDrawable();
+            Drawable[] yiyou = textView.getCompoundDrawables();
             switch (location) {
                 case 1:
-                    textView.setCompoundDrawables(drawable, null, null, null);
+                    textView.setCompoundDrawables(drawable, yiyou[1], yiyou[2], yiyou[3]);
                     break;
                 case 2:
-                    textView.setCompoundDrawables(null, drawable, null, null);
+                    textView.setCompoundDrawables(yiyou[0], drawable, yiyou[2], yiyou[3]);
                     break;
                 case 3:
-                    textView.setCompoundDrawables(null, null, drawable, null);
+                    textView.setCompoundDrawables(yiyou[0], yiyou[1], drawable, yiyou[3]);
                     break;
                 case 4:
-                    textView.setCompoundDrawables(null, null, null, drawable);
+                    textView.setCompoundDrawables(yiyou[0], yiyou[1], yiyou[2], drawable);
                     break;
             }
         }
     }
 }
+

@@ -604,8 +604,14 @@ public class SpannableUtils {
                 if (isChangSizeToText && !isChangOk) {
                     float drawWidth = d.getMinimumWidth();
                     float drawHeight = d.getMinimumHeight();
-                    int newHeight = (int) (((int) Math.ceil(fm.descent - fm.top) + 2) * 0.8);
-                    d.setBounds(0, 0, (int) (newHeight / drawHeight * drawWidth), newHeight);
+                    int fmsize = (int) Math.ceil(fm.descent - fm.top);
+                    if (fmsize <= 0) {
+                        fmsize = (int) Math.ceil(fmPaint.descent - fmPaint.top);
+                    }
+                    if (fmsize > 0) {
+                        int newHeight = (int) ((fmsize + 2) * 0.7);
+                        d.setBounds(0, 0, (int) (newHeight / drawHeight * drawWidth), newHeight);
+                    }
                 }
 
                 int fontHeight = fmPaint.bottom - fmPaint.top;
