@@ -28,7 +28,7 @@ public class ToastUtils {
      * @param content
      */
     public static void getToastShort(String content) {
-        myToast.makeText(getApp(), content, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApp(), content, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -38,11 +38,13 @@ public class ToastUtils {
      * @param content 内容
      */
     public static void getToastLong(String content) {
-        myToast.makeText(getApp(), content, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApp(), content, Toast.LENGTH_LONG).show();
     }
 
     public static void show(String text, int duration) {
-        if (TextUtils.isEmpty(text)) return;
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
         initToast();
         if (myToast != null) {
             myToast.setGravity(Gravity.BOTTOM, DimensUtils.dip2px(getApp(), 0),
@@ -71,7 +73,9 @@ public class ToastUtils {
 
     public static void show(String text, int duration,
                             int gravity, int xOffsetDp, int yOffsetDp) {
-        if (TextUtils.isEmpty(text)) return;
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
         initToast();
         if (myToast != null) {
             myToast.setGravity(gravity, DimensUtils.dip2px(getApp(), xOffsetDp),

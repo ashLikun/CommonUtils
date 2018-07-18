@@ -316,6 +316,56 @@ public class SuperToast {
         }
     }
 
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2016/9/22 11:11
+     * <p>
+     * 方法功能：显示错误信息
+     */
+    public static void showErrorMessage(String result) {
+        if (result != null) {
+            SuperToast.get(result).error();
+        }
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2016/9/22 11:11
+     * <p>
+     * 方法功能：显示警告信息
+     */
+    public static void showWarningMessage(String result) {
+        if (result != null) {
+            SuperToast.get(result).warn();
+        }
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2016/9/22 11:11
+     * <p>
+     * 方法功能：显示提示信息
+     */
+    public static void showInfoMessage(String result) {
+        if (result != null) {
+            SuperToast.get(result).info();
+        }
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2016/9/22 11:11
+     * <p>
+     * 方法功能：显示提示信息
+     *
+     * @param activity 是否销毁，null：不管
+     */
+    public static void showInfoMessage(String result, Activity activity) {
+        if (result != null) {
+            SuperToast.get(result).setFinish(activity).info();
+        }
+    }
+
     public static class Callback {
         public void onDismissed() {
         }
