@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
@@ -33,33 +34,10 @@ public class UiUtils {
     }
 
     /**
-     * 获得一个空间的宽高   防0
-     */
-
-    public static void setViewMeasure(View view) {
-        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-    }
-
-    /**
-     * 获得一个空间的宽   防0
-     */
-
-    public static void setViewWidth(View view) {
-        setViewMeasure(view);
-        view.getMeasuredWidth();
-    }
-
-    public static void setViewHeight(View view) {
-        setViewMeasure(view);
-        view.getMeasuredHeight();
-    }
-
-    /**
      * 从资源文件获取一个view
      */
     public static View getInflaterView(Context context, int res) {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(res, null);
-        applyFont(view);
         return view;
     }
 
@@ -68,7 +46,6 @@ public class UiUtils {
      */
     public static View getInflaterView(Context context, int res, ViewGroup parent) {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(res, parent);
-        applyFont(view);
         return view;
     }
 
@@ -77,7 +54,6 @@ public class UiUtils {
      */
     public static View getInflaterView(Context context, int res, ViewGroup parent, boolean attachToRoot) {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(res, parent, attachToRoot);
-        applyFont(view);
         return view;
     }
 
@@ -90,23 +66,7 @@ public class UiUtils {
     }
 
 
-    /*
-     * 设置字体
-     */
-    public static void applyFont(final View root) {
-//        try {
-//            if (root instanceof ViewGroup) {
-//                ViewGroup viewGroup = (ViewGroup) root;
-//                for (int i = 0; i < viewGroup.getChildCount(); i++)
-//                    applyFont(viewGroup.getChildAt(i));
-//            } else if (root instanceof TextView)
-//
-////                ((TextView) root).setTypeface(MyApplication.myApp.typeface);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
+
 
     public static View getRootView(Activity context) {
         return context.findViewById(android.R.id.content);
@@ -170,4 +130,83 @@ public class UiUtils {
         return isOpen;
     }
 
+
+    /**
+     * 按照原始的宽度，根据比例，缩放
+     *
+     * @param bili (w/h)
+     */
+    public static void scaleViewByWidth(final View view, final float bili) {
+        getViewSize(view, new OnSizeListener() {
+            @Override
+            public void onSize(int width, int height) {
+                scaleViewByWidth(view, width, bili);
+            }
+        });
+    }
+
+    /**
+     * 同上
+     *
+     * @param view
+     * @param width
+     * @param bili
+     */
+    public static void scaleViewByWidth(View view, int width, final float bili) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        params.height = (int) (width / bili);
+        view.setLayoutParams(params);
+    }
+
+    /**
+     * 按照原始的高度，根据比例，缩放
+     *
+     * @param bili (w/h)
+     */
+    public static void scaleViewByHeight(final View view, final float bili) {
+        getViewSize(view, new OnSizeListener() {
+            @Override
+            public void onSize(int width, int height) {
+                scaleViewByHeight(view, height, bili);
+            }
+        });
+    }
+
+    /**
+     * 同上
+     *
+     * @param view
+     * @param height
+     * @param bili
+     */
+    public static void scaleViewByHeight(final View view, int height, final float bili) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        params.width = (int) (height * bili);
+        view.setLayoutParams(params);
+    }
+
+    /**
+     * 获取view大小
+     *
+     * @param onSizeListener 监听回调
+     */
+    public static void getViewSize(final View view, final OnSizeListener onSizeListener) {
+        ViewTreeObserver observer = view.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (view.getMeasuredHeight() <= 0 && view.getMeasuredWidth() <= 0) {
+                    return;
+                }
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                onSizeListener.onSize(view.getMeasuredWidth(), view.getMeasuredHeight());
+            }
+        });
+    }
 }
