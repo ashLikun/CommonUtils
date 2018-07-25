@@ -2,7 +2,7 @@ package com.ashlikun.utils.other;
 
 import android.util.Log;
 
-import static com.ashlikun.utils.Utils.isDebug;
+import static com.ashlikun.utils.AppUtils.isDebug;
 
 
 /**

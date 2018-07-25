@@ -22,7 +22,7 @@ import com.ashlikun.utils.other.StringUtils;
 import java.io.File;
 import java.io.IOException;
 
-import static com.ashlikun.utils.Utils.getApp;
+import static com.ashlikun.utils.AppUtils.getApp;
 
 
 /**

@@ -25,7 +25,7 @@ import com.ashlikun.utils.other.DimensUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static com.ashlikun.utils.Utils.getApp;
+import static com.ashlikun.utils.AppUtils.getApp;
 
 /**
  * 作者　　: 李坤

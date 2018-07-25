@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.media.MediaMetadataRetriever;
 
-import com.ashlikun.utils.Utils;
+import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.encryption.Base64Utils;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +32,7 @@ public class BitmapUtil {
      * 获取视频文件的一帧
      */
     public static Bitmap getVideoFrame(String path, int wDp, int hDp) {
-        final float scale = Utils.getApp().getResources().getDisplayMetrics().density;
+        final float scale = AppUtils.getApp().getResources().getDisplayMetrics().density;
         wDp = (int) (wDp * scale + 0.5f);
         hDp = (int) (hDp * scale + 0.5f);
         MediaMetadataRetriever media = new MediaMetadataRetriever();

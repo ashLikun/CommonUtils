@@ -34,7 +34,8 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 
-import com.ashlikun.utils.Utils;
+import com.ashlikun.utils.AppUtils;
+
 
 /**
  * 作者　　: 李坤
@@ -135,7 +136,7 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setForegroundColorRes(@ColorRes int color) {
-            this.foregroundColor = Utils.getApp().getResources().getColor(color);
+            this.foregroundColor = AppUtils.getApp().getResources().getColor(color);
             return this;
         }
 
@@ -154,7 +155,7 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setBackgroundColorRes(@ColorRes int color) {
-            this.backgroundColor = Utils.getApp().getResources().getColor(color);
+            this.backgroundColor = AppUtils.getApp().getResources().getColor(color);
             return this;
         }
 
@@ -302,14 +303,14 @@ public class SpannableUtils {
         //自定义居上对其
         public Builder setAlignTopDp(float alignTopOffset) {
             isAlignTop = true;
-            this.alignTopOffset = DimensUtils.dip2px(Utils.getApp(), alignTopOffset);
+            this.alignTopOffset = DimensUtils.dip2px(AppUtils.getApp(), alignTopOffset);
             return this;
         }
 
         //自定义居上对其
         public Builder setAlignTopRes(@DimenRes int alignTopOffset) {
             isAlignTop = true;
-            this.alignTopOffset = Utils.getApp().getResources().getDimensionPixelOffset(alignTopOffset);
+            this.alignTopOffset = AppUtils.getApp().getResources().getDimensionPixelOffset(alignTopOffset);
             return this;
         }
 
@@ -549,9 +550,9 @@ public class SpannableUtils {
             if (imageIsBitmap || imageIsDrawable || imageIsResourceId) {
                 CentreImageSpan span = null;
                 if (imageIsBitmap) {
-                    drawable = new BitmapDrawable(Utils.getApp().getResources(), bitmap);
+                    drawable = new BitmapDrawable(AppUtils.getApp().getResources(), bitmap);
                 } else if (imageIsResourceId) {
-                    drawable = Utils.getApp().getResources().getDrawable(resourceId);
+                    drawable = AppUtils.getApp().getResources().getDrawable(resourceId);
                 }
                 if (imageIsBitmap || imageIsResourceId) {
                     int width = drawable.getIntrinsicWidth();

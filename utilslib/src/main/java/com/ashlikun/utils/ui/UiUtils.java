@@ -11,9 +11,10 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.R;
 
-import static com.ashlikun.utils.Utils.getApp;
+import static com.ashlikun.utils.AppUtils.getApp;
 
 
 public class UiUtils {

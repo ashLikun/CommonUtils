@@ -10,12 +10,11 @@ import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AlignmentSpan;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.ashlikun.utils.Utils;
+import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.ui.DrawableUtils;
 import com.ashlikun.utils.ui.StatusBarCompat;
@@ -32,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.init(getApplication());
-        Utils.setDebug(true);
+        AppUtils.init(getApplication());
+        AppUtils.setDebug(true);
         drawableUtils = new DrawableUtils(this);
         setContentView(R.layout.main_viewgroup_activity);
         new StatusBarCompat(this).setTransparentBar(android.R.color.transparent);
@@ -62,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView view = (TextView) findViewById(R.id.view);
         view.setTextColor(drawableUtils.createColorSelect(R.color.black, R.color.white));
-        DrawableUtils.setBackground(view, drawableUtils.getSelectDrawable(getResources().getDrawable(R.color.SwipeRefreshLayout_1),
-                getResources().getDrawable(R.color.colorAccent)));
+
         view.setSelected(false);
 
 //        for (int i = 0; i < 10; i++) {

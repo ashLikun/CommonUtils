@@ -10,7 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
-import com.ashlikun.utils.Utils;
+import com.ashlikun.utils.AppUtils;
 
 import java.util.List;
 
@@ -81,7 +81,7 @@ public class ActivityUtils {
             if (classs == null || TextUtils.isEmpty(className)) {
                 return false;
             }
-            ActivityManager am = (ActivityManager) Utils.getApp()
+            ActivityManager am = (ActivityManager) AppUtils.getApp()
                     .getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
             if (list != null && list.size() > 0) {

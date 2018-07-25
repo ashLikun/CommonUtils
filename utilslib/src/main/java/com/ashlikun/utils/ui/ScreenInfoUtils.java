@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.ashlikun.utils.Utils;
+import com.ashlikun.utils.AppUtils;
 
 /**
  * 作者　　: 李坤
@@ -67,7 +67,7 @@ public class ScreenInfoUtils {
 
     private void init() {
         DisplayMetrics metric = new DisplayMetrics();
-        WindowManager wm = (WindowManager) Utils.getApp().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) AppUtils.getApp().getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metric);
         width = metric.widthPixels;
         height = metric.heightPixels;

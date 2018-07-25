@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.ashlikun.utils.other.DimensUtils;
 
-import static com.ashlikun.utils.Utils.getApp;
+import static com.ashlikun.utils.AppUtils.getApp;
 
 
 public class ToastUtils {
