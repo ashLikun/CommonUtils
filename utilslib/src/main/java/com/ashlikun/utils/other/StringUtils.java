@@ -1,10 +1,13 @@
-/* 
+/*
  * @(#)StringHelper.java    Created on 2013-3-14
  * Copyright (c) 2013 ZDSoft Networks, Inc. All rights reserved.
  * $Id$
  */
 package com.ashlikun.utils.other;
 
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.text.TextUtils;
 
 import java.math.BigDecimal;
@@ -109,7 +112,9 @@ public class StringUtils {
      * @return 二进位组
      */
     public static byte[] parseHexStr2Byte(String hexStr) {
-        if (hexStr.length() < 1) return null;
+        if (hexStr.length() < 1) {
+            return null;
+        }
         byte[] result = new byte[hexStr.length() / 2];
 
         for (int i = 0; i < hexStr.length() / 2; i++) {
@@ -274,4 +279,31 @@ public class StringUtils {
         }
     }
 
+    /**
+     * 按照指定的行数截取字符串,末尾。。。
+     *
+     * @param paint
+     * @param textSize
+     * @param layoutWidth
+     * @param content
+     * @param maxLine
+     * @return
+     */
+    public static CharSequence ellipsize(TextPaint paint, float textSize, int layoutWidth, CharSequence content, int maxLine) {
+        if (layoutWidth != 0 && !TextUtils.isEmpty((CharSequence) content)) {
+            float oldTextSize = paint.getTextSize();
+            paint.setTextSize(textSize);
+            StaticLayout layout = new StaticLayout((CharSequence) content, paint, layoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
+            int count = layout.getLineCount();
+            if (count > maxLine) {
+                int start = layout.getLineStart(maxLine - 1);
+                content = content.subSequence(0, start) + (String) TextUtils.ellipsize(((CharSequence) content)
+                        .subSequence(start, ((CharSequence) content).length()), paint, (float) layoutWidth, TextUtils.TruncateAt.END);
+            }
+            paint.setTextSize(oldTextSize);
+            return content;
+        } else {
+            return content;
+        }
+    }
 }
