@@ -36,6 +36,7 @@ import static com.ashlikun.utils.AppUtils.getApp;
  */
 
 public class SuperToast {
+    private static Toast mToast = null;
     private static final String TOAST_VIEW_TAG = "TOAST_VIEW_TAG";
     private static final int Info = 1;//正常
     private static final int Confirm = 2;//完成
@@ -78,9 +79,15 @@ public class SuperToast {
         }
     }
 
+    private static void initToast() {
+        if (mToast == null) {
+            mToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
+        }
+    }
+
     //要在主线程
     private void cretae(final Builder builder) {
-        Toast mToast = ToastUtils.getMyToast();
+        initToast();
         View mView;
         if (mToast.getView() != null && TOAST_VIEW_TAG.equals(mToast.getView().getTag())) {
             mView = mToast.getView();

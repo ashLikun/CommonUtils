@@ -1,15 +1,13 @@
 package com.ashlikun.utils.simple;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.AlignmentSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -17,8 +15,9 @@ import android.widget.TextView;
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.ui.DrawableUtils;
+import com.ashlikun.utils.ui.FocusLinkMovementMethod;
 import com.ashlikun.utils.ui.StatusBarCompat;
-import com.ashlikun.utils.ui.SuperToast;
+import com.ashlikun.utils.ui.ToastUtils;
 
 import java.util.Map;
 
@@ -71,16 +70,22 @@ public class MainActivity extends AppCompatActivity {
 //        tv.setText(SpannableUtils.getBuilder("￥").setProportion(0.6f).setAlignTopDp(7)
 //                .append("123.33")
 //                .create());
-        SpannableStringBuilder aa = SpannableUtils.getBuilder("第一个:").setAlign(Layout.Alignment.ALIGN_NORMAL)
-                .append("123.33\n").setAlign(Layout.Alignment.ALIGN_OPPOSITE)
-                .append("第二个")
-                .append("aaaaa\n").setAlign(Layout.Alignment.ALIGN_OPPOSITE)
+        SpannableStringBuilder aa = SpannableUtils.getBuilder("第一个:")
+                .append("123.33\n")
+                .append("第二个").setClickSpan(new SpannableUtils.XClickableSpan() {
+
+                    @Override
+                    public void onClick(View widget) {
+                        ToastUtils.showShort("aaaaaaaaaa");
+                    }
+                })
+                .append("aaaaa\n")
                 .create();
-        String text = "Sometimes I ";
-        AlignmentSpan.Standard alignmentSpan = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL);
-        SpannableStringBuilder spannableString = new SpannableStringBuilder(text);
-        spannableString.setSpan(alignmentSpan, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv.setText(spannableString);
+
+
+        tv.setMovementMethod(FocusLinkMovementMethod.getInstance());
+        tv.setHighlightColor(Color.TRANSPARENT);
+        tv.setText(aa);
     }
 
     public void onView1Click(View view) {
@@ -88,22 +93,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                SuperToast.get("aaaaaaa").info();
+                //SuperToast.get("aaaaaaa").info();
             }
         }.start();
 
     }
 
     public void onView2Click(View view) {
-        SuperToast.get("aaaaaaa").ok();
+        //SuperToast.get("aaaaaaa").ok();
     }
 
     public void onView3Click(View view) {
-        SuperToast.get("aaaaaaa").warn();
+        // SuperToast.get("aaaaaaa").warn();
     }
 
     public void onView4Click(View view) {
-        SuperToast.get("aaaaaaa").error();
+        //SuperToast.get("aaaaaaa").error();
     }
 
 }

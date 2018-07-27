@@ -18,6 +18,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.BackgroundColorSpan;
@@ -378,7 +379,7 @@ public class SpannableUtils {
          * @param clickSpan 点击事件
          * @return {@link Builder}
          */
-        public Builder setClickSpan(@NonNull ClickableSpan clickSpan) {
+        public Builder setClickSpan(@NonNull XClickableSpan clickSpan) {
             this.clickSpan = clickSpan;
             return this;
         }
@@ -665,4 +666,27 @@ public class SpannableUtils {
 
     }
 
+    public static abstract class XClickableSpan extends ClickableSpan {
+
+        private int color = 0;
+        private boolean colorIsSet = false;
+
+        public XClickableSpan(int color) {
+            this.color = color;
+            colorIsSet = true;
+        }
+
+        public XClickableSpan() {
+        }
+
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            if (colorIsSet) {
+                ds.setColor(color);
+            }
+            ds.setUnderlineText(false);
+            ds.clearShadowLayer();
+        }
+    }
 }

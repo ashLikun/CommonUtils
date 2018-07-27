@@ -17,7 +17,7 @@ import com.ashlikun.utils.other.LogUtils;
  * 创建时间:2016/11/2　18:56
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：
+ * 功能介绍：设置TextView(setClickSpan)点击时候的背景
  */
 
 public class FocusLinkMovementMethod extends LinkMovementMethod {
@@ -25,8 +25,9 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
     private static FocusLinkMovementMethod sInstance;
 
     public static MovementMethod getInstance() {
-        if (sInstance == null)
+        if (sInstance == null) {
             sInstance = new FocusLinkMovementMethod();
+        }
 
         return sInstance;
     }
@@ -73,8 +74,6 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
         } else if (action != MotionEvent.ACTION_MOVE) {
             Selection.removeSelection(buffer);
         }
-        LogUtils.e(action + "");
-
         return super.onTouchEvent(widget, buffer, event);
     }
 }
