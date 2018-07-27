@@ -87,18 +87,30 @@ public class StatusBarCompat {
         }
     }
 
+
+    public void setStatusBarColorRes(@ColorRes int statusColor) {
+        setStatusBarColor(activity.getResources().getColor(statusColor));
+    }
+
+    public void setStatusBarColorWhite() {
+        setStatusBarColor(0xffffffff);
+    }
+
+    public void setStatusBarColorBlack() {
+        setStatusBarColor(0xff000000);
+    }
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/7/5 13:42
      * 邮箱　　：496546144@qq.com
      * <p>
      * 方法功能：兼容设置状态栏颜色,要在设置完布局后设置
+     * 本方法会自动设置状态栏字体颜色
      *
      * @param statusColor 状态栏颜色RES
-     * @param alpha       第二个参数是颜色深度值
      */
-    @SuppressLint("ResourceAsColor")
-    public void setStatusBarColor(@ColorRes int statusColor, int alpha) {
+    public void setStatusBarColor(int statusColor) {
         //5.0以下不设置
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             return;
@@ -255,7 +267,6 @@ public class StatusBarCompat {
             view.setLayoutParams(params);
         }
     }
-
 
 
     /**
