@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ashlikun.utils.AppUtils;
+import com.ashlikun.utils.other.SharedPreUtils;
 import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.ui.DrawableUtils;
 import com.ashlikun.utils.ui.FocusLinkMovementMethod;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayMap<Integer, Integer> aaa = new ArrayMap<>();
     ViewPager viewPager;
     DrawableUtils drawableUtils;
+    StatusBarCompat statusBarCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
         AppUtils.setDebug(true);
         drawableUtils = new DrawableUtils(this);
         setContentView(R.layout.main_viewgroup_activity);
-        new StatusBarCompat(this).setTransparentBar(android.R.color.transparent);
+
+        statusBarCompat = new StatusBarCompat(this);
+        statusBarCompat.setStatusBarColor(0xffff0000);
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setMovementMethod(FocusLinkMovementMethod.getInstance());
         tv.setHighlightColor(Color.TRANSPARENT);
         tv.setText(aa);
+        SharedPreUtils.putFloat(getApplicationContext(), "aaa", 123);
     }
 
     public void onView1Click(View view) {
@@ -99,7 +105,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    int statusColor = 0xffff0000;
+
     public void onView2Click(View view) {
+        statusColor = statusColor + 10;
+        statusBarCompat.setStatusBarColor(statusColor);
         //SuperToast.get("aaaaaaa").ok();
     }
 

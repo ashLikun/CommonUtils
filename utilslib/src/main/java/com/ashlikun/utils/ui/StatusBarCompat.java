@@ -31,12 +31,18 @@ public class StatusBarCompat {
      * 半透明颜色值
      */
     public static final int HALF_COLOR = 0x88aaaaaa;
-    private Activity activity;
+    private Window window;
+    private Context context;
 
     public StatusBarCompat(Activity activity) {
-        this.activity = activity;
+        this.window = activity.getWindow();
+        this.context = activity;
     }
 
+    public StatusBarCompat(Context context, Window window) {
+        this.window = window;
+        this.context = context;
+    }
 
     /**
      * 设置状态栏字体颜色为深色
@@ -53,11 +59,10 @@ public class StatusBarCompat {
     }
 
     public void setStatusTextColor(boolean drak) {
-        if (activity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (window != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //判断当前是不是6.0以上的系统
-            Window mWindow = activity.getWindow();
-            if (mWindow != null) {
-                View view = mWindow.getDecorView();
+            if (window != null) {
+                View view = window.getDecorView();
                 if (view != null) {
                     if (drak) {
                         //黑色
@@ -89,7 +94,7 @@ public class StatusBarCompat {
 
 
     public void setStatusBarColorRes(@ColorRes int statusColor) {
-        setStatusBarColor(activity.getResources().getColor(statusColor));
+        setStatusBarColor(context.getResources().getColor(statusColor));
     }
 
     public void setStatusBarColorWhite() {
@@ -112,7 +117,7 @@ public class StatusBarCompat {
      */
     public void setStatusBarColor(int statusColor) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -122,7 +127,6 @@ public class StatusBarCompat {
                 statusColor = blendColor(HALF_COLOR, statusColor);
             }
         }
-        Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(statusColor);
@@ -145,10 +149,9 @@ public class StatusBarCompat {
      */
     public void translucentStatusBar() {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
-        Window window = activity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -178,11 +181,9 @@ public class StatusBarCompat {
     public void setStatusBarColorForCollapsingToolbar(final AppBarLayout appBarLayout, final CollapsingToolbarLayout collapsingToolbarLayout,
                                                       Toolbar toolbar, final int statusColor) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
-        final Window window = activity.getWindow();
-
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
@@ -208,7 +209,7 @@ public class StatusBarCompat {
         toolbar.setFitsSystemWindows(false);
         if (toolbar.getTag() == null) {
             CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            int statusBarHeight = getStatusBarHeight(activity);
+            int statusBarHeight = getStatusBarHeight(context);
             lp.height += statusBarHeight;
             toolbar.setLayoutParams(lp);
             toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getPaddingTop() + statusBarHeight, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
@@ -254,7 +255,7 @@ public class StatusBarCompat {
      * @param view
      */
     public static void setEmptyHeight(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int h = getStatusBarHeight(view.getContext());
             if (isSetHaleColor()) {
                 view.setBackgroundColor(StatusBarCompat.HALF_COLOR);
@@ -275,11 +276,11 @@ public class StatusBarCompat {
      * @param isTransparent 是否透明
      */
     public void setNavigationTransparent(boolean isTransparent) {
-        if (activity != null && !activity.isFinishing() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (window != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (isTransparent) {
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             } else {
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             }
         }
     }
@@ -294,7 +295,7 @@ public class StatusBarCompat {
 
     public static void setTransparentViewMargin(View viewTop) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
         ViewGroup.LayoutParams params = viewTop.getLayoutParams();
@@ -385,12 +386,11 @@ public class StatusBarCompat {
     /**
      * 是否设置半透明颜色
      * 6.0以下不能设置状态栏文字颜色,这里处理,5.0-6.0已经在设置状态栏颜色的时候设置了
-     * 这里只设置4.4-5.0
      *
      * @return
      */
     public static boolean isSetHaleColor() {
-        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
+        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
 
     /**
