@@ -1,5 +1,7 @@
 package com.ashlikun.utils.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,6 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.ashlikun.utils.other.RomUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * 作者　　: 李坤
@@ -59,7 +66,10 @@ public class StatusBarCompat {
     }
 
     public void setStatusTextColor(boolean drak) {
-        if (window != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (!isSetStatusTextColor()) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //判断当前是不是6.0以上的系统
             if (window != null) {
                 View view = window.getDecorView();
@@ -73,7 +83,15 @@ public class StatusBarCompat {
                     }
                 }
             }
+        }
 
+        //小米
+        if (RomUtils.isXiaomi()) {
+            miuiSetStatusBarLightMode(window, drak);
+        }
+        //魅族
+        if (RomUtils.isFlyme()) {
+            flymeSetStatusBarLightMode(window, drak);
         }
     }
 
@@ -120,8 +138,8 @@ public class StatusBarCompat {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            //6.0以下不能设置状态栏文字颜色,这里处理以下
+        if (!isSetStatusTextColor()) {
+            //不能设置状态栏字体颜色时候
             if (!isColorDrak(statusColor)) {
                 //颜色浅色,设置半透明
                 statusColor = blendColor(HALF_COLOR, statusColor);
@@ -132,7 +150,7 @@ public class StatusBarCompat {
         window.setStatusBarColor(statusColor);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
-        ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
         if (mChildView != null) {
             ViewCompat.setFitsSystemWindows(mChildView, false);
@@ -154,15 +172,15 @@ public class StatusBarCompat {
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            //6.0以下加一个半透明
+        if (!isSetStatusTextColor()) {
+            //不能设置状态栏字体颜色时候
             window.setStatusBarColor(StatusBarCompat.HALF_COLOR);
         } else {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         if (mContentView != null) {
             View mChildView = mContentView.getChildAt(0);
             if (mChildView != null) {
@@ -411,8 +429,97 @@ public class StatusBarCompat {
                 }
             }
         });
+        sAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                sAnimator = null;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                sAnimator = null;
+            }
+        });
         sAnimator.start();
     }
 
     private static ValueAnimator sAnimator;
+
+    /**
+     * 是否可以设置状态栏颜色
+     *
+     * @return
+     */
+    public static boolean isSetStatusTextColor() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                (RomUtils.isHuawei() || RomUtils.isFlyme() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
+    }
+
+    /**
+     * 设置状态栏图标为深色和魅族特定的文字风格
+     * 可以用来判断是否为Flyme用户
+     *
+     * @param window 需要设置的窗口
+     * @param dark   是否把状态栏文字及图标颜色设置为深色
+     * @return boolean 成功执行返回true
+     */
+    public static boolean flymeSetStatusBarLightMode(Window window, boolean dark) {
+        boolean result = false;
+        if (window != null) {
+            try {
+                WindowManager.LayoutParams lp = window.getAttributes();
+                Field darkFlag = WindowManager.LayoutParams.class
+                        .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
+                Field meizuFlags = WindowManager.LayoutParams.class
+                        .getDeclaredField("meizuFlags");
+                darkFlag.setAccessible(true);
+                meizuFlags.setAccessible(true);
+                int bit = darkFlag.getInt(null);
+                int value = meizuFlags.getInt(lp);
+                if (dark) {
+                    value |= bit;
+                } else {
+                    value &= ~bit;
+                }
+                meizuFlags.setInt(lp, value);
+                window.setAttributes(lp);
+                result = true;
+            } catch (Exception e) {
+
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 需要MIUIV6以上
+     *
+     * @param window
+     * @param dark   是否把状态栏文字及图标颜色设置为深色
+     * @return boolean 成功执行返回true
+     */
+    public static boolean miuiSetStatusBarLightMode(Window window, boolean dark) {
+        boolean result = false;
+        if (window != null) {
+            Class clazz = window.getClass();
+            try {
+                int darkModeFlag = 0;
+                Class layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
+                Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
+                darkModeFlag = field.getInt(layoutParams);
+                Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
+                if (dark) {
+                    extraFlagField.invoke(window, darkModeFlag, darkModeFlag);//状态栏透明且黑色字体
+                } else {
+                    extraFlagField.invoke(window, 0, darkModeFlag);//清除黑色字体
+                }
+                result = true;
+            } catch (Exception e) {
+
+            }
+        }
+        return result;
+    }
 }

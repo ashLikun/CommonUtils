@@ -1,4 +1,4 @@
-/* 
+/*
  * @(#)DeviceHelper.java    Created on 2013-3-14
  * Copyright (c) 2013 ZDSoft Networks, Inc. All rights reserved.
  * $Id$
@@ -6,6 +6,7 @@
 package com.ashlikun.utils.other;
 
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,9 @@ import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.ashlikun.utils.AppUtils;
+
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -28,34 +32,35 @@ import java.util.UUID;
  * <p>
  * 功能介绍：获取设备信息的工具类
  * 权限：android.permission.TELEPHONY_SERVICE   ，  READ_PHONE_STATE
- *
- *   public String getTextAAA() {
- StringBuffer sb = new StringBuffer();
- sb.append("主板： "+ Build.BOARD);
- sb.append("\n系统启动程序版本号： "+ Build.BOOTLOADER);
- sb.append("\n系统定制商： "+ Build.BRAND);
- sb.append("\ncpu指令集： "+ Build.CPU_ABI);
- sb.append("\ncpu指令集2 "+ Build.CPU_ABI2);
- sb.append("\n设置参数： "+ Build.DEVICE);
- sb.append("\n显示屏参数：" + Build.DISPLAY);
- sb.append("\n无线电固件版本：" + Build.getRadioVersion());
- sb.append("\n硬件识别码： "+ Build.FINGERPRINT);
- sb.append("\n硬件名称： "+ Build.HARDWARE);
- sb.append("\nHOST: "+ Build.HOST);
- sb.append("\nBuild.ID);"+ Build.ID);
- sb.append("\n硬件制造商： "+ Build.MANUFACTURER);
- sb.append("\n版本： "+ Build.MODEL);
- sb.append("\n硬件序列号： "+ Build.SERIAL);
- sb.append("\n手机制造商： "+ Build.PRODUCT);
- sb.append("\n  描述Build的标签： "+ Build.TAGS);
- sb.append("\nTIME: "+ Build.TIME);
- sb.append("\nbuilder类型"+Build.TYPE);
- sb.append("\nUSER: "+Build.USER);
- return sb.toString();
- }
+ * <p>
+ * public String getTextAAA() {
+ * StringBuffer sb = new StringBuffer();
+ * sb.append("主板： "+ Build.BOARD);
+ * sb.append("\n系统启动程序版本号： "+ Build.BOOTLOADER);
+ * sb.append("\n系统定制商： "+ Build.BRAND);
+ * sb.append("\ncpu指令集： "+ Build.CPU_ABI);
+ * sb.append("\ncpu指令集2 "+ Build.CPU_ABI2);
+ * sb.append("\n设置参数： "+ Build.DEVICE);
+ * sb.append("\n显示屏参数：" + Build.DISPLAY);
+ * sb.append("\n无线电固件版本：" + Build.getRadioVersion());
+ * sb.append("\n硬件识别码： "+ Build.FINGERPRINT);
+ * sb.append("\n硬件名称： "+ Build.HARDWARE);
+ * sb.append("\nHOST: "+ Build.HOST);
+ * sb.append("\nBuild.ID);"+ Build.ID);
+ * sb.append("\n硬件制造商： "+ Build.MANUFACTURER);
+ * sb.append("\n版本： "+ Build.MODEL);
+ * sb.append("\n硬件序列号： "+ Build.SERIAL);
+ * sb.append("\n手机制造商： "+ Build.PRODUCT);
+ * sb.append("\n  描述Build的标签： "+ Build.TAGS);
+ * sb.append("\nTIME: "+ Build.TIME);
+ * sb.append("\nbuilder类型"+Build.TYPE);
+ * sb.append("\nUSER: "+Build.USER);
+ * return sb.toString();
+ * }
  */
-
+@SuppressLint("MissingPermission")
 public class DeviceUtil {
+
     public String UA = Build.MODEL;
     private String mIMEI;// 唯一的设备ID，GSM手机的 IMEI 和 CDMA手机的 MEID
     private String mSIM;// SIM卡的序列号：需要权限：READ_PHONE_STATE
@@ -63,30 +68,36 @@ public class DeviceUtil {
     private String mNetwrokIso;// 当前注册的国家环境代码
     private String mNetType;// 当前的连网类型
     private String mDeviceID;// 唯一设备号
-    Context context;
+    Context context = AppUtils.getApp();
 
 
     private TelephonyManager telephonyManager = null;// 很多关于手机的信息可以用此类得到
 
     private static DeviceUtil instance = null;// 单例模式
 
+
+    private DeviceUtil() {
+        findData();
+    }
+
     /**
      * 最好用全局的context获取实例
      *
-     * @param context
      * @return
      */
-    public static synchronized DeviceUtil getInstance(Context context) {
+    public static DeviceUtil get() {
+        //双重校验DCL单例模式
         if (instance == null) {
-            instance = new DeviceUtil(context);
+            //同步代码块
+            synchronized (DeviceUtil.class) {
+                if (instance == null) {
+                    //创建一个新的实例
+                    instance = new DeviceUtil();
+                }
+            }
         }
-
+        //返回一个实例
         return instance;
-    }
-
-    private DeviceUtil(Context context) {
-        this.context = context;
-        findData();
     }
 
     /**
@@ -95,7 +106,7 @@ public class DeviceUtil {
      * @param context
      * @param milliseconds milliseconds/1000(S)
      */
-    public void Vibrate(Context context, long milliseconds) {
+    public void vibrate(Context context, long milliseconds) {
         Vibrator vib = (Vibrator) context
                 .getSystemService(Service.VIBRATOR_SERVICE);
         vib.vibrate(milliseconds);
@@ -281,7 +292,6 @@ public class DeviceUtil {
         mNetwrokIso = telephonyManager.getNetworkCountryIso();
         mSIM = telephonyManager.getSimSerialNumber();
         mDeviceID = getDeviceId();
-
         try {
             ConnectivityManager cm = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -303,7 +313,7 @@ public class DeviceUtil {
         return mNetwrokIso;
     }
 
-    public String getmDeviceID() {
+    public String getDeviceID() {
         return mDeviceID;
     }
 
@@ -380,7 +390,7 @@ public class DeviceUtil {
     public String getUUID() {
         String uuid = null;
         SharedPreferences sp = context.getSharedPreferences("Cache",
-                context.MODE_PRIVATE);
+                Context.MODE_PRIVATE);
         if (sp != null) {
             uuid = sp.getString("uuid", "");
         }
@@ -394,5 +404,64 @@ public class DeviceUtil {
         }
         return uuid;
     }
+
+    /********************************************************************************************
+     *                                           静态方法区
+     ********************************************************************************************/
+
+    /**
+     * 获取当前手机系统语言。
+     *
+     * @return 返回当前系统语言。例如：当前设置的是“中文-中国”，则返回“zh-CN”
+     */
+    public static String getSystemLanguage() {
+        return Locale.getDefault().getLanguage();
+    }
+
+    /**
+     * 获取当前系统上的语言列表(Locale列表)
+     *
+     * @return 语言列表
+     */
+    public static Locale[] getSystemLanguageList() {
+        return Locale.getAvailableLocales();
+    }
+
+    /**
+     * 获取当前手机系统版本号
+     *
+     * @return 系统版本号
+     */
+    public static String getSystemVersion() {
+        return android.os.Build.VERSION.RELEASE;
+    }
+
+    /**
+     * 获取手机型号
+     *
+     * @return 手机型号
+     */
+    public static String getSystemModel() {
+        return android.os.Build.MODEL;
+    }
+
+    /**
+     * 生产/硬件的制造商。
+     *
+     * @return
+     */
+    public static String getManufacturer() {
+        return android.os.Build.MANUFACTURER;
+    }
+
+    /**
+     * 获取手机厂商
+     *
+     * @return 手机厂商
+     */
+    public static String getDeviceBrand() {
+        return android.os.Build.BRAND;
+    }
+
 
 }
