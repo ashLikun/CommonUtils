@@ -1,9 +1,11 @@
 package com.ashlikun.utils.ui;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.StringUtils;
 
 import java.util.regex.Matcher;
@@ -27,27 +29,70 @@ public class WebViewUtils {
         return builder.toString();
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    /**
+     * 配置webview
+     *
+     * @param webView
+     */
     public static void configWebview(WebView webView) {
+
+        WebSettings webSettings = webView.getSettings();
         // 设置文本编码
-        webView.getSettings().setDefaultTextEncodingName("utf-8");
-        // 可以缩放
-        webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        // 开启 Application Caches 功能
-        webView.getSettings().setAppCacheEnabled(false);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        // webView.getSettings().setDefaultZoom(ZoomDensity.MEDIUM);// 默认缩放模式
-        webView.getSettings().setUseWideViewPort(false);
+        webSettings.setDefaultTextEncodingName("utf-8");
+        //5.0以上开启混合模式加载
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
+        //允许js代码
+        webSettings.setJavaScriptEnabled(true);
+        //允许SessionStorage/LocalStorage存储
+        webSettings.setDomStorageEnabled(true);
+        //禁用放缩
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setBuiltInZoomControls(false);
+        //禁用文字缩放
+        webSettings.setTextZoom(100);
+        //10M缓存，api 18后，系统自动管理。
+        webSettings.setAppCacheMaxSize(10 * 1024 * 1024);
+        //允许缓存，设置缓存位置
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setAppCachePath(AppUtils.getApp().getDir("appcache", 0).getPath());
+        //允许WebView使用File协议
+        webSettings.setAllowFileAccess(true);
+        //不保存密码
+        webSettings.setSavePassword(false);
+        //设置UA
+        webSettings.setUserAgentString(webSettings.getUserAgentString() + " androidApp/" + AppUtils.getVersionName());
+        //移除部分系统JavaScript接口
+        removeJavascriptInterfaces(webView);
+        //自动加载图片
+        webSettings.setLoadsImagesAutomatically(true);
     }
 
+    /**
+     * 安全措施
+     *
+     * @param webView
+     */
+    @TargetApi(11)
+    private static final void removeJavascriptInterfaces(WebView webView) {
+        try {
+            if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 17) {
+                webView.removeJavascriptInterface("searchBoxJavaBridge_");
+                webView.removeJavascriptInterface("accessibility");
+                webView.removeJavascriptInterface("accessibilityTraversal");
+            }
+        } catch (Throwable tr) {
+            tr.printStackTrace();
+        }
+    }
 
-    /*
-   * html 获取纯文本
-   */
-    public static String Html2Text(String inputString) {
+    /**
+     * html 获取纯文本
+     */
+    public static String html2Text(String inputString) {
         if (inputString == null || inputString.trim().equals("")) {
             return "";
         }
@@ -89,8 +134,8 @@ public class WebViewUtils {
     }
 
     /*
-    * 获得超链接
-    */
+     * 获得超链接
+     */
     public static String getHrefInnerHtml(String href) {
         if (StringUtils.isEmpty(href)) {
             return "";

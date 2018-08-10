@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.other;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -8,7 +8,7 @@ import android.os.Looper;
  * 创建时间:2017/8/27 0027　2:41
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：
+ * 功能介绍：单例形式的hander,主线程
  */
 
 public class MainHandle extends Handler {

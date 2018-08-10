@@ -21,7 +21,7 @@ public class ThreadPoolManage {
         int POOL_SIZE = Runtime.getRuntime().availableProcessors() / 2;
         //仿照okhttp
         executor = new ThreadPoolExecutor(POOL_SIZE, POOL_SIZE * 2, 0, TimeUnit.SECONDS,
-                new SynchronousQueue<Runnable>(), threadFactory("0gow_thread_pool", false));
+                new SynchronousQueue<Runnable>(), threadFactory("thread_pool_manage", false));
     }
 
     /**

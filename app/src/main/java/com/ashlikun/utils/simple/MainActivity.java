@@ -1,5 +1,6 @@
 package com.ashlikun.utils.simple;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
@@ -8,10 +9,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ashlikun.utils.AppUtils;
-import com.ashlikun.utils.other.DeviceUtil;
-import com.ashlikun.utils.other.RomUtils;
+import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.ui.DrawableUtils;
+import com.ashlikun.utils.ui.FocusLinkMovementMethod;
 import com.ashlikun.utils.ui.StatusBarCompat;
+import com.ashlikun.utils.ui.SuperToast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     DrawableUtils drawableUtils;
     StatusBarCompat statusBarCompat;
+    TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,23 +32,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_viewgroup_activity);
         statusBarCompat = new StatusBarCompat(this);
         statusBarCompat.setStatusBarColor(0xffffffff);
-        TextView tv = findViewById(R.id.view4);
-        StringBuilder sb = new StringBuilder();
-        sb.append("getDeviceBrand   =  " + DeviceUtil.getDeviceBrand());
-        sb.append("\ngetSystemModel   =  " + DeviceUtil.getSystemModel());
-        sb.append("\ngetManufacturer   =  " + DeviceUtil.getManufacturer());
-        sb.append("\ngetSystemVersion   =  " + DeviceUtil.getSystemVersion());
-
-
-        sb.append("\n\n\n\nisXiaomi   =  " + RomUtils.isXiaomi());
-        sb.append("\nisFlyme   =  " + RomUtils.isFlyme());
-        sb.append("\nisHuawei   =  " + RomUtils.isHuawei());
-        sb.append("\nisOppo   =  " + RomUtils.isOppo());
-        sb.append("\nisVivo   =  " + RomUtils.isVivo());
-        sb.append("\nisSamsung   =  " + RomUtils.isSamsung());
-        sb.append("\nisSmartisan   =  " + RomUtils.isSmartisan());
-        sb.append("\nis360   =  " + RomUtils.is360());
-        tv.setText(sb);
+        tv = findViewById(R.id.view4);
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("getDeviceBrand   =  " + DeviceUtil.getDeviceBrand());
+//        sb.append("\ngetSystemModel   =  " + DeviceUtil.getSystemModel());
+//        sb.append("\ngetManufacturer   =  " + DeviceUtil.getManufacturer());
+//        sb.append("\ngetSystemVersion   =  " + DeviceUtil.getSystemVersion());
+//
+//
+//        sb.append("\n\n\n\nisXiaomi   =  " + RomUtils.isXiaomi());
+//        sb.append("\nisFlyme   =  " + RomUtils.isFlyme());
+//        sb.append("\nisHuawei   =  " + RomUtils.isHuawei());
+//        sb.append("\nisOppo   =  " + RomUtils.isOppo());
+//        sb.append("\nisVivo   =  " + RomUtils.isVivo());
+//        sb.append("\nisSamsung   =  " + RomUtils.isSamsung());
+//        sb.append("\nisSmartisan   =  " + RomUtils.isSmartisan());
+//        sb.append("\nis360   =  " + RomUtils.is360());
+        tv.setHighlightColor(Color.LTGRAY);
+        tv.setMovementMethod(FocusLinkMovementMethod.getInstance());
+        tv.setText(SpannableUtils.getBuilder("1111111111").setClickSpan(new MyClickableSpan()).setBackgroundColor(0xffff0000)
+                .append("\n\n")
+                .append("22222222222222").setClickSpan(new MyClickableSpan())
+                .append("\n\n")
+                .append("3333333333").setClickSpan(new MyClickableSpan())
+                .append("\n\n")
+                .append("4444444444444").setClickSpan(new MyClickableSpan())
+                .append("\n\n")
+                .append("5555555555555555555").setClickSpan(new MyClickableSpan())
+                .create());
     }
 
     public void onView1Click(View view) {
@@ -57,6 +71,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
+    }
+
+    private class MyClickableSpan extends SpannableUtils.XClickableSpan {
+
+
+        @Override
+        public void onClick(View widget) {
+            SuperToast.get("aaaaaaa").info();
+        }
     }
 
     int statusColor = 0xffff0000;

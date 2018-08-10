@@ -5,12 +5,13 @@
     android:orientation="vertical">
 
 
-    <TextView
+    <com.ashlikun.utils.simple.TextViewCompat
         android:id="@+id/view4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:lineSpacingExtra="10dp"
         android:onClick="onView4Click"
-        android:padding="@dimen/fab_margin_10"
         android:text="info"
-        android:textSize="16dp"></TextView>
+        android:textSize="16dp"></com.ashlikun.utils.simple.TextViewCompat>
 </LinearLayout>

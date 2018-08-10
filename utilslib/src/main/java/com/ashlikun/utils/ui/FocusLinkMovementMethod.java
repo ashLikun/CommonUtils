@@ -9,8 +9,6 @@ import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import com.ashlikun.utils.other.LogUtils;
-
 
 /**
  * 作者　　: 李坤
@@ -33,10 +31,33 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
     }
 
     @Override
+    protected boolean up(TextView widget, Spannable buffer) {
+        return false;
+    }
+
+    @Override
+    protected boolean down(TextView widget, Spannable buffer) {
+        return false;
+    }
+
+    @Override
+    protected boolean left(TextView widget, Spannable buffer) {
+        return false;
+    }
+
+    @Override
+    protected boolean right(TextView widget, Spannable buffer) {
+        return false;
+    }
+
+    @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer,
                                 MotionEvent event) {
         int action = event.getAction();
-
+        boolean isOpenSelect = true;
+        if (widget.getClass().getSimpleName().equals("TextViewCompat") || widget.getLineSpacingExtra() > 0 || widget.getLineSpacingMultiplier() != 1) {
+            isOpenSelect = false;
+        }
         if (action == MotionEvent.ACTION_UP ||
                 action == MotionEvent.ACTION_DOWN) {
             int x = (int) event.getX();
@@ -52,28 +73,34 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
             int line = layout.getLineForVertical(y);
             int off = layout.getOffsetForHorizontal(line, x);
 
-            ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
+            ClickableSpan[] links = buffer.getSpans(off, off, ClickableSpan.class);
 
-            if (link.length != 0) {
+            if (links.length != 0) {
                 if (action == MotionEvent.ACTION_UP) {
-                    Selection.removeSelection(buffer);
-                    link[0].onClick(widget);
+                    if (isOpenSelect) {
+                        Selection.removeSelection(buffer);
+                    }
+                    links[0].onClick(widget);
                 } else if (action == MotionEvent.ACTION_DOWN) {
-                    widget.setFocusable(true);
-                    widget.setFocusableInTouchMode(true);
-                    widget.requestFocus();
-                    Selection.setSelection(buffer,
-                            buffer.getSpanStart(link[0]),
-                            buffer.getSpanEnd(link[0]));
+                    if (isOpenSelect) {
+                        Selection.setSelection(buffer,
+                                buffer.getSpanStart(links[0]),
+                                buffer.getSpanEnd(links[0]));
+                    }
                 }
-
                 return true;
             } else {
-                Selection.removeSelection(buffer);
+                if (isOpenSelect) {
+                    Selection.removeSelection(buffer);
+                }
             }
         } else if (action != MotionEvent.ACTION_MOVE) {
             Selection.removeSelection(buffer);
         }
-        return super.onTouchEvent(widget, buffer, event);
+        if (isOpenSelect) {
+            return super.onTouchEvent(widget, buffer, event);
+        }
+        //如果调用父类会滚动
+        return true;
     }
 }

@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
  * 创建时间: 2018/2/24　15:04
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：
+ * 功能介绍：操作apk的工具
  */
 
 public class ApkUtils {

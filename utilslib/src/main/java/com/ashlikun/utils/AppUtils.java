@@ -3,6 +3,8 @@ package com.ashlikun.utils;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
@@ -112,6 +114,7 @@ public class AppUtils {
             return Uri.fromFile(file);
         }
     }
+
     /**
      * 服务是否启动了
      */
@@ -128,5 +131,39 @@ public class AppUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 获取版本名称
+     *
+     * @return
+     */
+    public static String getVersionName() {
+        PackageManager pm = AppUtils.getApp().getPackageManager();
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
+
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获取版本code
+     *
+     * @return
+     */
+    public static int getVersionCode() {
+        PackageManager pm = AppUtils.getApp().getPackageManager();
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
+
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
