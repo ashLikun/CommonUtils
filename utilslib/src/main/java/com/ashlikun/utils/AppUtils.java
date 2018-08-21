@@ -27,6 +27,9 @@ import java.util.List;
 public class AppUtils {
     private static boolean isDebug;
     private static Application myApp;
+    private static int versionCode = -10088;
+    private static String versionName;
+    private static String packageName;
 
     /**
      * 作者　　: 李坤
@@ -139,15 +142,19 @@ public class AppUtils {
      * @return
      */
     public static String getVersionName() {
-        PackageManager pm = AppUtils.getApp().getPackageManager();
-        try {
-            PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
-
-            return packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (TextUtils.isEmpty(versionName)) {
+            PackageManager pm = AppUtils.getApp().getPackageManager();
+            try {
+                PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
+                versionName = packageInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-        return "";
+        if (versionName == null) {
+            versionName = "";
+        }
+        return versionName;
     }
 
     /**
@@ -156,14 +163,31 @@ public class AppUtils {
      * @return
      */
     public static int getVersionCode() {
-        PackageManager pm = AppUtils.getApp().getPackageManager();
-        try {
-            PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
-
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (versionCode < 0) {
+            PackageManager pm = AppUtils.getApp().getPackageManager();
+            try {
+                PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
+                versionCode = packageInfo.versionCode;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-        return -1;
+        return versionCode;
+    }
+
+    public static String getPackageName() {
+        if (TextUtils.isEmpty(packageName)) {
+            PackageManager pm = AppUtils.getApp().getPackageManager();
+            try {
+                PackageInfo packageInfo = pm.getPackageInfo(AppUtils.getApp().getPackageName(), 0);
+                packageName = packageInfo.packageName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (packageName == null) {
+            packageName = "";
+        }
+        return packageName;
     }
 }
