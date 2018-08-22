@@ -6,19 +6,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.os.Process;
 import android.text.TextUtils;
 
 import com.ashlikun.utils.AppUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * 作者　　: 李坤
  * 创建时间: 2016/10/12 10:47
  * <p>
- * 方法功能：activity的操作类，检测是否前台运行
+ * 方法功能：activity的操作类，检测是否前台运行,获取进程名称
  * < uses-permission android:name =“android.permission.GET_TASKS” />
  */
 
@@ -36,19 +36,53 @@ public class ActivityUtils {
     }
 
     /**
-     * 获取App包 信息版本号
+     * 获得当前进程名称, >5.1的系统，有几率会关闭getRunningAppProcesses方法(只会返回我们自己的进程)
+     *
+     * @return
      */
-    public PackageInfo getPackageInfo(Context context) {
-        PackageManager packageManager = context.getPackageManager();
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+    public static String getCurProcessName() {
+        int pid = Process.myPid();
+        //获取app进程
+        List<ActivityManager.RunningAppProcessInfo> appProcessInfos = ((ActivityManager) AppUtils.getApp()
+                .getSystemService(Context.ACTIVITY_SERVICE))
+                .getRunningAppProcesses();
+        if (appProcessInfos != null && !appProcessInfos.isEmpty()) {
+            for (ActivityManager.RunningAppProcessInfo info : appProcessInfos) {
+                if (info.pid == pid && !TextUtils.isEmpty(info.processName)) {
+                    return info.processName;
+                }
+            }
         }
-        return packageInfo;
+        //如果没有获取到运行的进程，那么久调用运行的服务来判断
+        List<ActivityManager.RunningServiceInfo> runningServiceInfos = ((ActivityManager) AppUtils.getApp().getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE);
+        if (runningServiceInfos != null && !runningServiceInfos.isEmpty()) {
+            for (ActivityManager.RunningServiceInfo info : runningServiceInfos) {
+                if (info.pid == pid && !TextUtils.isEmpty(info.process)) {
+                    return info.process;
+                }
+            }
+        }
+        //返回默认值
+        return "";
     }
 
+    /**
+     * 服务是否启动了
+     */
+    public static boolean isServiceStart(Class serviceName) {
+        Iterator localIterator = ((ActivityManager) AppUtils.getApp().getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE).iterator();
+        if (localIterator == null) {
+            return false;
+        }
+        while (localIterator.hasNext()) {
+            ActivityManager.RunningServiceInfo runningService = (ActivityManager.RunningServiceInfo) localIterator.next();
+            if (runningService.service.getClassName().toString()
+                    .equals(serviceName.getName())) {
+                return true;
+            }
+        }
+        return true;
+    }
 
     /**
      * 作者　　: 李坤
@@ -74,6 +108,7 @@ public class ActivityUtils {
      * 方法功能：判断某个界面是否在前台
      *
      * @param classs 某个界面activity
+     * @return true:在前台，false:不在
      */
     public static boolean isForeground(Class classs) {
         if (Activity.class.isAssignableFrom(classs)) {
@@ -144,7 +179,8 @@ public class ActivityUtils {
             //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
             if (rti.topActivity.getPackageName().equals(context.getPackageName())) {
                 mAm.moveTaskToFront(rti.id, 0);
-                return 1;//后台
+                //后台
+                return 1;
             }
         }
         //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity

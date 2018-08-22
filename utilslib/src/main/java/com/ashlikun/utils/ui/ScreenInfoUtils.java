@@ -7,71 +7,50 @@ import android.view.WindowManager;
 import com.ashlikun.utils.AppUtils;
 
 /**
- * 作者　　: 李坤
- * 创建时间: 16:35 Administrator
+ * @author　　: 李坤
+ * 创建时间: 2018/8/22 15:07
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：屏幕信息工具类
  */
-
 public class ScreenInfoUtils {
-    /**
-     */
-    private int width;
-    /**
-     */
-    private int height;
-    /**
-     */
-    private float density;
-    /**
-     */
-    private int densityDpi;
+    private static DisplayMetrics metric;
 
 
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public float getDensity() {
-        return density;
-    }
-
-    public void setDensity(float density) {
-        this.density = density;
-    }
-
-    public int getDensityDpi() {
-        return densityDpi;
-    }
-
-    public void setDensityDpi(int densityDpi) {
-        this.densityDpi = densityDpi;
-    }
-
-    public ScreenInfoUtils() {
+    public static int getWidth() {
         init();
+        return metric.widthPixels;
     }
 
-    private void init() {
-        DisplayMetrics metric = new DisplayMetrics();
-        WindowManager wm = (WindowManager) AppUtils.getApp().getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metric);
-        width = metric.widthPixels;
-        height = metric.heightPixels;
-        density = metric.density;
-        densityDpi = metric.densityDpi;
+    private static void init() {
+        if (metric == null) {
+            metric = new DisplayMetrics();
+            WindowManager wm = (WindowManager) AppUtils.getApp().getSystemService(Context.WINDOW_SERVICE);
+            wm.getDefaultDisplay().getMetrics(metric);
+        }
     }
+
+
+    public static int getHeight() {
+        init();
+        return metric.heightPixels;
+    }
+
+
+    public static float getDensity() {
+        init();
+        return metric.density;
+    }
+
+
+    public static DisplayMetrics getDisplayMetrics() {
+        init();
+        return metric;
+    }
+
+    public static int getDensityDpi() {
+        init();
+        return metric.densityDpi;
+    }
+
 }

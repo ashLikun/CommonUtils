@@ -17,7 +17,7 @@ import com.ashlikun.utils.R;
  * 创建时间: 16:35 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：底部弹出消息的工具类
+ * 功能介绍：底部弹出消息Snackbar的工具类
  */
 
 public class SnackbarUtil {

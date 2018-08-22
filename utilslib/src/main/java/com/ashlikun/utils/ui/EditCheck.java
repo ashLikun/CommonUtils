@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class EditCheck {
     private Context context;
     private IEditStatusChang mIEditStatusChang;
     private ArrayList<EditCheckData> mEdithelpdatas;
-    private TextView button;
+    private View[] button;
 
     /**
      * 作者　　: 李坤
@@ -42,9 +43,9 @@ public class EditCheck {
     }
 
     /**
-     * 设置按钮
+     * 设置按钮,会调用setEnabled
      */
-    public void setButton(TextView button) {
+    public void setButton(View... button) {
         this.button = button;
     }
 
@@ -116,7 +117,10 @@ public class EditCheck {
                 isHandle = mIEditStatusChang.onEditChang(edits.getTextView(), s, isCheck);
             }
             if (!isHandle && button != null) {
-                button.setEnabled(isCheck);
+                for (View v : button) {
+                    v.setEnabled(isCheck);
+                }
+
             }
         }
     }

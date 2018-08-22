@@ -15,7 +15,13 @@ public class ActivityManager {
     private static Stack<Activity> activityStack;
     private static ActivityManager instance;
 
-    //获取指定的运行中的activity
+    /**
+     * 获取指定的运行中的activity
+     *
+     * @param activity
+     * @param <T>
+     * @return
+     */
     public <T> T getTagActivity(Class<? extends Activity> activity) {
         if (activity != null) {
             for (Activity a : activityStack) {
@@ -44,7 +50,11 @@ public class ActivityManager {
         return instance;
     }
 
-    // 退出Activity
+    /**
+     * 退出Activity
+     *
+     * @param activity
+     */
     public void exitActivity(Activity activity) {
         if (activity != null) {
             if (activityStack.contains(activity)) {
@@ -56,7 +66,11 @@ public class ActivityManager {
         }
     }
 
-    // 退出Activity
+    /**
+     * 退出Activity
+     *
+     * @param activity
+     */
     public void exitActivity(@SuppressWarnings("rawtypes") Class activity) {
         if (activity != null) {
             // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
@@ -72,15 +86,24 @@ public class ActivityManager {
         }
     }
 
-    // 获得当前栈顶Activity
+    /**
+     * 获得当前栈顶Activity
+     *
+     * @return
+     */
     public Activity currentActivity() {
         Activity activity = null;
-        if (activityStack != null && !activityStack.empty())
+        if (activityStack != null && !activityStack.empty()) {
             activity = activityStack.lastElement();
+        }
         return activity;
     }
 
-    // 将当前Activity推入栈中
+    /**
+     * 将当前Activity推入栈中
+     *
+     * @param activity
+     */
     public void pushActivity(Activity activity) {
         if (activityStack == null) {
             activityStack = new Stack<Activity>();
@@ -88,7 +111,9 @@ public class ActivityManager {
         activityStack.addElement(activity);
     }
 
-    // 退出栈中所有Activity
+    /**
+     * 退出栈中所有Activity
+     */
     public void exitAllActivity() {
 
         try {
@@ -105,7 +130,11 @@ public class ActivityManager {
 
     }
 
-    // 退出栈中所有Activity
+    /**
+     * 退出栈中所有Activity
+     *
+     * @param activity
+     */
     public void exitAllActivity(Class... activity) {
         try {
             for (Activity a : activityStack) {
@@ -119,8 +148,9 @@ public class ActivityManager {
                         break;
                     }
                 }
-                if (isfinish)
+                if (isfinish) {
                     exitActivity(a);
+                }
             }
         } catch (Exception e) {
 

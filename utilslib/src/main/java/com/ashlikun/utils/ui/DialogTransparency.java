@@ -40,9 +40,10 @@ public class DialogTransparency extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowManager.LayoutParams lp = getWindow().getAttributes();
-        ScreenInfoUtils screen = new ScreenInfoUtils();
-        lp.width = (screen.getWidth()); //设置宽度
-        lp.height = (screen.getHeight()); //设置宽度
+        //设置宽度
+        lp.width = (ScreenInfoUtils.getWidth());
+        //设置宽度
+        lp.height = (ScreenInfoUtils.getHeight());
         getWindow().setAttributes(lp);
         getWindow().getAttributes().gravity = Gravity.CENTER;
     }

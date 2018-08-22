@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
-import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.R;
 
 import static com.ashlikun.utils.AppUtils.getApp;
@@ -24,7 +23,6 @@ public class UiUtils {
     }
 
     public static void setRefreshing(final SwipeRefreshLayout swipeRefreshLayout, final boolean b) {
-
         swipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -59,14 +57,12 @@ public class UiUtils {
     }
 
 
-    /*
+    /**
      * 设置ImageView渲染（Tint）
      */
     public static void setImageViewTint(final ImageView view, final int color) {
         view.setColorFilter(view.getResources().getColor(color));
     }
-
-
 
 
     public static View getRootView(Activity context) {

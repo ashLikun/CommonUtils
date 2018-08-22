@@ -32,7 +32,6 @@ import static com.ashlikun.utils.AppUtils.getApp;
  * <p>
  * 功能介绍：启动系统自带的ui
  */
-
 public class SystemUiUtils {
     /**
      * 根据手机好拨打电话
@@ -72,7 +71,6 @@ public class SystemUiUtils {
      * @param requestCode    请求的Code
      * @return 文件，异步的
      */
-
     public static String startPicture(Activity context, String appSDCachePath, int requestCode) {
         File fDir = new File(appSDCachePath);
         String cachePath = System.currentTimeMillis() + ".jpg";
@@ -105,7 +103,6 @@ public class SystemUiUtils {
      *                video/*;image/*  同时选择视频和图片
      *                * /*  全部  没有空格
      */
-
     public static void startFileSelect(Activity context, String type, int requestCode) {
         Intent intent = new Intent();
         intent.setType(type);
@@ -133,7 +130,9 @@ public class SystemUiUtils {
      * 获取照片选择的文件路径
      */
     public static String getFileSelectPath(Intent data) {
-        if (data == null || data.getData() == null) return null;
+        if (data == null || data.getData() == null) {
+            return null;
+        }
         return getPath(getApp(), data.getData());
     }
 
@@ -147,7 +146,6 @@ public class SystemUiUtils {
      */
     @SuppressLint("NewApi")
     public static String getPath(Context context, Uri uri) {
-
         if (uri == null) {
             return "";
         }
@@ -230,8 +228,9 @@ public class SystemUiUtils {
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
     }

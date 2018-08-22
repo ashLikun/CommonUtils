@@ -1,5 +1,6 @@
 package com.ashlikun.utils.simple;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
@@ -12,6 +13,7 @@ import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.ui.DrawableUtils;
 import com.ashlikun.utils.ui.FocusLinkMovementMethod;
+import com.ashlikun.utils.ui.NotificationUtil;
 import com.ashlikun.utils.ui.StatusBarCompat;
 import com.ashlikun.utils.ui.SuperToast;
 
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View widget) {
             SuperToast.get("aaaaaaa").info();
+            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+            NotificationUtil.notification(intent, 123, R.mipmap.ic_launcher_round, "标题", "你收到通知啦");
         }
     }
 

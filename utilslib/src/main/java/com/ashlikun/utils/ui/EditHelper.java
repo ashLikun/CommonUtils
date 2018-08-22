@@ -23,10 +23,10 @@ import static android.R.attr.id;
  * 1：最后再调用check正则判断
  * 2：可监听输入状态，然后回掉接口判断
  */
-
-
 public class EditHelper {
-    //全局默认的是否动画
+    /**
+     * 全局默认的是否动画
+     */
     public static boolean IS_ANIM = true;
     public Context context;
     private boolean isAnim = IS_ANIM;

@@ -1,21 +1,17 @@
 package com.ashlikun.utils;
 
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Process;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.ashlikun.utils.provider.BaseContentProvider;
+import com.ashlikun.utils.ui.ActivityUtils;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * 作者　　: 李坤
@@ -65,43 +61,13 @@ public class AppUtils {
      * @return
      */
     public static boolean isMainProcess() {
-        String name = getCurProcessName();
+        String name = ActivityUtils.getCurProcessName();
         if (name == null || name.trim().length() == 0) {
             return false;
         }
         return name.equals(myApp.getApplicationInfo().packageName);
     }
 
-    /**
-     * 获得当前进程名称, >5.1的系统，有几率会关闭getRunningAppProcesses方法(只会返回我们自己的进程)
-     *
-     * @return
-     */
-    public static String getCurProcessName() {
-        int pid = Process.myPid();
-        //获取app进程
-        List<ActivityManager.RunningAppProcessInfo> appProcessInfos = ((ActivityManager) getApp()
-                .getSystemService(Context.ACTIVITY_SERVICE))
-                .getRunningAppProcesses();
-        if (appProcessInfos != null && !appProcessInfos.isEmpty()) {
-            for (ActivityManager.RunningAppProcessInfo info : appProcessInfos) {
-                if (info.pid == pid && !TextUtils.isEmpty(info.processName)) {
-                    return info.processName;
-                }
-            }
-        }
-        //如果没有获取到运行的进程，那么久调用运行的服务来判断
-        List<ActivityManager.RunningServiceInfo> runningServiceInfos = ((ActivityManager) getApp().getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE);
-        if (runningServiceInfos != null && !runningServiceInfos.isEmpty()) {
-            for (ActivityManager.RunningServiceInfo info : runningServiceInfos) {
-                if (info.pid == pid && !TextUtils.isEmpty(info.process)) {
-                    return info.process;
-                }
-            }
-        }
-        //返回默认值
-        return "";
-    }
 
     /**
      * 兼容高版本的fileprovider
@@ -118,23 +84,6 @@ public class AppUtils {
         }
     }
 
-    /**
-     * 服务是否启动了
-     */
-    public static boolean isServiceStart(Class serviceName) {
-        Iterator localIterator = ((ActivityManager) getApp().getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE).iterator();
-        if (localIterator == null) {
-            return false;
-        }
-        while (localIterator.hasNext()) {
-            ActivityManager.RunningServiceInfo runningService = (ActivityManager.RunningServiceInfo) localIterator.next();
-            if (runningService.service.getClassName().toString()
-                    .equals(serviceName.getName())) {
-                return true;
-            }
-        }
-        return true;
-    }
 
     /**
      * 获取版本名称
@@ -189,5 +138,27 @@ public class AppUtils {
             packageName = "";
         }
         return packageName;
+    }
+
+    /**
+     * 获取应用程序名称
+     */
+    public static String getAppName() {
+        int labelRes = getPackageInfo().applicationInfo.labelRes;
+        return getApp().getResources().getString(labelRes);
+    }
+
+    /**
+     * 获取App包 信息版本号
+     */
+    public static PackageInfo getPackageInfo() {
+        PackageManager packageManager = getApp().getPackageManager();
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = packageManager.getPackageInfo(getApp().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageInfo;
     }
 }

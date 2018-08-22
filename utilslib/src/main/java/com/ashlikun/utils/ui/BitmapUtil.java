@@ -25,6 +25,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * @author　　: 李坤
+ * 创建时间: 2018/8/22 15:15
+ * 邮箱　　：496546144@qq.com
+ * <p>
+ * 方法功能：Bitmap操作的一些工具
+ */
 
 public class BitmapUtil {
 
@@ -90,7 +97,7 @@ public class BitmapUtil {
     }
 
     /**
-     * 获取原形图片
+     * 获取圆形图片
      */
     public static Bitmap toRoundCorner(Bitmap bitmap) {
         int height = bitmap.getHeight();
@@ -104,7 +111,6 @@ public class BitmapUtil {
 
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
-        //paint.setColor(0xff424242);
         paint.setColor(Color.TRANSPARENT);
         canvas.drawCircle(width / 2, height / 2, width / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
@@ -116,8 +122,9 @@ public class BitmapUtil {
      * 保存图片
      */
     public static boolean saveBitmap(Bitmap bitmap, File file) {
-        if (bitmap == null)
+        if (bitmap == null) {
             return false;
+        }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
@@ -195,6 +202,8 @@ public class BitmapUtil {
 
     /**
      * 从资源中获取Bitmap   按照指定的宽高缩放
+     * @param width 希望的宽度
+     * @param height 希望的高度
      */
     public static Bitmap decodeResource(Context context, int resourseId,
                                         int width, int height) {
@@ -211,7 +220,8 @@ public class BitmapUtil {
             opts.inPurgeable = true;
         }
         try {
-            return BitmapFactory.decodeResource(context.getResources(), resourseId, opts); // decodeStream直接调用JNI>>nativeDecodeAsset()来完成decode，无�?再使用java层的createBitmap，从而节省了java层的空间
+            // decodeStream直接调用JNI>>nativeDecodeAsset()来完成decode，无�?再使用java层的createBitmap，从而节省了java层的空间
+            return BitmapFactory.decodeResource(context.getResources(), resourseId, opts);
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
         }
@@ -220,6 +230,8 @@ public class BitmapUtil {
 
     /**
      * 按照路径加载图片,按照指定的宽高缩放
+     * @param width 希望的宽度
+     * @param height 希望的高度
      */
     public static Bitmap decodeFile(File dst, int width, int height) {
         if (null != dst && dst.exists()) {
@@ -245,6 +257,8 @@ public class BitmapUtil {
 
     /**
      * 加载源数据图片
+     * @param width 希望的宽度
+     * @param height 希望的高度
      */
     public static Bitmap decodeByte(byte[] dst, int width, int height) {
         if (null != dst && dst.length > 0) {
@@ -272,6 +286,8 @@ public class BitmapUtil {
 
     /**
      * 计算inSampleSize
+     * @param reqWidth 希望的宽度
+     * @param reqWidth 希望的高度
      */
     public static int computeSampleSize(BitmapFactory.Options options,
                                         int reqWidth, int reqHeight) {
@@ -291,7 +307,13 @@ public class BitmapUtil {
         return roundedSize;
     }
 
-    //计算初始的SampleSize
+    /**
+     * 计算初始的SampleSize
+     * @param options
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
     private static int computeInitialSampleSize(BitmapFactory.Options options,
                                                 int reqWidth, int reqHeight) {
         double w = options.outWidth;

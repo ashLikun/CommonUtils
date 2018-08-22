@@ -6,13 +6,12 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 
-import com.ashlikun.utils.other.LogUtils;
+import com.ashlikun.utils.AppUtils;
 
 import java.util.ArrayList;
 
@@ -31,62 +30,108 @@ import java.util.ArrayList;
 
 public class NotificationUtil {
     private static int LedID = 0;
-    private static final String TAG = NotificationUtil.class.getSimpleName();
 
-    public static void notification(Context context, Uri uri,
-                                    int icon, String ticker, String title, String msg) {
-        LogUtils.i("notiry uri :" + uri);
+    /**
+     * @param activityClass 点击通知后进入的Activity
+     * @param bundle        intent参数
+     * @param id            通知id
+     * @param icon          图标
+     * @param title         标题
+     * @param msg           主题消息
+     */
+    public static void notification(String activityClass,
+                                    Bundle bundle,
+                                    int id,
+                                    int icon,
+                                    String title,
+                                    String msg) {
         // 设置通知的事件消息
         Intent intent = new Intent();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
-            intent.setPackage(context.getPackageName());
-        }
-        intent.setData(uri);
-        notification(context, intent, 0, icon, ticker, title, msg);
-    }
-
-    public static void notification(Context context, String activityClass, Bundle bundle,
-                                    int icon, String ticker, String title, String msg) {
-        // 设置通知的事件消息
-        Intent intent = new Intent();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.DONUT) {
-            intent.setPackage(context.getPackageName());
-        }
+        intent.setPackage(AppUtils.getApp().getPackageName());
         intent.putExtras(bundle);
-        intent.setComponent(new ComponentName(context.getPackageName(), activityClass));
-        notification(context, intent, 0, icon, ticker, title, msg);
+        intent.setComponent(new ComponentName(AppUtils.getApp().getPackageName(), activityClass));
+        notification(intent, id, icon, title, msg);
     }
 
-    public static void notification(Context context, Intent intent, int id,
-                                    int icon, String ticker, String title, String msg) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        notification(context, pendingIntent, id, icon, ticker, title, msg);
+    /**
+     * @param intent 点击通知后进入的Activity
+     * @param id     通知id
+     * @param icon   图标
+     * @param title  标题
+     * @param msg    主题消息
+     */
+    public static void notification(Intent intent,
+                                    int id,
+                                    int icon,
+                                    String title,
+                                    String msg) {
+        notification(intent, id, icon, title, msg, true);
     }
 
-    public static void notification(Context context, PendingIntent pendingIntent, int id,
-                                    int icon, String ticker, String title, String msg) {
-        Notification.Builder builder = new Notification.Builder(context);
-        builder.setSmallIcon(icon);
+    /**
+     * @param intent     点击通知后进入的Activity
+     * @param id         通知id
+     * @param icon       图标
+     * @param title      标题
+     * @param msg        主题消息
+     * @param autoCancel 是否自动取消，点击的时候
+     */
+    public static void notification(Intent intent,
+                                    int id,
+                                    int icon,
+                                    String title,
+                                    String msg,
+                                    boolean autoCancel) {
 
-        builder.setContentTitle(title);
-        builder.setTicker(ticker);
-        builder.setContentText(msg);
-
-        builder.setDefaults(Notification.DEFAULT_SOUND);
-        builder.setLights(0xFFFFFF00, 0, 2000);
-        builder.setVibrate(new long[]{0, 100, 300});
-        builder.setAutoCancel(true);
-        builder.setContentIntent(pendingIntent);
-        Notification baseNF;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            baseNF = builder.getNotification();
-        } else {
-            baseNF = builder.build();
-        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(AppUtils.getApp(), AppUtils.getAppName())
+                //左部图标
+                .setSmallIcon(icon)
+                //上部标题
+                .setContentTitle(title)
+                //中部通知内容
+                .setContentText(msg)
+                //点击通知后自动消失
+                .setAutoCancel(autoCancel);
+        //通知的声音震动等都随系统
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        //也可以选择使用声音文件，setSound(uri)
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(AppUtils.getApp(), 0, intent,
+                //允许更新
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+        //如果没有就创建，如果有就更新，
+        //第一个参数是设置创建通知的id或者需要更新通知的id
         //发出状态栏通知
-        NotificationManager nm = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-        nm.notify(id, baseNF);
+        NotificationManager nm = (NotificationManager) AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(id, builder.build());
     }
+
+    /**
+     * 取消通知
+     *
+     * @param notificationId，通知的id
+     */
+    public static void cancel(int notificationId) {
+        NotificationManager nm = (NotificationManager) AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE);
+        //撤销指定id通知
+        nm.cancel(notificationId);
+    }
+
+    /**
+     * 取消全部通知
+     */
+    public static void cancel() {
+        NotificationManager nm = (NotificationManager) AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE);
+        //撤销本程序发出的全部通知
+        nm.cancelAll();
+    }
+
+
+
+
+    /********************************************************************************************
+     *                                           下面是手机顶部小灯的通知
+     ********************************************************************************************/
 
     public static void lightLed(Context context, int colorOx, int durationMS) {
         lightLed(context, colorOx, 0, durationMS);

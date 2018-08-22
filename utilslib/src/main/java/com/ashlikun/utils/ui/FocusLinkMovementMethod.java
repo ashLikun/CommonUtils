@@ -16,6 +16,8 @@ import android.widget.TextView;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：设置TextView(setClickSpan)点击时候的背景
+ * 是否设置选择--->TextViewCompat || widget.getLineSpacingExtra() > 0 || widget.getLineSpacingMultiplier() != 1
+ * 满足一个就不设置
  */
 
 public class FocusLinkMovementMethod extends LinkMovementMethod {
@@ -54,6 +56,7 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
     public boolean onTouchEvent(TextView widget, Spannable buffer,
                                 MotionEvent event) {
         int action = event.getAction();
+        //是否设置选择
         boolean isOpenSelect = true;
         if (widget.getClass().getSimpleName().equals("TextViewCompat") || widget.getLineSpacingExtra() > 0 || widget.getLineSpacingMultiplier() != 1) {
             isOpenSelect = false;
