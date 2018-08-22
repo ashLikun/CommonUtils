@@ -19,18 +19,18 @@ import com.ashlikun.utils.AppUtils;
  */
 
 public class ResUtils {
-    public int getColor(Context context, @ColorRes int color) {
+    public static int getColor(Context context, @ColorRes int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getTheme() != null) {
             return context.getResources().getColor(color, context.getTheme());
         }
         return context.getResources().getColor(color);
     }
 
-    public int getColor(@ColorRes int color) {
+    public static int getColor(@ColorRes int color) {
         return AppUtils.getApp().getResources().getColor(color);
     }
 
-    public Drawable getDrawable(Context context, @DrawableRes int drawable) {
+    public static Drawable getDrawable(Context context, @DrawableRes int drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return context.getResources().getDrawable(drawable, context.getTheme());
         } else {
@@ -38,23 +38,23 @@ public class ResUtils {
         }
     }
 
-    public Drawable getDrawable(@DrawableRes int drawable) {
+    public static Drawable getDrawable(@DrawableRes int drawable) {
         return AppUtils.getApp().getResources().getDrawable(drawable);
     }
 
-    public float getDimension(Context context, @DimenRes int color) {
+    public static float getDimension(Context context, @DimenRes int color) {
         return context.getResources().getDimension(color);
     }
 
-    public float getDimension(@DimenRes int color) {
+    public static float getDimension(@DimenRes int color) {
         return AppUtils.getApp().getResources().getDimension(color);
     }
 
-    public String getString(Context context, @StringRes int str) {
+    public static String getString(Context context, @StringRes int str) {
         return context.getResources().getString(str);
     }
 
-    public String getString(@StringRes int str) {
+    public static String getString(@StringRes int str) {
         return AppUtils.getApp().getResources().getString(str);
     }
 }
