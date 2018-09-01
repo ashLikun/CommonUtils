@@ -195,6 +195,75 @@ public class UiUtils {
     }
 
     /**
+     * 设置view高度
+     *
+     * @param view
+     * @param height
+     */
+    public static void setViewHeight(View view, int height) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        params.height = height;
+        view.setLayoutParams(params);
+    }
+
+    /**
+     * 设置view宽度
+     *
+     * @param view
+     * @param width
+     */
+    public static void setViewWidth(View view, int width) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        params.width = width;
+        view.setLayoutParams(params);
+    }
+
+    /**
+     * 设置view   Margin
+     *
+     * @param view
+     */
+    public static void setViewMargin(View view, int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params != null && params instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) params).leftMargin = leftMargin;
+            ((ViewGroup.MarginLayoutParams) params).topMargin = topMargin;
+            ((ViewGroup.MarginLayoutParams) params).rightMargin = rightMargin;
+            ((ViewGroup.MarginLayoutParams) params).bottomMargin = bottomMargin;
+            view.setLayoutParams(params);
+        }
+    }
+
+    /**
+     * 获取view的Margin
+     *
+     * @param view
+     * @param orientation 那个值，左上右下（0,1,2,3）
+     * @return
+     */
+    public static int getViewMargin(View view, int orientation) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params != null && params instanceof ViewGroup.MarginLayoutParams) {
+            if (orientation == 0) {
+                return ((ViewGroup.MarginLayoutParams) params).leftMargin;
+            } else if (orientation == 1) {
+                return ((ViewGroup.MarginLayoutParams) params).topMargin;
+            } else if (orientation == 2) {
+                return ((ViewGroup.MarginLayoutParams) params).rightMargin;
+            } else if (orientation == 3) {
+                return ((ViewGroup.MarginLayoutParams) params).bottomMargin;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * 获取view大小
      *
      * @param onSizeListener 监听回调

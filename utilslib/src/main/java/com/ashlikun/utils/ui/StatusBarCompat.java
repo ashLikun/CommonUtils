@@ -78,8 +78,10 @@ public class StatusBarCompat {
                         //黑色
                         view.setSystemUiVisibility(view.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                     } else {
-                        //白色
-                        view.setSystemUiVisibility(view.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                        //白色,就是去除View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        if ((view.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0) {
+                            view.setSystemUiVisibility(view.getSystemUiVisibility() ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        }
                     }
                 }
             }
