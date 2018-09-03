@@ -13,5 +13,6 @@
         android:lineSpacingExtra="10dp"
         android:onClick="onView4Click"
         android:text="info"
+        android:textColor="@color/white"
         android:textSize="16dp"></com.ashlikun.utils.simple.TextViewCompat>
 </LinearLayout>

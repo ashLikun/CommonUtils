@@ -10,7 +10,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ashlikun.utils.AppUtils;
+import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.SpannableUtils;
+import com.ashlikun.utils.other.spannable.XClickableSpan;
 import com.ashlikun.utils.ui.DrawableUtils;
 import com.ashlikun.utils.ui.FocusLinkMovementMethod;
 import com.ashlikun.utils.ui.NotificationUtil;
@@ -52,15 +54,18 @@ public class MainActivity extends AppCompatActivity {
 //        sb.append("\nis360   =  " + RomUtils.is360());
         tv.setHighlightColor(Color.LTGRAY);
         tv.setMovementMethod(FocusLinkMovementMethod.getInstance());
-        tv.setText(SpannableUtils.getBuilder("1111111111").setClickSpan(new MyClickableSpan()).setBackgroundColor(0xffff0000)
+        tv.setText(SpannableUtils.getBuilder("1111111111").setBackgroundColor(0xffff0000)
                 .append("\n\n")
-                .append("22222222222222").setClickSpan(new MyClickableSpan())
+                .append("22222222222222222222222222222222222222222222222222222").setBullet(DimensUtils.dip2px(this, 3), 0xffff0000)
                 .append("\n\n")
-                .append("3333333333").setClickSpan(new MyClickableSpan())
+                .append("3333333333").setBullet(DimensUtils.dip2px(this, 3), 0xffff0000)
                 .append("\n\n")
-                .append("4444444444444").setClickSpan(new MyClickableSpan())
+                .append("4444444444444").setBullet(DimensUtils.dip2px(this, 3), 0xffff0000)
                 .append("\n\n")
-                .append("5555555555555555555").setClickSpan(new MyClickableSpan())
+                .append(" ").setResourceId(R.mipmap.aaaaaa).changImageSize().setLineSpacingExtra(tv.getLineSpacingExtra())
+                .append("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .append("\n\n")
+                .append("5555555555555555555").setBullet(DimensUtils.dip2px(this, 3), 0xffff0000)
                 .create());
     }
 
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class MyClickableSpan extends SpannableUtils.XClickableSpan {
+    private class MyClickableSpan extends XClickableSpan {
 
 
         @Override

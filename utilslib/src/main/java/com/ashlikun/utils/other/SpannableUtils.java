@@ -2,9 +2,6 @@ package com.ashlikun.utils.other;
 
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -18,17 +15,14 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.MaskFilterSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.ReplacementSpan;
 import android.text.style.ScaleXSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -36,6 +30,10 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 
 import com.ashlikun.utils.AppUtils;
+import com.ashlikun.utils.other.spannable.CentreImageSpan;
+import com.ashlikun.utils.other.spannable.CustomAlignSpan;
+import com.ashlikun.utils.other.spannable.XBulletSpan;
+import com.ashlikun.utils.other.spannable.XClickableSpan;
 
 
 /**
@@ -62,45 +60,130 @@ public class SpannableUtils {
 
     public static class Builder {
         private int defaultValue = 0x12000000;
-        private CharSequence text;//源文本
+        /**
+         * 源文本
+         */
+        private CharSequence text;
         private int flag;
+        /**
+         * 前景颜色
+         */
         @ColorInt
-        private int foregroundColor;//前景颜色
+        private int foregroundColor;
+        /**
+         * 背景颜色
+         */
         @ColorInt
-        private int backgroundColor;//背景颜色
-        private boolean isLeadingMargin;//是否设置缩进
-        private int first;//首行
-        private int rest;//其他的缩进
+        private int backgroundColor;
+        /**
+         * 是否设置缩进
+         */
+        private boolean isLeadingMargin;
+        /**
+         * 首行
+         */
+        private int first;
+        /**
+         * 其他的缩进
+         */
+        private int rest;
 
-        private float proportion;//文字大小比例
-        private float xProportion;//设置横向比例
-        private boolean isStrikethrough;//设置删除线
-        private boolean isUnderline;//设置下划线
-        private boolean isBold;//设置粗体
-        private boolean isItalic;//设置斜体
-        private Layout.Alignment align;//设置对其
-        private boolean isAlignTop;//是否居上对齐
-        private float alignTopOffset;//居上对其的偏移量
-        private boolean imageIsBitmap;//是否设置图片
+        /**
+         * 文字大小比例
+         */
+        private float proportion;
+        /**
+         * 设置横向比例
+         */
+        private float xProportion;
+        /**
+         * 设置删除线
+         */
+        private boolean isStrikethrough;
+        /**
+         * 设置下划线
+         */
+        private boolean isUnderline;
+        /**
+         * 设置粗体
+         */
+        private boolean isBold;
+        /**
+         * 设置斜体
+         */
+        private boolean isItalic;
+        /**
+         * 设置对其
+         */
+        private Layout.Alignment align;
+        /**
+         * 是否居上对齐
+         */
+        private boolean isAlignTop;
+        /**
+         * 居上对其的偏移量
+         */
+        private float alignTopOffset;
+        /**
+         * 是否设置图片
+         */
+        private boolean imageIsBitmap;
         /**
          * 是否改变大小和文字一样大
          */
         boolean isChangImageSize = false;
-        private Bitmap bitmap;//图片
-        private boolean imageIsDrawable;//图片
-        private Drawable drawable;//图片
-        private boolean imageIsResourceId;//图片
+        /**
+         * 下面都是图片
+         */
+        private Bitmap bitmap;
+        private boolean imageIsDrawable;
+        private Drawable drawable;
+        private boolean imageIsResourceId;
         @DrawableRes
-        private int resourceId;//图片
+        private int resourceId;
+        /**
+         * 点击
+         */
+        private ClickableSpan clickSpan;
+        /**
+         * 超链接
+         */
+        private String url;
 
-        private ClickableSpan clickSpan;//点击
-        private String url;//超链接
+        /**
+         * 是否模糊
+         */
+        private boolean isBlur;
+        /**
+         * 模糊半径
+         */
+        private float radius;
+        /**
+         * 模糊的格式
+         */
+        private BlurMaskFilter.Blur style;
+        /**
+         * 项目符号间距
+         */
+        private int bulletGapWidth = 0;
+        /**
+         * 项目符号宽度 > 0才会有
+         */
+        private int bulletWidth = 0;
+        /**
+         * 项目符号的颜色
+         */
+        @ColorInt
+        private int bulletColor;
 
-        private boolean isBlur;//是否模糊
-        private float radius;//模糊半径
-        private BlurMaskFilter.Blur style;//模糊的格式
-
-        private boolean isClean = true;//一次结束是否清楚样式
+        /**
+         * 行间距，谁要使用就传递给谁，一般用于对齐
+         */
+        private float lineSpacingExtra;
+        /**
+         * 一次结束是否清楚样式
+         */
+        private boolean isClean = true;
 
         private SpannableStringBuilder mBuilder;
 
@@ -288,27 +371,46 @@ public class SpannableUtils {
             return this;
         }
 
-        //自定义居上对其
+        /**
+         * 自定义居上对其
+         *
+         * @return
+         */
         public Builder setAlignTop() {
             setAlignTop(0);
             return this;
         }
 
-        //自定义居上对其
+        /**
+         * 自定义居上对其
+         *
+         * @param alignTopOffset
+         * @return
+         */
         public Builder setAlignTop(float alignTopOffset) {
             isAlignTop = true;
             this.alignTopOffset = alignTopOffset;
             return this;
         }
 
-        //自定义居上对其
+        /**
+         * 自定义居上对其
+         *
+         * @param alignTopOffset
+         * @return
+         */
         public Builder setAlignTopDp(float alignTopOffset) {
             isAlignTop = true;
             this.alignTopOffset = DimensUtils.dip2px(AppUtils.getApp(), alignTopOffset);
             return this;
         }
 
-        //自定义居上对其
+        /**
+         * 自定义居上对其
+         *
+         * @param alignTopOffset
+         * @return
+         */
         public Builder setAlignTopRes(@DimenRes int alignTopOffset) {
             isAlignTop = true;
             this.alignTopOffset = AppUtils.getApp().getResources().getDimensionPixelOffset(alignTopOffset);
@@ -421,6 +523,46 @@ public class SpannableUtils {
         }
 
         /**
+         * 设置项目符号
+         *
+         * @param bulletWidth 宽度
+         * @param color       颜色
+         * @return
+         */
+        public Builder setBullet(int bulletWidth, @ColorInt int color) {
+            this.bulletWidth = bulletWidth;
+            this.bulletColor = color;
+            return this;
+        }
+
+        /**
+         * 设置项目符号
+         *
+         * @param bulletWidth    宽度
+         * @param color          颜色
+         * @param bulletGapWidth 间距
+         * @return
+         */
+        public Builder setBullet(int bulletWidth, @ColorInt int color, int bulletGapWidth) {
+            this.bulletWidth = bulletWidth;
+            this.bulletGapWidth = bulletGapWidth;
+            this.bulletColor = color;
+            return this;
+        }
+
+        /**
+         * 行间距，谁要使用就传递给谁，一般用于对齐
+         * 类似于偏移量,相对于Y偏移
+         *
+         * @param lineSpacingExtra
+         * @return
+         */
+        public Builder setLineSpacingExtra(float lineSpacingExtra) {
+            this.lineSpacingExtra = lineSpacingExtra;
+            return this;
+        }
+
+        /**
          * 作者　　: 李坤
          * 创建时间: 2017/6/29 10:11
          * <p>
@@ -476,6 +618,10 @@ public class SpannableUtils {
             clickSpan = null;
             url = null;
             isBlur = false;
+            bulletGapWidth = 0;
+            bulletWidth = 0;
+            bulletColor = 0;
+            lineSpacingExtra = 0;
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
             isChangImageSize = false;
         }
@@ -500,9 +646,11 @@ public class SpannableUtils {
                 clean();
                 return;
             }
-            int start = mBuilder.length();//开始位置
+            //开始位置
+            int start = mBuilder.length();
             mBuilder.append(this.text);
-            int end = mBuilder.length();//结束位置
+            //结束位置
+            int end = mBuilder.length();
             //前景色
             if (foregroundColor != defaultValue) {
                 mBuilder.setSpan(new ForegroundColorSpan(foregroundColor), start, end, flag);
@@ -538,9 +686,11 @@ public class SpannableUtils {
             }
             if (isBold && isItalic) {
                 mBuilder.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), start, end, flag);
-            } else if (isBold) {//设置粗体
+            } else if (isBold) {
+                //设置粗体
                 mBuilder.setSpan(new StyleSpan(Typeface.BOLD), start, end, flag);
-            } else if (isItalic) {//设置斜体
+            } else if (isItalic) {
+                //设置斜体
                 mBuilder.setSpan(new StyleSpan(Typeface.ITALIC), start, end, flag);
             }
             //设置对其
@@ -565,6 +715,7 @@ public class SpannableUtils {
                 }
                 mBuilder.setSpan(span = new CentreImageSpan(drawable), start, end, flag);
                 span.setChangSizeToText(isChangImageSize);
+                span.setLineSpacingExtra(lineSpacingExtra);
             }
             //设置点击
             if (clickSpan != null) {
@@ -576,117 +727,29 @@ public class SpannableUtils {
             if (isBlur) {
                 mBuilder.setSpan(new MaskFilterSpan(new BlurMaskFilter(radius, style)), start, end, flag);
             }
+            if (bulletWidth > 0) {
+                mBuilder.setSpan(new XBulletSpan(bulletWidth, bulletColor, bulletGapWidth), start, end, flag);
+            }
             clean();
         }
     }
 
-    public static class CentreImageSpan extends ImageSpan {
-        /**
-         * 是否改变大小和文字一样大
-         */
-        boolean isChangSizeToText = false;
-        boolean isChangOk = false;
 
-
-        public CentreImageSpan(Drawable d) {
-            super(d);
+    /**
+     * 获取span  Draw的Y中心
+     *
+     * @param top
+     * @param bottom
+     * @param l
+     * @return
+     */
+    public static float getSpanDrawCententY(int top, int bottom, Layout l) {
+        float spacing = l.getSpacingAdd() * l.getSpacingMultiplier();
+        if (l.getHeight() <= bottom + 3) {
+            //最后一行不要行间距
+            spacing = 0;
         }
-
-        public void setChangSizeToText(boolean changSizeToText) {
-            isChangSizeToText = changSizeToText;
-        }
-
-        @Override
-        public int getSize(Paint paint, CharSequence text, int start, int end,
-                           Paint.FontMetricsInt fm) {
-            Drawable d = getDrawable();
-            Rect rect = d.getBounds();
-            if (fm != null) {
-                Paint.FontMetricsInt fmPaint = paint.getFontMetricsInt();
-                if (isChangSizeToText && !isChangOk) {
-                    float drawWidth = d.getMinimumWidth();
-                    float drawHeight = d.getMinimumHeight();
-                    int fmsize = (int) Math.ceil(fm.descent - fm.top);
-                    if (fmsize <= 0) {
-                        fmsize = (int) Math.ceil(fmPaint.descent - fmPaint.top);
-                    }
-                    if (fmsize > 0) {
-                        int newHeight = (int) ((fmsize + 2) * 0.7);
-                        d.setBounds(0, 0, (int) (newHeight / drawHeight * drawWidth), newHeight);
-                    }
-                }
-
-                int fontHeight = fmPaint.bottom - fmPaint.top;
-                int drHeight = rect.bottom - rect.top;
-
-                int top = drHeight / 2 - fontHeight / 4;
-                int bottom = drHeight / 2 + fontHeight / 4;
-
-                fm.ascent = -bottom;
-                fm.top = -bottom;
-                fm.bottom = top;
-                fm.descent = top;
-            }
-            return rect.right;
-        }
-
-        @Override
-        public void draw(Canvas canvas, CharSequence text, int start, int end,
-                         float x, int top, int y, int bottom, Paint paint) {
-            Drawable b = getDrawable();
-            canvas.save();
-            int transY = 0;
-            transY = ((bottom - top) - b.getBounds().bottom) / 2 + top;
-            canvas.translate(x, transY);
-            b.draw(canvas);
-            canvas.restore();
-        }
+        return (bottom - spacing - top) / 2 + top;
     }
 
-    public static class CustomAlignSpan extends ReplacementSpan {
-
-        float alignTopOffset;
-
-        public CustomAlignSpan(float alignTopOffset) {
-            this.alignTopOffset = alignTopOffset;
-        }
-
-        @Override
-        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, @Nullable Paint.FontMetricsInt fm) {
-            text = text.subSequence(start, end);
-            return (int) paint.measureText(text.toString());
-        }
-
-        @Override
-        public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
-            text = text.subSequence(start, end);
-            Paint.FontMetricsInt fm = paint.getFontMetricsInt();
-            canvas.drawText(text.toString(), x, y - ((y + fm.descent + y + fm.ascent) - (bottom + top)) + alignTopOffset, paint);    //此处重新计算y坐标，使字体对其
-        }
-
-    }
-
-    public static abstract class XClickableSpan extends ClickableSpan {
-
-        private int color = 0;
-        private boolean colorIsSet = false;
-
-        public XClickableSpan(int color) {
-            this.color = color;
-            colorIsSet = true;
-        }
-
-        public XClickableSpan() {
-        }
-
-
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            if (colorIsSet) {
-                ds.setColor(color);
-            }
-            ds.setUnderlineText(false);
-            ds.clearShadowLayer();
-        }
-    }
 }
