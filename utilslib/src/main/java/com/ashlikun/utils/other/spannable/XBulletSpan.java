@@ -63,6 +63,13 @@ public class XBulletSpan implements LeadingMarginSpan, ParcelableSpan {
      */
     @Override
     public int getSpanTypeId() {
+        return getSpanTypeIdInternal();
+    }
+
+    /**
+     * @hide
+     */
+    public int getSpanTypeIdInternal() {
         return 8;
     }
 
