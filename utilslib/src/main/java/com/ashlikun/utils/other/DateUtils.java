@@ -33,8 +33,6 @@ public abstract class DateUtils {
     public static final String REX_10D = "\\d{10,}";
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/3/27 17:28
      * 方法功能 按照指定格式把时间转换成字符串，格式的写法类似yyyy-MM-dd HH:mm:ss.SSS
      *
      * @param calendar 时间
@@ -50,8 +48,26 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/3/27 17:28
+     * @param time   时间字符串
+     * @param format 格式
+     * @return
+     */
+    public static Calendar getFormatCalendar(String time, String format) {
+        if (time == null) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(time));
+            return calendar;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 方法功能 按照指定格式把时间转换成字符串，格式的写法类似yyyy-MM-dd HH:mm:ss.SSS
      *
      * @param calendar 时间戳
@@ -66,8 +82,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/3/27 17:28
      * 方法功能 按照指定格式把时间转换成字符串，格式的写法类似yyyy-MM-dd HH:mm:ss.SSS
      *
      * @param calendar     时间
@@ -93,9 +107,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2016/10/12 11:08
-     * <p>
      * 方法功能：获取指定格式的当前时间
      *
      * @param format 格式
@@ -107,9 +118,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 10:41
-     * <p>
      * 方法功能：获取当前时间 并简单格式化
      */
 
@@ -118,8 +126,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 10:41
      * 方法功能：获取当前时间 并完全格式化
      *
      * @return 格式化后的时间 2006-01-10 20:56:44
@@ -129,9 +135,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 10:41
-     * <p>
      * 方法功能：根据日期对象来获取日期中的时间(YMD)
      *
      * @param calender 日期对象
@@ -144,9 +147,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 10:41
-     * <p>
      * 方法功能：根据日期对象来获取日期中的完整时间
      *
      * @param calender 日期对象
@@ -159,9 +159,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 10:46
-     * <p>
      * 方法功能：获取某天的结束时间,
      *
      * @param calender 要获取的时间
@@ -181,9 +178,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 10:46
-     * <p>
      * 方法功能：获取某天的起始时间,
      *
      * @param calender 要获取的时间
@@ -214,9 +208,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:04
-     * <p>
      * 方法功能：根据指定的年, 月, 日, 时, 分,秒等参数获取日期对象.
      *
      * @param year      年
@@ -237,9 +228,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:05
-     * <p>
      * 方法功能：同上 重载
      */
 
@@ -249,9 +237,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:00
-     * <p>
      * 方法功能：取得指定天数后的时间
      *
      * @param calendar  基准时间
@@ -268,9 +253,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:00
-     * <p>
      * 方法功能：取得指定小时数后的时间
      *
      * @param calendar   基准时间
@@ -287,8 +269,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:00
      * 方法功能：取得指定分钟数后的时间
      *
      * @param calendar     基准时间
@@ -307,9 +287,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:01
-     * <p>
      * 方法功能：比较两日期对象中的小时和分钟部分的大小
      *
      * @param calendar        日期对象1, 如果为 null 会以当前时间的日期对象代替
@@ -344,9 +321,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:03
-     * <p>
      * 方法功能：比较两日期对象的大小, 忽略秒, 只精确到分钟.
      *
      * @param calendar        日期对象1, 如果为 null 会以当前时间的日期对象代替
@@ -372,9 +346,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:07
-     * <p>
      * 方法功能：根据日期对象来获取日期中的 天
      *
      * @param calender 日期
@@ -387,8 +358,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:08
      * 方法功能： 是否是今天
      *
      * @param calendar 日期
@@ -403,8 +372,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:08
      * 方法功能： 判断是否是闰年
      *
      * @param year 年份
@@ -416,9 +383,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:09
-     * <p>
      * 方法功能：取得一年中的第几周。
      *
      * @param calender 日期
@@ -431,9 +395,6 @@ public abstract class DateUtils {
 
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:15
-     * <p>
      * 方法功能：Date(1461686400000)  转化成时间
      *
      * @param calendar Date(1461686400000) 接口返回时间
@@ -453,9 +414,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:19
-     * <p>
      * 方法功能：同上  重载
      */
 
@@ -464,9 +422,6 @@ public abstract class DateUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 11:17
-     * <p>
      * 方法功能：Date(1461686400000) 转换成 时间值
      *
      * @param date Date(1461686400000) 接口返回时间
