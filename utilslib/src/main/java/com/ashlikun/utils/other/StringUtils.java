@@ -11,6 +11,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * 作者　　: 李坤
@@ -167,7 +168,8 @@ public class StringUtils {
                 } else {
                     return "未知";
                 }
-            } else if (filter != null) {//数据源异常 并且filter不为空
+            } else if (filter != null) {
+                //数据源异常 并且filter不为空
                 return filter.toString();
             }
         } catch (NumberFormatException e) {
@@ -181,9 +183,6 @@ public class StringUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2016/10/12 14:07
-     * <p>
      * 方法功能：返回指定长度的字符串
      */
     public static String isNullToConvert(String str, int maxLenght) {
@@ -191,9 +190,6 @@ public class StringUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/29 11:06
-     * <p>
      * 方法功能：小数 四舍五入 19.0->19.0    返回Double
      */
     public static Double roundDouble(double val, int precision) {
@@ -203,9 +199,59 @@ public class StringUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/29 11:06
-     * <p>
+     * double转String,保留小数点后两位
+     */
+    public static String roundDoubleToFormat(double val, int precision) {
+        //使用0.00不足位补0，#.##仅保留有效位
+        return numberFormat(roundDouble(val, precision), precision);
+    }
+
+    /**
+     * double转String,保留小数点后两位,三位三位的隔开
+     *
+     * @param precision 保留几位小数不足位补0
+     */
+    public static String roundDoubleToFormat3(double val, int precision) {
+        //使用0.00不足位补0，#.##仅保留有效位
+        return numberFormat3(roundDouble(val, precision), precision);
+    }
+
+    /**
+     * double转String
+     *
+     * @param precision 保留几位小数不足位补0
+     */
+    public static String numberFormat(double val, int precision) {
+        if (precision == 0) {
+            return String.valueOf((int) val);
+        }
+        //使用0.00不足位补0，#.##仅保留有效位 ,
+        StringBuilder pattern = new StringBuilder("#.");
+        for (int i = 0; i < precision; i++) {
+            pattern.append("0");
+        }
+        return new DecimalFormat(pattern.toString()).format(val);
+    }
+
+    /**
+     * double转String,三位三位的隔开
+     *
+     * @param precision 保留几位小数不足位补0
+     */
+    public static String numberFormat3(double val, int precision) {
+        if (precision == 0) {
+            return new DecimalFormat("#,###").format(val);
+        }
+        // #,###.0000:金钱数字保留4位小数且三位三位的隔开
+        StringBuilder pattern = new StringBuilder("#,###.");
+        for (int i = 0; i < precision; i++) {
+            pattern.append("0");
+        }
+        return new DecimalFormat(pattern.toString()).format(val);
+    }
+
+
+    /**
      * 方法功能：小数后两位
      */
 
@@ -214,14 +260,10 @@ public class StringUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/29 11:07
-     * <p>
      * 方法功能：小数 四舍五入 19.0->19.0   返回字符串
      */
     public static String roundString(double val, int precision) {
         return String.valueOf(roundDouble(val, precision));
-
     }
 
     /**
