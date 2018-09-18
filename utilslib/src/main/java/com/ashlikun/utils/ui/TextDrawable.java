@@ -40,7 +40,10 @@ public class TextDrawable extends GradientDrawable {
     }
 
     private void init() {
-        setPadding(3, 2, 3, 2);
+        this.paddingLeft = DimensUtils.dip2px(AppUtils.getApp(), 3);
+        this.paddingTop = DimensUtils.dip2px(AppUtils.getApp(), 2);
+        this.paddingRight = DimensUtils.dip2px(AppUtils.getApp(), 3);
+        this.paddingBottom = DimensUtils.dip2px(AppUtils.getApp(), 2);
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
@@ -48,12 +51,6 @@ public class TextDrawable extends GradientDrawable {
         setTextSize(12);
     }
 
-    private void setPadding(float paddingLeft, float paddingTop, float paddingRight, float paddingBottom) {
-        this.paddingLeft = (int) (paddingLeft * 3f);
-        this.paddingTop = (int) (paddingTop * 3f);
-        this.paddingRight = (int) (paddingRight * 3f);
-        this.paddingBottom = (int) (paddingBottom * 3f);
-    }
 
     private void setDrawableSize() {
         if (TextUtils.isEmpty(text)) {
@@ -94,8 +91,22 @@ public class TextDrawable extends GradientDrawable {
         return this;
     }
 
+    public TextDrawable setPadding(float paddingLeftDp, float paddingTopDp, float paddingRightDp, float paddingBottomDp) {
+        this.paddingLeft = DimensUtils.dip2px(AppUtils.getApp(), paddingLeftDp);
+        this.paddingTop = DimensUtils.dip2px(AppUtils.getApp(), paddingTopDp);
+        this.paddingRight = DimensUtils.dip2px(AppUtils.getApp(), paddingRightDp);
+        this.paddingBottom = DimensUtils.dip2px(AppUtils.getApp(), paddingBottomDp);
+        setDrawableSize();
+        return this;
+    }
+
     public TextDrawable setTextSize(float textSizeDp) {
-        textSize = DimensUtils.dip2px(AppUtils.getApp(), textSizeDp);
+        setTextSizePx(DimensUtils.dip2px(AppUtils.getApp(), textSizeDp));
+        return this;
+    }
+
+    public TextDrawable setTextSizePx(float textSizePx) {
+        textSize = textSizePx;
         paint.setTextSize(textSize);
         setDrawableSize();
         return this;
@@ -108,7 +119,12 @@ public class TextDrawable extends GradientDrawable {
      * @param color
      */
     public TextDrawable setStrokeNew(float widthDp, @ColorInt int color) {
-        stokeWidth = DimensUtils.dip2px(AppUtils.getApp(), widthDp);
+        setStrokeNewPx(DimensUtils.dip2px(AppUtils.getApp(), widthDp), color);
+        return this;
+    }
+
+    public TextDrawable setStrokeNewPx(int widthPx, @ColorInt int color) {
+        stokeWidth = widthPx;
         setStroke(stokeWidth, color);
         return this;
     }

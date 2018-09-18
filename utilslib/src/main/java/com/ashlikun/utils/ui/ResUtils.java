@@ -6,7 +6,9 @@ import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
+import android.util.TypedValue;
 
 import com.ashlikun.utils.AppUtils;
 
@@ -42,12 +44,12 @@ public class ResUtils {
         return AppUtils.getApp().getResources().getDrawable(drawable);
     }
 
-    public static float getDimension(Context context, @DimenRes int color) {
-        return context.getResources().getDimension(color);
+    public static float getDimension(Context context, @DimenRes int dimen) {
+        return context.getResources().getDimension(dimen);
     }
 
-    public static float getDimension(@DimenRes int color) {
-        return AppUtils.getApp().getResources().getDimension(color);
+    public static float getDimension(@DimenRes int dimen) {
+        return AppUtils.getApp().getResources().getDimension(dimen);
     }
 
     public static String getString(Context context, @StringRes int str) {
@@ -57,4 +59,18 @@ public class ResUtils {
     public static String getString(@StringRes int str) {
         return AppUtils.getApp().getResources().getString(str);
     }
+
+    /**
+     * 直接获取xml里面的变量值
+     * 12dp就返回12.0
+     *
+     * @param id
+     * @return
+     */
+    public static float getFloatValue(@IdRes int id) {
+        TypedValue typedValue = new TypedValue();
+        AppUtils.getApp().getResources().getValue(id, typedValue, true);
+        return TypedValue.complexToFloat(typedValue.data);
+    }
+
 }
