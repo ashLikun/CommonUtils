@@ -3,10 +3,10 @@ package com.ashlikun.utils.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.AnyRes;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.util.TypedValue;
 
@@ -67,7 +67,7 @@ public class ResUtils {
      * @param id
      * @return
      */
-    public static float getFloatValue(@IdRes int id) {
+    public static float getValue(@AnyRes int id) {
         TypedValue typedValue = new TypedValue();
         AppUtils.getApp().getResources().getValue(id, typedValue, true);
         return TypedValue.complexToFloat(typedValue.data);
