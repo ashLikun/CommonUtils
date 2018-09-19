@@ -2,7 +2,7 @@ package com.ashlikun.utils.encryption;
 
 import android.util.Base64;
 
-import com.ashlikun.utils.other.FileUtils;
+import com.ashlikun.utils.other.file.FileUtils;
 
 /**
  * 作者　　: 李坤

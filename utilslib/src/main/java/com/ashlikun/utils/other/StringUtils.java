@@ -22,6 +22,23 @@ import java.text.DecimalFormat;
 
 public class StringUtils {
 
+    /**
+     * 用于判断指定字符是否为空白字符，空白符包含：空格、tab键、换行符。
+     *
+     * @param s
+     * @return
+     */
+    public static boolean isSpace(final String s) {
+        if (s == null) {
+            return true;
+        }
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * 作者　　: 李坤

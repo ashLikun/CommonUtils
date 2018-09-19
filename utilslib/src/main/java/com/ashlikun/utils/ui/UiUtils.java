@@ -2,14 +2,12 @@ package com.ashlikun.utils.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.IBinder;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,8 +16,6 @@ import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
 
 import java.lang.reflect.Field;
-
-import static com.ashlikun.utils.AppUtils.getApp;
 
 
 public class UiUtils {
@@ -80,58 +76,6 @@ public class UiUtils {
     }
 
 
-    /**
-     * 获得状态栏的高度
-     *
-     * @return
-     */
-    public static int getStatusHeight() {
-
-        int result = 0;
-        int resourceId = getApp().getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getApp().getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-
-    private static void exitOrShowInput(IBinder iBinder, View view) {
-
-        InputMethodManager inputMethodManager = (InputMethodManager) getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (iBinder != null) {
-            inputMethodManager.hideSoftInputFromWindow(iBinder, 0);
-        }
-        if (view != null) {
-            view.requestFocus();
-            inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
-        }
-    }
-
-
-    public static void showInput(View view) {
-        exitOrShowInput(null, view);
-    }
-
-    public static void exitInput(Activity activity) {
-        if (activity != null && activity.getCurrentFocus() != null) {
-            exitOrShowInput(activity.getCurrentFocus().getWindowToken(), null);
-        }
-    }
-
-    public static void exitInput(IBinder iBinder) {
-        exitOrShowInput(iBinder, null);
-    }
-
-    public static void exitInput(View view) {
-        exitOrShowInput(view.getWindowToken(), null);
-    }
-
-    public static boolean isOpenInput(Context context) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        boolean isOpen = imm.isActive();
-        return isOpen;
-    }
 
 
     /**

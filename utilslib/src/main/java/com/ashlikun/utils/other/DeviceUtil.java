@@ -333,21 +333,7 @@ public class DeviceUtil {
         return UA;
     }
 
-    /**
-     * 根据手机号发送短信
-     *
-     * @param context
-     * @param phone
-     */
-    public static void sendSmsByPhone(Context context, String phone) {
-        if (StringUtils.isEmpty(phone)) {
-            return;
-        }
-        Uri uri = Uri.parse("smsto:" + phone);
-        Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-        // intent.putExtra("sms_body", "");
-        context.startActivity(intent);
-    }
+
 
     /**
      * 根据内容调用手机通讯录

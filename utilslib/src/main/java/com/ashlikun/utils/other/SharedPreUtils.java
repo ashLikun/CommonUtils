@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.provider.ImpSpProvider;
-import com.ashlikun.utils.ui.ActivityUtils;
+import com.ashlikun.utils.main.ProcessUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -317,7 +317,7 @@ public class SharedPreUtils {
     }
 
     public static void testPut(Context context) {
-        Log.e("testPut", "getCurProcessName = " + ActivityUtils.getCurProcessName());
+        Log.e("testPut", "getCurProcessName = " + ProcessUtils.getCurProcessName());
         SharedPreUtils.putLong(context, "sp_testLong", 123);
         SharedPreUtils.putInt(context, "sp_testInt", 12322222);
         SharedPreUtils.putString(context, "sp_testString", "putString");
@@ -331,7 +331,7 @@ public class SharedPreUtils {
     }
 
     public static void testGet(Context context) {
-        Log.e("testGet", "getCurProcessName = " + ActivityUtils.getCurProcessName());
+        Log.e("testGet", "getCurProcessName = " + ProcessUtils.getCurProcessName());
         Log.e("testGet", "getLong = " + SharedPreUtils.getLong(context, "sp_testLong", 999));
         Log.e("testGet", "getInt = " + SharedPreUtils.getInt(context, "sp_testInt"));
         Log.e("testGet", "getString = " + SharedPreUtils.getString(context, "sp_testString", null));

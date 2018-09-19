@@ -8,8 +8,8 @@ import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
+import com.ashlikun.utils.main.ProcessUtils;
 import com.ashlikun.utils.provider.BaseContentProvider;
-import com.ashlikun.utils.ui.ActivityUtils;
 
 import java.io.File;
 
@@ -61,7 +61,7 @@ public class AppUtils {
      * @return
      */
     public static boolean isMainProcess() {
-        String name = ActivityUtils.getCurProcessName();
+        String name = ProcessUtils.getCurProcessName();
         if (name == null || name.trim().length() == 0) {
             return false;
         }
@@ -77,8 +77,8 @@ public class AppUtils {
      */
     public static Uri getUri(File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            String authority = myApp.getApplicationInfo().packageName + ".Provider";
-            return FileProvider.getUriForFile(myApp, authority, file);
+            String authority = getApp().getPackageName() + ".Provider";
+            return FileProvider.getUriForFile(getApp(), authority, file);
         } else {
             return Uri.fromFile(file);
         }
@@ -161,4 +161,6 @@ public class AppUtils {
         }
         return packageInfo;
     }
+
+
 }

@@ -1,5 +1,7 @@
 package com.ashlikun.utils.other;
 
+import com.ashlikun.utils.other.file.FileIOUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -33,7 +35,7 @@ public class CpuUtil {
      * 输出cpu信息
      */
     public static String printCpuInfo() {
-        String info = FileUtils.readFileInputStream(CPU_INFO_PATH);
+        String info = FileIOUtils.readFile2String(CPU_INFO_PATH);
         LogUtils.i("_______  CPU :   \n" + info);
         return info;
     }
@@ -108,7 +110,7 @@ public class CpuUtil {
      */
     public static long getCurrentFreqency() {
         try {
-            return Long.parseLong(FileUtils.readFileInputStream(CPU_FREQ_CUR_PATH).trim());
+            return Long.parseLong(FileIOUtils.readFile2String(CPU_FREQ_CUR_PATH).trim());
         } catch (Exception e) {
             e.printStackTrace();
         }

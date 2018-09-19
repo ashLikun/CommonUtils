@@ -46,7 +46,7 @@ public class SnackbarUtil {
         if (view == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(view);
+        KeyboardUtils.exitInput(view);
         Snackbar snackbar = Snackbar
                 .make(view, message, Snackbar.LENGTH_INDEFINITE)
                 .setDuration(duration);
@@ -58,7 +58,7 @@ public class SnackbarUtil {
         if (activity == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(activity);
+        KeyboardUtils.exitInput(activity);
         Snackbar snackbar = Snackbar.make(UiUtils.getRootView(activity), message, Snackbar.LENGTH_SHORT);
         switchType(snackbar, type);
         return snackbar;
@@ -68,7 +68,7 @@ public class SnackbarUtil {
         if (activity == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(activity);
+        KeyboardUtils.exitInput(activity);
         Snackbar snackbar = Snackbar.make(UiUtils.getRootView(activity), message, Snackbar.LENGTH_LONG);
         switchType(snackbar, type);
         return snackbar;
@@ -78,7 +78,7 @@ public class SnackbarUtil {
         if (activity == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(activity);
+        KeyboardUtils.exitInput(activity);
         Snackbar snackbar = Snackbar.make(UiUtils.getRootView(activity), message, Snackbar.LENGTH_INDEFINITE);
         switchType(snackbar, type);
         return snackbar;
@@ -96,7 +96,7 @@ public class SnackbarUtil {
         if (view == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(view);
+        KeyboardUtils.exitInput(view);
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         switchType(snackbar, type);
         return snackbar;
@@ -114,7 +114,7 @@ public class SnackbarUtil {
         if (view == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(view);
+        KeyboardUtils.exitInput(view);
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         switchType(snackbar, type);
         return snackbar;
@@ -132,13 +132,17 @@ public class SnackbarUtil {
         if (view == null || message == null) {
             return null;
         }
-        UiUtils.exitInput(view);
+        KeyboardUtils.exitInput(view);
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE).setDuration(duration);
         switchType(snackbar, type);
         return snackbar;
     }
 
-    //选择预设类型
+    /**
+     * 选择预设类型
+     * @param snackbar
+     * @param type
+     */
     private static void switchType(Snackbar snackbar, int type) {
         switch (type) {
             case Info:

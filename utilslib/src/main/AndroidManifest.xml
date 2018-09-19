@@ -2,9 +2,7 @@
 
     package="com.ashlikun.utils">
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    
 
     <application
         android:allowBackup="true"
