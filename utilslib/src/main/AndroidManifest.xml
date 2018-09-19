@@ -2,7 +2,7 @@
 
     package="com.ashlikun.utils">
 
-    
+
 
     <application
         android:allowBackup="true"
