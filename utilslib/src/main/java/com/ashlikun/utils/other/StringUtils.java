@@ -219,7 +219,7 @@ public class StringUtils {
      * double转String,保留小数点后两位
      */
     public static String roundDoubleToFormat(double val, int precision) {
-        //使用0.00不足位补0，#.##仅保留有效位
+        //使用0.00不足位补0，#.##     # 一个数字，不包括 0 , 0 一个数字
         return numberFormat(roundDouble(val, precision), precision);
     }
 
@@ -229,7 +229,7 @@ public class StringUtils {
      * @param precision 保留几位小数不足位补0
      */
     public static String roundDoubleToFormat3(double val, int precision) {
-        //使用0.00不足位补0，#.##仅保留有效位
+        //使用0.00不足位补0，#.##     # 一个数字，不包括 0 , 0 一个数字
         return numberFormat3(roundDouble(val, precision), precision);
     }
 
@@ -242,8 +242,8 @@ public class StringUtils {
         if (precision == 0) {
             return String.valueOf((int) val);
         }
-        //使用0.00不足位补0，#.##仅保留有效位 ,
-        StringBuilder pattern = new StringBuilder("#.");
+        //使用0.00不足位补0，#.##     # 一个数字，不包括 0 , 0 一个数字
+        StringBuilder pattern = new StringBuilder("0.");
         for (int i = 0; i < precision; i++) {
             pattern.append("0");
         }
@@ -257,10 +257,10 @@ public class StringUtils {
      */
     public static String numberFormat3(double val, int precision) {
         if (precision == 0) {
-            return new DecimalFormat("#,###").format(val);
+            return new DecimalFormat("0,###").format(val);
         }
-        // #,###.0000:金钱数字保留4位小数且三位三位的隔开
-        StringBuilder pattern = new StringBuilder("#,###.");
+        // #,##0.0000:金钱数字保留4位(不足补一位0)小数且三位三位的隔开
+        StringBuilder pattern = new StringBuilder("#,##0.");
         for (int i = 0; i < precision; i++) {
             pattern.append("0");
         }
