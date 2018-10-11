@@ -464,6 +464,7 @@ public class DrawableUtils {
         private int width = 0;
         private int height = 0;
         private int tintColor = -1;
+        private boolean isTintColor = false;
         private Drawable drawable;
         private TextView textView;
         /**
@@ -507,10 +508,12 @@ public class DrawableUtils {
         }
 
         public BuilderTvd tintColorId(int val) {
+            isTintColor = true;
             return tintColor(context.getResources().getColor(val));
         }
 
         public BuilderTvd tintColor(int val) {
+            isTintColor = true;
             tintColor = val;
             return this;
         }
@@ -549,9 +552,9 @@ public class DrawableUtils {
                 height = (int) (width / drawWidth * drawHeight);
             }
             //如果使用tint，必须使用DrawableCompat.wrap
-            if (isChang || tintColor != -1) {
+            if (isChang || isTintColor) {
                 drawable = DrawableCompat.wrap(drawable).mutate();
-                if (tintColor != -1) {
+                if (isTintColor) {
                     DrawableCompat.setTint(drawable, tintColor);
                 }
             }
