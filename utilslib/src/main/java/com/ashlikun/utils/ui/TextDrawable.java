@@ -2,13 +2,13 @@ package com.ashlikun.utils.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
+
 
 /**
  * 作者　　: 李坤
@@ -41,9 +41,7 @@ public class TextDrawable extends GradientDrawable {
 
     private void init() {
         this.paddingLeft = DimensUtils.dip2px(AppUtils.getApp(), 3);
-        this.paddingTop = DimensUtils.dip2px(AppUtils.getApp(), 2);
         this.paddingRight = DimensUtils.dip2px(AppUtils.getApp(), 3);
-        this.paddingBottom = DimensUtils.dip2px(AppUtils.getApp(), 2);
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
@@ -58,10 +56,10 @@ public class TextDrawable extends GradientDrawable {
             setBounds(0, 0, 0, 0);
             return;
         }
-        Rect rect = new Rect();
-        paint.getTextBounds(text, 0, text.length(), rect);
-        int width = rect.width() + paddingLeft + paddingRight + stokeWidth * 2;
-        int height = rect.height() + paddingTop + paddingBottom + stokeWidth * 2;
+        float textWidth = paint.measureText(text);
+        float textHeiht = paint.getFontMetricsInt().bottom - paint.getFontMetricsInt().top;
+        int width = (int) (textWidth + paddingLeft + paddingRight + stokeWidth * 2);
+        int height = (int) (textHeiht + paddingTop + paddingBottom + stokeWidth * 2);
         setSize(width, height);
         setBounds(0, 0, width, height);
         invalidateSelf();
@@ -91,6 +89,18 @@ public class TextDrawable extends GradientDrawable {
         return this;
     }
 
+    public TextDrawable setPadding(float paddingLeftDp, float paddingRightDp) {
+        //本身字体上下已经有一点空白了,这里就不要设置了
+        return setPadding(paddingLeftDp, 0, paddingRightDp, 0);
+    }
+
+    /**
+     * @param paddingLeftDp
+     * @param paddingTopDp    本身字体上下已经有一点空白了，注意
+     * @param paddingRightDp
+     * @param paddingBottomDp 本身字体上下已经有一点空白了，注意
+     * @return
+     */
     public TextDrawable setPadding(float paddingLeftDp, float paddingTopDp, float paddingRightDp, float paddingBottomDp) {
         this.paddingLeft = DimensUtils.dip2px(AppUtils.getApp(), paddingLeftDp);
         this.paddingTop = DimensUtils.dip2px(AppUtils.getApp(), paddingTopDp);
@@ -101,12 +111,7 @@ public class TextDrawable extends GradientDrawable {
     }
 
     public TextDrawable setTextSize(float textSizeDp) {
-        setTextSizePx(DimensUtils.dip2px(AppUtils.getApp(), textSizeDp));
-        return this;
-    }
-
-    public TextDrawable setTextSizePx(float textSizePx) {
-        textSize = textSizePx;
+        textSize = DimensUtils.dip2px(AppUtils.getApp(), textSizeDp);
         paint.setTextSize(textSize);
         setDrawableSize();
         return this;
@@ -119,12 +124,7 @@ public class TextDrawable extends GradientDrawable {
      * @param color
      */
     public TextDrawable setStrokeNew(float widthDp, @ColorInt int color) {
-        setStrokeNewPx(DimensUtils.dip2px(AppUtils.getApp(), widthDp), color);
-        return this;
-    }
-
-    public TextDrawable setStrokeNewPx(int widthPx, @ColorInt int color) {
-        stokeWidth = widthPx;
+        stokeWidth = DimensUtils.dip2px(AppUtils.getApp(), widthDp);
         setStroke(stokeWidth, color);
         return this;
     }
@@ -134,8 +134,28 @@ public class TextDrawable extends GradientDrawable {
         return this;
     }
 
+    public TextDrawable setColorsNew(int[] colors) {
+        super.setColors(colors);
+        return this;
+    }
+
     public TextDrawable setCornerRadiusNew(float radiusDp) {
         super.setCornerRadius(DimensUtils.dip2px(AppUtils.getApp(), radiusDp));
+        return this;
+    }
+
+    /**
+     * 设置8个方向的角标
+     *
+     * @param radiiDp
+     * @return
+     */
+    public TextDrawable setCornerRadiuNew(float[] radiiDp) {
+        //转成dp
+        for (int i = 0; i < radiiDp.length; i++) {
+            radiiDp[i] = DimensUtils.dip2px(AppUtils.getApp(), radiiDp[i]);
+        }
+        super.setCornerRadii(radiiDp);
         return this;
     }
 }
