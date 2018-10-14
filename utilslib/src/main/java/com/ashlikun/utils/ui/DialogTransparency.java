@@ -14,14 +14,14 @@ import com.ashlikun.utils.R;
  * 创建时间:2017/9/26 0026　21:27
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：
+ * 功能介绍：全屏的透明对话框
  */
 
 public class DialogTransparency extends Dialog {
     private Context context;
 
     public DialogTransparency(Context context) {
-        this(context, R.style.Dialog_Translucent);
+        this(context, R.style.SnackBarTransparency);
     }
 
     public DialogTransparency(Context context, int themeResId) {
