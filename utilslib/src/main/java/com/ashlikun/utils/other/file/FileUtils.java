@@ -78,7 +78,7 @@ public class FileUtils {
             return baos.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
-            return "获取失败".getBytes();
+            return "获取失败" .getBytes();
         }
     }
 
@@ -87,10 +87,9 @@ public class FileUtils {
             return readByte(new FileInputStream(path));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "获取失败".getBytes();
+            return "获取失败" .getBytes();
         }
     }
-
 
 
     /**
@@ -223,7 +222,7 @@ public class FileUtils {
      * @return
      */
     private static double formetFileSize(long fileS, int sizeType) {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         double fileSizeLong = 0;
         switch (sizeType) {
             case SIZETYPE_B:
@@ -246,9 +245,36 @@ public class FileUtils {
     }
 
     /**
+     * 自动格式化单位
+     *
+     * @param size size
+     * @return size
+     */
+    private static String autoFormetFileSize(double size) {
+        //# 一个数字，不包括 0 , 0 一个数字
+        DecimalFormat df = new DecimalFormat("0.#");
+        double kiloByte = size / 1024;
+        if (kiloByte < 1) {
+            return df.format(size) + "Byte";
+        }
+        double megaByte = kiloByte / 1024;
+        if (megaByte < 1) {
+            return df.format(kiloByte) + "KB";
+        }
+        double gigaByte = megaByte / 1024;
+        if (gigaByte < 1) {
+            return df.format(megaByte) + "MB";
+        }
+        double teraBytes = gigaByte / 1024;
+        if (teraBytes < 1) {
+            return df.format(gigaByte) + "GB";
+        }
+        return df.format(teraBytes) + "TB";
+    }
+
+    /**
      * 删除文件或者目录
      */
-
     public static void deleteFile(File file) {
         if (file.exists() == false) {
             return;
