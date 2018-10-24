@@ -152,7 +152,7 @@ public class FileUtils {
             e.printStackTrace();
             Log.e("获取文件大小", "获取失败!");
         }
-        return formetFileSize(blockSize);
+        return autoFormetFileSize(blockSize);
     }
 
     /**
@@ -177,41 +177,27 @@ public class FileUtils {
     }
 
     /**
-     * 获取指定文件夹文件大小
+     * 获取指定文件夹内所有文件大小的和
+     *
+     * @param file file
+     * @return size
+     * @throws Exception
      */
-    private static long getFileSizes(File f) throws Exception {
+    private static long getFileSizes(File file) throws Exception {
         long size = 0;
-        File flist[] = f.listFiles();
-        for (int i = 0; i < flist.length; i++) {
-            if (flist[i].isDirectory()) {
-                size = size + getFileSizes(flist[i]);
-            } else {
-                size = size + getFileSize(flist[i]);
+        try {
+            File[] fileList = file.listFiles();
+            for (File aFileList : fileList) {
+                if (aFileList.isDirectory()) {
+                    size = size + getFileSizes(aFileList);
+                } else {
+                    size = size + aFileList.length();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return size;
-    }
-
-    /**
-     * 转换文件大小
-     */
-    private static String formetFileSize(long fileS) {
-        DecimalFormat df = new DecimalFormat("#.00");
-        String fileSizeString = "";
-        String wrongSize = "0B";
-        if (fileS == 0) {
-            return wrongSize;
-        }
-        if (fileS < 1024) {
-            fileSizeString = df.format((double) fileS) + "B";
-        } else if (fileS < 1048576) {
-            fileSizeString = df.format((double) fileS / 1024) + "KB";
-        } else if (fileS < 1073741824) {
-            fileSizeString = df.format((double) fileS / 1048576) + "MB";
-        } else {
-            fileSizeString = df.format((double) fileS / 1073741824) + "GB";
-        }
-        return fileSizeString;
     }
 
     /**
