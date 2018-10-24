@@ -34,5 +34,4 @@ dependencies {
     implementation rootProject.ext.designVersion
     implementation rootProject.ext.v13Version
     implementation project(':utilslib')
-    implementation 'com.github.ha-excited:BigNews:0.1.2'
 }
