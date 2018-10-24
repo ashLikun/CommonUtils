@@ -236,7 +236,7 @@ public class FileUtils {
      * @param size size
      * @return size
      */
-    private static String autoFormetFileSize(double size) {
+    public static String autoFormetFileSize(double size) {
         //# 一个数字，不包括 0 , 0 一个数字
         DecimalFormat df = new DecimalFormat("0.#");
         double kiloByte = size / 1024;
