@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation rootProject.ext.designVersion
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
 }
