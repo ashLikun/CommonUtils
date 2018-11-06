@@ -76,8 +76,6 @@ public class UiUtils {
     }
 
 
-
-
     /**
      * 按照原始的宽度，根据比例，缩放
      *
@@ -247,15 +245,20 @@ public class UiUtils {
                         //拿到tabView的mTextView属性
                         TextView mTextView = null;
                         for (int j = 0; j < tabView.getChildCount(); j++) {
-                            if (tabLayout.getChildAt(j) instanceof TextView) {
-                                mTextView = (TextView) tabLayout.getChildAt(j);
+                            if (tabView.getChildAt(j) instanceof TextView) {
+                                mTextView = (TextView) tabView.getChildAt(j);
                             }
                         }
                         //如果没有找到，就反射获取，一半不会
                         if (mTextView == null) {
-                            Field mTextViewField = tabView.getClass().getDeclaredField("mTextView");
+                            Field mTextViewField = tabView.getClass().getDeclaredField("textView");
                             mTextViewField.setAccessible(true);
                             mTextView = (TextView) mTextViewField.get(tabView);
+                            if (mTextView == null) {
+                                Field mTextViewField2 = tabView.getClass().getDeclaredField("mTextView");
+                                mTextViewField2.setAccessible(true);
+                                mTextView = (TextView) mTextViewField2.get(tabView);
+                            }
                         }
                         tabView.setPadding(0, 0, 0, 0);
                         //因为我想要的效果是   字多宽线就多宽，所以测量mTextView的宽度
