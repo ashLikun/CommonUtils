@@ -5,14 +5,20 @@
     android:orientation="vertical">
 
 
-    <com.ashlikun.utils.simple.TextViewCompat
-        android:id="@+id/view4"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@mipmap/timg"></ImageView>
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:lineSpacingExtra="10dp"
+        android:background="#ffff00"
+        android:gravity="center"
         android:onClick="onView4Click"
-        android:text="info"
-        android:textColor="@color/white"
-        android:textSize="16dp"></com.ashlikun.utils.simple.TextViewCompat>
+        android:padding="10dp"
+        android:text="加水印" />
 </LinearLayout>

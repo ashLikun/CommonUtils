@@ -16,6 +16,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.media.MediaMetadataRetriever;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.encryption.Base64Utils;
@@ -202,7 +204,8 @@ public class BitmapUtil {
 
     /**
      * 从资源中获取Bitmap   按照指定的宽高缩放
-     * @param width 希望的宽度
+     *
+     * @param width  希望的宽度
      * @param height 希望的高度
      */
     public static Bitmap decodeResource(Context context, int resourseId,
@@ -230,7 +233,8 @@ public class BitmapUtil {
 
     /**
      * 按照路径加载图片,按照指定的宽高缩放
-     * @param width 希望的宽度
+     *
+     * @param width  希望的宽度
      * @param height 希望的高度
      */
     public static Bitmap decodeFile(File dst, int width, int height) {
@@ -257,7 +261,8 @@ public class BitmapUtil {
 
     /**
      * 加载源数据图片
-     * @param width 希望的宽度
+     *
+     * @param width  希望的宽度
      * @param height 希望的高度
      */
     public static Bitmap decodeByte(byte[] dst, int width, int height) {
@@ -286,6 +291,7 @@ public class BitmapUtil {
 
     /**
      * 计算inSampleSize
+     *
      * @param reqWidth 希望的宽度
      * @param reqWidth 希望的高度
      */
@@ -309,6 +315,7 @@ public class BitmapUtil {
 
     /**
      * 计算初始的SampleSize
+     *
      * @param options
      * @param reqWidth
      * @param reqHeight
@@ -336,6 +343,74 @@ public class BitmapUtil {
         } else {
             return upperBound;
         }
+    }
+
+    /**
+     * 截取viewGroup内容，生成图片
+     *
+     * @param view 控件
+     * @return 图片bitmap
+     */
+    public static Bitmap getViewBitmap(View view) {
+        if (view == null || view.getMeasuredWidth() == 0 || view.getMeasuredHeight() == 0) {
+            return null;
+        }
+        int h = 0;
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                h += ((ViewGroup) view).getChildAt(i).getHeight();
+            }
+        } else {
+            h = view.getMeasuredHeight();
+        }
+        // 创建相应大小的bitmap
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), h, Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bitmap);
+        //绘制viewGroup内容
+        view.draw(canvas);
+        return bitmap;
+    }
+
+    /**
+     * 添加水印
+     *
+     * @param src    原图片
+     * @param logo   logo
+     * @param matrix logo对应的变换矩阵（大小位置）,默认移动到底部右边的位置
+     * @return 合成水印图片
+     */
+    public static Bitmap getWaterMaskImage(Bitmap src, Bitmap logo, Matrix matrix) {
+        if (src == null || logo == null) {
+            return null;
+        }
+        //原图宽高
+        int w = src.getWidth();
+        int h = src.getHeight();
+        //logo宽高
+        int ww = logo.getWidth();
+        int wh = logo.getHeight();
+        //创建一个和原图宽高一样的bitmap
+        Bitmap newBitmap = Bitmap.createBitmap(w, h, src.getConfig());
+        //创建Canvas
+        Canvas canvas = new Canvas(newBitmap);
+        //绘制原始图片
+        canvas.drawBitmap(src, 0, 0, null);
+
+        if (matrix == null) {
+            //新建矩阵
+            matrix = new Matrix();
+            //对矩阵作位置偏移，移动到底部右边的位置
+            matrix.postTranslate(w - ww, h - wh);
+        }
+        //将logo绘制到画布上并做矩阵变换
+        canvas.drawBitmap(logo, matrix, null);
+        // 保存状态
+        canvas.save();
+        // 恢复状态
+        canvas.restore();
+        recycle(src);
+        recycle(logo);
+        return newBitmap;
     }
 
     /**

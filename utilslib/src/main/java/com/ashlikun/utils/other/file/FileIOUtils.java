@@ -74,11 +74,9 @@ public class FileIOUtils {
      * @param bm       数据流
      * @param path     文件路径
      * @param recreate 如果文件存在，是否需要删除重建
-     * @param url      真实地址
      * @return 是否写入成功
      */
-    public static boolean writeImage(Bitmap bm, String path, boolean recreate,
-                                     String url) {
+    public static boolean writeImage(Bitmap bm, String path, boolean recreate) {
         boolean res = false;
         try {
             File f = new File(path);
@@ -88,8 +86,8 @@ public class FileIOUtils {
             if (createOrExistsFile(f) && null != bm) {
                 BufferedOutputStream bos = new BufferedOutputStream(
                         new FileOutputStream(f));
-                /** 简单加密 */
-                if (url != null && (url.contains("png") || url.contains("PNG"))) {
+                //写入缓存
+                if (path != null && (path.contains("png") || path.contains("PNG"))) {
                     bm.compress(Bitmap.CompressFormat.PNG, 80, bos);
                 } else {
                     bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
