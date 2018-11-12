@@ -155,10 +155,28 @@ public class StatusBarCompat {
         ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
         if (mChildView != null) {
-            ViewCompat.setFitsSystemWindows(mChildView, false);
+            mChildView.setFitsSystemWindows(false);
             ViewCompat.requestApplyInsets(mChildView);
         }
         autoStatueTextColor(statusColor);
+    }
+
+    /**
+     * 使用跟布局插入状态栏
+     * 这里没有设置状态栏字体颜色
+     * 一般用于这个页面有类似微信的查看大图，解决返回的时候抖动问题
+     */
+    public void setFitsSystemWindows() {
+        //5.0以下不设置
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
+        View mChildView = mContentView.getChildAt(0);
+        if (mContentView != null) {
+            mChildView.setFitsSystemWindows(true);
+        }
     }
 
     /**
