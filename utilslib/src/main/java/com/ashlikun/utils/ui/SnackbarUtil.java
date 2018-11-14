@@ -2,10 +2,12 @@ package com.ashlikun.utils.ui;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.design.internal.SnackbarContentLayout;
 import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -140,6 +142,7 @@ public class SnackbarUtil {
 
     /**
      * 选择预设类型
+     *
      * @param snackbar
      * @param type
      */
@@ -186,7 +189,12 @@ public class SnackbarUtil {
         view.setFitsSystemWindows(false);
         if (view != null) {
             view.setBackgroundColor(backgroundColor);
-            ((TextView) view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(messageColor);
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                if (viewGroup.getChildAt(i) instanceof SnackbarContentLayout) {
+                    ((TextView) ((SnackbarContentLayout) viewGroup.getChildAt(i)).getChildAt(0)).setTextColor(messageColor);
+                }
+            }
         }
     }
 
