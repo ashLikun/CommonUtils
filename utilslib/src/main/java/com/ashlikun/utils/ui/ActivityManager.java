@@ -25,7 +25,7 @@ public class ActivityManager {
     public <T> T getTagActivity(Class<? extends Activity> activity) {
         if (activity != null) {
             for (Activity a : activityStack) {
-                if (activity.equals(a.getClass())) {
+                if (a.getClass() == activity) {
                     return (T) a;
                 }
             }
@@ -71,11 +71,11 @@ public class ActivityManager {
      *
      * @param activity
      */
-    public void exitActivity(@SuppressWarnings("rawtypes") Class activity) {
+    public void exitActivity(Class activity) {
         if (activity != null) {
             // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
             for (Activity a : activityStack) {
-                if (activity.equals(a.getClass())) {
+                if (a.getClass() == activity) {
                     activityStack.remove(a);
                     a.finish();
                     a = null;
@@ -97,6 +97,19 @@ public class ActivityManager {
             activity = activityStack.lastElement();
         }
         return activity;
+    }
+
+    /**
+     * 当前栈顶是不是这个activity
+     *
+     * @return
+     */
+    public boolean currentActivity(Class<? extends Activity> activityClas) {
+        Activity activity = currentActivity();
+        if (activity != null && activity.getClass() == activityClas) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -143,7 +156,7 @@ public class ActivityManager {
                 }
                 boolean isfinish = true;
                 for (Class c : activity) {
-                    if (a.getClass().equals(c)) {
+                    if (a.getClass() == c) {
                         isfinish = false;
                         break;
                     }
