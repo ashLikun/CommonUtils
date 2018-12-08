@@ -22,8 +22,8 @@ import com.ashlikun.utils.other.DimensUtils;
  * 在你的Activity的oncreate()方法里调用AndroidBug5497Workaround.assistActivity(this);即可。注意：在setContentView(R.layout.xxx)之后调用。
  */
 public class AndroidBug5497Workaround {
-    public static void assistActivity(Activity activity) {
-        new AndroidBug5497Workaround(activity);
+    public static AndroidBug5497Workaround get(Activity activity) {
+        return new AndroidBug5497Workaround(activity);
     }
 
     private View mChildOfContent;
