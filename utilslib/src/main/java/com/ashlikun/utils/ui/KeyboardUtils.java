@@ -76,7 +76,7 @@ public class KeyboardUtils {
     }
 
     public static final void setOnInputChang(final Activity activity, OnResizeListener listener) {
-        FrameLayout content = (FrameLayout) activity.findViewById(android.R.id.content);
+        FrameLayout content = activity.findViewById(android.R.id.content);
         final View mChildOfContent = content.getChildAt(0);
         //界面出现变动都会调用这个监听事件
         mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new MyOnGlobalLayoutListener(activity, listener));
