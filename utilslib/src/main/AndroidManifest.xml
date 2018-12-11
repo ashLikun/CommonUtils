@@ -3,11 +3,17 @@
     package="com.ashlikun.utils">
 
 
-
-    <application
-        android:allowBackup="true"
-        android:supportsRtl="true">
-
+    <application>
+        <!--7.0 url的获取-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.Provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files_paths" />
+        </provider>
     </application>
 
 </manifest>
