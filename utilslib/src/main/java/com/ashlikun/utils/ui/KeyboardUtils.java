@@ -80,6 +80,9 @@ public class KeyboardUtils {
      * @return
      */
     public static boolean isOpenInput(View view) {
+        if (view == null) {
+            return false;
+        }
         //获取当前屏幕内容的高度
         int screenHeight = view.getHeight();
         //获取View可见区域的bottom
