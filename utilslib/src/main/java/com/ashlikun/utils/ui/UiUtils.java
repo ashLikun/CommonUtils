@@ -167,6 +167,22 @@ public class UiUtils {
     }
 
     /**
+     * 设置view大小
+     *
+     * @param view
+     * @param width
+     */
+    public static void setViewSize(View view, int width, int height) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        params.width = width;
+        params.height = height;
+        view.setLayoutParams(params);
+    }
+
+    /**
      * 设置view   Margin
      *
      * @param view
