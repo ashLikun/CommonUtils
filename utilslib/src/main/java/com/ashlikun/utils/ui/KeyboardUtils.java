@@ -66,13 +66,26 @@ public class KeyboardUtils {
     /**
      * 软键盘是否打开
      *
-     * @param context
+     * @param activity
      * @return
      */
-    public static boolean isOpenInput(Context context) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        boolean isOpen = imm.isActive();
-        return isOpen;
+    public static boolean isOpenInput(Activity activity) {
+        return isOpenInput(activity.getWindow().getDecorView());
+    }
+
+    /**
+     * 软键盘是否打开
+     *
+     * @param view 页面跟布局
+     * @return
+     */
+    public static boolean isOpenInput(View view) {
+        //获取当前屏幕内容的高度
+        int screenHeight = view.getHeight();
+        //获取View可见区域的bottom
+        Rect rect = new Rect();
+        view.getWindowVisibleDisplayFrame(rect);
+        return screenHeight - rect.bottom != 0;
     }
 
     public static final void setOnInputChang(final Activity activity, OnResizeListener listener) {
