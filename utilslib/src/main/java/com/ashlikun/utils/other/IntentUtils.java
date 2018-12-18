@@ -3,14 +3,10 @@ package com.ashlikun.utils.other;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.ashlikun.utils.AppUtils;
 
 import java.io.File;
@@ -61,31 +57,6 @@ public class IntentUtils {
         AppUtils.getApp().startActivity(homeIntent);
     }
 
-    /**
-     * 根据手机好拨打电话
-     *
-     * @param context
-     * @param phone
-     */
-    public static void callPhoneDialog(final Context context, final String phone) {
-        if (StringUtils.isEmpty(phone)) {
-            return;
-        }
-        MaterialDialog dialog = new MaterialDialog.Builder(context)
-                .content("确定拨打 " + phone)
-                .title("拨打电话")
-                .positiveText("拨打")
-                .negativeColor(Color.GRAY)
-                .negativeText("取消")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        IntentUtils.callPhone(phone);
-                    }
-                })
-                .build();
-        dialog.show();
-    }
 
     /**
      * 根据手机好拨打电话
