@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
+import com.ashlikun.utils.other.SpannableUtils;
 import com.ashlikun.utils.other.spannable.XClickableSpan;
 import com.ashlikun.utils.ui.BitmapUtil;
 import com.ashlikun.utils.ui.DrawableUtils;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     DrawableUtils drawableUtils;
     StatusBarCompat statusBarCompat;
     ImageView imageView;
+    TextViewCompat textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,21 @@ public class MainActivity extends AppCompatActivity {
         statusBarCompat = new StatusBarCompat(this);
         statusBarCompat.setStatusBarColor(0xffffffff);
         imageView = findViewById(R.id.imageView);
+        textView = findViewById(R.id.text);
+
+        GradientDrawable drawable = new GradientDrawable();
+        int size = DimensUtils.dip2px(this, 4f);
+        drawable.setBounds(0, 0, size, size);
+        drawable.setColor(0xfffa5c4f);
+        drawable.setCornerRadius(size / 2f);
+
+        textView.setText(SpannableUtils.getBuilder("").setLineSpacingExtra(textView.getLineSpacingExtra()).setDrawable(drawable)
+                .append("文案已复制\n")
+                .append("").setDrawable(drawable)
+                .append("分享二维码已保存\n")
+                .append("").setDrawable(drawable)
+                .append("图案已保存到相册")
+                .create());
     }
 
     public void onView1Click(View view) {

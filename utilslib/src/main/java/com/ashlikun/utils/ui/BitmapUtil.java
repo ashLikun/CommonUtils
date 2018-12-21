@@ -1,6 +1,7 @@
 package com.ashlikun.utils.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -16,8 +17,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.encryption.Base64Utils;
@@ -352,23 +353,49 @@ public class BitmapUtil {
      * @return 图片bitmap
      */
     public static Bitmap getViewBitmap(View view) {
-        if (view == null || view.getMeasuredWidth() == 0 || view.getMeasuredHeight() == 0) {
+        if (view == null) {
             return null;
         }
-        int h = 0;
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                h += ((ViewGroup) view).getChildAt(i).getHeight();
-            }
-        } else {
-            h = view.getMeasuredHeight();
+        if (view.getMeasuredWidth() == 0 || view.getMeasuredHeight() == 0) {
+            view.measure(View.MeasureSpec.makeMeasureSpec(ScreenInfoUtils.getWidth(), View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(ScreenInfoUtils.getWidth() * 10, View.MeasureSpec.AT_MOST));
         }
         // 创建相应大小的bitmap
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), h, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         //绘制viewGroup内容
         view.draw(canvas);
         return bitmap;
+    }
+
+    /**
+     * 保存文件到相册
+     *
+     * @return true 成功，false:失败
+     */
+    public boolean saveImageToGallery(Context context, Bitmap bmp, File file) {
+        if (saveBitmap(bmp, file)) {
+            return updatePhotoMedia(context, file);
+        }
+        return false;
+    }
+
+    /**
+     * 刷新相册
+     *
+     * @return true 成功，false:失败
+     */
+    public boolean updatePhotoMedia(Context context, File file) {
+        //保存图片后发送广播通知更新数据库
+        if (file.exists()) {
+            try {
+                context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                return true;
+            } catch (Exception e) {
+
+            }
+        }
+        return false;
     }
 
     /**

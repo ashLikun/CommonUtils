@@ -177,7 +177,7 @@ public class SpannableUtils {
         private int bulletColor;
 
         /**
-         * 行间距，谁要使用就传递给谁，一般用于对齐
+         * 行间距，谁要使用就传递给谁，一般用于对齐 ,  一次设置后不清空
          */
         private float lineSpacingExtra;
         /**
@@ -551,7 +551,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 行间距，谁要使用就传递给谁，一般用于对齐
+         * 行间距，谁要使用就传递给谁，一般用于对齐,一次设置后不清空
          * 类似于偏移量,相对于Y偏移
          *
          * @param lineSpacingExtra
@@ -621,7 +621,6 @@ public class SpannableUtils {
             bulletGapWidth = 0;
             bulletWidth = 0;
             bulletColor = 0;
-            lineSpacingExtra = 0;
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
             isChangImageSize = false;
         }
