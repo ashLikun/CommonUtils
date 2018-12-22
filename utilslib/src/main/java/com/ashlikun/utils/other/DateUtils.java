@@ -433,6 +433,17 @@ public abstract class DateUtils {
     }
 
     /**
+     * 是否本周
+     *
+     * @param calender 日期1
+     * @param today    日期2
+     * @return
+     */
+    public static boolean isThisWeek(Calendar calender, Calendar today) {
+        return getWeekOfYear(today) == getWeekOfYear(calender);
+    }
+
+    /**
      * 获取周几
      */
     public static int getWeek(Calendar calender) {
