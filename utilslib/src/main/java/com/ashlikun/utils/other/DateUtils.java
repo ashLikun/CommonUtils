@@ -402,7 +402,7 @@ public abstract class DateUtils {
         if (calendar == null) {
             return false;
         }
-        today = addDay(today, 1);
+        calendar = addDay(calendar, 1);
         return isTotay(calendar, today);
     }
 
