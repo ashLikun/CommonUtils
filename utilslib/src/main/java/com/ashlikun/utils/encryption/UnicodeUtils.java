@@ -28,8 +28,12 @@ public class UnicodeUtils {
         Matcher m = reUnicode.matcher(unicode);
         StringBuffer sb = new StringBuffer(unicode.length());
         while (m.find()) {
-            m.appendReplacement(sb,
-                    Character.toString((char) Integer.parseInt(m.group(1), 16)));
+            try {
+                m.appendReplacement(sb,
+                        Character.toString((char) Integer.parseInt(m.group(1), 16)));
+            } catch (Exception e) {
+
+            }
         }
         m.appendTail(sb);
         return sb.toString();
