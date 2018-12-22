@@ -425,6 +425,10 @@ public abstract class DateUtils {
      */
 
     public static int getWeekOfYear(Calendar calender) {
+        //如果是周日，就要-1
+        if (getWeek(calender) == 7) {
+            return calender.get(Calendar.WEEK_OF_YEAR) - 1;
+        }
         return calender.get(Calendar.WEEK_OF_YEAR);
     }
 
