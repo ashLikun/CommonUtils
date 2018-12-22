@@ -364,11 +364,46 @@ public abstract class DateUtils {
      * @return 是true，否则false
      */
     public static boolean isTotay(Calendar calendar) {
+        return isTotay(calendar, Calendar.getInstance());
+    }
+
+    /**
+     * 方法功能： 是否是今天
+     *
+     * @param calendar 日期
+     * @param today    今天的日期
+     * @return 是true，否则false
+     */
+    public static boolean isTotay(Calendar calendar, Calendar today) {
         if (calendar == null) {
             return false;
         }
-        Calendar today = Calendar.getInstance();
-        return today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) || today.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR);
+        return today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR);
+    }
+
+    /**
+     * 方法功能： 是否是昨天
+     *
+     * @param calendar 日期
+     * @return 是true，否则false
+     */
+    public static boolean isYeserday(Calendar calendar) {
+        return isYeserday(calendar, Calendar.getInstance());
+    }
+
+    /**
+     * 方法功能： 是否是昨天
+     *
+     * @param calendar 日期
+     * @param today    今天的日期
+     * @return 是true，否则false
+     */
+    public static boolean isYeserday(Calendar calendar, Calendar today) {
+        if (calendar == null) {
+            return false;
+        }
+        today = addDay(today, 1);
+        return isTotay(calendar, today);
     }
 
     /**
@@ -393,6 +428,16 @@ public abstract class DateUtils {
         return calender.get(Calendar.WEEK_OF_YEAR);
     }
 
+    /**
+     * 获取周几
+     */
+    public static int getWeek(Calendar calender) {
+        int week = calender.get(Calendar.DAY_OF_WEEK) - 1;
+        if (week == 0) {
+            return 7;
+        }
+        return week;
+    }
 
     /**
      * 方法功能：Date(1461686400000)  转化成时间
