@@ -62,12 +62,26 @@ public class AppUtils {
      */
     public static boolean isMainProcess() {
         String name = ProcessUtils.getCurProcessName();
-        if (name == null || name.trim().length() == 0) {
+        if (TextUtils.isEmpty(name)) {
             return false;
         }
-        return name.equals(myApp.getApplicationInfo().packageName);
+        return name.equals(myApp.getPackageName());
     }
 
+    /**
+     * 是否APP进程
+     * com.ogow.activity
+     * com.ogow.activity:webview
+     *
+     * @return 获取失败也是APP进程
+     */
+    public static boolean isAppProcess() {
+        String name = ProcessUtils.getCurProcessName();
+        if (TextUtils.isEmpty(name)) {
+            return true;
+        }
+        return name.contains(myApp.getPackageName());
+    }
 
     /**
      * 兼容高版本的fileprovider

@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Process;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
 import com.ashlikun.utils.AppUtils;
@@ -30,7 +29,26 @@ public class ProcessUtils {
      * @return {@code true}: yes<br>{@code false}: no
      */
     public static boolean isMainProcess() {
-        return AppUtils.getApp().getPackageName().equals(getCurProcessName());
+        String name = ProcessUtils.getCurProcessName();
+        if (TextUtils.isEmpty(name)) {
+            return false;
+        }
+        return name.equals(AppUtils.getApp().getPackageName());
+    }
+
+    /**
+     * 是否APP进程
+     * com.ogow.activity
+     * com.ogow.activity:webview
+     *
+     * @return 获取失败也是APP进程
+     */
+    public static boolean isAppProcess() {
+        String name = ProcessUtils.getCurProcessName();
+        if (TextUtils.isEmpty(name)) {
+            return true;
+        }
+        return name.contains(AppUtils.getApp().getPackageName());
     }
 
     /**
