@@ -72,7 +72,7 @@ public class TextDrawable extends GradientDrawable {
         }
         super.draw(canvas);
         Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
-        int baseline = (getIntrinsicHeight() - fontMetrics.top - fontMetrics.bottom) / 2;
+        int baseline = (getIntrinsicHeight() - fontMetrics.ascent - fontMetrics.descent) / 2;
         canvas.drawText(text, 0, text.length(), getIntrinsicWidth() / 2, baseline, paint);
     }
 
