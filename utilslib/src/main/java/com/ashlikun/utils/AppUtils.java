@@ -26,6 +26,8 @@ public class AppUtils {
     private static int versionCode = -10088;
     private static String versionName;
     private static String packageName;
+    public static ApplicationListener activityLifecycleCallbacks = new ApplicationListener();
+
 
     /**
      * 作者　　: 李坤
@@ -37,6 +39,7 @@ public class AppUtils {
 
     public static void init(Application myApp) {
         AppUtils.myApp = myApp;
+        myApp.registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
         //设置内容提供者的名字
         BaseContentProvider.AUTHORITY = myApp.getApplicationInfo().packageName + "ContentProvider";
     }
@@ -52,6 +55,24 @@ public class AppUtils {
 
     public static boolean isDebug() {
         return AppUtils.isDebug;
+    }
+
+    /**
+     * 前后台监听
+     *
+     * @param listener
+     */
+    public static void addAppRunChang(ApplicationListener.OnChangListener listener) {
+        activityLifecycleCallbacks.addOnChangListener(listener);
+    }
+
+    /**
+     * 前后台监听
+     *
+     * @param listener
+     */
+    public static void removeAppRunChang(ApplicationListener.OnChangListener listener) {
+        activityLifecycleCallbacks.removeOnChangListener(listener);
     }
 
     /**

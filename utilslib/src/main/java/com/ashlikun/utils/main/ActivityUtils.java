@@ -62,50 +62,10 @@ public class ActivityUtils {
      * @param classs 某个界面activity
      * @return true:在前台，false:不在
      */
-    public static boolean isForeground(Class classs) {
-        if (Activity.class.isAssignableFrom(classs)) {
-            String className = classs.getName();
-            if (classs == null || TextUtils.isEmpty(className)) {
-                return false;
-            }
-            ActivityManager am = (ActivityManager) AppUtils.getApp()
-                    .getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
-            if (list != null && list.size() > 0) {
-                ComponentName cpn = list.get(0).topActivity;
-                if (className.equals(cpn.getClassName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public static boolean isForeground() {
+        return AppUtils.activityLifecycleCallbacks.isForeground();
     }
 
-    /**
-     * 方法功能：同上
-     */
-    public static boolean isForeground(Activity activity) {
-        return activity != null ? isForeground(activity.getClass()) : false;
-    }
-
-    /**
-     * 方法功能：判断应用是否处于前台
-     * < uses-permission android:name =“android.permission.GET_TASKS” />
-     *
-     * @param context 上下文对象
-     */
-    public static boolean isAppForeground(Context context) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
-        if (runningTasks != null && runningTasks.size() > 0) {
-            ActivityManager.RunningTaskInfo foregroundTaskInfo = runningTasks.get(0);
-            String foregroundTaskPackageName = foregroundTaskInfo.topActivity.getPackageName();
-            if (context.getPackageName().equals(foregroundTaskPackageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 方法功能：获取app运行状态
@@ -113,26 +73,23 @@ public class ActivityUtils {
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
     public static int appRunStatus(Context context) {
-        //获取ActivityManager
-        ActivityManager mAm = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        //获得当前运行的task
-        List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
-        if (taskList != null && taskList.size() > 0) {
-            if (taskList.get(0).topActivity.getPackageName().equals(context.getPackageName())) {
-                //前台
-                return 0;
-            }
-            for (ActivityManager.RunningTaskInfo rti : taskList) {
-                //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
-                if (rti.topActivity.getPackageName().equals(context.getPackageName())) {
-                    //后台
+        if (!isForeground()) {
+            //处于后台
+            //获取ActivityManager
+            ActivityManager mAm = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            //获得当前运行的task
+            List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
+            if (taskList != null && taskList.size() > 0) {
+                if (taskList.get(0).topActivity.getPackageName().equals(context.getPackageName())) {
                     return 1;
                 }
             }
+            //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
+            //未启动
+            return 2;
+        } else {
+            return 0;
         }
-        //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
-        //未启动
-        return 2;
     }
 
     /**
@@ -142,24 +99,28 @@ public class ActivityUtils {
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
     public static int appBackgoundToForeground(Context context) {
-        //获取ActivityManager
-        ActivityManager mAm = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        //获得当前运行的task
-        List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
-        if (taskList.get(0).topActivity.getPackageName().equals(context.getPackageName())) {
-            return 0;//前台
-        }
-        for (ActivityManager.RunningTaskInfo rti : taskList) {
-            //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
-            if (rti.topActivity.getPackageName().equals(context.getPackageName())) {
-                mAm.moveTaskToFront(rti.id, 0);
-                //后台
-                return 1;
+        if (!isForeground()) {
+            //处于后台
+            //获取ActivityManager
+            ActivityManager mAm = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            //获得当前运行的task
+            List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
+            if (taskList != null && taskList.size() > 0) {
+                for (ActivityManager.RunningTaskInfo rti : taskList) {
+                    //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
+                    if (rti.topActivity.getPackageName().equals(context.getPackageName())) {
+                        mAm.moveTaskToFront(rti.id, 0);
+                        //后台
+                        return 1;
+                    }
+                }
             }
+            //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
+            //未启动
+            return 2;
+        } else {
+            return 0;
         }
-        //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
-        //未启动
-        return 2;
     }
 
 
