@@ -23,14 +23,20 @@ public class ActivityManager {
      * @return
      */
     public <T> T getTagActivity(Class<? extends Activity> activity) {
+        Activity returnAct = null;
         if (activity != null) {
             for (Activity a : activityStack) {
                 if (a.getClass() == activity) {
-                    return (T) a;
+                    returnAct = a;
+                    break;
                 }
             }
         }
-        return null;
+        if (returnAct != null && returnAct.isFinishing()) {
+            activityStack.remove(returnAct);
+            returnAct = null;
+        }
+        return (T) returnAct;
     }
 
     private ActivityManager() {
@@ -95,6 +101,10 @@ public class ActivityManager {
         Activity activity = null;
         if (activityStack != null && !activityStack.empty()) {
             activity = activityStack.lastElement();
+            if (activity != null && activity.isFinishing()) {
+                activityStack.remove(activity);
+                activity = null;
+            }
         }
         return activity;
     }

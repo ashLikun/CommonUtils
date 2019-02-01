@@ -1,11 +1,13 @@
 package com.ashlikun.utils.ui;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -83,7 +85,7 @@ public class NotificationUtil {
                                     String msg,
                                     boolean autoCancel) {
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(AppUtils.getApp(), AppUtils.getAppName())
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(AppUtils.getApp(), AppUtils.getApp().getPackageName())
                 //左部图标
                 .setSmallIcon(icon)
                 //上部标题
@@ -99,11 +101,22 @@ public class NotificationUtil {
                 //允许更新
                 PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
+
+        //用消息的id对应的hashCode作为通知id
         //如果没有就创建，如果有就更新，
         //第一个参数是设置创建通知的id或者需要更新通知的id
         //发出状态栏通知
         NotificationManager nm = (NotificationManager) AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(id, builder.build());
+        // 此处必须兼容android O设备，否则系统版本在O以上可能不展示通知栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    AppUtils.getApp().getPackageName(),
+                    AppUtils.getAppName(),
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            nm.createNotificationChannel(channel);
+        }
+        nm.notify(AppUtils.getAppName(), id, builder.build());
     }
 
     /**
@@ -118,6 +131,18 @@ public class NotificationUtil {
     }
 
     /**
+     * 取消通知
+     *
+     * @param tag，通知的tag
+     * @param notificationId，通知的id
+     */
+    public static void cancel(String tag, int notificationId) {
+        NotificationManager nm = (NotificationManager) AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE);
+        //撤销指定id通知
+        nm.cancel(tag, notificationId);
+    }
+
+    /**
      * 取消全部通知
      */
     public static void cancel() {
@@ -125,8 +150,6 @@ public class NotificationUtil {
         //撤销本程序发出的全部通知
         nm.cancelAll();
     }
-
-
 
 
     /********************************************************************************************
