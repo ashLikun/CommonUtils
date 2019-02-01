@@ -59,7 +59,6 @@ public class ActivityUtils {
     /**
      * 方法功能：判断某个界面是否在前台
      *
-     * @param classs 某个界面activity
      * @return true:在前台，false:不在
      */
     public static boolean isForeground() {
