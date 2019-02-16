@@ -93,6 +93,62 @@ public class ActivityManager {
     }
 
     /**
+     * 是否已经有这个activity
+     *
+     * @param activity
+     * @return
+     */
+    public Activity contains(Class<? extends Activity> activity) {
+        if (!activityStack.isEmpty()) {
+            for (int i = 0; i < activityStack.size(); i++) {
+                if (!activityStack.get(i).isFinishing() &&
+                        activityStack.get(i).getClass() == activity) {
+                    return activityStack.get(i);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 回退到指定的activity
+     */
+    public boolean goBack(Class<? extends Activity> activity) {
+        if (contains(activity) != null) {
+            while (activityStack.size() > 1) {
+                if (!currentActivity(activity)) {
+                    exitTopActivity();
+                } else {
+                    break;
+                }
+            }
+            return true;
+
+        }
+        return false;
+    }
+
+    /**
+     * 回退到指定的activity，并且销毁指定的activity
+     */
+    public boolean goBackFinish(Class<? extends Activity> activity) {
+        Activity tagActivity = contains(activity);
+        if (tagActivity != null) {
+            while (!activityStack.isEmpty()) {
+                if (!currentActivity(activity)) {
+                    exitTopActivity();
+                } else {
+                    break;
+                }
+            }
+            //退出当前activity
+            exitTopActivity();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 获得当前栈顶Activity
      *
      * @return
@@ -181,4 +237,15 @@ public class ActivityManager {
 
     }
 
+    /**
+     * 退出栈顶activity
+     */
+    public void exitTopActivity() {
+        if (activityStack != null && !activityStack.isEmpty()) {
+            Activity activity = activityStack.pop();
+            if (activity != null) {
+                activity.finish();
+            }
+        }
+    }
 }
