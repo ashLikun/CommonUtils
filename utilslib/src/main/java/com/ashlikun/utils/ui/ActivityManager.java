@@ -160,6 +160,7 @@ public class ActivityManager {
             if (activity != null && activity.isFinishing()) {
                 activityStack.remove(activity);
                 activity = null;
+                return currentActivity();
             }
         }
         return activity;
