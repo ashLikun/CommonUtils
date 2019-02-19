@@ -35,6 +35,7 @@ public class ActivityManager {
         if (returnAct != null && returnAct.isFinishing()) {
             activityStack.remove(returnAct);
             returnAct = null;
+            return getTagActivity(activity);
         }
         return (T) returnAct;
     }
