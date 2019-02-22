@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onView4Click(View view) {
+        SuperToast.showInfoMessage("aaaaaaaaaaaaaaaaaa");
         Bitmap logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
                 DimensUtils.dip2px(this, 50),
                 DimensUtils.dip2px(this, 50));

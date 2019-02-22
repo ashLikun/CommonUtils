@@ -5,12 +5,15 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Looper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -149,11 +152,25 @@ public class SuperToast {
         if (!builder.isShowIcon) {
             imageView.setVisibility(View.GONE);
         } else {
-            imageView.setImageResource(builder.iconRes);
+            Drawable draw = ContextCompat.getDrawable(view.getContext(), builder.iconRes);
+            //自动设置文字颜色
+            if ("auto_tintColor".equals(imageView.getTag())) {
+                draw = DrawableCompat.wrap(draw);
+                DrawableCompat.setTint(draw, StatusBarCompat.isColorDrak(builder.backgroundColor) ? 0xffffffff :
+                        0xff000000);
+            }
+            imageView.setImageDrawable(draw);
+
         }
         TextView textView = (TextView) view.findViewById(R.id.msg);
+        //自动设置文字颜色
+        if ("auto_textColor".equals(textView.getTag())) {
+            textView.setTextColor(StatusBarCompat.isColorDrak(builder.backgroundColor) ? 0xffffffff :
+                    0xff000000);
+        }
         textView.setText(builder.msg);
     }
+
 
     private int getBackgroundShen(int backgroundColor) {
         int red = (int) (Color.red(backgroundColor) * COLOR_DEPTH);

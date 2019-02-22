@@ -4,7 +4,7 @@
     <color name="SwipeRefreshLayout_2">#ffEA4335</color>
     <color name="SwipeRefreshLayout_3">#ff34A853</color>
     <color name="SwipeRefreshLayout_4">#ffFBBC05</color>
-    <color name="super_toast_color_info">#CC2195f3</color>
+    <color name="super_toast_color_info">#FFFFFF</color>
     <color name="super_toast_color_confirm">#CC4caf50</color>
     <color name="super_toast_color_warning">#CCdd8500</color>
     <color name="super_toast_color_error">#CCFF0000</color>
