@@ -25,9 +25,19 @@ public class CentreImageSpan extends ImageSpan {
     protected float lineSpacingExtra;
 
     int drawWidth = 0;
+    /**
+     * 0：居中
+     * 1:上
+     * 2：下
+     */
+    int imageAlign;
 
     public CentreImageSpan(Drawable d) {
         super(d);
+    }
+
+    public void setImageAlign(int imageAlign) {
+        this.imageAlign = imageAlign;
     }
 
     public void setChangSizeToText(boolean changSizeToText) {
@@ -77,7 +87,17 @@ public class CentreImageSpan extends ImageSpan {
                      float x, int top, int y, int bottom, Paint paint) {
         Drawable b = getDrawable();
         canvas.save();
-        int transY = (int) (((bottom - lineSpacingExtra - top) - b.getBounds().bottom) / 2 + top);
+        int transY = 0;
+        if (imageAlign == 0) {
+            //居中
+            transY = (int) (((bottom - top) - b.getBounds().bottom - lineSpacingExtra) / 2 + top);
+        } else if (imageAlign == 1) {
+            //上
+            transY = paint.getFontMetricsInt().descent;
+        } else if (imageAlign == 2) {
+            //下
+            transY = bottom - b.getBounds().bottom - paint.getFontMetricsInt().descent;
+        }
         canvas.translate(x, transY);
         b.draw(canvas);
         canvas.restore();

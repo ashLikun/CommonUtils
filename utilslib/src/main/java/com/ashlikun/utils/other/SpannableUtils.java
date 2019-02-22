@@ -142,6 +142,10 @@ public class SpannableUtils {
         @DrawableRes
         private int resourceId;
         /**
+         * 图片对齐方式
+         */
+        private int imageAlign = 0;
+        /**
          * 点击
          */
         private ClickableSpan clickSpan;
@@ -623,6 +627,7 @@ public class SpannableUtils {
             bulletColor = 0;
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
             isChangImageSize = false;
+            imageAlign = 0;
         }
 
         /**
@@ -634,6 +639,17 @@ public class SpannableUtils {
          */
         public Builder changImageSize() {
             isChangImageSize = true;
+            return this;
+        }
+
+        /**
+         * 图片对齐方式
+         * 0：居中
+         * 1:上
+         * 2：下
+         */
+        public Builder imageAlign(int imageAlign) {
+            this.imageAlign = imageAlign;
             return this;
         }
 
@@ -723,6 +739,7 @@ public class SpannableUtils {
                 mBuilder.setSpan(span = new CentreImageSpan(drawable), start, end, flag);
                 span.setChangSizeToText(isChangImageSize);
                 span.setLineSpacingExtra(lineSpacingExtra);
+                span.setImageAlign(imageAlign);
             }
             //设置点击
             if (clickSpan != null) {
