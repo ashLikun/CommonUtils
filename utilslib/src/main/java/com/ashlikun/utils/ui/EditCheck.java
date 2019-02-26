@@ -111,16 +111,14 @@ public class EditCheck {
 
         @Override
         public void afterTextChanged(Editable s) {
-            boolean isHandle = false;
             boolean isCheck = edits.check();
             if (mIEditStatusChang != null) {
-                isHandle = mIEditStatusChang.onEditChang(edits.getTextView(), s, isCheck);
+                isCheck = mIEditStatusChang.onEditChang(edits.getTextView(), s, isCheck);
             }
-            if (!isHandle && button != null) {
+            if (button != null) {
                 for (View v : button) {
                     v.setEnabled(isCheck);
                 }
-
             }
         }
     }
@@ -143,7 +141,7 @@ public class EditCheck {
          * @param textView 宿主控件
          * @param s        改变的字符串
          * @param isCheck  是否验证通过
-         * @return 是否消耗了这个处理，（关系到设置button）false设置，true不设置
+         * @return 是否消耗了这个处理，（关系到设置setEnabled）
          */
         boolean onEditChang(TextView textView, Editable s, boolean isCheck);
     }
@@ -153,18 +151,13 @@ public class EditCheck {
         TextView view;
         String regex;
 
-        public EditCheckData(TextView textView, String regex, String msg) {
-            this.regex = regex;
-            this.view = textView;
-        }
-
         public EditCheckData(TextView textView, String regex) {
             this.regex = regex;
             this.view = textView;
         }
 
 
-        public EditCheckData(TextView textView, int regexMaxLenght, @StringRes int msgStringId) {
+        public EditCheckData(TextView textView, int regexMaxLenght) {
             this.regex = "[\\S]{1," + regexMaxLenght + "}";
             this.view = textView;
         }
