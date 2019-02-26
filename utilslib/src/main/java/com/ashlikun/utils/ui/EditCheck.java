@@ -116,7 +116,7 @@ public class EditCheck {
             for (EditCheckData e : allEdits) {
                 if (e != edits) {
                     if (e.isCheckOk == null) {
-                        e.check(s);
+                        e.check();
                     }
                     if (!e.isCheckOk) {
                         if (button != null) {
@@ -128,7 +128,7 @@ public class EditCheck {
                     }
                 }
             }
-            boolean isCheck = edits.check(s);
+            boolean isCheck = edits.check();
             if (mIEditStatusChang != null) {
                 isCheck = mIEditStatusChang.onEditChang(edits.getTextView(), s, isCheck);
             }
@@ -160,7 +160,7 @@ public class EditCheck {
          * @param isCheck  是否验证通过
          * @return 是否消耗了这个处理，（关系到设置setEnabled）
          */
-        boolean onEditChang(TextView textView, Editable s, boolean isCheck);
+        boolean onEditChang(TextView textView, CharSequence s, boolean isCheck);
     }
 
     public static class EditCheckData {
@@ -207,10 +207,10 @@ public class EditCheck {
             return this;
         }
 
-        public boolean check(Editable s) {
-            isCheckOk = view != null && s.toString().matches(regex);
+        public boolean check() {
+            isCheckOk = view != null && view.getText().toString().matches(regex);
             if (mIEditStatusChang != null) {
-                isCheckOk = mIEditStatusChang.onEditChang(getTextView(), s, isCheckOk);
+                isCheckOk = mIEditStatusChang.onEditChang(getTextView(), view.getText(), isCheckOk);
             }
             return isCheckOk;
         }
