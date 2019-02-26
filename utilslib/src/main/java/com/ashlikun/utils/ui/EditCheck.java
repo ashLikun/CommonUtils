@@ -115,6 +115,9 @@ public class EditCheck {
             //检查其他的
             for (EditCheckData e : allEdits) {
                 if (e != edits) {
+                    if (e.isCheckOk == null) {
+                        e.check(s);
+                    }
                     if (!e.isCheckOk) {
                         if (button != null) {
                             for (View v : button) {
@@ -167,7 +170,7 @@ public class EditCheck {
         /**
          * 是否满足
          */
-        boolean isCheckOk = false;
+        Boolean isCheckOk = null;
         private IEditStatusChang mIEditStatusChang;
 
         public EditCheckData(TextView textView, String regex) {
