@@ -72,7 +72,7 @@ public class EditCheck {
                 mEdithelpdatas = new ArrayList<>();
             }
             mEdithelpdatas.add(edits);
-            edits.getTextView().addTextChangedListener(new MyTextWatcher(edits));
+            edits.getTextView().addTextChangedListener(new MyTextWatcher(mEdithelpdatas, edits));
         }
     }
 
@@ -93,8 +93,10 @@ public class EditCheck {
     public class MyTextWatcher implements TextWatcher {
 
         EditCheckData edits;
+        ArrayList<EditCheckData> allEdits;
 
-        public MyTextWatcher(EditCheckData edits) {
+        public MyTextWatcher(ArrayList<EditCheckData> allEdits, EditCheckData edits) {
+            this.allEdits = allEdits;
             this.edits = edits;
         }
 
@@ -110,7 +112,20 @@ public class EditCheck {
 
         @Override
         public void afterTextChanged(Editable s) {
-            boolean isCheck = edits.check();
+            //检查其他的
+            for (EditCheckData e : allEdits) {
+                if (e != edits) {
+                    if (!e.isCheckOk) {
+                        if (button != null) {
+                            for (View v : button) {
+                                v.setEnabled(false);
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+            boolean isCheck = edits.check(s);
             if (mIEditStatusChang != null) {
                 isCheck = mIEditStatusChang.onEditChang(edits.getTextView(), s, isCheck);
             }
@@ -149,6 +164,11 @@ public class EditCheck {
 
         TextView view;
         String regex;
+        /**
+         * 是否满足
+         */
+        boolean isCheckOk = false;
+        private IEditStatusChang mIEditStatusChang;
 
         public EditCheckData(TextView textView, String regex) {
             this.regex = regex;
@@ -174,16 +194,22 @@ public class EditCheck {
             return regex;
         }
 
-        public void setRegex(String regex) {
+        public EditCheckData setRegex(String regex) {
             this.regex = regex;
+            return this;
         }
 
+        public EditCheckData setEditStatusChang(IEditStatusChang mIEditStatusChang) {
+            this.mIEditStatusChang = mIEditStatusChang;
+            return this;
+        }
 
-        public boolean check() {
-            if (view == null || !getTextView().getText().toString().matches(regex)) {
-                return false;
+        public boolean check(Editable s) {
+            isCheckOk = view != null && s.toString().matches(regex);
+            if (mIEditStatusChang != null) {
+                isCheckOk = mIEditStatusChang.onEditChang(getTextView(), s, isCheckOk);
             }
-            return true;
+            return isCheckOk;
         }
 
     }
