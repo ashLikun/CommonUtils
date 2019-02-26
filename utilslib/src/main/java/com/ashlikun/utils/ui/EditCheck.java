@@ -1,7 +1,6 @@
 package com.ashlikun.utils.ui;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
