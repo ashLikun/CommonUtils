@@ -12,7 +12,7 @@ import java.util.Stack;
  */
 
 public class ActivityManager {
-    private static Stack<Activity> activityStack;
+    private static Stack<Activity> activityStack = new Stack<>();
     private static ActivityManager instance;
 
     /**
