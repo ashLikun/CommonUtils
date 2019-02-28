@@ -186,13 +186,23 @@ public class StatusBarCompat {
      * 方法功能：设置透明的状态栏，实际布局内容在状态栏里面
      */
     public void translucentStatusBar() {
+        translucentStatusBar(false);
+    }
+
+    /**
+     * 设置透明状态栏时候，顶部的padding
+     *
+     * @param isNeedAndroidMHalf 6.0以下是否绘制半透明,因为不能设置状态栏字体颜色
+     * @return
+     */
+    public void translucentStatusBar(boolean isNeedAndroidMHalf) {
         //5.0以下不设置
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        if (!isSetStatusTextColor()) {
+        if (isNeedAndroidMHalf && !isSetStatusTextColor()) {
             //不能设置状态栏字体颜色时候
             window.setStatusBarColor(StatusBarCompat.HALF_COLOR);
         } else {
@@ -293,9 +303,13 @@ public class StatusBarCompat {
      * @param view
      */
     public static void setEmptyHeight(View view) {
+        setEmptyHeight(view, false);
+    }
+
+    public static void setEmptyHeight(View view, boolean isNeedAndroidMHalf) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int h = getStatusBarHeight(view.getContext());
-            if (isSetHaleColor()) {
+            if (isNeedAndroidMHalf && isSetHaleColor()) {
                 view.setBackgroundColor(StatusBarCompat.HALF_COLOR);
             }
             ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) view.getLayoutParams();
