@@ -88,7 +88,7 @@ public class KeyboardUtils {
         //获取View可见区域的bottom
         Rect rect = new Rect();
         view.getWindowVisibleDisplayFrame(rect);
-        return screenHeight - rect.bottom != 0;
+        return Math.abs(screenHeight - rect.bottom) - 200 > 0;
     }
 
     public static final void setOnInputChang(final Activity activity, OnResizeListener listener) {
