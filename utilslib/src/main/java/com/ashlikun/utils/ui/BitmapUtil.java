@@ -373,7 +373,7 @@ public class BitmapUtil {
      *
      * @return true 成功，false:失败
      */
-    public boolean saveImageToGallery(Context context, Bitmap bmp, File file) {
+    public static boolean saveImageToGallery(Context context, Bitmap bmp, File file) {
         if (saveBitmap(bmp, file)) {
             return updatePhotoMedia(context, file);
         }
@@ -385,7 +385,7 @@ public class BitmapUtil {
      *
      * @return true 成功，false:失败
      */
-    public boolean updatePhotoMedia(Context context, File file) {
+    public static boolean updatePhotoMedia(Context context, File file) {
         //保存图片后发送广播通知更新数据库
         if (file.exists()) {
             try {
