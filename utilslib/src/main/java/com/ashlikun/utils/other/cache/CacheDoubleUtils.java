@@ -3,13 +3,14 @@ package com.ashlikun.utils.other.cache;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.util.SimpleArrayMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+
+import androidx.annotation.NonNull;
+import androidx.collection.SimpleArrayMap;
 
 /**
  * 作者　　: 李坤

@@ -8,8 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.util.SimpleArrayMap;
 
 import com.ashlikun.utils.AppUtils;
 
@@ -35,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import androidx.annotation.NonNull;
+import androidx.collection.SimpleArrayMap;
 
 import static com.ashlikun.utils.other.StringUtils.isSpace;
 

@@ -3,11 +3,11 @@ package com.ashlikun.utils.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.AnyRes;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.AnyRes;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 import android.util.TypedValue;
 
 import com.ashlikun.utils.AppUtils;

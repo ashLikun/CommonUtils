@@ -1,7 +1,7 @@
 package com.ashlikun.utils.encryption;
 
-import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import android.text.TextUtils;
 
 import java.lang.annotation.Retention;

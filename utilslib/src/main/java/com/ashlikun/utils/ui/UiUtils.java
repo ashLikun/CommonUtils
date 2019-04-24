@@ -2,8 +2,6 @@ package com.ashlikun.utils.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.design.widget.TabLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,11 @@ import android.widget.TextView;
 
 import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
+import com.google.android.material.tabs.TabLayout;
 
 import java.lang.reflect.Field;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class UiUtils {

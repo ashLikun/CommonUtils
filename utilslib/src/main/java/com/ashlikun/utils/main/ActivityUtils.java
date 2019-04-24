@@ -2,12 +2,10 @@ package com.ashlikun.utils.main;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import androidx.annotation.NonNull;
 
 import com.ashlikun.utils.AppUtils;
 

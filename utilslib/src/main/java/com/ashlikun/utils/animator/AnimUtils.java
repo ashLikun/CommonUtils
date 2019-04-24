@@ -5,7 +5,7 @@ import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;

@@ -1,7 +1,8 @@
 package com.ashlikun.utils.animator;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 
 /**
@@ -17,6 +18,7 @@ public class DepthPageTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE = 0.65f;
 
 
+    @Override
     public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
         if (position < -1) { // [-Infinity,-1)

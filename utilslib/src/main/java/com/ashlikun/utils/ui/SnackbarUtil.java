@@ -2,8 +2,6 @@ package com.ashlikun.utils.ui;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.support.design.internal.SnackbarContentLayout;
-import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ashlikun.utils.R;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.snackbar.SnackbarContentLayout;
 
 
 /**

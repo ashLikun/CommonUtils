@@ -1,16 +1,17 @@
 package com.ashlikun.utils.ui;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ashlikun.utils.animator.AnimUtils;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+
+import androidx.annotation.StringRes;
 
 import static android.R.attr.id;
 

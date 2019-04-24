@@ -3,7 +3,7 @@ package com.ashlikun.utils.ui;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.text.TextUtils;
 
 import com.ashlikun.utils.AppUtils;
