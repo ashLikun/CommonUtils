@@ -26,4 +26,13 @@
         android:onClick="onView4Click"
         android:padding="10dp"
         android:text="加水印" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffaaffaa"
+        android:gravity="center"
+        android:onClick="onView5Click"
+        android:padding="10dp"
+        android:text="测试通知" />
 </LinearLayout>
