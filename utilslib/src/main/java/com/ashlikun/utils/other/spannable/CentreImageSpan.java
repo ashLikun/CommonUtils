@@ -24,7 +24,6 @@ public class CentreImageSpan extends ImageSpan {
      */
     protected float lineSpacingExtra;
 
-    int drawWidth = 0;
     /**
      * 0：居中
      * 1:上
@@ -73,7 +72,6 @@ public class CentreImageSpan extends ImageSpan {
 
             int top = drHeight / 2 - fontHeight / 4;
             int bottom = drHeight / 2 + fontHeight / 4;
-            drawWidth = rect.right - rect.left;
             fm.ascent = -bottom;
             fm.top = -bottom;
             fm.bottom = top;

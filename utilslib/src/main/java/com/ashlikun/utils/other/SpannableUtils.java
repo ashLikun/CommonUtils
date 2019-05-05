@@ -5,13 +5,6 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DimenRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.DrawableCompat;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -28,6 +21,14 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.spannable.CentreImageSpan;
@@ -422,12 +423,6 @@ public class SpannableUtils {
         }
 
         /**
-         * 设置图片
-         *
-         * @param bitmap 图片位图
-         * @return {@link Builder}
-         */
-        /**
          * 作者　　: 李坤
          * 创建时间: 2017/6/29 9:58
          * 方法功能：设置图片
@@ -436,8 +431,10 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setBitmap(@NonNull Bitmap bitmap) {
-            this.bitmap = bitmap;
-            imageIsBitmap = true;
+            if (bitmap != null) {
+                this.bitmap = bitmap;
+                imageIsBitmap = true;
+            }
             return this;
         }
 
@@ -451,8 +448,10 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setDrawable(@NonNull Drawable drawable) {
-            this.drawable = drawable;
-            imageIsDrawable = true;
+            if (drawable != null) {
+                this.drawable = drawable;
+                imageIsDrawable = true;
+            }
             return this;
         }
 
@@ -465,22 +464,20 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setResourceId(@DrawableRes int resourceId) {
-            this.resourceId = resourceId;
-            imageIsResourceId = true;
+            if (resourceId != 0) {
+                this.resourceId = resourceId;
+                imageIsResourceId = true;
+            }
             return this;
         }
 
         /**
-         * 设置点击事件
-         * <p>需添加view.setMovementMethod(LinkMovementMethod.getInstance())</p>
-         *
-         * @param clickSpan 点击事件
-         * @return {@link Builder}
-         */
-        /**
          * 作者　　: 李坤
          * 创建时间: 2017/6/29 9:58
          * 方法功能：设置点击事件
+         * <p>
+         * 设置点击事件
+         * <p>需添加view.setMovementMethod(LinkMovementMethod.getInstance())</p>
          *
          * @param clickSpan 点击事件
          * @return {@link Builder}
