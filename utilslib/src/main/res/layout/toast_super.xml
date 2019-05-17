@@ -3,7 +3,8 @@
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:background="@color/super_toast_color_warning"
+    android:gravity="center">
 
     //auto_tintColor：自动根据背景颜色设置图标白色还是黑色
 
@@ -12,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_toast_super_error"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:tag="auto_tintColor" />
@@ -22,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="4dp"
+        android:text="aaaaa"
         android:layout_marginRight="13dp"
         android:layout_toRightOf="@+id/img"
         android:background="@android:color/transparent"
