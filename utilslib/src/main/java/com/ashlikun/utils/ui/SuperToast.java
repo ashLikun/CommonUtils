@@ -42,6 +42,7 @@ import static com.ashlikun.utils.AppUtils.getApp;
 
 public class SuperToast {
     private static Toast mToast = null;
+    private static final String TOAST_VIEW_TAG = "TOAST_VIEW_TAG";
     private static final int Info = 1;//正常
     private static final int Confirm = 2;//完成
     private static final int Warning = 3;//警告 orange
@@ -93,7 +94,13 @@ public class SuperToast {
     private void cretae(final Builder builder) {
         initToast();
         View mView;
-        mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
+        if (builder.layoutId == R.layout.toast_super &&
+                mToast.getView() != null && TOAST_VIEW_TAG.equals(mToast.getView().getTag())) {
+            mView = mToast.getView();
+        } else {
+            mView = LayoutInflater.from(getApp()).inflate(builder.layoutId, null);
+            mView.setTag(TOAST_VIEW_TAG);
+        }
         setViewContent(mView, builder);
         startAnim(builder, mView);
         mToast.setGravity(builder.gravity, builder.offsetX, builder.offsetY);

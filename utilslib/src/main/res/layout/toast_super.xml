@@ -30,7 +30,6 @@
         android:paddingRight="13dp"
         android:paddingBottom="10dp"
         android:tag="auto_textColor"
-        android:text="aaaaa"
         android:textSize="14sp" />
 
 </LinearLayout>
