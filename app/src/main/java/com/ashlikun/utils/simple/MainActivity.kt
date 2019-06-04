@@ -59,12 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onView1Click(view: View) {
-        object : Thread() {
-            override fun run() {
-                super.run()
-                //SuperToast.get("aaaaaaa").info();
-            }
-        }.start()
+        SuperToast.get("aaaaaaa").info();
 
     }
 
@@ -89,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onView4Click(view: View) {
-        SuperToast.showInfoMessage("aaaaaaaaaaaaaaaaaa")
+        SuperToast.showErrorMessage("aaaaaaaaaaaaaaaaaa")
         val logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
                 DimensUtils.dip2px(this, 50f),
                 DimensUtils.dip2px(this, 50f))

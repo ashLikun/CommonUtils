@@ -3,7 +3,7 @@
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/super_toast_color_warning"
+    android:background="@color/super_toast_color_info"
     android:gravity="center">
 
     //auto_tintColor：自动根据背景颜色设置图标白色还是黑色
