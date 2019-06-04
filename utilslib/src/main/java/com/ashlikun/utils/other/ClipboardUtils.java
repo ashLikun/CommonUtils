@@ -19,10 +19,21 @@ public class ClipboardUtils {
      *
      * @param text 文本
      */
-    public static void copyText(final CharSequence text) {
+    public static void copyText(CharSequence text) {
         ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
         //noinspection ConstantConditions
-        cm.setPrimaryClip(ClipData.newPlainText("text", text));
+        cm.setPrimaryClip(ClipData.newPlainText(null, text));
+    }
+
+    /**
+     * 复制文本到剪贴板
+     *
+     * @param text 文本
+     */
+    public static void copyText(CharSequence label, CharSequence text) {
+        ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
+        //noinspection ConstantConditions
+        cm.setPrimaryClip(ClipData.newPlainText(null, text));
     }
 
     /**
@@ -40,9 +51,40 @@ public class ClipboardUtils {
         return null;
     }
 
-
-
-
-
-
+    /**
+     * 获取剪贴板的文本
+     *
+     * @return 剪贴板的文本
+     */
+    public static CharSequence[] getTexts() {
+        ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
+        //noinspection ConstantConditions
+        ClipData clip = cm.getPrimaryClip();
+        CharSequence[] result = null;
+        if (clip != null && clip.getItemCount() > 0) {
+            result = new CharSequence[clip.getItemCount()];
+            for (int i = 0; i < clip.getItemCount(); i++) {
+                result[i] = clip.getItemAt(i).coerceToText(AppUtils.getApp());
+            }
+        }
+        return result;
+    }
+    /**
+     * 获取剪贴板的文本
+     *
+     * @return 剪贴板的文本
+     */
+    public static CharSequence[] getTexts() {
+        ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
+        //noinspection ConstantConditions
+        ClipData clip = cm.getPrimaryClip();
+        CharSequence[] result = null;
+        if (clip != null && clip.getItemCount() > 0) {
+            result = new CharSequence[clip.getItemCount()];
+            for (int i = 0; i < clip.getItemCount(); i++) {
+                result[i] = clip.getItemAt(0);
+            }
+        }
+        return result;
+    }
 }
