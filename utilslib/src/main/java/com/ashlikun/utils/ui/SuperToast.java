@@ -152,6 +152,7 @@ public class SuperToast {
                 drawable.setColor(builder.backgroundColor);
                 drawable.setStroke(DimensUtils.dip2px(getApp(), 1f), getBackgroundShen(builder.backgroundColor));
                 drawable.setCornerRadius(DimensUtils.dip2px(getApp(), 4));
+                ViewCompat.setBackground(view, drawable);
             }
             ImageView imageView = (ImageView) view.findViewById(R.id.img);
             if (!builder.isShowIcon) {
