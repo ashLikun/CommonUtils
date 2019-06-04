@@ -37,7 +37,7 @@ public class ClipboardUtils {
     }
 
     /**
-     * 获取剪贴板的文本
+     * 获取剪贴板 最新的文本
      *
      * @return 剪贴板的文本
      */
@@ -52,7 +52,7 @@ public class ClipboardUtils {
     }
 
     /**
-     * 获取剪贴板的文本
+     * 获取剪贴板的 全部文本
      *
      * @return 剪贴板的文本
      */
@@ -69,22 +69,42 @@ public class ClipboardUtils {
         }
         return result;
     }
+
     /**
      * 获取剪贴板的文本
      *
-     * @return 剪贴板的文本
+     * @return 剪贴板的文本 原始对象
      */
-    public static CharSequence[] getTexts() {
+    public static ClipData.Item[] getClipItems() {
         ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
-        //noinspection ConstantConditions
         ClipData clip = cm.getPrimaryClip();
-        CharSequence[] result = null;
+        ClipData.Item[] result = null;
         if (clip != null && clip.getItemCount() > 0) {
-            result = new CharSequence[clip.getItemCount()];
+            result = new ClipData.Item[clip.getItemCount()];
             for (int i = 0; i < clip.getItemCount(); i++) {
                 result[i] = clip.getItemAt(0);
             }
         }
         return result;
+    }
+
+    /**
+     * 添加剪贴板数据改变监听器
+     */
+    public static void addChangedListener(ClipboardManager.OnPrimaryClipChangedListener changedListener) {
+        // 获取系统剪贴板
+        ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
+        // 添加剪贴板数据改变监听器
+        cm.addPrimaryClipChangedListener(changedListener);
+    }
+
+    /**
+     * 移除剪贴板数据改变监听器
+     */
+    public static void removeChangedListener(ClipboardManager.OnPrimaryClipChangedListener changedListener) {
+        // 获取系统剪贴板
+        ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
+        // 添加剪贴板数据改变监听器
+        cm.removePrimaryClipChangedListener(changedListener);
     }
 }
