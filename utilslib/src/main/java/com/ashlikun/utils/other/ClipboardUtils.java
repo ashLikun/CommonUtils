@@ -28,12 +28,13 @@ public class ClipboardUtils {
     /**
      * 复制文本到剪贴板
      *
-     * @param text 文本
+     * @param label 标签
+     * @param text  文本
      */
     public static void copyText(CharSequence label, CharSequence text) {
         ClipboardManager cm = (ClipboardManager) AppUtils.getApp().getSystemService(Context.CLIPBOARD_SERVICE);
         //noinspection ConstantConditions
-        cm.setPrimaryClip(ClipData.newPlainText(null, text));
+        cm.setPrimaryClip(ClipData.newPlainText(label, text));
     }
 
     /**
