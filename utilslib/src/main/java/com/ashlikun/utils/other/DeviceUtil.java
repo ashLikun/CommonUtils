@@ -287,10 +287,27 @@ public class DeviceUtil {
     private void findData() {
         telephonyManager = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
-        mIMEI = telephonyManager.getDeviceId();
-        mMobileVersion = telephonyManager.getDeviceSoftwareVersion();
-        mNetwrokIso = telephonyManager.getNetworkCountryIso();
-        mSIM = telephonyManager.getSimSerialNumber();
+        try {
+            mIMEI = telephonyManager.getDeviceId();
+        } catch (Exception e) {
+
+        }
+        try {
+            mMobileVersion = telephonyManager.getDeviceSoftwareVersion();
+        } catch (Exception e) {
+
+        }
+        try {
+            mNetwrokIso = telephonyManager.getNetworkCountryIso();
+        } catch (Exception e) {
+
+        }
+        try {
+            mSIM = telephonyManager.getSimSerialNumber();
+        } catch (Exception e) {
+
+        }
+
         mDeviceID = getDeviceId();
         try {
             ConnectivityManager cm = (ConnectivityManager) context
@@ -332,7 +349,6 @@ public class DeviceUtil {
     public String getUA() {
         return UA;
     }
-
 
 
     /**

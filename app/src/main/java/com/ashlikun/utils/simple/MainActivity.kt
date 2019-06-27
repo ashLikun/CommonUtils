@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.other.DeviceUtil
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.other.SpannableUtils
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         drawable.setBounds(0, 0, size, size)
         drawable.setColor(-0x5a3b1)
         drawable.cornerRadius = size / 2f
-
+DeviceUtil.get()
         textView.text = SpannableUtils.getBuilder("").setLineSpacingExtra(textView.lineSpacingExtra).setDrawable(drawable)
                 .append("文案已复制\n")
                 .append("").setDrawable(drawable)
