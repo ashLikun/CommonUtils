@@ -58,7 +58,6 @@ import java.util.UUID;
  * return sb.toString();
  * }
  */
-@SuppressLint("MissingPermission")
 public class DeviceUtil {
 
     public String UA = Build.MODEL;
@@ -69,12 +68,8 @@ public class DeviceUtil {
     private String mNetType;// 当前的连网类型
     private String mDeviceID;// 唯一设备号
     Context context = AppUtils.getApp();
-
-
     private TelephonyManager telephonyManager = null;// 很多关于手机的信息可以用此类得到
-
     private static DeviceUtil instance = null;// 单例模式
-
 
     private DeviceUtil() {
         findData();
@@ -103,11 +98,11 @@ public class DeviceUtil {
     /**
      * 设置手机立刻震动
      *
-     * @param context
      * @param milliseconds milliseconds/1000(S)
      */
-    public void vibrate(Context context, long milliseconds) {
-        Vibrator vib = (Vibrator) context
+    @SuppressLint("MissingPermission")
+    public static void vibrate(long milliseconds) {
+        Vibrator vib = (Vibrator) AppUtils.getApp()
                 .getSystemService(Service.VIBRATOR_SERVICE);
         vib.vibrate(milliseconds);
     }
@@ -124,9 +119,9 @@ public class DeviceUtil {
      *
      * @return
      */
-    public static String getDeviceId(Context context) {
+    public static String getDeviceId() {
         return Secure
-                .getString(context.getContentResolver(), Secure.ANDROID_ID);
+                .getString(AppUtils.getApp().getContentResolver(), Secure.ANDROID_ID);
     }
 
     /**
@@ -215,6 +210,7 @@ public class DeviceUtil {
     /**
      * 服务商名称：例如：中国移动、联通 　　 SIM卡的状态必须是 SIM_STATE_READY就绪状态(使用getSimState()判断).
      */
+    @SuppressLint("MissingPermission")
     public String getSimOpertorName() {
         if (telephonyManager.getSimState() == TelephonyManager.SIM_STATE_READY) {
             StringBuffer sb = new StringBuffer();
@@ -284,6 +280,7 @@ public class DeviceUtil {
     }
 
     // 设置基本信息
+    @SuppressLint("MissingPermission")
     private void findData() {
         telephonyManager = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
@@ -320,11 +317,6 @@ public class DeviceUtil {
         }
     }
 
-    // 获取设备号
-    private String getDeviceId() {
-        return Secure
-                .getString(context.getContentResolver(), Secure.ANDROID_ID);
-    }
 
     public String getNetwrokIso() {
         return mNetwrokIso;
@@ -372,12 +364,12 @@ public class DeviceUtil {
      * 方法功能：androidId > imeiId > UUID
      * 组合设备唯一标识符，防止为空
      */
-    public String getSoleDeviceId() {
+    public static String getSoleDeviceId() {
         String res = getDeviceId();//androidId
         if (!TextUtils.isEmpty(res)) {
             return res;
         }
-        res = getImei();//imei标识符
+        res = get().getImei();//imei标识符
         if (!TextUtils.isEmpty(res)) {
             return res;
         }
@@ -389,9 +381,9 @@ public class DeviceUtil {
     /**
      * 创建一个UUID并保存
      */
-    public String getUUID() {
+    public static String getUUID() {
         String uuid = null;
-        SharedPreferences sp = context.getSharedPreferences("Cache",
+        SharedPreferences sp = AppUtils.getApp().getSharedPreferences("Cache",
                 Context.MODE_PRIVATE);
         if (sp != null) {
             uuid = sp.getString("uuid", "");
