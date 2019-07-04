@@ -95,6 +95,8 @@ public class CountdownUtils {
      * 方法功能：取消倒计时
      */
     public void cancel() {
-        countDownTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 }

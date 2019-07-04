@@ -156,8 +156,6 @@ public class DeviceUtil {
 
     /**
      * 获取sim卡的状态
-     *
-     * @return
      */
     public String getSimState() {
         switch (telephonyManager.getSimState()) {

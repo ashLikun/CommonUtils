@@ -6,14 +6,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.StringRes;
+
 import com.ashlikun.utils.animator.AnimUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-
-import androidx.annotation.StringRes;
-
-import static android.R.attr.id;
 
 
 /**
@@ -140,7 +138,7 @@ public class EditHelper {
             if (mEdithelpdatas == null) {
                 return false;
             }
-            EditHelperData e = mEdithelpdatas.get(id);
+            EditHelperData e = mEdithelpdatas.get(index);
             if (e == null || !e.check(context)) {
                 return false;
             }
