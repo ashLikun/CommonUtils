@@ -250,4 +250,16 @@ public class ActivityManager {
             }
         }
     }
+
+    /**
+     * 获取activity 个数
+     *
+     * @return
+     */
+    public int getActivitySize() {
+        if (activityStack != null) {
+            return activityStack.size();
+        }
+        return 0;
+    }
 }
