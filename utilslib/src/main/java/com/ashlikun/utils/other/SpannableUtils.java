@@ -60,7 +60,7 @@ public class SpannableUtils {
     }
 
     public static class Builder {
-        private int defaultValue = 0x12000000;
+        public static int defaultValue = 0x12000000;
         /**
          * 源文本
          */
@@ -142,6 +142,8 @@ public class SpannableUtils {
         private boolean imageIsResourceId;
         @DrawableRes
         private int resourceId;
+        private int imageWidth;
+        private int imageHidth;
         /**
          * 图片对齐方式
          */
@@ -472,6 +474,16 @@ public class SpannableUtils {
         }
 
         /**
+         * 功能介绍：设置图片大小
+         */
+
+        public Builder setImageSize(int width, int height) {
+            this.imageWidth = width;
+            this.imageHidth = height;
+            return this;
+        }
+
+        /**
          * 作者　　: 李坤
          * 创建时间: 2017/6/29 9:58
          * 方法功能：设置点击事件
@@ -671,6 +683,7 @@ public class SpannableUtils {
             mBuilder.append(this.text);
             //结束位置
             int end = mBuilder.length();
+
             //前景色
             if (foregroundColor != defaultValue) {
                 mBuilder.setSpan(new ForegroundColorSpan(foregroundColor), start, end, flag);
@@ -688,10 +701,7 @@ public class SpannableUtils {
             if (proportion != -1) {
                 mBuilder.setSpan(new RelativeSizeSpan(proportion), start, end, flag);
             }
-            //是否居上对齐
-            if (isAlignTop) {
-                mBuilder.setSpan(new CustomAlignSpan(alignTopOffset), start, end, flag);
-            }
+
             //文字X缩放
             if (xProportion != -1) {
                 mBuilder.setSpan(new ScaleXSpan(xProportion), start, end, flag);
@@ -733,6 +743,9 @@ public class SpannableUtils {
                 if (isChangImageSize) {
                     drawable = DrawableCompat.wrap(drawable).mutate();
                 }
+                if (imageHidth != 0 && imageWidth != 0) {
+                    drawable.setBounds(0, 0, imageWidth, imageHidth);
+                }
                 mBuilder.setSpan(span = new CentreImageSpan(drawable), start, end, flag);
                 span.setChangSizeToText(isChangImageSize);
                 span.setLineSpacingExtra(lineSpacingExtra);
@@ -750,6 +763,10 @@ public class SpannableUtils {
             }
             if (bulletWidth > 0) {
                 mBuilder.setSpan(new XBulletSpan(bulletWidth, bulletColor, bulletGapWidth), start, end, flag);
+            }
+            //是否居上对齐
+            if (isAlignTop) {
+                mBuilder.setSpan(new CustomAlignSpan(alignTopOffset, foregroundColor, backgroundColor), start, end, flag);
             }
             clean();
         }

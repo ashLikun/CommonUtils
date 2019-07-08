@@ -49,13 +49,11 @@ class MainActivity : AppCompatActivity() {
         drawable.setBounds(0, 0, size, size)
         drawable.setColor(-0x5a3b1)
         drawable.cornerRadius = size / 2f
-DeviceUtil.get()
-        textView.text = SpannableUtils.getBuilder("").setLineSpacingExtra(textView.lineSpacingExtra).setDrawable(drawable)
-                .append("文案已复制\n")
-                .append("").setDrawable(drawable)
-                .append("分享二维码已保存\n")
-                .append("").setDrawable(drawable)
-                .append("图案已保存到相册")
+        DeviceUtil.get()
+        textView.text = SpannableUtils.getBuilder("")
+                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setImageSize(20, 20)
+                .append("文案已复制")
+                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent).setAlignTop(15f)
                 .create()
     }
 
@@ -99,7 +97,7 @@ DeviceUtil.get()
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {
         builder = NotificationUtil.createBuilder(R.mipmap.ic_launcher, "更新应用", "更新进度0%"
-                , defaults =NotificationCompat.DEFAULT_LIGHTS)
+                , defaults = NotificationCompat.DEFAULT_LIGHTS)
         builder?.setProgress(100, currentProgress++, false)
         NotificationUtil.show(10, builder!!)
         startPost()

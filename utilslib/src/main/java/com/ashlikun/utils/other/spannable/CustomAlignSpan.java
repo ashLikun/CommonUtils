@@ -2,9 +2,13 @@ package com.ashlikun.utils.other.spannable;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.text.TextPaint;
+import android.text.style.ReplacementSpan;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.style.ReplacementSpan;
+
+import com.ashlikun.utils.other.SpannableUtils;
 
 /**
  * 作者　　: 李坤
@@ -16,9 +20,13 @@ import android.text.style.ReplacementSpan;
 public class CustomAlignSpan extends ReplacementSpan {
 
     float alignTopOffset;
+    int foregroundColor;
+    int backgroundColor;
 
-    public CustomAlignSpan(float alignTopOffset) {
+    public CustomAlignSpan(float alignTopOffset, int foregroundColor, int backgroundColor) {
         this.alignTopOffset = alignTopOffset;
+        this.foregroundColor = foregroundColor;
+        this.backgroundColor = backgroundColor;
     }
 
     @Override
@@ -29,6 +37,14 @@ public class CustomAlignSpan extends ReplacementSpan {
 
     @Override
     public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
+        if (foregroundColor != SpannableUtils.Builder.defaultValue) {
+            paint.setColor(foregroundColor);
+        }
+        if (backgroundColor != SpannableUtils.Builder.defaultValue) {
+            if (paint instanceof TextPaint) {
+                ((TextPaint) paint).bgColor = backgroundColor;
+            }
+        }
         text = text.subSequence(start, end);
         Paint.FontMetricsInt fm = paint.getFontMetricsInt();
         //此处重新计算y坐标，使字体对其
