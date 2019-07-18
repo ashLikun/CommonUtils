@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui;
 
 import android.app.Activity;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -249,6 +250,30 @@ public class ActivityManager {
                 activity.finish();
             }
         }
+    }
+
+    /**
+     * 获取 指定activity 个数
+     *
+     * @return
+     */
+    public int getActivitySize(Class<? extends Activity> activityClas) {
+        int size = 0;
+        if (activityStack != null && !activityStack.isEmpty()) {
+            ArrayList<Activity> finifshA = new ArrayList<>();
+            for (int i = 0; i < activityStack.size(); i++) {
+                Activity activity = activityStack.get(i);
+                if (activity.isFinishing()) {
+                    finifshA.add(activity);
+                } else if (activity.getClass() == activityClas) {
+                    size++;
+                }
+            }
+            for (Activity a : finifshA) {
+                a.finish();
+            }
+        }
+        return size;
     }
 
     /**

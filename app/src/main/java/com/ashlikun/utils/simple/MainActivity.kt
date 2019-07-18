@@ -52,8 +52,8 @@ class MainActivity : AppCompatActivity() {
         DeviceUtil.get()
         textView.text = SpannableUtils.getBuilder("")
                 .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setImageSize(20, 20)
-                .append("文案已复制")
-                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent).setAlignTop(15f)
+                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册").setAlignTop(15f)
+                .append("\n图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent).setAlignTop(15f)
                 .create()
     }
 
