@@ -68,6 +68,9 @@ public class ToastUtils {
     private static void initToast() {
         if (myToast == null) {
             myToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
+        } else {
+            myToast.cancel();
+            myToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         }
     }
 
