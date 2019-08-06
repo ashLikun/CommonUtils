@@ -87,6 +87,9 @@ public class SuperToast {
     private static void initToast() {
         if (mToast == null) {
             mToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
+        } else {
+            mToast.cancel();
+            mToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         }
     }
 

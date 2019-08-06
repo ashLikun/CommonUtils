@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onView4Click(view: View) {
-        SuperToast.showErrorMessage("aaaaaaaaaaaaaaaaaa")
+        SuperToast.showInfoMessage("aaaaaaaaaaaaaaaaaa")
         val logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
                 DimensUtils.dip2px(this, 50f),
                 DimensUtils.dip2px(this, 50f))
