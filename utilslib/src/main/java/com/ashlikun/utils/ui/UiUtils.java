@@ -10,13 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.lang.reflect.Field;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class UiUtils {
@@ -228,6 +228,10 @@ public class UiUtils {
      * @param onSizeListener 监听回调
      */
     public static void getViewSize(final View view, final OnSizeListener onSizeListener) {
+        if (view.getMeasuredWidth() > 0 || view.getMeasuredHeight() > 0) {
+            onSizeListener.onSize(view.getMeasuredWidth(), view.getMeasuredHeight());
+            return;
+        }
         ViewTreeObserver observer = view.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
