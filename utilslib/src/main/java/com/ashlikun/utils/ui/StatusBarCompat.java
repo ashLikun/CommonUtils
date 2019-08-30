@@ -139,7 +139,7 @@ public class StatusBarCompat {
      */
     public void setStatusBarColor(int statusColor) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (!isSetStatusColor()) {
             return;
         }
         if (NotchHelper.isNotchOfficialSupport()) {
@@ -173,7 +173,7 @@ public class StatusBarCompat {
      */
     public void setFitsSystemWindows() {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (!isSetStatusColor()) {
             return;
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -202,7 +202,7 @@ public class StatusBarCompat {
      */
     public void translucentStatusBar(boolean isNeedAndroidMHalf) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (!isSetStatusColor()) {
             return;
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -234,7 +234,7 @@ public class StatusBarCompat {
     public void setStatusBarColorForCollapsingToolbar(final AppBarLayout appBarLayout, final CollapsingToolbarLayout collapsingToolbarLayout,
                                                       Toolbar toolbar, final int statusColor) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (!isSetStatusColor()) {
             return;
         }
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -312,7 +312,7 @@ public class StatusBarCompat {
     }
 
     public static void setEmptyHeight(View view, boolean isNeedAndroidMHalf) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (isSetStatusColor()) {
             int h = getStatusBarHeight(view.getContext());
             if (isNeedAndroidMHalf && isSetHaleColor()) {
                 view.setBackgroundColor(StatusBarCompat.HALF_COLOR);
@@ -333,7 +333,7 @@ public class StatusBarCompat {
      * @param isTransparent 是否透明
      */
     public void setNavigationTransparent(boolean isTransparent) {
-        if (window != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (window != null && isSetStatusColor()) {
             if (isTransparent) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             } else {
@@ -352,7 +352,7 @@ public class StatusBarCompat {
 
     public static void setTransparentViewMargin(View viewTop) {
         //5.0以下不设置
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (!isSetStatusColor()) {
             return;
         }
         ViewGroup.LayoutParams params = viewTop.getLayoutParams();
@@ -364,7 +364,7 @@ public class StatusBarCompat {
     }
 
     public static void setTransparentViewPadding(View viewTop) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (isSetStatusColor()) {
             viewTop.setPadding(viewTop.getPaddingLeft(), viewTop.getPaddingTop() + getStatusBarHeight(viewTop.getContext())
                     , viewTop.getPaddingRight(), viewTop.getPaddingBottom());
         }
@@ -503,7 +503,7 @@ public class StatusBarCompat {
      * @return
      */
     public static boolean isSetStatusColor() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 // Essential Phone 在 Android 8 之前沉浸式做得不全，系统不从状态栏顶部开始布局却会下发 WindowInsets
                 && !(RomUtils.isEssentialPhone() && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
     }
