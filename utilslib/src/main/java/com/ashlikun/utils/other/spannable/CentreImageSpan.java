@@ -20,11 +20,6 @@ public class CentreImageSpan extends ImageSpan {
     protected boolean isChangSizeToText = false;
     protected boolean isChangOk = false;
     /**
-     * 行间距
-     */
-    protected float lineSpacingExtra;
-
-    /**
      * 0：居中
      * 1:上
      * 2：下
@@ -44,7 +39,6 @@ public class CentreImageSpan extends ImageSpan {
     }
 
     public void setLineSpacingExtra(float lineSpacingExtra) {
-        this.lineSpacingExtra = lineSpacingExtra;
     }
 
     @Override
@@ -83,21 +77,25 @@ public class CentreImageSpan extends ImageSpan {
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end,
                      float x, int top, int y, int bottom, Paint paint) {
-        Drawable b = getDrawable();
+        Drawable d = getDrawable();
         canvas.save();
+        Paint.FontMetricsInt fontMetricsInt = paint.getFontMetricsInt();
+        int fontTop = y + fontMetricsInt.top;
+        int fontMetricsHeight = fontMetricsInt.bottom - fontMetricsInt.top;
+        int iconHeight = d.getBounds().bottom - d.getBounds().top;
         int transY = 0;
         if (imageAlign == 0) {
             //居中
-            transY = (int) (((bottom - top) - b.getBounds().bottom - lineSpacingExtra) / 2 + top);
+            transY = fontTop + (fontMetricsHeight - iconHeight) / 2;
         } else if (imageAlign == 1) {
             //上
             transY = paint.getFontMetricsInt().descent;
         } else if (imageAlign == 2) {
             //下
-            transY = bottom - b.getBounds().bottom - paint.getFontMetricsInt().descent;
+            transY = bottom - d.getBounds().bottom - paint.getFontMetricsInt().descent;
         }
         canvas.translate(x, transY);
-        b.draw(canvas);
+        d.draw(canvas);
         canvas.restore();
     }
 }

@@ -19,7 +19,8 @@ public class RomUtils {
     //360
     public static final String ROM_QIKU = "QIKU";
     public static final String ROM_360 = "360";
-
+    private final static String ZUKZ1 = "zuk z1";
+    private final static String ZTEC2016 = "zte c2016";
 
     public static boolean isXiaomi() {
         return check(ROM_XIAOMI);
@@ -51,6 +52,24 @@ public class RomUtils {
 
     public static boolean isSamsung() {
         return check(ROM_SAMSUNG);
+    }
+
+    /**
+     * 判断是否为 ZUK Z1 和 ZTK C2016。
+     * 两台设备的系统虽然为 android 6.0，但不支持状态栏icon颜色改变，因此经常需要对它们进行额外判断。
+     */
+    public static boolean isZUKZ1() {
+        final String board = android.os.Build.MODEL;
+        return board != null && board.toLowerCase().contains(ZUKZ1);
+    }
+
+    public static boolean isZTKC2016() {
+        final String board = android.os.Build.MODEL;
+        return board != null && board.toLowerCase().contains(ZTEC2016);
+    }
+
+    public static boolean isEssentialPhone() {
+        return DeviceUtil.getDeviceBrand().contains("essential");
     }
 
     private static boolean check(String rom) {

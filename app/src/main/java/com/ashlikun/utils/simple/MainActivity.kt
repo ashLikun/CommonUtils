@@ -51,9 +51,12 @@ class MainActivity : AppCompatActivity() {
         drawable.cornerRadius = size / 2f
         DeviceUtil.get()
         textView.text = SpannableUtils.getBuilder("")
-                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setImageSize(20, 20)
-                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册").setAlignTop(15f)
-                .append("\n图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent).setAlignTop(15f)
+                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).changImageSize()
+                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n")
+                .append("[space]").blockSpaceHeight(DimensUtils.dip2px(100f))
+                .append("\n")
+                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setProportion(0.5f).changImageSize()
+                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent)
                 .create()
     }
 

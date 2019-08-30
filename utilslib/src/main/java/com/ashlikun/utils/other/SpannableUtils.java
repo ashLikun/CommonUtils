@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.ashlikun.utils.AppUtils;
+import com.ashlikun.utils.other.spannable.BlockSpaceSpan;
 import com.ashlikun.utils.other.spannable.CentreImageSpan;
 import com.ashlikun.utils.other.spannable.CustomAlignSpan;
 import com.ashlikun.utils.other.spannable.XBulletSpan;
@@ -182,15 +183,11 @@ public class SpannableUtils {
          */
         @ColorInt
         private int bulletColor;
+        /**
+         * 空白行的高度
+         */
+        private int blockSpaceHeight = 0;
 
-        /**
-         * 行间距，谁要使用就传递给谁，一般用于对齐 ,  一次设置后不清空
-         */
-        private float lineSpacingExtra;
-        /**
-         * 一次结束是否清楚样式
-         */
-        private boolean isClean = true;
 
         private SpannableStringBuilder mBuilder;
 
@@ -564,18 +561,6 @@ public class SpannableUtils {
         }
 
         /**
-         * 行间距，谁要使用就传递给谁，一般用于对齐,一次设置后不清空
-         * 类似于偏移量,相对于Y偏移
-         *
-         * @param lineSpacingExtra
-         * @return
-         */
-        public Builder setLineSpacingExtra(float lineSpacingExtra) {
-            this.lineSpacingExtra = lineSpacingExtra;
-            return this;
-        }
-
-        /**
          * 作者　　: 李坤
          * 创建时间: 2017/6/29 10:11
          * <p>
@@ -637,6 +622,7 @@ public class SpannableUtils {
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
             isChangImageSize = false;
             imageAlign = 0;
+            blockSpaceHeight = 0;
         }
 
         /**
@@ -659,6 +645,14 @@ public class SpannableUtils {
          */
         public Builder imageAlign(int imageAlign) {
             this.imageAlign = imageAlign;
+            return this;
+        }
+
+        /**
+         * 空白行的高度
+         */
+        public Builder blockSpaceHeight(int blockSpaceHeight) {
+            this.blockSpaceHeight = blockSpaceHeight;
             return this;
         }
 
@@ -748,7 +742,6 @@ public class SpannableUtils {
                 }
                 mBuilder.setSpan(span = new CentreImageSpan(drawable), start, end, flag);
                 span.setChangSizeToText(isChangImageSize);
-                span.setLineSpacingExtra(lineSpacingExtra);
                 span.setImageAlign(imageAlign);
             }
             //设置点击
@@ -767,6 +760,9 @@ public class SpannableUtils {
             //是否居上对齐
             if (isAlignTop) {
                 mBuilder.setSpan(new CustomAlignSpan(alignTopOffset, foregroundColor, backgroundColor), start, end, flag);
+            }
+            if (blockSpaceHeight > 0) {
+                mBuilder.setSpan(new BlockSpaceSpan(blockSpaceHeight), start, end, flag);
             }
             clean();
         }

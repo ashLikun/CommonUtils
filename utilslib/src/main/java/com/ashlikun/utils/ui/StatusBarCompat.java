@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -13,19 +14,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.ashlikun.utils.other.RomUtils;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import androidx.annotation.ColorRes;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.ashlikun.utils.other.RomUtils;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * 作者　　: 李坤
@@ -140,6 +141,9 @@ public class StatusBarCompat {
         //5.0以下不设置
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
+        }
+        if (NotchHelper.isNotchOfficialSupport()) {
+            handleDisplayCutoutMode(window);
         }
         if (!isSetStatusTextColor()) {
             //不能设置状态栏字体颜色时候
@@ -483,13 +487,25 @@ public class StatusBarCompat {
     private static ValueAnimator sAnimator;
 
     /**
-     * 是否可以设置状态栏颜色
+     * 是否可以设置状态栏字体颜色
      *
      * @return
      */
     public static boolean isSetStatusTextColor() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                (RomUtils.isHuawei() || RomUtils.isFlyme() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
+                (RomUtils.isHuawei() || RomUtils.isFlyme() ||
+                        (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !(RomUtils.isZUKZ1() || RomUtils.isZTKC2016())));
+    }
+
+    /**
+     * 是否可以设置状态栏颜色
+     *
+     * @return
+     */
+    public static boolean isSetStatusColor() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                // Essential Phone 在 Android 8 之前沉浸式做得不全，系统不从状态栏顶部开始布局却会下发 WindowInsets
+                && !(RomUtils.isEssentialPhone() && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
     }
 
     /**
@@ -556,5 +572,51 @@ public class StatusBarCompat {
             }
         }
         return result;
+    }
+
+    /**
+     * 刘海屏状态栏
+     *
+     * @param window
+     */
+    @TargetApi(28)
+    private static void handleDisplayCutoutMode(final Window window) {
+        View decorView = window.getDecorView();
+        if (decorView != null) {
+            if (ViewCompat.isAttachedToWindow(decorView)) {
+                realHandleDisplayCutoutMode(window, decorView);
+            } else {
+                decorView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(View v) {
+                        v.removeOnAttachStateChangeListener(this);
+                        realHandleDisplayCutoutMode(window, v);
+                    }
+
+                    @Override
+                    public void onViewDetachedFromWindow(View v) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 刘海屏状态栏
+     *
+     * @param window
+     * @param decorView
+     */
+    @TargetApi(28)
+    private static void realHandleDisplayCutoutMode(Window window, View decorView) {
+        if (decorView.getRootWindowInsets() != null &&
+                decorView.getRootWindowInsets().getDisplayCutout() != null) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            //该窗口始终允许延伸到屏幕短边上的DisplayCutout区域
+            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams
+                    .LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.setAttributes(params);
+        }
     }
 }
