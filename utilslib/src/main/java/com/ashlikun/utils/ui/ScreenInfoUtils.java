@@ -1,6 +1,7 @@
 package com.ashlikun.utils.ui;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
@@ -94,6 +95,16 @@ public class ScreenInfoUtils {
             return 0;
         }
         return getHeight() - subPx;
+    }
+
+    /**
+     * 判断是否有状态栏
+     *
+     * @return
+     */
+    public static boolean hasStatusBar(Activity activity) {
+        WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
+        return (attrs.flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != WindowManager.LayoutParams.FLAG_FULLSCREEN;
     }
 
     /**
