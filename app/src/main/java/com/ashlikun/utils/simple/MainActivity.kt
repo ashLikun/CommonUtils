@@ -26,7 +26,6 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-    internal lateinit var drawableUtils: DrawableUtils
     internal lateinit var statusBarCompat: StatusBarCompat
     internal lateinit var imageView: ImageView
     internal lateinit var textView: TextViewCompat
@@ -37,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppUtils.init(application)
         AppUtils.setDebug(true)
-        drawableUtils = DrawableUtils(this)
         setContentView(R.layout.main_viewgroup_activity)
         statusBarCompat = StatusBarCompat(this)
         statusBarCompat.setStatusBarColor(-0x1)

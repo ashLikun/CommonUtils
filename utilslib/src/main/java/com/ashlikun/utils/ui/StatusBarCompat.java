@@ -105,7 +105,7 @@ public class StatusBarCompat {
      * @param color
      */
     public void autoStatueTextColor(int color) {
-        if (isColorDrak(color)) {
+        if (ColorUtils.isColorDrak(color)) {
             //浅色文字
             setStatusLightColor();
         } else {
@@ -147,9 +147,9 @@ public class StatusBarCompat {
         }
         if (!isSetStatusTextColor()) {
             //不能设置状态栏字体颜色时候
-            if (!isColorDrak(statusColor)) {
+            if (!ColorUtils.isColorDrak(statusColor)) {
                 //颜色浅色,设置半透明
-                statusColor = blendColor(HALF_COLOR, statusColor);
+                statusColor = ColorUtils.blendColor(HALF_COLOR, statusColor);
             }
         }
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -185,13 +185,25 @@ public class StatusBarCompat {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/8/3 0003 22:24
-     * <p>
-     * 方法功能：设置透明的状态栏，实际布局内容在状态栏里面
+     * 设置透明的状态栏，实际布局内容在状态栏里面
      */
     public void translucentStatusBar() {
         translucentStatusBar(false);
+    }
+
+    /**
+     * 设置底部导航栏透明
+     *
+     * @param isTransparent 是否透明
+     */
+    public void setNavigationTransparent(boolean isTransparent) {
+        if (window != null && isSetStatusColor()) {
+            if (isTransparent) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            }
+        }
     }
 
     /**
@@ -219,17 +231,14 @@ public class StatusBarCompat {
         if (mContentView != null) {
             View mChildView = mContentView.getChildAt(0);
             if (mChildView != null) {
-                ViewCompat.setFitsSystemWindows(mChildView, false);
+                mChildView.setFitsSystemWindows(false);
                 ViewCompat.requestApplyInsets(mChildView);
             }
         }
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/8/3 0003 22:24
-     * <p>
-     * 方法功能：设置透明的状态栏，实际布局内容在状态栏里面
+     * 设置透明的状态栏，实际布局内容在状态栏里面
      */
     public void setStatusBarColorForCollapsingToolbar(final AppBarLayout appBarLayout, final CollapsingToolbarLayout collapsingToolbarLayout,
                                                       Toolbar toolbar, final int statusColor) {
@@ -262,7 +271,7 @@ public class StatusBarCompat {
         toolbar.setFitsSystemWindows(false);
         if (toolbar.getTag() == null) {
             CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            int statusBarHeight = getStatusBarHeight(context);
+            int statusBarHeight = ScreenInfoUtils.getStatusBarHeight();
             lp.height += statusBarHeight;
             toolbar.setLayoutParams(lp);
             toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getPaddingTop() + statusBarHeight, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
@@ -313,7 +322,7 @@ public class StatusBarCompat {
 
     public static void setEmptyHeight(View view, boolean isNeedAndroidMHalf) {
         if (isSetStatusColor()) {
-            int h = getStatusBarHeight(view.getContext());
+            int h = ScreenInfoUtils.getStatusBarHeight();
             if (isNeedAndroidMHalf && isSetHaleColor()) {
                 view.setBackgroundColor(StatusBarCompat.HALF_COLOR);
             }
@@ -328,26 +337,7 @@ public class StatusBarCompat {
 
 
     /**
-     * 设置底部导航栏透明
-     *
-     * @param isTransparent 是否透明
-     */
-    public void setNavigationTransparent(boolean isTransparent) {
-        if (window != null && isSetStatusColor()) {
-            if (isTransparent) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            } else {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            }
-        }
-    }
-
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/8/14 17:52
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：一般用于fragment是透明状态栏得时候,调用这个方法
+     * 一般用于fragment是透明状态栏得时候,调用这个方法
      */
 
     public static void setTransparentViewMargin(View viewTop) {
@@ -358,40 +348,20 @@ public class StatusBarCompat {
         ViewGroup.LayoutParams params = viewTop.getLayoutParams();
         if (params instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) params).topMargin = ((ViewGroup.MarginLayoutParams) params).topMargin
-                    + getStatusBarHeight(viewTop.getContext());
+                    + ScreenInfoUtils.getStatusBarHeight();
         }
         viewTop.setLayoutParams(params);
     }
 
     public static void setTransparentViewPadding(View viewTop) {
         if (isSetStatusColor()) {
-            viewTop.setPadding(viewTop.getPaddingLeft(), viewTop.getPaddingTop() + getStatusBarHeight(viewTop.getContext())
+            viewTop.setPadding(viewTop.getPaddingLeft(), viewTop.getPaddingTop() + ScreenInfoUtils.getStatusBarHeight()
                     , viewTop.getPaddingRight(), viewTop.getPaddingBottom());
         }
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/5 13:29
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：获取状态栏高度
-     */
-    public static int getStatusBarHeight(Context context) {
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/8/3 0003 21:59
-     * <p>
-     * 方法功能：获取底部导航栏高度
+     * 获取底部导航栏高度
      */
     public static int getNavigationHeight(Context context) {
         int result = 0;
@@ -402,43 +372,6 @@ public class StatusBarCompat {
         return result;
     }
 
-    /**
-     * 这个颜色是不是深色的
-     *
-     * @param color
-     * @return
-     */
-    public static boolean isColorDrak(int color) {
-        //int t = (color >> 24) & 0xFF;
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
-        return r * 0.299 + g * 0.578 + b * 0.114 <= 192;
-    }
-
-    /**
-     * 2个颜色混合
-     *
-     * @param fg 前景
-     * @param bg 背景
-     * @return
-     */
-    public static int blendColor(int fg, int bg) {
-        int sca = Color.alpha(fg);
-        int scr = Color.red(fg);
-        int scg = Color.green(fg);
-        int scb = Color.blue(fg);
-
-        int dca = Color.alpha(bg);
-        int dcr = Color.red(bg);
-        int dcg = Color.green(bg);
-        int dcb = Color.blue(bg);
-
-        int color_r = dcr * (0xff - sca) / 0xff + scr * sca / 0xff;
-        int color_g = dcg * (0xff - sca) / 0xff + scg * sca / 0xff;
-        int color_b = dcb * (0xff - sca) / 0xff + scb * sca / 0xff;
-        return ((color_r << 16) + (color_g << 8) + color_b) | (0xff000000);
-    }
 
     /**
      * 是否设置半透明颜色
@@ -562,9 +495,11 @@ public class StatusBarCompat {
                 darkModeFlag = field.getInt(layoutParams);
                 Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
                 if (dark) {
-                    extraFlagField.invoke(window, darkModeFlag, darkModeFlag);//状态栏透明且黑色字体
+                    //状态栏透明且黑色字体
+                    extraFlagField.invoke(window, darkModeFlag, darkModeFlag);
                 } else {
-                    extraFlagField.invoke(window, 0, darkModeFlag);//清除黑色字体
+                    //清除黑色字体
+                    extraFlagField.invoke(window, 0, darkModeFlag);
                 }
                 result = true;
             } catch (Exception e) {

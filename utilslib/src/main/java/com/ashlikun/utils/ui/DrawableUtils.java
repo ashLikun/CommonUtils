@@ -10,12 +10,14 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.widget.TextView;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.core.graphics.drawable.DrawableCompat;
-import android.widget.TextView;
 
+import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 
 
@@ -27,15 +29,6 @@ import com.ashlikun.utils.other.DimensUtils;
  * 功能介绍：Drawable 常用的工具
  */
 public class DrawableUtils {
-    Context context;
-
-    public DrawableUtils(Context context) {
-        this.context = context;
-    }
-
-    public static DrawableUtils get(Context context) {
-        return new DrawableUtils(context);
-    }
 
     /**
      * 作者　　: 李坤
@@ -44,8 +37,8 @@ public class DrawableUtils {
      * <p>
      * 方法功能：获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
      */
-    public ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int select, @ColorRes int enable) {
-        int[] colors = new int[]{getColor(pressed), getColor(select), getColor(enable), getColor(normal)};
+    public static ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int select, @ColorRes int enable) {
+        int[] colors = new int[]{ResUtils.getColor(pressed), ResUtils.getColor(select), ResUtils.getColor(enable), ResUtils.getColor(normal)};
         int[][] states = new int[4][];
         states[0] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
         states[1] = new int[]{android.R.attr.state_selected};
@@ -64,8 +57,8 @@ public class DrawableUtils {
      * @param normal 默认的资源
      * @param select 选择的资源
      */
-    public ColorStateList createColorSelect(@ColorRes int normal, @ColorRes int select) {
-        int[] colors = new int[]{getColor(select), getColor(normal)};
+    public static ColorStateList createColorSelect(@ColorRes int normal, @ColorRes int select) {
+        int[] colors = new int[]{ResUtils.getColor(select), ResUtils.getColor(normal)};
         int[][] states = new int[2][];
         states[0] = new int[]{android.R.attr.state_selected};
         states[1] = new int[]{};
@@ -80,8 +73,8 @@ public class DrawableUtils {
      * <p>
      * 方法功能：同上
      */
-    public ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed) {
-        int[] colors = new int[]{getColor(pressed), getColor(normal)};
+    public static ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed) {
+        int[] colors = new int[]{ResUtils.getColor(pressed), ResUtils.getColor(normal)};
         int[][] states = new int[2][];
         states[0] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
         states[1] = new int[]{};
@@ -96,8 +89,8 @@ public class DrawableUtils {
      * <p>
      * 方法功能：同上
      */
-    public ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int enable) {
-        int[] colors = new int[]{getColor(pressed), getColor(enable), getColor(normal)};
+    public static ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int enable) {
+        int[] colors = new int[]{ResUtils.getColor(pressed), ResUtils.getColor(enable), ResUtils.getColor(normal)};
         int[][] states = new int[3][];
         states[0] = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
         states[1] = new int[]{-android.R.attr.state_enabled};
@@ -107,35 +100,66 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/11 17:39
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：
-     *
      * @param fillColorId:填充的颜色
      * @param strokeColorId:边框颜色
      * @param roundRadius:圆角半径   dp
      * @param strokeWidth:边框宽度   dp
      */
     @SuppressLint("ResourceType")
-    public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, @ColorRes int strokeColorId, float roundRadius, float strokeWidth) {
+    public static GradientDrawable getGradientDrawable(@ColorRes int fillColorId, @ColorRes int strokeColorId, float roundRadius, float strokeWidth) {
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(getColor(fillColorId));
+        drawable.setColor(ResUtils.getColor(fillColorId));
         if (strokeColorId > 0) {
-            drawable.setStroke(DimensUtils.dip2px(context, strokeWidth), getColor(strokeColorId));
+            drawable.setStroke(DimensUtils.dip2px(strokeWidth), ResUtils.getColor(strokeColorId));
         }
         if (roundRadius > 0) {
-            drawable.setCornerRadius(DimensUtils.dip2px(context, roundRadius));
+            drawable.setCornerRadius(DimensUtils.dip2px(roundRadius));
+        }
+        return drawable;
+    }
+
+    /**
+     * @param fillColorId:填充的颜色
+     * @param roundRadius:圆角半径[左上，右上，右下，左下] dp
+     */
+    @SuppressLint("ResourceType")
+    public static GradientDrawable getGradientDrawable(@ColorRes int fillColorId, float[] roundRadius) {
+        return getGradientDrawable(fillColorId, 0, roundRadius, 0);
+    }
+
+    /**
+     * @param fillColorId:填充的颜色
+     * @param strokeColorId:边框颜色
+     * @param roundRadius:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 dp
+     * @param strokeWidth:边框宽度                            dp
+     */
+    @SuppressLint("ResourceType")
+    public static GradientDrawable getGradientDrawable(@ColorRes int fillColorId, @ColorRes int strokeColorId, float[] roundRadius, float strokeWidth) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(ResUtils.getColor(fillColorId));
+        if (strokeColorId > 0) {
+            drawable.setStroke(DimensUtils.dip2px(strokeWidth), ResUtils.getColor(strokeColorId));
+        }
+        if (roundRadius != null && roundRadius.length > 8) {
+            float[] round = new float[]{DimensUtils.dip2px(roundRadius[0]), DimensUtils.dip2px(roundRadius[1]), DimensUtils.dip2px(roundRadius[2]), DimensUtils.dip2px(roundRadius[3]),
+                    DimensUtils.dip2px(roundRadius[4]), DimensUtils.dip2px(roundRadius[5]), DimensUtils.dip2px(roundRadius[6]), DimensUtils.dip2px(roundRadius[7])};
+            drawable.setCornerRadii(round);
+        } else {
+            float[] round = new float[]{DimensUtils.dip2px(roundRadius[0]), DimensUtils.dip2px(roundRadius[0]),
+                    DimensUtils.dip2px(roundRadius[1]), DimensUtils.dip2px(roundRadius[1]),
+                    DimensUtils.dip2px(roundRadius[2]), DimensUtils.dip2px(roundRadius[2]),
+                    DimensUtils.dip2px(roundRadius[3]), DimensUtils.dip2px(roundRadius[3])};
+            drawable.setCornerRadii(round);
         }
         return drawable;
     }
 
     @SuppressLint("ResourceType")
-    public GradientDrawable getGradientDrawablePx(@ColorRes int fillColorId, @ColorRes int strokeColorId, int roundRadius, int strokeWidth) {
+    public static GradientDrawable getGradientDrawablePx(@ColorRes int fillColorId, @ColorRes int strokeColorId, int roundRadius, int strokeWidth) {
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(getColor(fillColorId));
+        drawable.setColor(ResUtils.getColor(fillColorId));
         if (strokeColorId > 0) {
-            drawable.setStroke(strokeWidth, getColor(strokeColorId));
+            drawable.setStroke(strokeWidth, ResUtils.getColor(strokeColorId));
         }
         if (roundRadius > 0) {
             drawable.setCornerRadius(roundRadius);
@@ -143,7 +167,7 @@ public class DrawableUtils {
         return drawable;
     }
 
-    public GradientDrawable getGradientDrawableNoStroke(@ColorRes int fillColorId, float roundRadius) {
+    public static GradientDrawable getGradientDrawableNoStroke(@ColorRes int fillColorId, float roundRadius) {
         return getGradientDrawable(fillColorId, 0, roundRadius, 0);
     }
 
@@ -155,7 +179,7 @@ public class DrawableUtils {
      * 方法功能：同上
      */
 
-    public GradientDrawable getGradientDrawable(@ColorRes int fillColorId, float roundRadius) {
+    public static GradientDrawable getGradientDrawable(@ColorRes int fillColorId, float roundRadius) {
         return getGradientDrawable(fillColorId, -1, roundRadius, -1);
     }
 
@@ -169,7 +193,7 @@ public class DrawableUtils {
      * @param pressed 按下的资源
      * @param enabled 不可用的资源
      */
-    public StateListDrawable getStateListDrawable(Drawable normal, Drawable pressed, Drawable enabled) {
+    public static StateListDrawable getStateListDrawable(Drawable normal, Drawable pressed, Drawable enabled) {
         StateListDrawable bg = new StateListDrawable();
         bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
         bg.addState(new int[]{-android.R.attr.state_enabled}, enabled);
@@ -186,17 +210,17 @@ public class DrawableUtils {
      * @param normal 默认的资源
      * @param select 选择的资源
      */
-    public StateListDrawable getSelectDrawable(Drawable normal, Drawable select) {
+    public static StateListDrawable getSelectDrawable(Drawable normal, Drawable select) {
         StateListDrawable bg = new StateListDrawable();
         bg.addState(new int[]{android.R.attr.state_selected}, select);
         bg.addState(new int[]{}, normal);
         return bg;
     }
 
-    public StateListDrawable getSelectDrawable(@DrawableRes int normalId, @DrawableRes int selectId) {
+    public static StateListDrawable getSelectDrawable(@DrawableRes int normalId, @DrawableRes int selectId) {
         StateListDrawable bg = new StateListDrawable();
-        bg.addState(new int[]{android.R.attr.state_selected}, context.getResources().getDrawable(selectId));
-        bg.addState(new int[]{}, context.getResources().getDrawable(normalId));
+        bg.addState(new int[]{android.R.attr.state_selected}, AppUtils.getApp().getResources().getDrawable(selectId));
+        bg.addState(new int[]{}, AppUtils.getApp().getResources().getDrawable(normalId));
         return bg;
     }
 
@@ -210,11 +234,11 @@ public class DrawableUtils {
      * @param idPressed 按下的资源id
      * @param idEbable  不可用的资源id
      */
-    public StateListDrawable getStateListDrawable(@DrawableRes int idNormal, @DrawableRes int idPressed, @DrawableRes int idEbable) {
+    public static StateListDrawable getStateListDrawable(@DrawableRes int idNormal, @DrawableRes int idPressed, @DrawableRes int idEbable) {
         StateListDrawable bg = new StateListDrawable();
-        Drawable normal = idNormal == -1 ? null : context.getResources().getDrawable(idNormal);
-        Drawable pressed = idPressed == -1 ? null : context.getResources().getDrawable(idPressed);
-        Drawable enabled = idEbable == -1 ? null : context.getResources().getDrawable(idEbable);
+        Drawable normal = idNormal == -1 ? null : AppUtils.getApp().getResources().getDrawable(idNormal);
+        Drawable pressed = idPressed == -1 ? null : AppUtils.getApp().getResources().getDrawable(idPressed);
+        Drawable enabled = idEbable == -1 ? null : AppUtils.getApp().getResources().getDrawable(idEbable);
         bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
         bg.addState(new int[]{-android.R.attr.state_enabled}, enabled);
         bg.addState(new int[]{}, normal);
@@ -230,7 +254,7 @@ public class DrawableUtils {
      * @param idNormal  默认的资源id
      * @param idPressed 按下的资源id
      */
-    public StateListDrawable getStateListDrawable(@DrawableRes int idNormal, @DrawableRes int idPressed) {
+    public static StateListDrawable getStateListDrawable(@DrawableRes int idNormal, @DrawableRes int idPressed) {
         return getStateListDrawable(idNormal, idPressed, idPressed);
     }
 
@@ -249,8 +273,8 @@ public class DrawableUtils {
      * @param strokeWidth  边框宽度 dP
      * @return
      */
-    public StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled, @ColorRes int strokeColor,
-                                                  float cornerRadius, float strokeWidth) {
+    public static StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled, @ColorRes int strokeColor,
+                                                         float cornerRadius, float strokeWidth) {
         StateListDrawable bg = new StateListDrawable();
         Drawable normal = getGradientDrawable(idNormal, strokeColor, cornerRadius, strokeWidth);
         Drawable pressed = getGradientDrawable(idPressed, strokeColor, cornerRadius, strokeWidth);
@@ -267,14 +291,20 @@ public class DrawableUtils {
      * 邮箱　　：496546144@qq.com
      * 方法功能：同上
      */
-    public StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled,
-                                                  float cornerRadius) {
+    public static StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled,
+                                                         float cornerRadius) {
         Drawable normal = getGradientDrawable(idNormal, cornerRadius);
         Drawable pressed = getGradientDrawable(idPressed, cornerRadius);
         Drawable enabled = getGradientDrawable(idEnabled, cornerRadius);
         return getStateListDrawable(normal, pressed, enabled);
     }
 
+    private static float getFloatArray(float[] roundRadius, int index) {
+        if (roundRadius != null && roundRadius.length > index) {
+            return roundRadius[index];
+        }
+        return 0;
+    }
 
     /**
      * 作者　　: 李坤
@@ -399,12 +429,6 @@ public class DrawableUtils {
         }
     }
 
-    private int getColor(@ColorRes int colorId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getResources().getColor(colorId, context.getTheme());
-        }
-        return context.getResources().getColor(colorId);
-    }
 
     /**
      * 把drawable渲染成指定的颜色
@@ -468,10 +492,7 @@ public class DrawableUtils {
         private Drawable drawable;
         private TextView textView;
         /**
-         * 左：1
-         * 上：2
-         * 右：3
-         * 下：4
+         * 左：1,上：2,右：3,下：4
          * 默认 右
          */
         int location = 3;
@@ -524,10 +545,7 @@ public class DrawableUtils {
         }
 
         /**
-         * 左：1
-         * 上：2
-         * 右：3
-         * 下：4
+         * 左：1,上：2,右：3,下：4
          * 默认 右
          */
         public BuilderTvd location(int location) {

@@ -3,12 +3,13 @@ package com.ashlikun.utils.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.TypedValue;
+
 import androidx.annotation.AnyRes;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
-import android.util.TypedValue;
 
 import com.ashlikun.utils.AppUtils;
 
@@ -21,6 +22,21 @@ import com.ashlikun.utils.AppUtils;
  */
 
 public class ResUtils {
+    /**
+     * 是否有这个id
+     */
+    public static boolean havRes(@ColorRes int resId) {
+        TypedValue typedValue = new TypedValue();
+        AppUtils.getApp().getResources().getValue(resId, typedValue, true);
+        if (typedValue.type >= TypedValue.TYPE_FIRST_INT
+                && typedValue.type <= TypedValue.TYPE_LAST_INT) {
+            return true;
+        } else if (typedValue.type != TypedValue.TYPE_STRING) {
+            return false;
+        }
+        return true;
+    }
+
     public static int getColor(Context context, @ColorRes int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.getTheme() != null) {
             return context.getResources().getColor(color, context.getTheme());

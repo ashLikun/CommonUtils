@@ -347,12 +347,40 @@ public class BitmapUtil {
     }
 
     /**
+     * 安全的创建bitmap。
+     * 如果新建 Bitmap 时产生了 OOM，可以主动进行一次 GC - System.gc()，然后再次尝试创建。
+     *
+     * @param width      Bitmap 宽度。
+     * @param height     Bitmap 高度。
+     * @param config     传入一个 Bitmap.Config。
+     * @param retryCount 创建 Bitmap 时产生 OOM 后，主动重试的次数。
+     * @return 返回创建的 Bitmap。
+     */
+    public static Bitmap createBitmapSafely(int width, int height, Bitmap.Config config, int retryCount) {
+        try {
+            return Bitmap.createBitmap(width, height, config);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            if (retryCount > 0) {
+                System.gc();
+                return createBitmapSafely(width, height, config, retryCount - 1);
+            }
+            return null;
+        }
+    }
+
+    public static Bitmap getViewBitmap(View view) {
+        return getViewBitmap(view, 1f);
+    }
+
+    /**
      * 截取viewGroup内容，生成图片
      *
-     * @param view 控件
+     * @param view  传入一个 View，会获取这个 View 的内容创建 Bitmap。
+     * @param scale 缩放比例，对创建的 Bitmap 进行缩放，数值支持从 0 到 1。
      * @return 图片bitmap
      */
-    public static Bitmap getViewBitmap(View view) {
+    public static Bitmap getViewBitmap(View view, float scale) {
         if (view == null) {
             return null;
         }
@@ -361,10 +389,15 @@ public class BitmapUtil {
                     View.MeasureSpec.makeMeasureSpec(ScreenInfoUtils.getWidth() * 10, View.MeasureSpec.AT_MOST));
         }
         // 创建相应大小的bitmap
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = createBitmapSafely((int) (view.getWidth() * scale),
+                (int) (view.getHeight() * scale), Bitmap.Config.ARGB_8888, 1);
         final Canvas canvas = new Canvas(bitmap);
+        canvas.save();
+        canvas.scale(scale, scale);
         //绘制viewGroup内容
         view.draw(canvas);
+        canvas.restore();
+        canvas.setBitmap(null);
         return bitmap;
     }
 

@@ -166,7 +166,7 @@ public class SuperToast {
                 //自动设置文字颜色
                 if ("auto_tintColor".equals(imageView.getTag())) {
                     draw = DrawableCompat.wrap(draw);
-                    DrawableCompat.setTint(draw, StatusBarCompat.isColorDrak(builder.backgroundColor) ? 0xffffffff :
+                    DrawableCompat.setTint(draw, ColorUtils.isColorDrak(builder.backgroundColor) ? 0xffffffff :
                             0xff000000);
                 }
                 imageView.setImageDrawable(draw);
@@ -175,7 +175,7 @@ public class SuperToast {
             TextView textView = (TextView) view.findViewById(R.id.msg);
             //自动设置文字颜色
             if ("auto_textColor".equals(textView.getTag())) {
-                textView.setTextColor(StatusBarCompat.isColorDrak(builder.backgroundColor) ? 0xffffffff :
+                textView.setTextColor(ColorUtils.isColorDrak(builder.backgroundColor) ? 0xffffffff :
                         0xff000000);
             }
             textView.setText(builder.msg);
