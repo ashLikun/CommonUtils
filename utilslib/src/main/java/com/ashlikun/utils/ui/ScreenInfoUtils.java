@@ -97,11 +97,7 @@ public class ScreenInfoUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/5 13:29
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：获取状态栏高度
+     * 获取状态栏高度
      */
     public static int getStatusBarHeight() {
         int result = 0;

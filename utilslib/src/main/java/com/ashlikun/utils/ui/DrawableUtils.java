@@ -31,11 +31,7 @@ import com.ashlikun.utils.other.DimensUtils;
 public class DrawableUtils {
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/29 11:30
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
+     * 获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
      */
     public static ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int select, @ColorRes int enable) {
         int[] colors = new int[]{ResUtils.getColor(pressed), ResUtils.getColor(select), ResUtils.getColor(enable), ResUtils.getColor(normal)};
@@ -49,10 +45,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/11 17:41
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：获取StateListDrawable实例
+     * 获取StateListDrawable实例
      *
      * @param normal 默认的资源
      * @param select 选择的资源
@@ -67,11 +60,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/12 9:49
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：同上
+     * 同上
      */
     public static ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed) {
         int[] colors = new int[]{ResUtils.getColor(pressed), ResUtils.getColor(normal)};
@@ -83,11 +72,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/12 9:49
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：同上
+     * 同上
      */
     public static ColorStateList createColorStateList(@ColorRes int normal, @ColorRes int pressed, @ColorRes int enable) {
         int[] colors = new int[]{ResUtils.getColor(pressed), ResUtils.getColor(enable), ResUtils.getColor(normal)};
@@ -172,11 +157,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/12 10:42
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：同上
+     * 同上
      */
 
     public static GradientDrawable getGradientDrawable(@ColorRes int fillColorId, float roundRadius) {
@@ -184,10 +165,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/11 17:41
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：获取StateListDrawable实例
+     * 获取StateListDrawable实例
      *
      * @param normal  默认的资源
      * @param pressed 按下的资源
@@ -202,10 +180,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/11 17:41
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：获取StateListDrawable实例
+     * 获取StateListDrawable实例
      *
      * @param normal 默认的资源
      * @param select 选择的资源
@@ -225,10 +200,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/11 17:41
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：获取StateListDrawable实例
+     * 获取StateListDrawable实例
      *
      * @param idNormal  默认的资源id
      * @param idPressed 按下的资源id
@@ -246,10 +218,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/11 17:41
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：获取StateListDrawable实例
+     * 获取StateListDrawable实例
      *
      * @param idNormal  默认的资源id
      * @param idPressed 按下的资源id
@@ -259,10 +228,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/12 10:45
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：获取StateListDrawable实例
+     * 获取StateListDrawable实例
      * 之定义资源，例如形状，边框，颜色
      *
      * @param idNormal     默认的颜色
@@ -286,10 +252,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/12 10:48
-     * 邮箱　　：496546144@qq.com
-     * 方法功能：同上
+     * 同上
      */
     public static StateListDrawable getStateListDrawable(@ColorRes int idNormal, @ColorRes int idPressed, @ColorRes int idEnabled,
                                                          float cornerRadius) {
@@ -307,10 +270,7 @@ public class DrawableUtils {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2016/12/12 9:52
-     * <p>
-     * 功能：创建水波纹效果
+     * 创建水波纹效果
      */
     public static class RippleBuilder {
         Context context;
@@ -325,10 +285,7 @@ public class DrawableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/7/11 15:26
-         * 邮箱　　：496546144@qq.com
-         * 方法功能：设置失效的资源
+         * 设置失效的资源
          */
         public RippleBuilder setEnableDrawable(Drawable enableDrawable) {
             this.enableDrawable = enableDrawable;
@@ -346,10 +303,7 @@ public class DrawableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/7/11 15:26
-         * 邮箱　　：496546144@qq.com
-         * 方法功能：设置涟漪的颜色
+         * 设置涟漪的颜色
          */
         public RippleBuilder setRippleColor(ColorStateList rippleColor) {
             this.rippleColor = rippleColor;
@@ -357,10 +311,7 @@ public class DrawableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/7/11 15:26
-         * 邮箱　　：496546144@qq.com
-         * 方法功能：设置默认
+         * 设置默认
          */
         public RippleBuilder setNormalDrawable(Drawable normalDrawable) {
             this.normalDrawable = normalDrawable;
@@ -373,10 +324,7 @@ public class DrawableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/7/11 15:26
-         * 邮箱　　：496546144@qq.com
-         * 方法功能：设置按下
+         * 设置按下
          */
         public RippleBuilder setPressedDrawable(Drawable pressedDrawable) {
             this.pressedDrawable = pressedDrawable;
