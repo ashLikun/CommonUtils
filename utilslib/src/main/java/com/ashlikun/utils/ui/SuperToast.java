@@ -378,6 +378,18 @@ public class SuperToast {
      * 作者　　: 李坤
      * 创建时间: 2016/9/22 11:11
      * <p>
+     * 方法功能：显示完成信息
+     */
+    public static void showConfirmMessage(String result) {
+        if (result != null) {
+            SuperToast.get(result).ok();
+        }
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2016/9/22 11:11
+     * <p>
      * 方法功能：显示错误信息
      */
     public static void showErrorMessage(String result) {
@@ -421,6 +433,20 @@ public class SuperToast {
     public static void showInfoMessage(String result, Activity activity) {
         if (result != null) {
             SuperToast.get(result).setFinish(activity).info();
+        }
+    }
+
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2016/9/22 11:11
+     * <p>
+     * 方法功能：显示提示信息
+     *
+     * @param activity 是否销毁，null：不管
+     */
+    public static void showConfirmMessage(String result, Activity activity) {
+        if (result != null) {
+            SuperToast.get(result).setFinish(activity).ok();
         }
     }
 
