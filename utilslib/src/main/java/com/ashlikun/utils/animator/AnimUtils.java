@@ -270,7 +270,6 @@ public class AnimUtils {
      * 更新背景色
      * 不会start
      */
-
     public static ValueAnimator updateViewBackgroundColor(final View view, @ColorInt int fromColor,
                                                           @ColorInt int toColor) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
