@@ -5,9 +5,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import androidx.core.content.FileProvider;
 import android.text.TextUtils;
 
+import androidx.core.content.FileProvider;
+
+import com.ashlikun.utils.bug.BugUtils;
 import com.ashlikun.utils.main.ProcessUtils;
 import com.ashlikun.utils.provider.BaseContentProvider;
 
@@ -42,6 +44,9 @@ public class AppUtils {
         myApp.registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
         //设置内容提供者的名字
         BaseContentProvider.AUTHORITY = myApp.getApplicationInfo().packageName + "ContentProvider";
+        //解决一些疑难杂症
+        BugUtils.init();
+
     }
 
     public static void setDebug(boolean isDebug) {
