@@ -5,8 +5,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Parcel;
 import android.text.Layout;
-import android.text.ParcelableSpan;
 import android.text.Spanned;
+import android.text.style.BulletSpan;
 import android.text.style.LeadingMarginSpan;
 
 import com.ashlikun.utils.other.SpannableUtils;
@@ -18,7 +18,7 @@ import com.ashlikun.utils.other.SpannableUtils;
  * <p>
  * 功能介绍：系统的项目符号不能改变大小，只能绘制圆形（这里可口重写）,还有对其方式
  */
-public class XBulletSpan implements LeadingMarginSpan, ParcelableSpan {
+public class XBulletSpan extends BulletSpan implements LeadingMarginSpan  {
     public static final int STANDARD_GAP_WIDTH = 2;
     protected int mGapWidth;
     protected boolean mWantColor;
@@ -56,27 +56,6 @@ public class XBulletSpan implements LeadingMarginSpan, ParcelableSpan {
         mColor = src.readInt();
     }
 
-    /**
-     * TextUtils#BULLET_SPAN
-     *
-     * @return
-     */
-    @Override
-    public int getSpanTypeId() {
-        return getSpanTypeIdInternal();
-    }
-
-    /**
-     * @hide
-     */
-    public int getSpanTypeIdInternal() {
-        return 8;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

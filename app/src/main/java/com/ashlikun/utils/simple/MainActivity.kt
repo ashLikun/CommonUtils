@@ -48,13 +48,17 @@ class MainActivity : AppCompatActivity() {
         drawable.setColor(-0x5a3b1)
         drawable.cornerRadius = size / 2f
         DeviceUtil.get()
+//        textView.text = SpannableUtils.getBuilder("")
+//                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).changImageSize()
+//                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n")
+//                .append("[space]").blockSpaceHeight(DimensUtils.dip2px(100f))
+//                .append("\n")
+//                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setProportion(0.5f).changImageSize()
+//                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent)
+//                .create()
         textView.text = SpannableUtils.getBuilder("")
-                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).changImageSize()
-                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n")
-                .append("[space]").blockSpaceHeight(DimensUtils.dip2px(100f))
-                .append("\n")
-                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setProportion(0.5f).changImageSize()
-                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent)
+                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n").setBullet(5,resources.getColor(R.color.black))
+
                 .create()
     }
 
