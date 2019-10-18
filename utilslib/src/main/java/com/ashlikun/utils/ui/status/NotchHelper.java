@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.status;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -34,9 +34,14 @@ import android.view.WindowManager;
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.RomUtils;
+import com.ashlikun.utils.ui.ScreenInfoUtils;
 
 import java.lang.reflect.Method;
 
+/**
+ * 刘海屏工具
+ * 调用hasNotch 一次就可以
+ */
 public class NotchHelper {
 
     private static final String TAG = "QMUINotchHelper";
@@ -51,10 +56,10 @@ public class NotchHelper {
     private static int[] sNotchSizeInHawei = null;
     private static Boolean sHuaweiIsNotchSetToShow = null;
 
-    public static boolean hasNotchInVivo(Context context) {
+    public static boolean hasNotchInVivo() {
         boolean ret = false;
         try {
-            ClassLoader cl = context.getClassLoader();
+            ClassLoader cl = AppUtils.getApp().getClassLoader();
             Class ftFeature = cl.loadClass("android.util.FtFeature");
             Method[] methods = ftFeature.getDeclaredMethods();
             if (methods != null) {
@@ -75,10 +80,10 @@ public class NotchHelper {
     }
 
 
-    public static boolean hasNotchInHuawei(Context context) {
+    public static boolean hasNotchInHuawei() {
         boolean hasNotch = false;
         try {
-            ClassLoader cl = context.getClassLoader();
+            ClassLoader cl = AppUtils.getApp().getClassLoader();
             Class HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil");
             Method get = HwNotchSizeUtil.getMethod("hasNotchInScreen");
             hasNotch = (boolean) get.invoke(HwNotchSizeUtil);
@@ -92,13 +97,13 @@ public class NotchHelper {
         return hasNotch;
     }
 
-    public static boolean hasNotchInOppo(Context context) {
-        return context.getPackageManager()
+    public static boolean hasNotchInOppo() {
+        return AppUtils.getApp().getPackageManager()
                 .hasSystemFeature("com.oppo.feature.screen.heteromorphism");
     }
 
     @SuppressLint("PrivateApi")
-    public static boolean hasNotchInXiaomi(Context context) {
+    public static boolean hasNotchInXiaomi() {
         try {
             Class spClass = Class.forName("android.os.SystemProperties");
             Method getMethod = spClass.getDeclaredMethod("getInt", String.class, int.class);
@@ -118,7 +123,7 @@ public class NotchHelper {
                     return false;
                 }
             } else {
-                sHasNotch = has3rdNotch(view.getContext());
+                sHasNotch = has3rdNotch();
             }
         }
         return sHasNotch;
@@ -140,7 +145,27 @@ public class NotchHelper {
                     return false;
                 }
             } else {
-                sHasNotch = has3rdNotch(activity);
+                sHasNotch = has3rdNotch();
+            }
+        }
+        return sHasNotch;
+    }
+
+    public static boolean hasNotch(Window window) {
+        if (sHasNotch == null) {
+            if (isNotchOfficialSupport()) {
+                if (window == null) {
+                    return false;
+                }
+                View decorView = window.getDecorView();
+                if (decorView == null) {
+                    return false;
+                }
+                if (!attachHasOfficialNotch(decorView)) {
+                    return false;
+                }
+            } else {
+                sHasNotch = has3rdNotch();
             }
         }
         return sHasNotch;
@@ -163,15 +188,15 @@ public class NotchHelper {
         }
     }
 
-    public static boolean has3rdNotch(Context context) {
+    public static boolean has3rdNotch() {
         if (RomUtils.isHuawei()) {
-            return hasNotchInHuawei(context);
+            return hasNotchInHuawei();
         } else if (RomUtils.isVivo()) {
-            return hasNotchInVivo(context);
+            return hasNotchInVivo();
         } else if (RomUtils.isOppo()) {
-            return hasNotchInOppo(context);
+            return hasNotchInOppo();
         } else if (RomUtils.isXiaomi()) {
-            return hasNotchInXiaomi(context);
+            return hasNotchInXiaomi();
         }
         return false;
     }
@@ -204,7 +229,12 @@ public class NotchHelper {
         return getSafeInsetRect(activity).right;
     }
 
-
+    /**
+     * 刘海顶部
+     *
+     * @param view
+     * @return
+     */
     public static int getSafeInsetTop(View view) {
         if (!hasNotch(view)) {
             return 0;
@@ -212,6 +242,12 @@ public class NotchHelper {
         return getSafeInsetRect(view).top;
     }
 
+    /**
+     * 刘海底部
+     *
+     * @param view
+     * @return
+     */
     public static int getSafeInsetBottom(View view) {
         if (!hasNotch(view)) {
             return 0;
@@ -319,7 +355,7 @@ public class NotchHelper {
         }
     }
 
-    private static Rect getRectInfoRotation0( ) {
+    private static Rect getRectInfoRotation0() {
         Rect rect = new Rect();
         if (RomUtils.isVivo()) {
             //  显示与亮度-第三方应用显示比例
@@ -450,6 +486,7 @@ public class NotchHelper {
 
     /**
      * this method is private, because we do not need to handle tablet
+     *
      * @return
      */
     private static int getScreenRotation() {
@@ -465,6 +502,11 @@ public class NotchHelper {
         return display.getRotation();
     }
 
+    /**
+     * 是否是AndroidP 以上,以上才能获取刘海屏
+     *
+     * @return
+     */
     public static boolean isNotchOfficialSupport() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
     }

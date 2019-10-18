@@ -22,6 +22,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.ashlikun.utils.other.RomUtils;
+import com.ashlikun.utils.ui.status.NotchHelper;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -128,11 +129,7 @@ public class StatusBarCompat {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/7/5 13:42
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：兼容设置状态栏颜色,要在设置完布局后设置
+     * 兼容设置状态栏颜色,要在设置完布局后设置
      * 本方法会自动设置状态栏字体颜色
      *
      * @param statusColor 状态栏颜色RES
@@ -142,9 +139,8 @@ public class StatusBarCompat {
         if (!isSetStatusColor()) {
             return;
         }
-        if (NotchHelper.isNotchOfficialSupport()) {
-            handleDisplayCutoutMode(window);
-        }
+        notch();
+
         if (!isSetStatusTextColor()) {
             //不能设置状态栏字体颜色时候
             if (!ColorUtils.isColorDrak(statusColor)) {
@@ -217,6 +213,7 @@ public class StatusBarCompat {
         if (!isSetStatusColor()) {
             return;
         }
+        notch();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         if (isNeedAndroidMHalf && !isSetStatusTextColor()) {
@@ -238,6 +235,15 @@ public class StatusBarCompat {
     }
 
     /**
+     * 刘海屏适配
+     */
+    public void notch() {
+        if (NotchHelper.isNotchOfficialSupport()) {
+            handleDisplayCutoutMode(window);
+        }
+    }
+
+    /**
      * 设置透明的状态栏，实际布局内容在状态栏里面
      */
     public void setStatusBarColorForCollapsingToolbar(final AppBarLayout appBarLayout, final CollapsingToolbarLayout collapsingToolbarLayout,
@@ -246,6 +252,7 @@ public class StatusBarCompat {
         if (!isSetStatusColor()) {
             return;
         }
+        notch();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
