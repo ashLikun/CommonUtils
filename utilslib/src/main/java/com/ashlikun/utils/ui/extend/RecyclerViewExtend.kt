@@ -1,4 +1,4 @@
-package com.ogow.libs.utils.extend
+package com.ashlikun.utils.ui.extend
 
 import android.util.DisplayMetrics
 import androidx.recyclerview.widget.LinearSmoothScroller
