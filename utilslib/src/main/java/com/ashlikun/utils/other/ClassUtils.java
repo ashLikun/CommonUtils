@@ -40,6 +40,27 @@ public class ClassUtils {
     }
 
     /**
+     * 反射字段
+     *
+     * @param object    要反射的对象
+     * @param fieldName 要反射的字段名称
+     */
+    public static Object getField(Object object, String fieldName) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            if (field != null) {
+                field.setAccessible(true);
+                return field.get(object);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 获取域的泛型类型，如果不带泛型返回null
      */
     public static Class<?> getGenericType(Type type) {
