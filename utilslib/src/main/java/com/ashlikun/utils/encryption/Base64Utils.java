@@ -4,6 +4,8 @@ import android.util.Base64;
 
 import com.ashlikun.utils.other.file.FileUtils;
 
+import kotlin.text.Charsets;
+
 /**
  * 作者　　: 李坤
  * 创建时间: 2016/7/4 17:49
@@ -42,6 +44,15 @@ public class Base64Utils {
 
     public static byte[] decode(String str) {
         return Base64.decode(str, Base64.NO_WRAP);
+    }
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/6/28 10:30
+     * <p>
+     * 方法功能：解密 转成字符串
+     */
+    public static String decodeToStr(String str) {
+        return new String(decode(str), Charsets.UTF_8);
     }
 
     /**
