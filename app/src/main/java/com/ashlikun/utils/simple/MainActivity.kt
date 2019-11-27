@@ -20,6 +20,7 @@ import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.other.SpannableUtils
 import com.ashlikun.utils.other.spannable.XClickableSpan
+import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
 import java.io.IOException
 import java.util.*
@@ -57,9 +58,32 @@ class MainActivity : AppCompatActivity() {
 //                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent)
 //                .create()
         textView.text = SpannableUtils.getBuilder("")
-                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n").setBullet(5,resources.getColor(R.color.black))
+                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n").setBullet(5, resources.getColor(R.color.black))
 
                 .create()
+        WorkFlow.Builder()
+                .addWork {
+                    object : Thread() {
+                        override fun run() {
+                            super.run()
+                            Thread.sleep(2000)
+                            Log.e("aaaa", "第一个执行完")
+                            it.onOk()
+                        }
+                    }.start()
+                }
+                .addWork {
+                    object : Thread() {
+                        override fun run() {
+                            super.run()
+                            Thread.sleep(3000)
+                            Log.e("aaaa", "第二个执行完")
+                            it.onOk()
+                        }
+                    }.start()
+                }
+                .build()
+                .start()
     }
 
     fun onView1Click(view: View) {

@@ -29,4 +29,10 @@ public class MainHandle extends Handler {
         return mainHandle;
     }
 
+    /**
+     * 是否是主线程
+     */
+    public static boolean isMain() {
+        return Looper.myLooper() == Looper.getMainLooper();
+    }
 }
