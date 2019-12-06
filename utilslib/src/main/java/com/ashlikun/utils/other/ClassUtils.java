@@ -40,6 +40,28 @@ public class ClassUtils {
     }
 
     /**
+     * 获取指定的字段
+     */
+    public static Field getAllDeclaredField(Class<?> claxx, String fieldName) {
+        if (fieldName == null || fieldName.isEmpty()) {
+            return null;
+        }
+
+        while (claxx != null && claxx != Object.class) {
+            try {
+                Field f = claxx.getDeclaredField(fieldName);
+                if (f != null) {
+                    return f;
+                }
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            claxx = claxx.getSuperclass();
+        }
+        return null;
+    }
+
+    /**
      * 反射字段
      *
      * @param object    要反射的对象
@@ -47,14 +69,12 @@ public class ClassUtils {
      */
     public static Object getField(Object object, String fieldName) {
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
+            Field field = getAllDeclaredField(object.getClass(), fieldName);
             if (field != null) {
                 field.setAccessible(true);
                 return field.get(object);
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
         return null;
