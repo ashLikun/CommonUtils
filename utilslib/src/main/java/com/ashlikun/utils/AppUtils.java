@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import androidx.core.content.FileProvider;
 
 import com.ashlikun.utils.bug.BugUtils;
-import com.ashlikun.utils.main.ProcessUtils;
 import com.ashlikun.utils.provider.BaseContentProvider;
 
 import java.io.File;
@@ -80,34 +79,6 @@ public class AppUtils {
         activityLifecycleCallbacks.removeOnChangListener(listener);
     }
 
-    /**
-     * 是否是主进程
-     * 如果getCurProcessName为空就默认认为不是主进程
-     *
-     * @return
-     */
-    public static boolean isMainProcess() {
-        String name = ProcessUtils.getCurProcessName();
-        if (TextUtils.isEmpty(name)) {
-            return false;
-        }
-        return name.equals(myApp.getPackageName());
-    }
-
-    /**
-     * 是否APP进程
-     * com.ogow.activity
-     * com.ogow.activity:webview
-     *
-     * @return 获取失败也是APP进程
-     */
-    public static boolean isAppProcess() {
-        String name = ProcessUtils.getCurProcessName();
-        if (TextUtils.isEmpty(name)) {
-            return true;
-        }
-        return name.contains(myApp.getPackageName());
-    }
 
     /**
      * 兼容高版本的fileprovider

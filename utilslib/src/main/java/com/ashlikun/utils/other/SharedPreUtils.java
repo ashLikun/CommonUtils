@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.ashlikun.utils.AppUtils;
-import com.ashlikun.utils.provider.ImpSpProvider;
 import com.ashlikun.utils.main.ProcessUtils;
+import com.ashlikun.utils.provider.ImpSpProvider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -188,7 +187,7 @@ public class SharedPreUtils {
     }
 
     public static boolean remove(Context context, String name, String key) {
-        if (AppUtils.isMainProcess()) {
+        if (ProcessUtils.isMainProcess()) {
             SharedPreferences.Editor editor = getSP(context, name).edit();
             editor.remove(key);
             return editor.commit();
@@ -205,7 +204,7 @@ public class SharedPreUtils {
 
     public static boolean clear(Context context, String name) {
 
-        if (AppUtils.isMainProcess()) {
+        if (ProcessUtils.isMainProcess()) {
             SharedPreferences sp = getSP(context, name);
             SharedPreferences.Editor editor = sp.edit();
             editor.clear();
@@ -236,7 +235,7 @@ public class SharedPreUtils {
         if (context == null) {
             return false;
         }
-        if (AppUtils.isMainProcess()) {
+        if (ProcessUtils.isMainProcess()) {
             SharedPreferences sp = getSP(context, name);
             if (sp == null) {
                 return defaule;
@@ -273,7 +272,7 @@ public class SharedPreUtils {
         if (context == null) {
             return false;
         }
-        if (AppUtils.isMainProcess()) {
+        if (ProcessUtils.isMainProcess()) {
             SharedPreferences sp = getSP(context, name);
             if (sp == null) {
                 return false;

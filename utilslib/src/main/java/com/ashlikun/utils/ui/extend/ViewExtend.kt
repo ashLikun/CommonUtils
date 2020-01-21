@@ -226,4 +226,17 @@ fun View?.shadowNoHardware(range: Int = this?.getPadding() ?: DimensUtils.dip2px
     }
 }
 
+/**
+ * 设置隐藏与显示
+ */
+fun View.setVisibility(visibility: Boolean) {
+    this?.visibility = if (visibility) View.VISIBLE else View.GONE
+}
 
+/**
+ * 是否Gone
+ */
+fun View.isGone() = this?.visibility == View.GONE
+
+fun View.isVisible() = this?.visibility == View.VISIBLE
+fun View.isInvisible() = this?.visibility == View.INVISIBLE

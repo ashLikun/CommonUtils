@@ -22,6 +22,7 @@ import com.ashlikun.utils.other.SpannableUtils
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
+import com.ashlikun.utils.ui.extend.windowBrightness
 import java.io.IOException
 import java.util.*
 
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         val size = DimensUtils.dip2px(this, 4f)
         drawable.setBounds(0, 0, size, size)
         drawable.setColor(-0x5a3b1)
+        windowBrightness = 10f
         drawable.cornerRadius = size / 2f
         DeviceUtil.get()
 //        textView.text = SpannableUtils.getBuilder("")

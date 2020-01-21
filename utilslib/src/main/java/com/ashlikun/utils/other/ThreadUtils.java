@@ -17,4 +17,17 @@ public class ThreadUtils {
         return Looper.myLooper() == Looper.getMainLooper();
     }
 
+    /**
+     * 在线程池中执行线程
+     */
+    public void execute(Runnable command) {
+        ThreadPoolManage.get().execute(command);
+    }
+
+    /**
+     * 切换到主线程
+     */
+    public void toMain(Runnable command) {
+        MainHandle.get().post(command);
+    }
 }
