@@ -2,6 +2,7 @@ package com.ashlikun.utils.other;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -74,6 +75,69 @@ public class ClassUtils {
                 field.setAccessible(true);
                 return field.get(object);
             }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取全部Method，包括父类
+     *
+     * @param claxx
+     * @return
+     */
+    public static LinkedList<Method> getAllDeclaredMethods(Class<?> claxx) {
+        // find all field.
+        LinkedList<Method> fieldList = new LinkedList<Method>();
+        while (claxx != null && claxx != Object.class) {
+            Method[] fs = claxx.getDeclaredMethods();
+            for (int i = 0; i < fs.length; i++) {
+                Method f = fs[i];
+                fieldList.addLast(f);
+            }
+            claxx = claxx.getSuperclass();
+        }
+        return fieldList;
+    }
+
+    /**
+     * 获取指定的方法
+     */
+    public static Method getAllDeclaredMethod(Class<?> claxx, String methodName) {
+        if (methodName == null || methodName.isEmpty()) {
+            return null;
+        }
+
+        while (claxx != null && claxx != Object.class) {
+            try {
+                Method f = claxx.getDeclaredMethod(methodName);
+                if (f != null) {
+                    return f;
+                }
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            claxx = claxx.getSuperclass();
+        }
+        return null;
+    }
+
+    /**
+     * 反射方法
+     *
+     * @param object     要反射的对象
+     * @param methodName 要反射的方法名称
+     */
+    public static Object getMethod(Object object, String methodName) {
+        try {
+            Method method = getAllDeclaredMethod(object.getClass(), methodName);
+            if (method != null) {
+                method.setAccessible(true);
+                return method.invoke(object);
+            }
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
