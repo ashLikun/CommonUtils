@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
+import com.ashlikun.utils.ui.BitmapUtil
 import com.ashlikun.utils.ui.ResUtils
 import com.ashlikun.utils.ui.shadow.CanShadowDrawable
 import com.ashlikun.utils.ui.shadow.RoundShadowDrawable
@@ -240,3 +241,10 @@ fun View.isGone() = this?.visibility == View.GONE
 
 fun View.isVisible() = this?.visibility == View.VISIBLE
 fun View.isInvisible() = this?.visibility == View.INVISIBLE
+/**
+ * 截取viewGroup内容，生成图片
+ *
+ * @param scale 缩放比例，对创建的 Bitmap 进行缩放，数值支持从 0 到 1。
+ * @return 图片bitmap
+ */
+fun View.getToBitmap(scale: Float = 1f) = BitmapUtil.getViewBitmap(this,scale)

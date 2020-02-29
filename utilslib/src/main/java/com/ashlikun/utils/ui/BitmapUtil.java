@@ -388,6 +388,9 @@ public class BitmapUtil {
             view.measure(View.MeasureSpec.makeMeasureSpec(ScreenInfoUtils.getWidth(), View.MeasureSpec.AT_MOST),
                     View.MeasureSpec.makeMeasureSpec(ScreenInfoUtils.getWidth() * 10, View.MeasureSpec.AT_MOST));
         }
+        if (view.getWidth() == 0 || view.getHeight() == 0) {
+            view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        }
         // 创建相应大小的bitmap
         Bitmap bitmap = createBitmapSafely((int) (view.getWidth() * scale),
                 (int) (view.getHeight() * scale), Bitmap.Config.ARGB_8888, 1);
