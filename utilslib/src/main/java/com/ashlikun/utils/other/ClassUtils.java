@@ -69,11 +69,37 @@ public class ClassUtils {
      * @param fieldName 要反射的字段名称
      */
     public static Object getField(Object object, String fieldName) {
+        if (object == null || fieldName == null || fieldName.isEmpty()) {
+            return null;
+        }
         try {
             Field field = getAllDeclaredField(object.getClass(), fieldName);
             if (field != null) {
                 field.setAccessible(true);
                 return field.get(object);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 反射字段
+     *
+     * @param object    要反射的对象
+     * @param fieldName 要反射的字段名称
+     */
+    public static Field setField(Object object, String fieldName, Object value) {
+        if (object == null || fieldName == null || fieldName.isEmpty()) {
+            return null;
+        }
+        try {
+            Field field = getAllDeclaredField(object.getClass(), fieldName);
+            if (field != null) {
+                field.setAccessible(true);
+                field.set(object, value);
+                return field;
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -129,12 +155,15 @@ public class ClassUtils {
      * @param object     要反射的对象
      * @param methodName 要反射的方法名称
      */
-    public static Object getMethod(Object object, String methodName) {
+    public static Object getMethod(Object object, String methodName, Object... args) {
+        if (object == null || methodName == null || methodName.isEmpty()) {
+            return null;
+        }
         try {
             Method method = getAllDeclaredMethod(object.getClass(), methodName);
             if (method != null) {
                 method.setAccessible(true);
-                return method.invoke(object);
+                return method.invoke(object, args);
             }
         } catch (InvocationTargetException e) {
             e.printStackTrace();
