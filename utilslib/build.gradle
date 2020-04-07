@@ -18,30 +18,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    /**
-     * aar文件的编译
-     */
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-        maven {
-            url "https://jitpack.io"
-        }
-    }
     //java8
     compileOptions {
         //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
         kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.utils']
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly rootProject.ext.designVersion
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 apply from: '../maven.gradle'
-repositories {
-    mavenCentral()
-}
