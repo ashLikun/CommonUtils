@@ -61,3 +61,10 @@ fun Context?.getActivity(): Activity? {
     }
     return getActivity(this)
 }
+
+/**
+ * 设置页面饱和度
+ */
+fun Activity?.setViewSaturation(sat: Float = 0f) {
+    getDecorView()?.setViewSaturation(sat)
+}

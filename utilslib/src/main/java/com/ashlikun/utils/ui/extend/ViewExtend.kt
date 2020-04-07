@@ -1,6 +1,9 @@
 package com.ashlikun.utils.ui.extend
 
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -241,10 +244,26 @@ fun View.isGone() = this?.visibility == View.GONE
 
 fun View.isVisible() = this?.visibility == View.VISIBLE
 fun View.isInvisible() = this?.visibility == View.INVISIBLE
+
 /**
  * 截取viewGroup内容，生成图片
  *
  * @param scale 缩放比例，对创建的 Bitmap 进行缩放，数值支持从 0 到 1。
  * @return 图片bitmap
  */
-fun View.getToBitmap(scale: Float = 1f) = BitmapUtil.getViewBitmap(this,scale)
+fun View.getToBitmap(scale: Float = 1f) = BitmapUtil.getViewBitmap(this, scale)
+
+/**
+ * 设置View的饱和度
+ */
+fun View.setViewSaturation(sat: Float = 0f) {
+    val paint = Paint()
+    val filter = ColorMatrix()
+    filter.setSaturation(sat)
+    paint.colorFilter = ColorMatrixColorFilter(filter)
+    if (layerType == View.LAYER_TYPE_NONE) {
+        setLayerType(View.LAYER_TYPE_HARDWARE, paint)
+    } else {
+        setLayerType(layerType, paint)
+    }
+}

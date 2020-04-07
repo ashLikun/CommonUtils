@@ -37,6 +37,7 @@ public class UiUtils {
 
     /**
      * 从资源文件获取一个view
+     * @param context 不同的 context 对应不同的LayoutInflater
      */
     public static View getInflaterView(Context context, int res) {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(res, null);
@@ -45,6 +46,7 @@ public class UiUtils {
 
     /**
      * 从资源文件获取一个view
+     * @param context 不同的 context 对应不同的LayoutInflater
      */
     public static View getInflaterView(Context context, int res, ViewGroup parent) {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(res, parent);
@@ -53,6 +55,7 @@ public class UiUtils {
 
     /**
      * 从资源文件获取一个view
+     * @param context 不同的 context 对应不同的LayoutInflater
      */
     public static View getInflaterView(Context context, int res, ViewGroup parent, boolean attachToRoot) {
         View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(res, parent, attachToRoot);
