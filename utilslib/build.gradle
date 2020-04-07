@@ -29,6 +29,11 @@ android {
             url "https://jitpack.io"
         }
     }
+    //java8
+    compileOptions {
+        //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
+        kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.utils']
+    }
 }
 
 dependencies {
