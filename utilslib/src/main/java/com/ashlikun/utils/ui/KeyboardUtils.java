@@ -127,6 +127,9 @@ public class KeyboardUtils {
             activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
             if (mScreenHeight == 0) {
                 mScreenHeight = r.bottom;
+            } else {
+                //防止第一次的时候获取的是假的
+                mScreenHeight = Math.max(mScreenHeight, r.bottom);
             }
             mNowh = mScreenHeight - r.bottom;
             if (mOldh != -1 && mNowh != mOldh) {
