@@ -202,17 +202,6 @@ object NotificationUtil {
         return builder
     }
 
-    /**
-     * 取消通知
-     *
-     * @param notificationId，通知的id
-     */
-    @JvmStatic
-    fun cancel(notificationId: Int) {
-        val nm = AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        //撤销指定id通知
-        nm.cancel(notificationId)
-    }
 
     /**
      * 取消通知
@@ -221,7 +210,7 @@ object NotificationUtil {
      * @param notificationId，通知的id
      */
     @JvmStatic
-    fun cancel(tag: String, notificationId: Int) {
+    fun cancel(notificationId: Int, tag: String = AppUtils.getAppName()) {
         val nm = AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //撤销指定id通知
         nm.cancel(tag, notificationId)
