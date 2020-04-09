@@ -15,10 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.other.DeviceUtil
-import com.ashlikun.utils.other.DimensUtils
-import com.ashlikun.utils.other.MainHandle
-import com.ashlikun.utils.other.SpannableUtils
+import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
@@ -127,11 +124,12 @@ class MainActivity : AppCompatActivity() {
 
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {
-        builder = NotificationUtil.createBuilder(R.mipmap.ic_launcher, "更新应用", "更新进度0%"
-                , defaults = NotificationCompat.DEFAULT_LIGHTS)
-        builder?.setProgress(100, currentProgress++, false)
+        LogUtils.e(NotificationUtil.isNotificationEnabled(this))
+        builder = NotificationUtil.createBuilder(R.mipmap.ic_launcher,
+                "测试通知",
+                "通知内容"
+                , defaults = NotificationCompat.DEFAULT_ALL)
         NotificationUtil.show(10, builder!!)
-        startPost()
     }
 
     val runable = Runnable {

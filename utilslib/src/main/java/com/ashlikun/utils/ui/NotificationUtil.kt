@@ -1,19 +1,20 @@
 package com.ashlikun.utils.ui
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.media.AudioAttributes
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.other.LogUtils
 import java.util.*
+
 
 /**
  * @author MaTianyu
@@ -46,6 +47,7 @@ object NotificationUtil {
                      bundle: Bundle,
                      id: Int,
                      icon: Int,
+                     largeIcon: Bitmap? = null,
                      title: String,
                      msg: String,
                      autoCancel: Boolean = true,
@@ -55,7 +57,7 @@ object NotificationUtil {
         intent.setPackage(AppUtils.getApp().packageName)
         intent.putExtras(bundle)
         intent.component = ComponentName(AppUtils.getApp().packageName, activityClass)
-        return notification(id, icon, title, msg, autoCancel, intent, defaults)
+        return notification(id, icon, title, msg, largeIcon, autoCancel, intent, defaults)
     }
 
     /**
@@ -72,36 +74,56 @@ object NotificationUtil {
             icon: Int,
             title: String,
             msg: String,
+            largeIcon: Bitmap? = null,
             autoCancel: Boolean = true,
             intent: Intent? = null,
             defaults: Int = Notification.DEFAULT_ALL): NotificationCompat.Builder {
 
         return show(notificationId,
-                createBuilder(icon, title, msg, autoCancel, intent, defaults))
+                createBuilder(icon, title, msg, largeIcon, autoCancel, intent, defaults = defaults))
     }
 
     /**
      * 创建一个 NotificationCompat.Builder
      *
      * @param intent     点击通知后进入的Activity,可以为null
+     * @param pendingIntent     点击通知后进入的Activity,可以为null（PendingIntent）
      * @param icon       图标
      * @param title      标题
      * @param msg        主题消息
      * @param autoCancel 是否自动取消，点击的时候
+     * @param channelName 渠道名称，也是id
+     * @param channelGroupName 渠道组名称，也是id
+     * @param lockscreenVisibility 设置锁屏可见  null:默认，true：可见，false：不可见
      * @param defaults 提示类型  声音：[NotificationCompat.DEFAULT_SOUND], 震动：[NotificationCompat.DEFAULT_VIBRATE], 顶部灯光：[NotificationCompat.DEFAULT_LIGHTS],
+     * @param importance 渠道优先级  高（有声音和提示）：[NotificationManager.IMPORTANCE_HIGH]
      */
     @JvmStatic
     fun createBuilder(icon: Int,
                       title: String,
                       msg: String,
+                      largeIcon: Bitmap? = null,
                       autoCancel: Boolean = true,
                       intent: Intent? = null,
+                      pendingIntent: PendingIntent? = null,
+                      channelName: String = "默认通知",
+                      channelGroupName: String = AppUtils.getAppName(),
+                      lockscreenVisibility: Boolean? = null,
+                      importance: Int = NotificationManager.IMPORTANCE_HIGH,
                       defaults: Int = Notification.DEFAULT_ALL): NotificationCompat.Builder {
-        val builder = NotificationCompat.Builder(AppUtils.getApp(), AppUtils.getApp().packageName)
+        createChannel(channelName = channelName,
+                channelGroupName = channelGroupName,
+                lockscreenVisibility = lockscreenVisibility,
+                importance = importance,
+                defaults = defaults
+        )
+        val builder = NotificationCompat.Builder(AppUtils.getApp(), channelName)
                 //左部图标
                 .setSmallIcon(icon)
+                //大图标
+                .setLargeIcon(largeIcon)
                 //设置通知的优先级：最大
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 //上部标题
                 .setContentTitle(title)
                 //中部通知内容
@@ -112,19 +134,33 @@ object NotificationUtil {
         if (defaults == NotificationCompat.DEFAULT_ALL || (defaults and NotificationCompat.DEFAULT_LIGHTS) != 0) {
             builder.setLights(0xffFF0000.toInt(), 3000, 3000)
         }
-        builder.setOnlyAlertOnce(true)
-        if (intent != null) {
-            val resultPendingIntent = PendingIntent.getActivity(AppUtils.getApp(), 0, intent,
+//        builder.setOnlyAlertOnce(true)
+        if (pendingIntent != null) {
+            builder.setContentIntent(pendingIntent)
+        } else if (intent != null) {
+            builder.setContentIntent(PendingIntent.getActivity(AppUtils.getApp(), 0, intent,
                     //允许更新
-                    PendingIntent.FLAG_UPDATE_CURRENT)
-            builder.setContentIntent(resultPendingIntent)
+                    PendingIntent.FLAG_UPDATE_CURRENT))
         }
+        return builder
+    }
+
+    /**
+     * 创建渠道
+     */
+    @JvmStatic
+    fun createChannel(
+            channelName: String = "默认通知",
+            channelGroupName: String = AppUtils.getAppName(),
+            lockscreenVisibility: Boolean? = null,
+            importance: Int = NotificationManager.IMPORTANCE_HIGH,
+            defaults: Int = Notification.DEFAULT_ALL) {
         // 此处必须兼容android O设备，否则系统版本在O以上可能不展示通知栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                    AppUtils.getApp().packageName,
-                    AppUtils.getAppName(),
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    channelName,
+                    channelName,
+                    importance
             )
             channel.enableVibration(defaults == NotificationCompat.DEFAULT_ALL || (defaults and NotificationCompat.DEFAULT_VIBRATE) != 0)
             if (defaults == NotificationCompat.DEFAULT_ALL || (defaults and NotificationCompat.DEFAULT_LIGHTS) != 0) {
@@ -136,9 +172,19 @@ object NotificationUtil {
             if (defaults != NotificationCompat.DEFAULT_ALL && (defaults and NotificationCompat.DEFAULT_SOUND) == 0) {
                 channel.setSound(null, null)
             }
-            (AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
+            //设置锁屏可见
+            if (lockscreenVisibility == true) {
+                channel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
+            } else if (lockscreenVisibility == false) {
+                channel.lockscreenVisibility = NotificationCompat.VISIBILITY_SECRET
+            }
+            //渠道分组
+            val grouping = NotificationChannelGroup(channelGroupName, channelGroupName)
+            channel.group = channelGroupName
+            val nm = (AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            nm.createNotificationChannelGroup(grouping)
+            nm.createNotificationChannel(channel)
         }
-        return builder
     }
 
     /**
@@ -147,7 +193,6 @@ object NotificationUtil {
     @JvmStatic
     fun show(notificationId: Int, builder: NotificationCompat.Builder, tag: String = AppUtils.getAppName()): NotificationCompat.Builder {
         val nm = AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
         //用消息的id对应的hashCode作为通知id
         //如果没有就创建，如果有就更新，
         //第一个参数是设置创建通知的id或者需要更新通知的id
@@ -192,6 +237,39 @@ object NotificationUtil {
         nm.cancelAll()
     }
 
+    /**
+     * 检查是否有通知栏权限
+     */
+    @JvmStatic
+    fun isNotificationEnabled(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //8.0手机以上
+            if ((context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).importance == NotificationManager.IMPORTANCE_NONE) {
+                return false
+            }
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return true
+        }
+        val CHECK_OP_NO_THROW = "checkOpNoThrow"
+        val OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION"
+        val mAppOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val appInfo = context.applicationInfo
+        val pkg = context.applicationContext.packageName
+        val uid = appInfo.uid
+        var appOpsClass: Class<*>? = null
+        try {
+            appOpsClass = Class.forName(AppOpsManager::class.java.name)
+            val checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
+                    String::class.java)
+            val opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION)
+            val value = opPostNotificationValue[Int::class.java] as Int
+            return checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) as Int == AppOpsManager.MODE_ALLOWED
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
+    }
 
     /********************************************************************************************
      * 下面是手机顶部小灯的通知
