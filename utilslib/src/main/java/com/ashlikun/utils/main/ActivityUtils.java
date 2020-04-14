@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.ContextThemeWrapper;
 
 import com.ashlikun.utils.AppUtils;
 
@@ -50,6 +51,8 @@ public class ActivityUtils {
             return (Activity) context;
         } else if (context instanceof ContextWrapper) {
             return getActivity(((ContextWrapper) context).getBaseContext());
+        } else if (context instanceof ContextThemeWrapper) {
+            return getActivity(((ContextThemeWrapper) context).getBaseContext());
         }
         return null;
     }
