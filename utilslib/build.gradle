@@ -31,5 +31,7 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly rootProject.ext.designVersion
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //kotlin 协程
+    compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines"
 }
 apply from: '../maven.gradle'

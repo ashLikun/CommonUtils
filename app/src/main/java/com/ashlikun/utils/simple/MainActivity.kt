@@ -16,10 +16,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.*
+import com.ashlikun.utils.other.coroutines.*
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
 import com.ashlikun.utils.ui.extend.windowBrightness
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.*
 
@@ -124,12 +127,24 @@ class MainActivity : AppCompatActivity() {
 
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {
-        LogUtils.e(NotificationUtil.isNotificationEnabled(this))
-        builder = NotificationUtil.createBuilder(R.mipmap.ic_launcher,
-                "测试通知",
-                "通知内容"
-                , defaults = NotificationCompat.DEFAULT_ALL)
-        NotificationUtil.show(10, builder!!)
+//        LogUtils.e(NotificationUtil.isNotificationEnabled(this))
+//        builder = NotificationUtil.createBuilder(R.mipmap.ic_launcher,
+//                "测试通知",
+//                "通知内容"
+//                , defaults = NotificationCompat.DEFAULT_ALL)
+//        NotificationUtil.show(10, builder!!)
+
+
+        taskLaunchMain() {
+
+            LogUtils.e(Thread.currentThread().name)
+            val aa: Int = withContext(ThreadPoolDispatcher) {
+                delay(1000)
+                LogUtils.e(Thread.currentThread().name)
+                1
+            }
+            LogUtils.e(aa)
+        }
     }
 
     val runable = Runnable {

@@ -57,6 +57,10 @@ public class ThreadPoolManage {
         return instance;
     }
 
+    public ExecutorService getExecutor() {
+        return executor;
+    }
+
 
     /**
      * 在线程池中执行线程
