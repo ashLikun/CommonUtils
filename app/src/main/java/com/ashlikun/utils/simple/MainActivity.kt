@@ -21,6 +21,7 @@ import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
 import com.ashlikun.utils.ui.extend.windowBrightness
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -135,15 +136,15 @@ class MainActivity : AppCompatActivity() {
 //        NotificationUtil.show(10, builder!!)
 
 
-        taskLaunchMain() {
+        taskLaunchMain {
 
             LogUtils.e(Thread.currentThread().name)
-            val aa: Int = withContext(ThreadPoolDispatcher) {
-                delay(1000)
+            val aa = taskAsync {
+                delay(3000)
                 LogUtils.e(Thread.currentThread().name)
                 1
             }
-            LogUtils.e(aa)
+            LogUtils.e(aa.await())
         }
     }
 
