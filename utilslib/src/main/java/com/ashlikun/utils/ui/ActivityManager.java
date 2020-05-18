@@ -52,18 +52,13 @@ public class ActivityManager {
             }
         }
         Iterator iterator = returnAct.iterator();
-        while (iterator.hasNext()){
-
-        }
-        for (int i = 0; i < ; i++) {
-
-        }
-        for (T a : returnAct) {
+        while (iterator.hasNext()) {
+            T a = (T) iterator.next();
             if (a != null && a.isFinishing()) {
                 activityStack.remove(a);
+                returnAct.remove(a);
             }
         }
-
         return returnAct;
     }
 
@@ -101,7 +96,7 @@ public class ActivityManager {
     }
 
     /**
-     * 退出Activity
+     * 退出Activity,只退出一个
      *
      * @param activity
      */
@@ -116,7 +111,24 @@ public class ActivityManager {
                     break;
                 }
             }
+        }
+    }
 
+    /**
+     * 退出全部这个Activity
+     *
+     * @param activity
+     */
+    public void exitActivitys(Class activity) {
+        if (activity != null) {
+            // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
+            for (Activity a : activityStack) {
+                if (a.getClass() == activity) {
+                    activityStack.remove(a);
+                    a.finish();
+                    a = null;
+                }
+            }
         }
     }
 
@@ -245,20 +257,8 @@ public class ActivityManager {
      */
     public void exitAllActivity(Class... activity) {
         try {
-            for (Activity a : activityStack) {
-                if (a == null) {
-                    continue;
-                }
-                boolean isfinish = true;
-                for (Class c : activity) {
-                    if (a.getClass() == c) {
-                        isfinish = false;
-                        break;
-                    }
-                }
-                if (isfinish) {
-                    exitActivity(a);
-                }
+            for (Class c : activity) {
+                exitActivitys(c);
             }
         } catch (Exception e) {
 
