@@ -3,6 +3,8 @@ package com.ashlikun.utils.ui;
 import android.app.Activity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -17,11 +19,7 @@ public class ActivityManager {
     private static ActivityManager instance;
 
     /**
-     * 获取指定的运行中的activity
-     *
-     * @param activity
-     * @param <T>
-     * @return
+     * 获取指定的运行中的activity,只取最新的
      */
     public <T> T getTagActivity(Class<? extends Activity> activity) {
         Activity returnAct = null;
@@ -39,6 +37,34 @@ public class ActivityManager {
             return getTagActivity(activity);
         }
         return (T) returnAct;
+    }
+
+    /**
+     * 获取指定的运行中的activity，取全部的
+     */
+    public <T extends Activity> List<T> getTagActivitys(Class<? extends Activity> activity) {
+        List<T> returnAct = new ArrayList<T>();
+        if (activity != null) {
+            for (Activity a : activityStack) {
+                if (a.getClass() == activity) {
+                    returnAct.add((T) a);
+                }
+            }
+        }
+        Iterator iterator = returnAct.iterator();
+        while (iterator.hasNext()){
+
+        }
+        for (int i = 0; i < ; i++) {
+
+        }
+        for (T a : returnAct) {
+            if (a != null && a.isFinishing()) {
+                activityStack.remove(a);
+            }
+        }
+
+        return returnAct;
     }
 
     private ActivityManager() {
