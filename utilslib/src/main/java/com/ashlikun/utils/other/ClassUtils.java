@@ -130,14 +130,14 @@ public class ClassUtils {
     /**
      * 获取指定的方法
      */
-    public static Method getAllDeclaredMethod(Class<?> claxx, String methodName) {
+    public static Method getAllDeclaredMethod(Class<?> claxx, String methodName, Class<?>... parameterTypes) {
         if (methodName == null || methodName.isEmpty()) {
             return null;
         }
 
         while (claxx != null && claxx != Object.class) {
             try {
-                Method f = claxx.getDeclaredMethod(methodName);
+                Method f = claxx.getDeclaredMethod(methodName, parameterTypes);
                 if (f != null) {
                     return f;
                 }
@@ -152,15 +152,19 @@ public class ClassUtils {
     /**
      * 反射方法
      *
-     * @param object     要反射的对象
-     * @param methodName 要反射的方法名称
+     * @param object      要反射的对象
+     * @param methodNames 要反射的方法名称
      */
-    public static Object getMethod(Object object, String methodName, Object... args) {
+    public static Object getMethod(Object object, String methodNames) {
+        return getMethod(object, methodNames, null, null);
+    }
+
+    public static Object getMethod(Object object, String methodName, Class<?>[] parameterTypes, Object... args) {
         if (object == null || methodName == null || methodName.isEmpty()) {
             return null;
         }
         try {
-            Method method = getAllDeclaredMethod(object.getClass(), methodName);
+            Method method = getAllDeclaredMethod(object.getClass(), methodName, parameterTypes);
             if (method != null) {
                 method.setAccessible(true);
                 return method.invoke(object, args);
@@ -199,8 +203,8 @@ public class ClassUtils {
     /**
      * 是否有Class注解
      *
-     * @param clazz           a {@link java.lang.Class} object.
-     * @param annotationClass a {@link java.lang.Class} object.
+     * @param clazz           a {@link Class} object.
+     * @param annotationClass a {@link Class} object.
      * @return a boolean.
      */
     public static boolean hasClassAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
@@ -210,9 +214,9 @@ public class ClassUtils {
     /**
      * 是否有字段注解
      *
-     * @param clazz           a {@link java.lang.Class} object.
-     * @param annotationClass a {@link java.lang.Class} object.
-     * @param fieldName       a {@link java.lang.String} object.
+     * @param clazz           a {@link Class} object.
+     * @param annotationClass a {@link Class} object.
+     * @param fieldName       a {@link String} object.
      * @return a boolean.
      */
     public static boolean hasFieldAnnotation(Class<?> clazz,
@@ -223,10 +227,10 @@ public class ClassUtils {
     /**
      * 是否有字段注解
      *
-     * @param clazz           a {@link java.lang.Class} object.
-     * @param annotationClass a {@link java.lang.Class} object.
-     * @param methodName      a {@link java.lang.String} object.
-     * @param paramType       a {@link java.lang.Class} object.
+     * @param clazz           a {@link Class} object.
+     * @param annotationClass a {@link Class} object.
+     * @param methodName      a {@link String} object.
+     * @param paramType       a {@link Class} object.
      * @return a boolean.
      */
     public static boolean hasMethodAnnotation(Class<?> clazz,
