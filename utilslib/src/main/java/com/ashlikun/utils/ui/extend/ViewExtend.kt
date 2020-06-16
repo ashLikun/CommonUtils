@@ -131,6 +131,19 @@ fun View?.getMarginBottom() = if (this?.layoutParams is ViewGroup.MarginLayoutPa
         ?: 0 else 0
 
 /**
+ * 设置view   Padding
+ */
+fun View?.setPaddings(leftPadding: Int = this?.paddingLeft
+        ?: 0, topPadding: Int = this?.paddingTop ?: 0,
+                     rightPadding: Int = this?.paddingRight
+                             ?: 0, bottomPadding: Int = this?.paddingBottom
+                ?: 0) {
+    this?.run {
+        setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
+    }
+}
+
+/**
  * 设置view   Margin
  */
 fun View?.setMargin(leftMargin: Int = getMarginLeft(), topMargin: Int = getMarginTop(),
