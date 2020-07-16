@@ -66,6 +66,14 @@ public class SpannableUtils {
          * 源文本
          */
         private CharSequence text;
+        /**
+         * 是否需要添加
+         */
+        private boolean isAppendText = true;
+        /**
+         * 如果不添加（isAppendText）的时候是否只匹配第一次
+         */
+        private boolean isMatchFirst = true;
         private int flag;
         /**
          * 前景颜色
@@ -234,10 +242,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 17:39
-         * <p>
-         * 方法功能：设置背景色
+         * 设置背景色
          *
          * @param color 背景色
          * @return {@link Builder}
@@ -253,10 +258,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 17:40
-         * <p>
-         * 方法功能：设置缩进
+         * 设置缩进
          *
          * @param first 首行缩进
          * @param rest  剩余行缩进
@@ -270,9 +272,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 17:41
-         * 方法功能：设置文字大小比例
+         * 设置文字大小比例
          *
          * @param proportion 比例
          * @return {@link Builder}
@@ -283,9 +283,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 17:41
-         * 方法功能：设置字体横向比例
+         * 设置字体横向比例
          *
          * @param proportion 比例
          * @return {@link Builder}
@@ -296,10 +294,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 17:41
-         * <p>
-         * 方法功能：设置删除线
+         * 设置删除线
          *
          * @return {@link Builder}
          */
@@ -309,10 +304,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:56
-         * <p>
-         * 方法功能：设置下划线
+         * 设置下划线
          *
          * @return {@link Builder}
          */
@@ -322,9 +314,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:57
-         * 方法功能：设置粗体
+         * 设置粗体
          *
          * @return {@link Builder}
          */
@@ -335,10 +325,7 @@ public class SpannableUtils {
 
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * <p>
-         * 方法功能：设置斜体
+         * 设置斜体
          *
          * @return {@link Builder}
          */
@@ -348,10 +335,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * <p>
-         * 方法功能：设置粗斜体
+         * 设置粗斜体
          *
          * @return {@link Builder}
          */
@@ -361,9 +345,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * 方法功能：设置对齐
+         * 设置对齐
          *
          * @param align {@link Layout.Alignment#ALIGN_NORMAL}正常
          *              {@link Layout.Alignment#ALIGN_OPPOSITE}相反
@@ -377,8 +359,6 @@ public class SpannableUtils {
 
         /**
          * 自定义居上对其
-         *
-         * @return
          */
         public Builder setAlignTop() {
             setAlignTop(0);
@@ -422,10 +402,6 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * 方法功能：设置图片
-         *
          * @param bitmap 图片位图
          * @return {@link Builder}
          */
@@ -439,10 +415,6 @@ public class SpannableUtils {
 
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * 方法功能：设置图片
-         *
          * @param drawable 图片资源
          * @return {@link Builder}
          */
@@ -455,10 +427,6 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * 方法功能：设置图片
-         *
          * @param resourceId 图片资源id
          * @return {@link Builder}
          */
@@ -481,10 +449,6 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 9:58
-         * 方法功能：设置点击事件
-         * <p>
          * 设置点击事件
          * <p>需添加view.setMovementMethod(LinkMovementMethod.getInstance())</p>
          *
@@ -497,10 +461,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 10:09
-         * <p>
-         * 方法功能：设置超链接
+         * ：设置超链接
          * 需添加view.setMovementMethod(LinkMovementMethod.getInstance())
          *
          * @param url 超链接
@@ -512,10 +473,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 10:09
-         * <p>
-         * 方法功能：设置模糊 推荐还是把所有字体都模糊这样使用
+         * 设置模糊 推荐还是把所有字体都模糊这样使用
          *
          * @param radius 模糊半径（需大于0）
          * @param style  模糊样式<ul>
@@ -561,10 +519,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 10:11
-         * <p>
-         * 方法功能：追加样式字符串
+         * 追加样式字符串
          *
          * @param text 样式字符串文本
          * @return {@link Builder}
@@ -576,10 +531,27 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 10:12
-         * <p>
-         * 方法功能：创建样式字符串
+         * 样式字符串
+         *
+         * @param text 样式字符串文本
+         * @return {@link Builder}
+         */
+        public Builder appendStyle(@NonNull CharSequence text, boolean isMatchFirst) {
+            setSpan();
+            this.text = text;
+            this.isAppendText = false;
+            this.isMatchFirst = isMatchFirst;
+            return this;
+        }
+
+        public Builder isNoAppendText(boolean isMatchFirst) {
+            this.isAppendText = false;
+            this.isMatchFirst = isMatchFirst;
+            return this;
+        }
+
+        /**
+         * 创建样式字符串
          *
          * @return 样式字符串
          */
@@ -589,10 +561,7 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/29 10:13
-         * <p>
-         * 方法功能：清空样式 一般调用append 或者 create 就会主动清空，以便后续设置
+         * 清空样式 一般调用append 或者 create 就会主动清空，以便后续设置
          */
         private void clean() {
             foregroundColor = defaultValue;
@@ -626,11 +595,7 @@ public class SpannableUtils {
         }
 
         /**
-         * @author　　: 李坤
-         * 创建时间: 2018/6/1 0001 下午 4:22
-         * 邮箱　　：496546144@qq.com
-         * <p>
-         * 方法功能：设置图片与文字高度一致
+         * 设置图片与文字高度一致
          */
         public Builder changImageSize() {
             isChangImageSize = true;
@@ -672,12 +637,33 @@ public class SpannableUtils {
                 clean();
                 return;
             }
-            //开始位置
-            int start = mBuilder.length();
-            mBuilder.append(this.text);
-            //结束位置
-            int end = mBuilder.length();
 
+            if (isAppendText) {
+                //开始位置
+                int start = mBuilder.length();
+                mBuilder.append(this.text);
+                //结束位置
+                int end = mBuilder.length();
+                handText(start, end);
+            } else {
+                String tt = mBuilder.toString();
+                int start = 0;
+                int end = 0;
+                while (start >= 0) {
+                    start = tt.indexOf(text.toString(), end);
+                    end = start + text.length();
+                    if (start >= 0) {
+                        handText(start, end);
+                        if (isMatchFirst) {
+                            break;
+                        }
+                    }
+                }
+            }
+            clean();
+        }
+
+        private void handText(int start, int end) {
             //前景色
             if (foregroundColor != defaultValue) {
                 mBuilder.setSpan(new ForegroundColorSpan(foregroundColor), start, end, flag);
@@ -764,7 +750,6 @@ public class SpannableUtils {
             if (blockSpaceHeight > 0) {
                 mBuilder.setSpan(new BlockSpaceSpan(blockSpaceHeight), start, end, flag);
             }
-            clean();
         }
     }
 
