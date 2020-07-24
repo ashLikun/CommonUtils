@@ -8,8 +8,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-import androidx.annotation.NonNull;
+import android.provider.Settings;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.file.FileUtils;
@@ -61,6 +64,7 @@ public class ApkUtils {
         if (!FileUtils.isFileExists(file)) {
             return;
         }
+
         activity.startActivityForResult(getInstallAppIntent(file), requestCode);
     }
 
@@ -90,6 +94,32 @@ public class ApkUtils {
         }
         intent.setDataAndType(AppUtils.getUri(file), type);
         return isNewTask ? intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) : intent;
+    }
+
+    /**
+     * 是否可以安装未知app权限
+     */
+    public static boolean canRequestPackageInstalls(Activity activity, int requestCode) {
+        //兼容8.0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            boolean hasInstallPermission = AppUtils.getApp().getPackageManager().canRequestPackageInstalls();
+            if (!hasInstallPermission) {
+                startInstallPermissionSettingActivity(activity, requestCode);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 跳转到设置-允许安装未知来源-页面
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void startInstallPermissionSettingActivity(Activity activity, int requestCode) {
+        //注意这个是8.0新API
+        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     /**

@@ -33,11 +33,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.designVersion
-    implementation project(':utilslib')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api rootProject.ext.designVersion
+    api project(':utilslib')
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //kotlin 协程
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines"
 }
 repositories {
     mavenCentral()
