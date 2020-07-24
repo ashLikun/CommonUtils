@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.file.FileUtils;
@@ -110,7 +109,6 @@ public class ApkUtils {
     /**
      * 跳转到设置-允许安装未知来源-页面
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public static Intent unknownAppInstall() {
         //注意这个是8.0新API
         Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
