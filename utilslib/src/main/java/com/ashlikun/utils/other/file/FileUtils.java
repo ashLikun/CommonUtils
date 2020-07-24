@@ -78,7 +78,7 @@ public class FileUtils {
             return baos.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
-            return "获取失败" .getBytes();
+            return "获取失败".getBytes();
         }
     }
 
@@ -87,7 +87,7 @@ public class FileUtils {
             return readByte(new FileInputStream(path));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "获取失败" .getBytes();
+            return "获取失败".getBytes();
         }
     }
 
@@ -112,6 +112,13 @@ public class FileUtils {
 
     /**
      * 获取文件指定文件的指定单位的大小
+     */
+    public static double getFileOrFilesSize(String filePath) {
+        return getFileOrFilesSize(filePath, SIZETYPE_B);
+    }
+
+    /**
+     * 获取文件指定文件的指定单位的大小
      *
      * @param filePath 文件路径
      * @param sizeType 获取大小的类型1为B、2为KB、3为MB、4为GB
@@ -124,7 +131,7 @@ public class FileUtils {
             if (file.isDirectory()) {
                 blockSize = getFileSizes(file);
             } else {
-                blockSize = getFileSize(file);
+                blockSize = getOneFileSize(file);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,7 +153,7 @@ public class FileUtils {
             if (file.isDirectory()) {
                 blockSize = getFileSizes(file);
             } else {
-                blockSize = getFileSize(file);
+                blockSize = getOneFileSize(file);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,7 +169,7 @@ public class FileUtils {
      * @return
      * @throws Exception
      */
-    public static long getFileSize(File file) throws Exception {
+    public static long getOneFileSize(File file) throws Exception {
         long size = 0;
         if (file.exists()) {
             FileInputStream fis = null;
@@ -183,7 +190,7 @@ public class FileUtils {
      * @return size
      * @throws Exception
      */
-    private static long getFileSizes(File file) throws Exception {
+    public static long getFileSizes(File file) {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
@@ -202,12 +209,15 @@ public class FileUtils {
 
     /**
      * 转换文件大小,指定转换的类型
-     *
-     * @param fileS
-     * @param sizeType
-     * @return
      */
-    private static double formetFileSize(long fileS, int sizeType) {
+    public static double formetFileSize(long fileS) {
+        return formetFileSize(fileS, SIZETYPE_B);
+    }
+
+    /**
+     * 转换文件大小,指定转换的类型
+     */
+    public static double formetFileSize(long fileS, int sizeType) {
         DecimalFormat df = new DecimalFormat("0.00");
         double fileSizeLong = 0;
         switch (sizeType) {
