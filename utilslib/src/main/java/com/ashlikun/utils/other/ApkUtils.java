@@ -99,14 +99,10 @@ public class ApkUtils {
     /**
      * 是否可以安装未知app权限
      */
-    public static boolean canRequestPackageInstalls(Activity activity, int requestCode) {
+    public static boolean canRequestPackageInstalls() {
         //兼容8.0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            boolean hasInstallPermission = AppUtils.getApp().getPackageManager().canRequestPackageInstalls();
-            if (!hasInstallPermission) {
-                startInstallPermissionSettingActivity(activity, requestCode);
-                return false;
-            }
+            return AppUtils.getApp().getPackageManager().canRequestPackageInstalls();
         }
         return true;
     }
@@ -115,11 +111,11 @@ public class ApkUtils {
      * 跳转到设置-允许安装未知来源-页面
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void startInstallPermissionSettingActivity(Activity activity, int requestCode) {
+    public static Intent unknownAppInstall() {
         //注意这个是8.0新API
         Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivityForResult(intent, requestCode);
+        return intent;
     }
 
     /**
