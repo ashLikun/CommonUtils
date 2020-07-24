@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.core.view.ViewCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.ui.BitmapUtil
@@ -76,13 +75,7 @@ fun View?.getViewSize(onSizeListener: OnSizeListener) {
 
 }
 
-fun SwipeRefreshLayout?.setColorSchemeResources() {
-    this?.setColorSchemeResources(R.color.SwipeRefreshLayout_1, R.color.SwipeRefreshLayout_2, R.color.SwipeRefreshLayout_3, R.color.SwipeRefreshLayout_4)
-}
 
-fun SwipeRefreshLayout?.setRefreshingx(isRefresh: Boolean) {
-    this?.postDelayed({ isRefreshing = isRefresh }, 400)
-}
 
 /**
  * 从资源文件获取一个view

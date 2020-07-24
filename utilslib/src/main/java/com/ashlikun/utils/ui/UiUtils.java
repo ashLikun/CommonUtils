@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
@@ -20,20 +19,6 @@ import java.lang.reflect.Field;
 
 
 public class UiUtils {
-
-    public static void setColorSchemeResources(SwipeRefreshLayout swipeRefreshLayout) {
-        swipeRefreshLayout.setColorSchemeResources(R.color.SwipeRefreshLayout_1, R.color.SwipeRefreshLayout_2, R.color.SwipeRefreshLayout_3, R.color.SwipeRefreshLayout_4);
-    }
-
-    public static void setRefreshing(final SwipeRefreshLayout swipeRefreshLayout, final boolean b) {
-        swipeRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(b);
-            }
-        }, 400);
-
-    }
 
     /**
      * 从资源文件获取一个view
