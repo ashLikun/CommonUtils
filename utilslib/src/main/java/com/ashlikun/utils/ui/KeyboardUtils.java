@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
@@ -95,7 +96,17 @@ public class KeyboardUtils {
         FrameLayout content = activity.findViewById(android.R.id.content);
         final View mChildOfContent = content.getChildAt(0);
         //界面出现变动都会调用这个监听事件
-        mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new MyOnGlobalLayoutListener(activity, listener));
+        mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardOnGlobalLayoutListener(activity.getWindow().getDecorView(), listener));
+    }
+
+    public static final void setOnInputChang(final View view, OnResizeListener listener) {
+        //界面出现变动都会调用这个监听事件
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardOnGlobalLayoutListener(view, listener));
+    }
+
+    public static final void setOnInputChang(final Window window, OnResizeListener listener) {
+        //界面出现变动都会调用这个监听事件
+        window.getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardOnGlobalLayoutListener(window.getDecorView(), listener));
     }
 
     public interface OnResizeListener {
@@ -110,21 +121,21 @@ public class KeyboardUtils {
         void onSoftClose();
     }
 
-    private static class MyOnGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
-        Activity activity;
+    public static class KeyboardOnGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+        View view;
         OnResizeListener onResizeListener;
         int mNowh, mOldh;
         int mScreenHeight;
 
-        public MyOnGlobalLayoutListener(Activity activity, OnResizeListener onResizeListener) {
-            this.activity = activity;
+        public KeyboardOnGlobalLayoutListener(View view, OnResizeListener onResizeListener) {
+            this.view = view;
             this.onResizeListener = onResizeListener;
         }
 
         @Override
         public void onGlobalLayout() {
             Rect r = new Rect();
-            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+            view.getWindowVisibleDisplayFrame(r);
             if (mScreenHeight == 0) {
                 mScreenHeight = r.bottom;
             } else {
