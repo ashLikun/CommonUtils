@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.ashlikun.utils.other.DimensUtils;
@@ -23,7 +24,11 @@ import com.ashlikun.utils.other.DimensUtils;
  */
 public class AndroidBug5497Workaround {
     public static AndroidBug5497Workaround get(Activity activity) {
-        return new AndroidBug5497Workaround(activity);
+        return new AndroidBug5497Workaround(activity.getWindow());
+    }
+
+    public static AndroidBug5497Workaround get(Window window) {
+        return new AndroidBug5497Workaround(window);
     }
 
     private View mChildOfContent;
@@ -31,7 +36,6 @@ public class AndroidBug5497Workaround {
     private FrameLayout.LayoutParams frameLayoutParams;
     private int contentHeight;
     private boolean isfirst = true;
-    private Activity activity;
     private int statusBarHeight;
     private OnInputChang onInputChang;
 
@@ -39,12 +43,11 @@ public class AndroidBug5497Workaround {
         this.onInputChang = onInputChang;
     }
 
-    private AndroidBug5497Workaround(Activity activity) {
+    private AndroidBug5497Workaround(Window window) {
         //获取状态栏的高度
-        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
-        this.activity = activity;
-        FrameLayout content = (FrameLayout) activity.findViewById(android.R.id.content);
+        int resourceId = window.getDecorView().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        statusBarHeight = window.getDecorView().getResources().getDimensionPixelSize(resourceId);
+        FrameLayout content = (FrameLayout) window.findViewById(android.R.id.content);
         mChildOfContent = content.getChildAt(0);
 
         //界面出现变动都会调用这个监听事件
@@ -90,7 +93,7 @@ public class AndroidBug5497Workaround {
             usableHeightPrevious = usableHeightNow;
 
             if (onInputChang != null) {
-                if (ScreenInfoUtils.getHeight() - usableHeightNow > DimensUtils.dip2px(activity, 150)) {
+                if (ScreenInfoUtils.getHeight() - usableHeightNow > DimensUtils.dip2px(150)) {
                     onInputChang.onChangOpen();
                 } else {
                     onInputChang.onChangOff();
