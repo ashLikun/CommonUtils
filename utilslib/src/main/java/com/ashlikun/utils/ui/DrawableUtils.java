@@ -125,7 +125,7 @@ public class DrawableUtils {
         if (strokeColorId > 0) {
             drawable.setStroke(DimensUtils.dip2px(strokeWidth), ResUtils.getColor(strokeColorId));
         }
-        if (roundRadius != null && roundRadius.length > 8) {
+        if (roundRadius != null && roundRadius.length >= 8) {
             float[] round = new float[]{DimensUtils.dip2px(roundRadius[0]), DimensUtils.dip2px(roundRadius[1]), DimensUtils.dip2px(roundRadius[2]), DimensUtils.dip2px(roundRadius[3]),
                     DimensUtils.dip2px(roundRadius[4]), DimensUtils.dip2px(roundRadius[5]), DimensUtils.dip2px(roundRadius[6]), DimensUtils.dip2px(roundRadius[7])};
             drawable.setCornerRadii(round);

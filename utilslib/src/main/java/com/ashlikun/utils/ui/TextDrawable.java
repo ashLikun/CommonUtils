@@ -3,8 +3,9 @@ package com.ashlikun.utils.ui;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.ColorInt;
 import android.text.TextUtils;
+
+import androidx.annotation.ColorInt;
 
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
@@ -19,15 +20,15 @@ import com.ashlikun.utils.other.DimensUtils;
  */
 public class TextDrawable extends GradientDrawable {
 
-    private String text;
-    private float textSize;
-    private int textColor;
-    private Paint paint;
-    private int paddingLeft;
-    private int paddingTop;
-    private int paddingRight;
-    private int paddingBottom;
-    private int stokeWidth;
+    protected String text;
+    protected float textSize;
+    protected int textColor;
+    protected Paint paint;
+    protected int paddingLeft;
+    protected int paddingTop;
+    protected int paddingRight;
+    protected int paddingBottom;
+    protected int stokeWidth;
 
     public TextDrawable() {
         super();
