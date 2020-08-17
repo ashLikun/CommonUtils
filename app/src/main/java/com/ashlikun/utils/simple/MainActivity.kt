@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.*
 import com.ashlikun.utils.other.spannable.XClickableSpan
@@ -114,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         // SuperToast.get("aaaaaaa").warn();
     }
 
+    val ss = "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
     fun onView4Click(view: View) {
         SuperToast.showInfoMessage("aaaaaaaaaaaaaaaaaa")
         val logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
@@ -124,6 +126,11 @@ class MainActivity : AppCompatActivity() {
         //        imageView.setDrawingCacheEnabled(false);
         val bitmap = BitmapUtil.decodeResource(this, R.mipmap.timg, ScreenInfoUtils.getWidth(), ScreenInfoUtils.getHeight())
         imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo, null))
+
+        val aaa = AesAAUtil.encrypt(ss, "NeYHTiTLQp8J" + "\u0000\u0000\u0000\u0000")
+        val aaaa = AESUtils.encrypt(ss, "NeYHTiTLQp8J")
+        LogUtils.e("aaaa " + aaa ?: "")
+        LogUtils.e("aaaaaaaa    " + aaaa)
     }
 
     var builder: NotificationCompat.Builder? = null

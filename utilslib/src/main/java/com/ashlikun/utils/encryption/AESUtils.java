@@ -1,6 +1,5 @@
 package com.ashlikun.utils.encryption;
 
-import android.annotation.SuppressLint;
 import androidx.annotation.IntDef;
 
 import java.io.UnsupportedEncodingException;
@@ -8,15 +7,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import static com.ashlikun.utils.other.StringUtils.parseByte2HexStr;
@@ -32,11 +27,18 @@ import static com.ashlikun.utils.other.StringUtils.parseHexStr2Byte;
  * 对称加密
  */
 public class AESUtils {
-    private final static String SHA1PRNG = "SHA1PRNG";
+    private static final String AES = "AES"; //AES 加密
 
     @IntDef({Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE})
     @Retention(RetentionPolicy.SOURCE)
     @interface AESType {
+    }
+
+    /**
+     * 对密钥进行处理
+     */
+    public static byte[] getRawKey(byte[] seed, int keySizeInBytes) throws Exception {
+        return InsecureSHA1PRNGKeyDerivator.deriveInsecureKey(seed, keySizeInBytes);
     }
 
     /**
@@ -47,7 +49,11 @@ public class AESUtils {
      * @return 加密/解密结果字符串
      */
     public static String encrypt(String content, String password) {
-        return aes(content, password, Cipher.ENCRYPT_MODE);
+        return aes(content, password, Cipher.ENCRYPT_MODE, 128);
+    }
+
+    public static String encrypt(String content, String password, int bits) {
+        return aes(content, password, Cipher.ENCRYPT_MODE, bits);
     }
 
     /**
@@ -58,7 +64,11 @@ public class AESUtils {
      * @return 加密/解密结果字符串
      */
     public static String decrypt(String content, String password) {
-        return aes(content, password, Cipher.DECRYPT_MODE);
+        return aes(content, password, Cipher.DECRYPT_MODE, 128);
+    }
+
+    public static String decrypt(String content, String password, int bits) {
+        return aes(content, password, Cipher.DECRYPT_MODE, bits);
     }
 
     /**
@@ -69,26 +79,12 @@ public class AESUtils {
      * @param type     加密：{@link Cipher#ENCRYPT_MODE}，解密：{@link Cipher#DECRYPT_MODE}
      * @return 加密/解密结果字符串
      */
-    public static String aes(String content, String password, @AESType int type) {
+    public static String aes(String content, String password, @AESType int type, int bits) {
         try {
-            KeyGenerator generator = KeyGenerator.getInstance("AES");
 
-            SecureRandom secureRandom;
-            if (android.os.Build.VERSION.SDK_INT >= 24) {
-                secureRandom = SecureRandom.getInstance(SHA1PRNG, new CryptoProvider());
-            } else if (android.os.Build.VERSION.SDK_INT >= 17) {
-                secureRandom = SecureRandom.getInstance(SHA1PRNG, "Crypto");
-            } else {
-                secureRandom = SecureRandom.getInstance(SHA1PRNG);
-            }
-            secureRandom.setSeed(password.getBytes());
-            generator.init(128, secureRandom);
-            SecretKey secretKey = generator.generateKey();
-            byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
-            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
+            SecretKeySpec key = new SecretKeySpec(getRawKey(password.getBytes(), bits / 8), AES);
+            Cipher cipher = Cipher.getInstance(AES);
             cipher.init(type, key);
-
             if (type == Cipher.ENCRYPT_MODE) {
                 byte[] byteContent = content.getBytes("utf-8");
                 return parseByte2HexStr(cipher.doFinal(byteContent));
@@ -97,8 +93,9 @@ public class AESUtils {
                 return new String(cipher.doFinal(byteContent));
             }
         } catch (NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException |
-                UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException |
-                NoSuchProviderException e) {
+                UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
