@@ -5,14 +5,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.media.AudioAttributes
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.other.LogUtils
 import java.util.*
 
 
@@ -32,6 +32,48 @@ import java.util.*
 
 object NotificationUtil {
     private var LedID = 0
+
+    /**
+     * 是否开启通知
+     */
+    fun isNotificationEnabled() = try {
+        NotificationManagerCompat.from(AppUtils.getApp()).areNotificationsEnabled()
+    } catch (e: Exception) {
+        false
+    }
+
+    /**
+     * 跳转到推送设置
+     */
+    fun gotoSet(): Unit {
+        val intent = Intent()
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                // android 8.0引导
+                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                intent.putExtra("android.provider.extra.APP_PACKAGE", AppUtils.getPackageName())
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                // android 5.0-7.0
+                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                intent.putExtra("app_package", AppUtils.getPackageName())
+                intent.putExtra("app_uid", AppUtils.getApp().applicationInfo.uid)
+            }
+            else -> {
+                // 其他
+                intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+                intent.data = Uri.fromParts("package", AppUtils.getApp().packageName, null)
+            }
+        }
+        val activity = ActivityManager.getForegroundActivity()
+        if (activity != null) {
+            activity.startActivity(intent)
+        } else {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            AppUtils.getApp().startActivity(intent)
+        }
+
+    }
 
     /**
      * @param activityClass 点击通知后进入的Activity
@@ -181,7 +223,7 @@ object NotificationUtil {
             //渠道分组
             val grouping = NotificationChannelGroup(channelGroupName, channelGroupName)
             channel.group = channelGroupName
-            val nm = (AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            val nm = NotificationManagerCompat.from(AppUtils.getApp())
             nm.createNotificationChannelGroup(grouping)
             nm.createNotificationChannel(channel)
         }
@@ -192,7 +234,7 @@ object NotificationUtil {
      */
     @JvmStatic
     fun show(notificationId: Int, builder: NotificationCompat.Builder, tag: String = AppUtils.getAppName()): NotificationCompat.Builder {
-        val nm = AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = NotificationManagerCompat.from(AppUtils.getApp())
         //用消息的id对应的hashCode作为通知id
         //如果没有就创建，如果有就更新，
         //第一个参数是设置创建通知的id或者需要更新通知的id
@@ -211,7 +253,7 @@ object NotificationUtil {
      */
     @JvmStatic
     fun cancel(notificationId: Int, tag: String = AppUtils.getAppName()) {
-        val nm = AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = NotificationManagerCompat.from(AppUtils.getApp())
         //撤销指定id通知
         nm.cancel(tag, notificationId)
     }
@@ -221,7 +263,7 @@ object NotificationUtil {
      */
     @JvmStatic
     fun cancel() {
-        val nm = AppUtils.getApp().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = NotificationManagerCompat.from(AppUtils.getApp())
         //撤销本程序发出的全部通知
         nm.cancelAll()
     }
@@ -233,7 +275,7 @@ object NotificationUtil {
     fun isNotificationEnabled(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //8.0手机以上
-            if ((context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).importance == NotificationManager.IMPORTANCE_NONE) {
+            if (NotificationManagerCompat.from(AppUtils.getApp()).importance == NotificationManagerCompat.IMPORTANCE_NONE) {
                 return false
             }
         }
@@ -270,7 +312,7 @@ object NotificationUtil {
 
     @JvmStatic
     fun lightLed(context: Context, colorOx: Int, startOffMS: Int, durationMS: Int) {
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = NotificationManagerCompat.from(AppUtils.getApp())
         val notification = Notification()
         notification.ledARGB = colorOx
         notification.ledOffMS = startOffMS
