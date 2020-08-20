@@ -1,17 +1,17 @@
 package com.ashlikun.utils.other;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import androidx.fragment.app.Fragment;
+
 import com.ashlikun.utils.AppUtils;
+import com.ashlikun.utils.ui.ActivityManager;
 
 import java.io.File;
 import java.io.IOException;
-
-import androidx.fragment.app.Fragment;
 
 /**
  * 作者　　: 李坤
@@ -21,41 +21,49 @@ import androidx.fragment.app.Fragment;
  * 功能介绍：系统一些意图的工具类
  */
 public class IntentUtils {
+    public static void jump(Intent intent) {
+        Activity activity = ActivityManager.getForegroundActivity();
+        if (activity != null) {
+            activity.startActivity(intent);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            AppUtils.getApp().startActivity(intent);
+        }
+    }
+
     /**
      * 根据手机号发送短信
      *
-     * @param context
      * @param phone
      */
-    public static void sendSmsByPhone(Context context, String phone) {
+    public static void sendSmsByPhone(String phone) {
         if (StringUtils.isEmpty(phone)) {
             return;
         }
         Uri uri = Uri.parse("smsto:" + phone);
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         // intent.putExtra("sms_body", "");
-        context.startActivity(intent);
+        jump(intent);
     }
 
     /**
      * 调用系统分享
      */
-    public static void shareToOtherApp(Context context, String title, String content, String dialogTitle) {
+    public static void shareToOtherApp( String title, String content, String dialogTitle) {
         Intent intentItem = new Intent(Intent.ACTION_SEND);
         intentItem.setType("text/plain");
         intentItem.putExtra(Intent.EXTRA_SUBJECT, title);
         intentItem.putExtra(Intent.EXTRA_TEXT, content);
-        intentItem.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(Intent.createChooser(intentItem, dialogTitle));
+        jump(Intent.createChooser(intentItem, dialogTitle));
     }
 
     /**
      * 回到桌面
      */
     public static void startHomeActivity() {
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory(Intent.CATEGORY_HOME);
-        AppUtils.getApp().startActivity(homeIntent);
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        jump(intent);
     }
 
 
@@ -67,7 +75,7 @@ public class IntentUtils {
             return;
         }
         Intent intent = new Intent("android.intent.action.CALL", Uri.parse("tel:" + phone));
-        AppUtils.getApp().startActivity(intent);
+        jump(intent);
     }
 
     /**

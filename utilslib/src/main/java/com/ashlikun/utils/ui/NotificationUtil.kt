@@ -13,6 +13,7 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.other.IntentUtils
 import java.util.*
 
 
@@ -65,13 +66,7 @@ object NotificationUtil {
                 intent.data = Uri.fromParts("package", AppUtils.getApp().packageName, null)
             }
         }
-        val activity = ActivityManager.getForegroundActivity()
-        if (activity != null) {
-            activity.startActivity(intent)
-        } else {
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            AppUtils.getApp().startActivity(intent)
-        }
+        IntentUtils.jump(intent)
 
     }
 
@@ -268,39 +263,6 @@ object NotificationUtil {
         nm.cancelAll()
     }
 
-    /**
-     * 检查是否有通知栏权限
-     */
-    @JvmStatic
-    fun isNotificationEnabled(context: Context): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //8.0手机以上
-            if (NotificationManagerCompat.from(AppUtils.getApp()).importance == NotificationManagerCompat.IMPORTANCE_NONE) {
-                return false
-            }
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return true
-        }
-        val CHECK_OP_NO_THROW = "checkOpNoThrow"
-        val OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION"
-        val mAppOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val appInfo = context.applicationInfo
-        val pkg = context.applicationContext.packageName
-        val uid = appInfo.uid
-        var appOpsClass: Class<*>? = null
-        try {
-            appOpsClass = Class.forName(AppOpsManager::class.java.name)
-            val checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
-                    String::class.java)
-            val opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION)
-            val value = opPostNotificationValue[Int::class.java] as Int
-            return checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) as Int == AppOpsManager.MODE_ALLOWED
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return false
-    }
 
     /********************************************************************************************
      * 下面是手机顶部小灯的通知

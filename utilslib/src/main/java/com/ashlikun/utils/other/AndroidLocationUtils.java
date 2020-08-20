@@ -11,8 +11,9 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
-import androidx.annotation.RequiresPermission;
 import android.util.Log;
+
+import androidx.annotation.RequiresPermission;
 
 import com.ashlikun.utils.AppUtils;
 
@@ -65,7 +66,7 @@ public class AndroidLocationUtils {
      */
     public static void openGpsSettings() {
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        AppUtils.getApp().startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        IntentUtils.jump(intent);
     }
 
     /**
