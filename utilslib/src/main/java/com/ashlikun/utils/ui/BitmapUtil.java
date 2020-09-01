@@ -9,13 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.NinePatchDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.View;
@@ -57,6 +55,24 @@ public class BitmapUtil {
         ByteArrayOutputStream o = new ByteArrayOutputStream();
         b.compress(Bitmap.CompressFormat.JPEG, quality, o);
         return o.toByteArray();
+    }
+
+    /**
+     * 裁剪图片
+     */
+    public static Bitmap cropBitmap(Bitmap bitmap, int height) {
+        return cropBitmap(bitmap, 0, 0, ScreenInfoUtils.width(), height);
+    }
+
+    /**
+     * 裁剪图片
+     */
+    public static Bitmap cropBitmap(Bitmap bitmap, int x, int y, int realWidth, int height) {
+        // 得到图片的宽，高
+        int w = bitmap.getWidth();
+        //按比例计算
+        int newHeight = (int) (height * (w / (realWidth * 1f)));
+        return Bitmap.createBitmap(bitmap, x, y, w, newHeight);
     }
 
     /**
@@ -177,18 +193,18 @@ public class BitmapUtil {
 
     /**
      * drawable转换成bitmap
+     * 如果不是BitmapDrawable 那么要注意宽高
      */
     public static Bitmap drawableToBitmap(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
-        } else if (drawable instanceof NinePatchDrawable) {
+        } else {
             //获得drawable的基本信息
             Bitmap bitmap = Bitmap
                     .createBitmap(
                             drawable.getIntrinsicWidth(),
                             drawable.getIntrinsicHeight(),
-                            drawable.getOpacity() != PixelFormat.OPAQUE ? Config.ARGB_8888
-                                    : Config.ARGB_8888);
+                            Config.ARGB_8888);
             //建立对应的画布
             Canvas canvas = new Canvas(bitmap);
             //设置大小
@@ -197,8 +213,6 @@ public class BitmapUtil {
             //把drawable内容画到画布中
             drawable.draw(canvas);
             return bitmap;
-        } else {
-            return null;
         }
     }
 

@@ -12,10 +12,9 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import static com.ashlikun.utils.other.StringUtils.parseByte2HexStr;
-import static com.ashlikun.utils.other.StringUtils.parseHexStr2Byte;
 
 /**
  * 作者　　: 李坤
@@ -28,6 +27,14 @@ import static com.ashlikun.utils.other.StringUtils.parseHexStr2Byte;
  */
 public class AESUtils {
     private static final String AES = "AES"; //AES 加密
+    /**
+     * 密钥长度
+     */
+    public static final int KEY_LENGTH = 16;
+    /**
+     * 默认填充位数
+     */
+    public static final String DEFAULT_VALUE = "0";
 
     @IntDef({Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE})
     @Retention(RetentionPolicy.SOURCE)
@@ -49,11 +56,11 @@ public class AESUtils {
      * @return 加密/解密结果字符串
      */
     public static String encrypt(String content, String password) {
-        return aes(content, password, Cipher.ENCRYPT_MODE, 128);
+        return aes(content, password, Cipher.ENCRYPT_MODE, KEY_LENGTH);
     }
 
-    public static String encrypt(String content, String password, int bits) {
-        return aes(content, password, Cipher.ENCRYPT_MODE, bits);
+    public static String encrypt(String content, String password, int length) {
+        return aes(content, password, Cipher.ENCRYPT_MODE, length);
     }
 
     /**
@@ -64,11 +71,11 @@ public class AESUtils {
      * @return 加密/解密结果字符串
      */
     public static String decrypt(String content, String password) {
-        return aes(content, password, Cipher.DECRYPT_MODE, 128);
+        return aes(content, password, Cipher.DECRYPT_MODE, KEY_LENGTH);
     }
 
-    public static String decrypt(String content, String password, int bits) {
-        return aes(content, password, Cipher.DECRYPT_MODE, bits);
+    public static String decrypt(String content, String password, int length) {
+        return aes(content, password, Cipher.DECRYPT_MODE, length);
     }
 
     /**
@@ -79,26 +86,63 @@ public class AESUtils {
      * @param type     加密：{@link Cipher#ENCRYPT_MODE}，解密：{@link Cipher#DECRYPT_MODE}
      * @return 加密/解密结果字符串
      */
-    public static String aes(String content, String password, @AESType int type, int bits) {
+    public static String aes(String content, String password, @AESType int type, int length) {
         try {
-
-            SecretKeySpec key = new SecretKeySpec(getRawKey(password.getBytes(), bits / 8), AES);
-            Cipher cipher = Cipher.getInstance(AES);
-            cipher.init(type, key);
+            byte[] contentByte;
             if (type == Cipher.ENCRYPT_MODE) {
-                byte[] byteContent = content.getBytes("utf-8");
-                return parseByte2HexStr(cipher.doFinal(byteContent));
+                contentByte = content.getBytes();
             } else {
-                byte[] byteContent = parseHexStr2Byte(content);
-                return new String(cipher.doFinal(byteContent));
+                //解密的时候是否吧字符串用base64
+                contentByte = Base64Utils.decode(content);
             }
+            password = toMakeKey(password, length, DEFAULT_VALUE);
+            IvParameterSpec iv = new IvParameterSpec(password.getBytes());
+            return new String(aes("AES/CBC/PKCS7Padding",
+                    new SecretKeySpec(password.getBytes("ASCII"), AES), iv, contentByte, type));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 密钥key ,默认补的数字，补全16位数，以保证安全补全至少16位长度,android和ios对接通过
+     *
+     * @param key    密钥key
+     * @param length 密钥应有的长度 16  24  32
+     * @param text   默认补的文本
+     * @return 密钥
+     */
+    public static String toMakeKey(String key, int length, String text) {
+        // 获取密钥长度
+        int strLen = key.length();
+        // 判断长度是否小于应有的长度
+        if (strLen < length) {
+            // 补全位数
+            StringBuilder builder = new StringBuilder();
+            // 将key添加至builder中
+            builder.append(key);
+            // 遍历添加默认文本
+            for (int i = 0; i < length - strLen; i++) {
+                builder.append(text);
+            }
+            // 赋值
+            key = builder.toString();
+        }
+        return key.substring(0, length);
+    }
+
+    private static byte[] aes(String transformation, SecretKey key, IvParameterSpec iv, byte[] content, @AESType int type) {
+        try {
+            Cipher cipher = Cipher.getInstance(transformation);
+            cipher.init(type, key, iv);
+            return cipher.doFinal(content);
         } catch (NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException |
-                UnsupportedEncodingException | InvalidKeyException | NoSuchPaddingException e) {
+                InvalidKeyException | NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
 }

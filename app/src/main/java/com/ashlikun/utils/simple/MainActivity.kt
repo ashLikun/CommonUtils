@@ -62,8 +62,8 @@ class MainActivity : AppCompatActivity() {
 //                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent)
 //                .create()
         textView.text = SpannableUtils.getBuilder("")
-                .append("").setBullet(5, resources.getColor(R.color.black))
-                .append("相册").isNoAppendText(false).setForegroundColor(0xffff0000.toInt())
+                .append("相册").isNoAppendText(false).setForegroundColor(0xffff0000.toInt()).setBullet(5, resources.getColor(R.color.black))
+                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册")
                 .create()
         WorkFlow.Builder()
                 .addWork {
