@@ -8,8 +8,9 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
         android:lineSpacingExtra="0dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
         android:textSize="20dp" />
 
     <ImageView

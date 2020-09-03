@@ -111,8 +111,10 @@ public class SuperToast {
         mToast.setDuration(builder.duration);
         mToast.show();
         if (builder.isFinish) {
-            final DialogTransparency dialog = new DialogTransparency(builder.activity);
-            dialog.show();
+            if (builder.activity != null) {
+                final DialogTransparency dialog = new DialogTransparency(builder.activity);
+                dialog.show();
+            }
             MainHandle.get().postDelayed(new Runnable() {
                 @Override
                 public void run() {
