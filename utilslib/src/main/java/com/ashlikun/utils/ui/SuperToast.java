@@ -110,18 +110,23 @@ public class SuperToast {
         mToast.setView(mView);
         mToast.setDuration(builder.duration);
         mToast.show();
-        if (builder.isFinish) {
+        if (builder.isFinish || builder.isCancelable) {
+            DialogTransparency dialog = null;
             if (builder.activity != null) {
-                final DialogTransparency dialog = new DialogTransparency(builder.activity);
+                dialog = new DialogTransparency(builder.activity);
                 dialog.show();
             }
+            final DialogTransparency dialog2 = dialog;
             MainHandle.get().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (builder.callback != null) {
                         builder.callback.onDismissed();
                     }
-                    if (builder.activity != null && !builder.activity.isFinishing()) {
+                    if (dialog2 != null) {
+                        dialog2.dismiss();
+                    }
+                    if (builder.isFinish && builder.activity != null && !builder.activity.isFinishing()) {
                         builder.activity.finish();
                     }
                 }
@@ -222,6 +227,7 @@ public class SuperToast {
          */
         private boolean isCustom = false;
         boolean isFinish = false;
+        boolean isCancelable = false;
         Activity activity;//要finish的activity
         Callback callback;//toast销毁的回调
         Animator animator;//toast的动画
@@ -292,6 +298,12 @@ public class SuperToast {
                 isFinish = true;
                 this.activity = activity;
             }
+            return this;
+        }
+
+        public Builder setCancelable(Activity activity) {
+            isCancelable = true;
+            this.activity = activity;
             return this;
         }
 
