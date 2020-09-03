@@ -295,6 +295,11 @@ public class SuperToast {
             return this;
         }
 
+        public Builder setFinish() {
+            isFinish = true;
+            return this;
+        }
+
         public Builder setFinishCallback(Callback callback) {
             if (callback != null) {
                 this.callback = callback;
