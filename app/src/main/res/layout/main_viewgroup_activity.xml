@@ -4,14 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ashlikun.utils.simple.TextViewCompat
-        android:id="@+id/text"
+    <FrameLayout
+        android:id="@+id/textRoot"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lineSpacingExtra="0dp"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        android:textSize="20dp" />
+        android:layout_height="wrap_content">
+
+        <com.ashlikun.utils.simple.TextViewCompat
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="0dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/imageView"

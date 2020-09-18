@@ -22,6 +22,7 @@ import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
 import com.ashlikun.utils.ui.extend.windowBrightness
+import kotlinx.android.synthetic.main.main_viewgroup_activity.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -65,7 +66,20 @@ class MainActivity : AppCompatActivity() {
                 .append("相册\n").setForegroundColor(0xffff0000.toInt()).setBullet(20, resources.getColor(R.color.black), 30)
                 .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n").setForegroundColor(0xffff0000.toInt()).setBullet(20, resources.getColor(R.color.black), 30)
                 .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册").setBullet(20, resources.getColor(R.color.black), 30)
+                .append("点击事件").setBullet(20, resources.getColor(R.color.black), 30).setClickSpan(object : XClickableSpan() {
+                    override fun onClick(widget: View) {
+                        LogUtils.e("11111111111点击事件11")
+                    }
+
+                })
                 .create()
+        textView.setMovementMethods(FocusLinkMovementMethod.getInstance())
+        textView.setOnClickListener {
+            LogUtils.e("222222222222点击事件")
+        }
+//        textRoot.setOnClickListener {
+//            LogUtils.e("333333333333333点击事件")
+//        }
         WorkFlow.Builder()
                 .addWork {
                     object : Thread() {

@@ -23,6 +23,8 @@ import android.widget.TextView;
 public class FocusLinkMovementMethod extends LinkMovementMethod {
 
     private static FocusLinkMovementMethod sInstance;
+    public boolean clickDown = false;
+    public boolean clickUp = false;
 
     public static MovementMethod getInstance() {
         if (sInstance == null) {
@@ -55,6 +57,7 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer,
                                 MotionEvent event) {
+        clickUp = false;
         int action = event.getAction();
         //是否设置选择
         boolean isOpenSelect = true;
@@ -84,12 +87,15 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
                         Selection.removeSelection(buffer);
                     }
                     links[0].onClick(widget);
+                    clickUp = true;
+                    return false;
                 } else if (action == MotionEvent.ACTION_DOWN) {
                     if (isOpenSelect) {
                         Selection.setSelection(buffer,
                                 buffer.getSpanStart(links[0]),
                                 buffer.getSpanEnd(links[0]));
                     }
+                    clickDown = true;
                 }
                 return true;
             } else {
@@ -103,7 +109,8 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
         if (isOpenSelect) {
             return super.onTouchEvent(widget, buffer, event);
         }
-        //如果调用父类会滚动
-        return true;
+        clickDown = false;
+        //true :调用TextView,false 事件结束
+        return false;
     }
 }
