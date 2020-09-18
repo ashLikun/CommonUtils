@@ -27,6 +27,7 @@ public abstract class XClickableSpan extends ClickableSpan {
     @Override
     public void updateDrawState(TextPaint ds) {
         if (colorIsSet) {
+            //设定的是span超链接的文本颜色，而不是点击后的颜色，点击后的背景颜色(HighLightColor)属于TextView的属性，Android4.0以上默认是淡绿色，低版本的是黄色。
             ds.setColor(color);
         }
         ds.setUnderlineText(false);

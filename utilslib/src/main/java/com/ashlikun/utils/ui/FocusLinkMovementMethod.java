@@ -40,24 +40,9 @@ public class FocusLinkMovementMethod extends LinkMovementMethod implements View.
         return sInstance;
     }
 
-    @Override
-    protected boolean up(TextView widget, Spannable buffer) {
-        return false;
-    }
-
-    @Override
-    protected boolean down(TextView widget, Spannable buffer) {
-        return false;
-    }
-
-    @Override
-    protected boolean left(TextView widget, Spannable buffer) {
-        return false;
-    }
-
-    @Override
-    protected boolean right(TextView widget, Spannable buffer) {
-        return false;
+    //是否设置选择
+    public boolean isOpenSelect() {
+        return true;
     }
 
     @Override
@@ -65,11 +50,7 @@ public class FocusLinkMovementMethod extends LinkMovementMethod implements View.
                                 MotionEvent event) {
         clickUp = false;
         int action = event.getAction();
-        //是否设置选择
-        boolean isOpenSelect = true;
-        if (widget.getClass().getSimpleName().equals("TextViewCompat") || widget.getLineSpacingExtra() > 0 || widget.getLineSpacingMultiplier() != 1) {
-            isOpenSelect = false;
-        }
+        boolean isOpenSelect = isOpenSelect();
         if (action == MotionEvent.ACTION_UP ||
                 action == MotionEvent.ACTION_DOWN) {
             int x = (int) event.getX();
@@ -112,12 +93,9 @@ public class FocusLinkMovementMethod extends LinkMovementMethod implements View.
         } else if (action != MotionEvent.ACTION_MOVE) {
             Selection.removeSelection(buffer);
         }
-        if (isOpenSelect) {
-            return super.onTouchEvent(widget, buffer, event);
-        }
         clickDown = false;
         //true :调用TextView,false 事件结束
-        return false;
+        return widget.isClickable() && super.onTouchEvent(widget, buffer, event);
     }
 
 

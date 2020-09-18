@@ -36,6 +36,7 @@ dependencies {
     api rootProject.ext.designVersion
     api project(':utilslib')
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "androidx.constraintlayout:constraintlayout:+"
     //kotlin 协程
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines"
 }
