@@ -7,6 +7,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -20,11 +21,16 @@ import android.widget.TextView;
  * 满足一个就不设置
  */
 
-public class FocusLinkMovementMethod extends LinkMovementMethod {
+public class FocusLinkMovementMethod extends LinkMovementMethod implements View.OnLongClickListener {
 
     private static FocusLinkMovementMethod sInstance;
     public boolean clickDown = false;
     public boolean clickUp = false;
+
+    @Override
+    public boolean onLongClick(View v) {
+        return clickUp;
+    }
 
     public static MovementMethod getInstance() {
         if (sInstance == null) {
@@ -113,4 +119,6 @@ public class FocusLinkMovementMethod extends LinkMovementMethod {
         //true :调用TextView,false 事件结束
         return false;
     }
+
+
 }
