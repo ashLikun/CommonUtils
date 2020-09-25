@@ -16,25 +16,49 @@ import com.ashlikun.utils.ui.ToastUtils
  *
  * 功能介绍：ui页面的一些扩展函数
  */
-inline fun Int.dp() = DimensUtils.dip2px(this.toFloat())
-inline fun Float.dp() = DimensUtils.dip2px(this)
+inline val Int.dp
+    get() = DimensUtils.dip2px(this.toFloat())
 
-inline fun Int.sp() = DimensUtils.sp2px(this.toFloat())
-inline fun Float.sp() = DimensUtils.sp2px(this)
+inline val Float.dp
+    get() = DimensUtils.dip2px(this)
 
-inline fun Int.px2dip() = DimensUtils.px2dip(this.toFloat())
-inline fun Float.px2dip() = DimensUtils.px2dip(this)
+inline val Int.sp
+    get() = DimensUtils.sp2px(this.toFloat())
+inline val Float.sp
+    get() = DimensUtils.sp2px(this)
 
-inline fun Int.px2sp() = DimensUtils.px2sp(this.toFloat())
-inline fun Float.px2sp() = DimensUtils.px2sp(this)
+inline val Int.px2dip
+    get() = DimensUtils.px2dip(this.toFloat())
+inline val Float.px2dip
+    get() = DimensUtils.px2dip(this)
+
+inline val Int.px2sp
+    get() = DimensUtils.px2sp(this.toFloat())
+inline val Float.px2sp
+    get() = DimensUtils.px2sp(this)
 
 /**
  * ResUtils
  */
-inline fun Int.resColor(context: Context? = null) = if (context == null) ResUtils.getColor(this) else ResUtils.getColor(context, this)
-inline fun Int.resDrawable(context: Context? = null) = if (context == null) ResUtils.getDrawable(this) else ResUtils.getDrawable(context, this)
-inline fun Int.resString(context: Context? = null) = if (context == null) ResUtils.getString(this) else ResUtils.getString(context, this)
-inline fun Int.resDimension(context: Context? = null) = if (context == null) ResUtils.getDimension(this) else ResUtils.getDimension(context, this)
+inline val Int.resColor
+    get() = ResUtils.getColor(this)
+
+inline fun Int.resColor(context: Context) = ResUtils.getColor(context, this)
+
+inline val Int.resDrawable
+    get() = ResUtils.getDrawable(this)
+
+inline fun Int.resDrawable(context: Context) = ResUtils.getDrawable(context, this)
+
+inline val Int.resString
+    get() = ResUtils.getString(this)
+
+inline fun Int.resString(context: Context) = ResUtils.getString(context, this)
+
+inline val Int.resDimension
+    get() = ResUtils.getDimension(this)
+
+inline fun Int.resDimension(context: Context) = ResUtils.getDimension(context, this)
 
 /**
  * Toast
