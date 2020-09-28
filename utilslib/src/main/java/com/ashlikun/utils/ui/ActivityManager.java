@@ -89,8 +89,10 @@ public class ActivityManager {
             if (activityStack.contains(activity)) {
                 // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
                 activityStack.remove(activity);
-                activity.finish();
-                activity = null;
+                if (!activity.isFinishing()) {
+                    activity.finish();
+                    activity = null;
+                }
             }
         }
     }
@@ -199,7 +201,6 @@ public class ActivityManager {
             activity = activityStack.lastElement();
             if (activity != null && activity.isFinishing()) {
                 activityStack.remove(activity);
-                activity = null;
                 return currentActivity();
             }
         }
@@ -229,6 +230,20 @@ public class ActivityManager {
             activityStack = new Stack<Activity>();
         }
         activityStack.addElement(activity);
+    }
+
+    /**
+     * 将当前Activity从栈中退出
+     *
+     * @param activity
+     */
+    public void removeActivity(Activity activity) {
+        if (activity != null) {
+            if (activityStack.contains(activity)) {
+                // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
+                activityStack.remove(activity);
+            }
+        }
     }
 
     /**

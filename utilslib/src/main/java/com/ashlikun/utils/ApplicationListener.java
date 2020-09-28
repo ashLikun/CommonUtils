@@ -95,7 +95,7 @@ public class ApplicationListener implements Application.ActivityLifecycleCallbac
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        ActivityManager.getInstance().exitActivity(activity);
+        ActivityManager.getInstance().removeActivity(activity);
     }
 
     public interface OnChangListener {
