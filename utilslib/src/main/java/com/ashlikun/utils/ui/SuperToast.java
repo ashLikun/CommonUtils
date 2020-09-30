@@ -84,18 +84,20 @@ public class SuperToast {
         }
     }
 
-    private static void initToast() {
+    private static void initToast(final Builder builder) {
         if (mToast == null) {
             mToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         } else {
-            mToast.cancel();
+            if (builder.cancelBefore()) {
+                mToast.cancel();
+            }
             mToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         }
     }
 
     //要在主线程
     private void cretae(final Builder builder) {
-        initToast();
+        initToast(builder);
         View mView;
         if (builder.layoutId == R.layout.toast_super &&
                 mToast.getView() != null && TOAST_VIEW_TAG.equals(mToast.getView().getTag())) {
@@ -228,6 +230,8 @@ public class SuperToast {
         private boolean isCustom = false;
         boolean isFinish = false;
         boolean isCancelable = false;
+        //是否取消之前正在显示的
+        boolean isCancelBefore = true;
         Activity activity;//要finish的activity
         Callback callback;//toast销毁的回调
         Animator animator;//toast的动画
@@ -307,6 +311,16 @@ public class SuperToast {
             return this;
         }
 
+        /**
+         * 是否取消之前正在显示的
+         *
+         * @return
+         */
+        public Builder setCancelBefore(boolean isCancelBefore) {
+            this.isCancelBefore = isCancelBefore;
+            return this;
+        }
+
         public Builder setFinish() {
             isFinish = true;
             return this;
@@ -318,6 +332,10 @@ public class SuperToast {
                 isFinish = true;
             }
             return this;
+        }
+
+        public boolean cancelBefore() {
+            return isCancelBefore;
         }
 
         public Builder setAnimator(Animator animator) {
@@ -391,6 +409,8 @@ public class SuperToast {
 
             new SuperToast(this);
         }
+
+
     }
 
     /**

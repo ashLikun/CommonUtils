@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onClick(widget: View) {
             SuperToast.get("aaaaaaa").info()
+            SuperToast.get("bbbbbb").info()
             val intent = Intent(this@MainActivity, NotificationActivity::class.java)
             NotificationUtil.notification(123, R.mipmap.ic_launcher_round, "标题", "你收到通知啦", intent = intent)
         }
@@ -133,7 +134,8 @@ class MainActivity : AppCompatActivity() {
 
     val ss = "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
     fun onView4Click(view: View) {
-        SuperToast.showInfoMessage("aaaaaaaaaaaaaaaaaa")
+        SuperToast.get("aaaaaaa").info()
+        SuperToast.get("bbbbbb").info()
         val logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
                 DimensUtils.dip2px(this, 50f),
                 DimensUtils.dip2px(this, 50f))
