@@ -42,6 +42,10 @@ public class ToastUtils {
         Toast.makeText(getApp(), content, Toast.LENGTH_LONG).show();
     }
 
+    public static void show(String text, int duration) {
+        show(text, false, duration);
+    }
+
     public static void show(String text, boolean cancelBefore, int duration) {
         if (TextUtils.isEmpty(text)) {
             return;
