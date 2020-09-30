@@ -134,8 +134,9 @@ class MainActivity : AppCompatActivity() {
 
     val ss = "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
     fun onView4Click(view: View) {
-        SuperToast.get("aaaaaaa").info()
-        SuperToast.get("bbbbbb").info()
+        ThreadUtils.execute {
+            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
+        }
         val logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
                 DimensUtils.dip2px(this, 50f),
                 DimensUtils.dip2px(this, 50f))

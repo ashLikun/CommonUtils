@@ -1,12 +1,13 @@
 package com.ashlikun.utils.ui;
 
 
-import android.annotation.SuppressLint;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.ashlikun.utils.other.DimensUtils;
+import com.ashlikun.utils.other.MainHandle;
 
 import static com.ashlikun.utils.AppUtils.getApp;
 
@@ -18,7 +19,7 @@ public class ToastUtils {
     public static int LENGTH_LONG = Toast.LENGTH_LONG;
 
     public static Toast getMyToast() {
-        initToast();
+        initToast(false);
         return myToast;
     }
 
@@ -41,45 +42,71 @@ public class ToastUtils {
         Toast.makeText(getApp(), content, Toast.LENGTH_LONG).show();
     }
 
-    public static void show(String text, int duration) {
+    public static void show(String text, boolean cancelBefore, int duration) {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        initToast();
-        if (myToast != null) {
-            myToast.setGravity(Gravity.BOTTOM, DimensUtils.dip2px(getApp(), 0),
-                    DimensUtils.dip2px(getApp(), 60));
-            myToast.setText(text);
-            myToast.setDuration(duration);
-            myToast.show();
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            MainHandle.get().post(new Runnable() {
+                @Override
+                public void run() {
+                    cretae(text, cancelBefore, duration, Gravity.BOTTOM, 0, DimensUtils.dip2px(getApp(), 20));
+                }
+            });
+        } else {
+            cretae(text, cancelBefore, duration, Gravity.BOTTOM, 0, DimensUtils.dip2px(getApp(), 20));
         }
     }
 
 
     public static void showLong(String text) {
-        show(text, LENGTH_LONG);
+        show(text, false, LENGTH_LONG);
     }
 
     public static void showShort(String text) {
-        show(text, LENGTH_SHORT);
+        show(text, false, LENGTH_SHORT);
     }
 
-    @SuppressLint("ShowToast")
-    private static void initToast() {
+    public static void showLong(String text, boolean cancelBefore) {
+        show(text, cancelBefore, LENGTH_LONG);
+    }
+
+    public static void showShort(String text, boolean cancelBefore) {
+        show(text, cancelBefore, LENGTH_SHORT);
+    }
+
+    private static void initToast(boolean cancelBefore) {
         if (myToast == null) {
             myToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         } else {
-            myToast.cancel();
+            if (cancelBefore) {
+                myToast.cancel();
+            }
             myToast = Toast.makeText(getApp(), "", Toast.LENGTH_SHORT);
         }
     }
 
-    public static void show(String text, int duration,
+    public static void show(String text, boolean cancelBefore, int duration,
                             int gravity, int xOffsetDp, int yOffsetDp) {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        initToast();
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            MainHandle.get().post(new Runnable() {
+                @Override
+                public void run() {
+                    cretae(text, cancelBefore, duration, gravity, xOffsetDp, yOffsetDp);
+                }
+            });
+        } else {
+            cretae(text, cancelBefore, duration, gravity, xOffsetDp, yOffsetDp);
+        }
+    }
+
+    //要在主线程
+    public static void cretae(String text, boolean cancelBefore, int duration,
+                              int gravity, int xOffsetDp, int yOffsetDp) {
+        initToast(cancelBefore);
         if (myToast != null) {
             myToast.setGravity(gravity, DimensUtils.dip2px(getApp(), xOffsetDp),
                     DimensUtils.dip2px(getApp(), yOffsetDp));
@@ -87,7 +114,6 @@ public class ToastUtils {
             myToast.setDuration(duration);
             myToast.show();
         }
-
     }
 
 
