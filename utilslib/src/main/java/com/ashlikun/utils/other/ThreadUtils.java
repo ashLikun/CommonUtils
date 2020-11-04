@@ -28,6 +28,6 @@ public class ThreadUtils {
      * 切换到主线程
      */
     public static void toMain(Runnable command) {
-        MainHandle.get().post(command);
+        MainHandle.post(command);
     }
 }

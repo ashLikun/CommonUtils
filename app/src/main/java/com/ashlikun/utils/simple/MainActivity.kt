@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.encryption.AESUtils
+import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.taskAsync
 import com.ashlikun.utils.other.coroutines.taskLaunchMain
@@ -46,13 +47,17 @@ class MainActivity : AppCompatActivity() {
         statusBarCompat.setStatusBarColor(-0x1)
         imageView = findViewById(R.id.imageView)
         textView = findViewById(R.id.text)
-
+        buttonJump.setOnClickListener {
+            val intent = Intent(this, Main2Activity::class.java)
+            startActivity(intent)
+        }
         val drawable = GradientDrawable()
         val size = DimensUtils.dip2px(this, 4f)
         drawable.setBounds(0, 0, size, size)
         drawable.setColor(-0x5a3b1)
         windowBrightness = 10f
         drawable.cornerRadius = size / 2f
+        LogUtils.e("aaaaaaaaaaaaaa " + ProcessUtils.getCurProcessName());
         DeviceUtil.get()
 //        textView.text = SpannableUtils.getBuilder("")
 //                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).changImageSize()
@@ -186,7 +191,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startPost() {
         if (currentProgress <= 100) {
-            MainHandle.get().postDelayed(runable, 1000)
+            MainHandle.postDelayed(runable, 1000)
         }
     }
 

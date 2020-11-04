@@ -15,13 +15,6 @@ import androidx.core.app.NotificationManagerCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.IntentUtils
 import java.util.*
-
-
-/**
- * @author MaTianyu
- * @date 2014-11-19
- */
-
 /**
  * 作者　　: 李坤
  * 创建时间: 2017/8/7 15:07

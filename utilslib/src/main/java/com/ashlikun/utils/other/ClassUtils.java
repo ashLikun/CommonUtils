@@ -156,7 +156,7 @@ public class ClassUtils {
      * @param methodNames 要反射的方法名称
      */
     public static Object getMethod(Object object, String methodNames) {
-        return getMethod(object, methodNames, null, null);
+        return getMethod(object, methodNames, null);
     }
 
     public static Object getMethod(Object object, String methodName, Class<?>[] parameterTypes, Object... args) {
@@ -168,6 +168,43 @@ public class ClassUtils {
             if (method != null) {
                 method.setAccessible(true);
                 return method.invoke(object, args);
+            }
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 反射静态方法
+     *
+     * @param claxx      要反射的对象
+     * @param methodNames 要反射的方法名称
+     */
+    public static Object getMethod(Class<?> claxx, String methodNames) {
+        return getMethod(claxx, methodNames, null);
+    }
+
+    /**
+     * 反射静态方法
+     *
+     * @param claxx         要反射的对象
+     * @param methodName    要反射的方法名称
+     * @param parameterTypes 参数类型
+     * @param args           参数
+     * @return
+     */
+    public static Object getMethod(Class<?> claxx, String methodName, Class<?>[] parameterTypes, Object... args) {
+        if (claxx == null || methodName == null || methodName.isEmpty()) {
+            return null;
+        }
+        try {
+            Method method = getAllDeclaredMethod(claxx, methodName, parameterTypes);
+            if (method != null) {
+                method.setAccessible(true);
+                return method.invoke(null, args);
             }
         } catch (InvocationTargetException e) {
             e.printStackTrace();

@@ -32,6 +32,16 @@
         android:src="@mipmap/timg"></ImageView>
 
     <Button
+        android:id="@+id/buttonJump"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffff00"
+        android:gravity="center"
+        android:onClick="onView4Click"
+        android:padding="10dp"
+        android:text="跳转Main2" />
+
+    <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

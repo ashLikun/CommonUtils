@@ -51,7 +51,7 @@ public class ToastUtils {
             return;
         }
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            MainHandle.get().post(new Runnable() {
+            MainHandle.post(new Runnable() {
                 @Override
                 public void run() {
                     cretae(text, cancelBefore, duration, Gravity.BOTTOM, 0, DimensUtils.dip2px(getApp(), 20));
@@ -96,7 +96,7 @@ public class ToastUtils {
             return;
         }
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            MainHandle.get().post(new Runnable() {
+            MainHandle.post(new Runnable() {
                 @Override
                 public void run() {
                     cretae(text, cancelBefore, duration, gravity, xOffsetDp, yOffsetDp);

@@ -2,13 +2,19 @@ package com.ashlikun.utils.main;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Process;
+
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 
 import com.ashlikun.utils.AppUtils;
+import com.ashlikun.utils.other.ClassUtils;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +29,9 @@ import java.util.Set;
  * 功能介绍：进程相关工具
  */
 public class ProcessUtils {
+    //缓存
+    private static String currentProcessName;
+
     /**
      * 是否主进程正在运行
      *
@@ -57,6 +66,60 @@ public class ProcessUtils {
      * @return
      */
     public static String getCurProcessName() {
+
+        if (!TextUtils.isEmpty(currentProcessName)) {
+            return currentProcessName;
+        }
+
+        //1)通过Application的API获取当前进程名
+        currentProcessName = getCurrentProcessNameByApplication();
+        if (!TextUtils.isEmpty(currentProcessName)) {
+            return currentProcessName;
+        }
+
+        //2)通过反射ActivityThread获取当前进程名
+        currentProcessName = getCurrentProcessNameByActivityThread();
+        if (!TextUtils.isEmpty(currentProcessName)) {
+            return currentProcessName;
+        }
+
+        //3)通过ActivityManager获取当前进程名
+        currentProcessName = getCurrentProcessNameByActivityManager();
+
+        return currentProcessName;
+    }
+
+    /**
+     * 通过Application新的API获取进程名，无需反射，无需IPC，效率最高。
+     */
+    public static String getCurrentProcessNameByApplication() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return Application.getProcessName();
+        }
+        return null;
+    }
+
+    /**
+     * 通过反射ActivityThread获取进程名，避免了ipc
+     */
+    public static String getCurrentProcessNameByActivityThread() {
+
+        try {
+            Class cla = Class.forName("android.app.ActivityThread", false, Application.class.getClassLoader());
+            Object currentProcessName = ClassUtils.getMethod(cla, "currentProcessName");
+            if (currentProcessName != null) {
+                return currentProcessName.toString();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 通过ActivityManager 获取进程名，需要IPC通信
+     */
+    public static String getCurrentProcessNameByActivityManager() {
         int pid = Process.myPid();
         //获取app进程
         List<ActivityManager.RunningAppProcessInfo> appProcessInfos = ((android.app.ActivityManager) AppUtils.getApp()

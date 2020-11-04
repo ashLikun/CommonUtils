@@ -31,7 +31,7 @@ class WorkNode(var worker: Worker) : Node {
         if (ThreadUtils.isMainThread()) {
             worker.invoke(this)
         } else {
-            MainHandle.get().post { worker.invoke(this) }
+            MainHandle.post { worker.invoke(this) }
         }
     }
 

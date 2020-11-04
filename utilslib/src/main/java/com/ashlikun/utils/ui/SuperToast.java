@@ -73,7 +73,7 @@ public class SuperToast {
 
     private SuperToast(final Builder builder) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            MainHandle.get().post(new Runnable() {
+            MainHandle.post(new Runnable() {
                 @Override
                 public void run() {
                     cretae(builder);
@@ -119,7 +119,7 @@ public class SuperToast {
                 dialog.show();
             }
             final DialogTransparency dialog2 = dialog;
-            MainHandle.get().postDelayed(new Runnable() {
+            MainHandle.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (builder.callback != null) {
