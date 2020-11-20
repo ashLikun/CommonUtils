@@ -1,5 +1,11 @@
 package com.ashlikun.utils.bug;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
+import android.os.Build;
+
+import com.ashlikun.utils.other.LogUtils;
 import com.ashlikun.utils.other.ThreadPoolManage;
 
 import java.lang.reflect.Field;
@@ -42,5 +48,70 @@ public class BugUtils {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 当targetSDKVersion为26或者27时，在 Android 8.0 的设备上，一些设置了windowIsTranslucent标志，将背景设为透明，同事将屏幕方向锁定的Activity会崩溃    8.1之后已经修复
+     *
+     * @param activity
+     * @return
+     */
+
+
+    public static void orientationBug8_0(Activity activity) {
+        /**
+         *
+         if (getApplicationInfo().targetSdkVersion > O && mActivityInfo.isFixedOrientation()) {
+                    final TypedArray ta = obtainStyledAttributes(com.android.internal.R.styleable.Window);
+                    final boolean isTranslucentOrFloating = ActivityInfo.isTranslucentOrFloating(ta);
+                    ta.recycle();
+
+                    if (isTranslucentOrFloating) {
+                        throw new IllegalStateException(
+                            "Only fullscreen opaque activities can request orientation");
+                    }
+         }
+         */
+        if (activity.getApplicationInfo().targetSdkVersion > Build.VERSION_CODES.O && Build.VERSION.SDK_INT == Build.VERSION_CODES.O
+                && !isTranslucentOrFloating(activity)) {
+            boolean result = fixOrientation(activity);
+            LogUtils.e("onCreate fixOrientation when Oreo, result = " + result);
+        }
+    }
+
+    public static boolean fixOrientation(Activity activity) {
+        try {
+            Field field = Activity.class.getDeclaredField("mActivityInfo");
+            field.setAccessible(true);
+            ActivityInfo o = (ActivityInfo) field.get(activity);
+            o.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+            field.setAccessible(false);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    /**
+     * 是否是透明
+     *
+     * @param activity
+     * @return
+     */
+    public static boolean isTranslucentOrFloating(Activity activity) {
+        boolean isTranslucentOrFloating = false;
+        try {
+            int[] styleableRes = (int[]) Class.forName("com.android.internal.R$styleable").getField("Window").get(null);
+            final TypedArray ta = activity.obtainStyledAttributes(styleableRes);
+            Method m = ActivityInfo.class.getMethod("isTranslucentOrFloating", TypedArray.class);
+            m.setAccessible(true);
+            isTranslucentOrFloating = (boolean) m.invoke(null, ta);
+            m.setAccessible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isTranslucentOrFloating;
     }
 }
