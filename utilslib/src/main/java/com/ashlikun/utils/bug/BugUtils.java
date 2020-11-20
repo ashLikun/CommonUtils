@@ -56,8 +56,6 @@ public class BugUtils {
      * @param activity
      * @return
      */
-
-
     public static void orientationBug8_0(Activity activity) {
         /**
          *
@@ -72,8 +70,9 @@ public class BugUtils {
                     }
          }
          */
+        //适配8.0  并且只在8.0 不能同时固定屏幕和透明背景
         if (activity.getApplicationInfo().targetSdkVersion > Build.VERSION_CODES.O && Build.VERSION.SDK_INT == Build.VERSION_CODES.O
-                && !isTranslucentOrFloating(activity)) {
+                && isTranslucentOrFloating(activity)) {
             boolean result = fixOrientation(activity);
             LogUtils.e("onCreate fixOrientation when Oreo, result = " + result);
         }
