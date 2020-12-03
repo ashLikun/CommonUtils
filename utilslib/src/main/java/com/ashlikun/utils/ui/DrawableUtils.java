@@ -59,6 +59,7 @@ public class DrawableUtils {
         return colorList;
     }
 
+
     /**
      * 同上
      */
@@ -70,6 +71,7 @@ public class DrawableUtils {
         ColorStateList colorList = new ColorStateList(states, colors);
         return colorList;
     }
+
 
     /**
      * 同上
@@ -410,6 +412,64 @@ public class DrawableUtils {
         return changDrawSize(drawable, (int) (height / drawHeight * drawWidth), height);
     }
 
+    public static final class BuilderGradient {
+        Integer fillColor;
+        Integer strokeColor = null;
+        float[] roundRadiu = null;
+        float roundRadius;
+        int strokeWidth;
+
+        public BuilderGradient(int color) {
+            this.fillColor = color;
+        }
+
+        public BuilderGradient strokeColor(int color) {
+            this.strokeColor = color;
+            return this;
+        }
+
+        /**
+         * 圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 dp
+         */
+        public BuilderGradient roundRadiu(float[] roundRadiu) {
+            this.roundRadiu = roundRadiu;
+            return this;
+        }
+
+        public BuilderGradient roundRadius(float roundRadius) {
+            this.roundRadius = roundRadius;
+            return this;
+        }
+
+        public BuilderGradient strokeWidth(int strokeWidth) {
+            this.strokeWidth = strokeWidth;
+            return this;
+        }
+
+        public GradientDrawable create() {
+            GradientDrawable drawable = new GradientDrawable();
+            if (fillColor != null) {
+                drawable.setColor(fillColor);
+            }
+            if (strokeColor != null) {
+                drawable.setStroke(strokeWidth, strokeColor);
+            }
+            if (roundRadiu != null && roundRadiu.length >= 8) {
+                drawable.setCornerRadii(roundRadiu);
+            } else if (roundRadiu != null && roundRadiu.length == 4) {
+                drawable.setCornerRadii(roundRadiu);
+                float[] round = new float[]{roundRadiu[0], roundRadiu[0],
+                        roundRadiu[1], roundRadiu[1],
+                        roundRadiu[2], roundRadiu[2],
+                        roundRadiu[3], roundRadiu[3]};
+                drawable.setCornerRadii(round);
+            } else {
+                drawable.setCornerRadius(roundRadius);
+            }
+            return drawable;
+        }
+    }
+
     /**
      * 创建一个TextView的上下左右Drawable
      *
@@ -421,6 +481,10 @@ public class DrawableUtils {
 
     public static BuilderTvd createTextDraw(TextView textView, @DrawableRes int drawable) {
         return new BuilderTvd(textView, textView.getResources().getDrawable(drawable));
+    }
+
+    public static BuilderGradient createGradientDrawable(int color) {
+        return new BuilderGradient(color);
     }
 
 

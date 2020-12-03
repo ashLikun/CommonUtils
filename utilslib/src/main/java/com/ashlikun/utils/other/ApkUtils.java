@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -119,17 +119,18 @@ public class ApkUtils {
     /**
      * 这个apk是否已经安装了
      *
-     * @param action   ACTION_VIEW.
-     * @param category
+     * @param packagename
      * @return {@code true}: yes<br>{@code false}: no
      */
-    public static boolean isAppInstalled(@NonNull final String action,
-                                         @NonNull final String category) {
-        Intent intent = new Intent(action);
-        intent.addCategory(category);
-        PackageManager pm = AppUtils.getApp().getPackageManager();
-        ResolveInfo info = pm.resolveActivity(intent, 0);
-        return info != null;
+    public static boolean isAppInstalled(@NonNull final String packagename) {
+        PackageInfo packageInfo;
+        try {
+            packageInfo = AppUtils.getApp().getPackageManager().getPackageInfo(packagename, 0);
+        } catch (Exception e) {
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        return packageInfo != null;
     }
 
     /**
