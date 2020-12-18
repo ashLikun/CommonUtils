@@ -27,7 +27,7 @@ import com.ashlikun.utils.other.DimensUtils;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：Drawable 常用的工具
- */ActivityManager
+ */
 public class DrawableUtils {
 
     /**
