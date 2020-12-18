@@ -56,7 +56,7 @@ public class ActivityManager {
             T a = (T) iterator.next();
             if (a != null && a.isFinishing()) {
                 activityStack.remove(a);
-                returnAct.remove(a);
+                iterator.remove();
             }
         }
         return returnAct;

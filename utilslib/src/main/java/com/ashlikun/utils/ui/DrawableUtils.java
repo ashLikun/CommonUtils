@@ -27,7 +27,7 @@ import com.ashlikun.utils.other.DimensUtils;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：Drawable 常用的工具
- */
+ */ActivityManager
 public class DrawableUtils {
 
     /**
@@ -436,6 +436,17 @@ public class DrawableUtils {
             return this;
         }
 
+        /**
+         * 圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 dp
+         */
+        public BuilderGradient roundRadiu(int[] roundRadiu) {
+            this.roundRadiu = new float[roundRadiu.length];
+            for (int i = 0; i < roundRadiu.length; i++) {
+                this.roundRadiu[i] = roundRadiu[i];
+            }
+            return this;
+        }
+
         public BuilderGradient roundRadius(float roundRadius) {
             this.roundRadius = roundRadius;
             return this;
@@ -457,7 +468,6 @@ public class DrawableUtils {
             if (roundRadiu != null && roundRadiu.length >= 8) {
                 drawable.setCornerRadii(roundRadiu);
             } else if (roundRadiu != null && roundRadiu.length == 4) {
-                drawable.setCornerRadii(roundRadiu);
                 float[] round = new float[]{roundRadiu[0], roundRadiu[0],
                         roundRadiu[1], roundRadiu[1],
                         roundRadiu[2], roundRadiu[2],

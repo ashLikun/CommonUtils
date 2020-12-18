@@ -109,6 +109,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 .build()
                 .start()
+
+        buttonJump.background = DrawableUtils.createGradientDrawable(0xffff0000.toInt())
+                .roundRadiu(floatArrayOf(30f,30f,0f,20f))
+                .create()
     }
 
     fun onView1Click(view: View) {
