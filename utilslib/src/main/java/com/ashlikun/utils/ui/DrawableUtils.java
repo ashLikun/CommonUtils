@@ -300,7 +300,7 @@ public class DrawableUtils {
         }
 
         public RippleBuilder setEnableColor(@ColorRes int enable) {
-            this.enableDrawable = new ColorDrawable(getColor(enable));
+            this.enableDrawable = new ColorDrawable(ResUtils.getColor(context, enable));
             return this;
         }
 
@@ -321,7 +321,7 @@ public class DrawableUtils {
         }
 
         public RippleBuilder setNormalColor(@ColorRes int normalColor) {
-            this.normalDrawable = new ColorDrawable(getColor(normalColor));
+            this.normalDrawable = new ColorDrawable(ResUtils.getColor(context, normalColor));
             return this;
         }
 
@@ -334,9 +334,9 @@ public class DrawableUtils {
         }
 
         public RippleBuilder setPressedColor(@ColorRes int pressedColor) {
-            this.pressedDrawable = new ColorDrawable(getColor(pressedColor));
+            this.pressedDrawable = new ColorDrawable(ResUtils.getColor(context, pressedColor));
             if (rippleColor == null) {
-                rippleColor = ColorStateList.valueOf(getColor(pressedColor));
+                rippleColor = ColorStateList.valueOf(ResUtils.getColor(context, pressedColor));
             }
             return this;
         }
@@ -371,12 +371,7 @@ public class DrawableUtils {
             }
         }
 
-        private int getColor(@ColorRes int colorId) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return context.getResources().getColor(colorId, context.getTheme());
-            }
-            return context.getResources().getColor(colorId);
-        }
+
     }
 
 
@@ -490,7 +485,7 @@ public class DrawableUtils {
     }
 
     public static BuilderTvd createTextDraw(TextView textView, @DrawableRes int drawable) {
-        return new BuilderTvd(textView, textView.getResources().getDrawable(drawable));
+        return new BuilderTvd(textView, ResUtils.getDrawable(textView.getContext(),drawable));
     }
 
     public static BuilderGradient createGradientDrawable(int color) {

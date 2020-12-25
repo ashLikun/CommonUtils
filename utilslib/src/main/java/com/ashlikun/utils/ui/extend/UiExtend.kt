@@ -44,21 +44,28 @@ inline val Int.resColor
     get() = ResUtils.getColor(this)
 
 inline fun Int.resColor(context: Context) = ResUtils.getColor(context, this)
+inline fun Context.resColor(resId: Int) = ResUtils.getColor(this, resId)
+
 
 inline val Int.resDrawable
     get() = ResUtils.getDrawable(this)
 
 inline fun Int.resDrawable(context: Context) = ResUtils.getDrawable(context, this)
+inline fun Context.resDrawable(resId: Int) = ResUtils.getDrawable(this, resId)
 
 inline val Int.resString
     get() = ResUtils.getString(this)
 
 inline fun Int.resString(context: Context) = ResUtils.getString(context, this)
+inline fun Context.resString(resId: Int) = ResUtils.getString(this, resId)
+
 
 inline val Int.resDimension
     get() = ResUtils.getDimension(this)
 
 inline fun Int.resDimension(context: Context) = ResUtils.getDimension(context, this)
+inline fun Context.resDimension(resId: Int) = ResUtils.getDimension(this, resId)
+
 
 /**
  * Toast
