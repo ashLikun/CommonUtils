@@ -34,6 +34,7 @@ import android.view.WindowManager;
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.RomUtils;
+import com.ashlikun.utils.ui.ResUtils;
 import com.ashlikun.utils.ui.ScreenInfoUtils;
 
 import java.lang.reflect.Method;
@@ -463,7 +464,7 @@ public class NotchHelper {
     public static int getNotchWidthInXiaomi() {
         int resourceId = AppUtils.getApp().getResources().getIdentifier("notch_width", "dimen", "android");
         if (resourceId > 0) {
-            return AppUtils.getApp().getResources().getDimensionPixelSize(resourceId);
+            return ResUtils.getDimensionPixelSize(resourceId);
         }
         return -1;
     }
@@ -471,7 +472,7 @@ public class NotchHelper {
     public static int getNotchHeightInXiaomi() {
         int resourceId = AppUtils.getApp().getResources().getIdentifier("notch_height", "dimen", "android");
         if (resourceId > 0) {
-            return AppUtils.getApp().getResources().getDimensionPixelSize(resourceId);
+            return ResUtils.getDimensionPixelSize(resourceId);
         }
         return ScreenInfoUtils.getStatusBarHeight();
     }

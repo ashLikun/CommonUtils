@@ -17,7 +17,6 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.core.graphics.drawable.DrawableCompat;
 
-import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 
 
@@ -196,8 +195,8 @@ public class DrawableUtils {
 
     public static StateListDrawable getSelectDrawable(@DrawableRes int normalId, @DrawableRes int selectId) {
         StateListDrawable bg = new StateListDrawable();
-        bg.addState(new int[]{android.R.attr.state_selected}, AppUtils.getApp().getResources().getDrawable(selectId));
-        bg.addState(new int[]{}, AppUtils.getApp().getResources().getDrawable(normalId));
+        bg.addState(new int[]{android.R.attr.state_selected}, ResUtils.getDrawable(selectId));
+        bg.addState(new int[]{}, ResUtils.getDrawable(normalId));
         return bg;
     }
 
@@ -210,9 +209,9 @@ public class DrawableUtils {
      */
     public static StateListDrawable getStateListDrawable(@DrawableRes int idNormal, @DrawableRes int idPressed, @DrawableRes int idEbable) {
         StateListDrawable bg = new StateListDrawable();
-        Drawable normal = idNormal == -1 ? null : AppUtils.getApp().getResources().getDrawable(idNormal);
-        Drawable pressed = idPressed == -1 ? null : AppUtils.getApp().getResources().getDrawable(idPressed);
-        Drawable enabled = idEbable == -1 ? null : AppUtils.getApp().getResources().getDrawable(idEbable);
+        Drawable normal = idNormal == -1 ? null : ResUtils.getDrawable(idNormal);
+        Drawable pressed = idPressed == -1 ? null : ResUtils.getDrawable(idPressed);
+        Drawable enabled = idEbable == -1 ? null : ResUtils.getDrawable(idEbable);
         bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
         bg.addState(new int[]{-android.R.attr.state_enabled}, enabled);
         bg.addState(new int[]{}, normal);
@@ -547,7 +546,7 @@ public class DrawableUtils {
 
         public BuilderTvd tintColorId(int val) {
             isTintColor = true;
-            return tintColor(context.getResources().getColor(val));
+            return tintColor(ResUtils.getColor(context,val));
         }
 
         public BuilderTvd tintColor(int val) {

@@ -1,5 +1,6 @@
 package com.ashlikun.utils.other;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Typeface;
@@ -36,6 +37,7 @@ import com.ashlikun.utils.other.spannable.CentreImageSpan;
 import com.ashlikun.utils.other.spannable.CustomAlignSpan;
 import com.ashlikun.utils.other.spannable.XBulletSpan;
 import com.ashlikun.utils.other.spannable.XClickableSpan;
+import com.ashlikun.utils.ui.ResUtils;
 
 
 /**
@@ -57,11 +59,16 @@ public class SpannableUtils {
      * @return {@link Builder}
      */
     public static Builder getBuilder(@NonNull CharSequence text) {
-        return new Builder(text);
+        return new Builder(AppUtils.getApp(),text);
+    }
+
+    public static Builder getBuilder(Context context, @NonNull CharSequence text) {
+        return new Builder(context, text);
     }
 
     public static class Builder {
         public static int defaultValue = 0x12000000;
+        private Context context;
         /**
          * 源文本
          */
@@ -199,7 +206,8 @@ public class SpannableUtils {
 
         private SpannableStringBuilder mBuilder;
 
-        private Builder(@NonNull CharSequence text) {
+        private Builder(Context context, @NonNull CharSequence text) {
+            this.context = context;
             this.text = text;
             clean();
             mBuilder = new SpannableStringBuilder();
@@ -223,16 +231,13 @@ public class SpannableUtils {
         }
 
         /**
-         * 作者　　: 李坤
-         * 创建时间: 2017/6/28 17:38
-         * <p>
          * 方法功能：设置前景色
          *
          * @param color 前景色
          * @return {@link Builder}
          */
         public Builder setForegroundColorRes(@ColorRes int color) {
-            this.foregroundColor = AppUtils.getApp().getResources().getColor(color);
+            this.foregroundColor = ResUtils.getColor(context,color);
             return this;
         }
 
@@ -248,7 +253,7 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setBackgroundColorRes(@ColorRes int color) {
-            this.backgroundColor = AppUtils.getApp().getResources().getColor(color);
+            this.backgroundColor = ResUtils.getColor(context,color);
             return this;
         }
 
@@ -385,7 +390,7 @@ public class SpannableUtils {
          */
         public Builder setAlignTopDp(float alignTopOffset) {
             isAlignTop = true;
-            this.alignTopOffset = DimensUtils.dip2px(AppUtils.getApp(), alignTopOffset);
+            this.alignTopOffset = DimensUtils.dip2px(context, alignTopOffset);
             return this;
         }
 
@@ -397,7 +402,7 @@ public class SpannableUtils {
          */
         public Builder setAlignTopRes(@DimenRes int alignTopOffset) {
             isAlignTop = true;
-            this.alignTopOffset = AppUtils.getApp().getResources().getDimensionPixelOffset(alignTopOffset);
+            this.alignTopOffset = ResUtils.getDimensionPixelOffset(context,alignTopOffset);
             return this;
         }
 
@@ -711,9 +716,9 @@ public class SpannableUtils {
             if (isSetImage()) {
                 CentreImageSpan span = null;
                 if (imageIsBitmap) {
-                    drawable = new BitmapDrawable(AppUtils.getApp().getResources(), bitmap);
+                    drawable = new BitmapDrawable(context.getResources(), bitmap);
                 } else if (imageIsResourceId) {
-                    drawable = AppUtils.getApp().getResources().getDrawable(resourceId);
+                    drawable = ResUtils.getDrawable(context,resourceId);
                 }
                 if (imageIsBitmap || imageIsResourceId) {
                     int width = drawable.getIntrinsicWidth();

@@ -114,7 +114,7 @@ public class ScreenInfoUtils {
         int result = 0;
         int resourceId = AppUtils.getApp().getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
-            result = AppUtils.getApp().getResources().getDimensionPixelSize(resourceId);
+            result = ResUtils.getDimensionPixelSize(resourceId);
         }
         return result;
     }
@@ -139,7 +139,7 @@ public class ScreenInfoUtils {
         // 小米4没有nav bar, 而 navigation_bar_height 有值
         int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0) {
-            return context.getResources().getDimensionPixelSize(resourceId);
+            return ResUtils.getDimensionPixelSize(resourceId);
         }
         return -1;
     }

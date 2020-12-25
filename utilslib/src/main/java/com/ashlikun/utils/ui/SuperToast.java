@@ -251,7 +251,7 @@ public class SuperToast {
         }
 
         public Builder setBackgroundColor(@ColorRes int backgroundColor) {
-            this.backgroundColor = getApp().getResources().getColor(backgroundColor);
+            this.backgroundColor = ResUtils.getColor(backgroundColor);
             return this;
         }
 
@@ -367,28 +367,28 @@ public class SuperToast {
 
             if (type == Info) {
                 if (backgroundColor == NO_RES) {
-                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_info);
+                    backgroundColor = ResUtils.getColor(R.color.super_toast_color_info);
                 }
                 if (isShowIcon && iconRes == NO_RES) {
                     iconRes = R.drawable.ic_toast_super_info;
                 }
             } else if (type == Confirm) {
                 if (backgroundColor == NO_RES) {
-                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_confirm);
+                    backgroundColor = ResUtils.getColor(R.color.super_toast_color_confirm);
                 }
                 if (isShowIcon && iconRes == NO_RES) {
                     iconRes = R.drawable.ic_toast_super_confirm;
                 }
             } else if (type == Warning) {
                 if (backgroundColor == NO_RES) {
-                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_warning);
+                    backgroundColor = ResUtils.getColor(R.color.super_toast_color_warning);
                 }
                 if (isShowIcon && iconRes == NO_RES) {
                     iconRes = R.drawable.ic_toast_super_warning;
                 }
             } else if (type == Error) {
                 if (backgroundColor == NO_RES) {
-                    backgroundColor = getApp().getResources().getColor(R.color.super_toast_color_error);
+                    backgroundColor = ResUtils.getColor(R.color.super_toast_color_error);
                 }
                 if (isShowIcon && iconRes == NO_RES) {
                     iconRes = R.drawable.ic_toast_super_error;
@@ -398,7 +398,7 @@ public class SuperToast {
             if (INIT_OFFSET_Y == 0) {
                 int resourceId = getApp().getResources().getIdentifier("toast_y_offset", "dimen", "android");
                 if (resourceId > 0) {
-                    INIT_OFFSET_Y = getApp().getResources().getDimensionPixelSize(resourceId);
+                    INIT_OFFSET_Y = ResUtils.getDimensionPixelSize(resourceId);
                 }
             }
 

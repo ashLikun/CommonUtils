@@ -76,6 +76,22 @@ public class ResUtils {
         return AppUtils.getApp().getResources().getString(str);
     }
 
+    public static int getDimensionPixelOffset(Context context, @DimenRes int resId) {
+        return context.getResources().getDimensionPixelOffset(resId);
+    }
+
+    public static int getDimensionPixelOffset(@DimenRes int resId) {
+        return AppUtils.getApp().getResources().getDimensionPixelOffset(resId);
+    }
+
+    public static int getDimensionPixelSize(Context context, @DimenRes int resId) {
+        return context.getResources().getDimensionPixelSize(resId);
+    }
+
+    public static int getDimensionPixelSize(@DimenRes int resId) {
+        return AppUtils.getApp().getResources().getDimensionPixelSize(resId);
+    }
+
     /**
      * 直接获取xml里面的变量值
      * 12dp就返回12.0

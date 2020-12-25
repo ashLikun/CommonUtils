@@ -66,6 +66,18 @@ inline val Int.resDimension
 inline fun Int.resDimension(context: Context) = ResUtils.getDimension(context, this)
 inline fun Context.resDimension(resId: Int) = ResUtils.getDimension(this, resId)
 
+inline val Int.resDimensionPixelOffset
+    get() = ResUtils.getDimensionPixelOffset(this)
+
+inline fun Int.resDimensionPixelOffset(context: Context) = ResUtils.getDimensionPixelOffset(context, this)
+inline fun Context.resDimensionPixelOffset(resId: Int) = ResUtils.getDimensionPixelOffset(this, resId)
+
+inline val Int.resDimensionPixelSize
+    get() = ResUtils.getDimensionPixelSize(this)
+
+inline fun Int.resDimensionPixelSize(context: Context) = ResUtils.getDimensionPixelSize(context, this)
+inline fun Context.resDimensionPixelSize(resId: Int) = ResUtils.getDimensionPixelSize(this, resId)
+
 
 /**
  * Toast

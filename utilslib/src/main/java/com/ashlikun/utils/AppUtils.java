@@ -11,6 +11,7 @@ import androidx.core.content.FileProvider;
 
 import com.ashlikun.utils.bug.BugUtils;
 import com.ashlikun.utils.provider.BaseContentProvider;
+import com.ashlikun.utils.ui.ResUtils;
 
 import java.io.File;
 
@@ -156,7 +157,7 @@ public class AppUtils {
      */
     public static String getAppName() {
         int labelRes = getPackageInfo().applicationInfo.labelRes;
-        return getApp().getResources().getString(labelRes);
+        return ResUtils.getString(labelRes);
     }
 
     /**

@@ -204,8 +204,8 @@ fun View?.shadow(range: Int = this?.getPadding() ?: DimensUtils.dip2px(5f),
             setTag(999999881, range)
             setTag(999999882, color)
             setTag(999999883, bgColor)
-            ViewCompat.setBackground(this, RoundShadowDrawable(ResUtils.getColor(color),
-                    ResUtils.getColor(bgColor),
+            ViewCompat.setBackground(this, RoundShadowDrawable(context.resColor(color),
+                    ResUtils.getColor(context,bgColor),
                     DimensUtils.dip2px(radius).toFloat(),
                     range.toFloat()))
         }
@@ -226,8 +226,8 @@ fun View?.shadowNoHardware(range: Int = this?.getPadding() ?: DimensUtils.dip2px
             setTag(999999882, color)
             setTag(999999883, bgColor)
             CanShadowDrawable.Builder.on(this)
-                    .bgColor(ResUtils.getColor(bgColor))
-                    .shadowColor(ResUtils.getColor(color))
+                    .bgColor(ResUtils.getColor(context,bgColor))
+                    .shadowColor(ResUtils.getColor(context,color))
                     .radius(DimensUtils.dip2px(radius))
                     .shadowRange(range.toFloat())
                     .corners(corners)
