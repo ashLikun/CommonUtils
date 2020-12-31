@@ -41,42 +41,44 @@ val UnconfinedDispatcher = Dispatchers.Unconfined
  */
 val ThreadPoolDispatcher = ThreadPoolManage.get().executor.asCoroutineDispatcher()
 
+inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContext {
+    var ct = context
+    if (ct !is CoroutineExceptionHandler) {
+        ct = context + CoroutineExceptionHandler { _, t ->
+            t.printStackTrace()
+        }
+    }
+    return ct;
+}
+
+
 /**
  * 在主线程中顺序执行，属于顶级协程函数，一般用于最外层
  *
  * 注意：该函数会阻塞代码继续执行
  */
-inline fun <T> taskBlock(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T): T = runBlocking(context) {
-    try {
-        delay(delayTime)
-        job()
-    } catch (ext: Exception) {
-    }
-} as T
+inline fun <T> taskBlock(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T): T = runBlocking(CoroutineExceptionHandler(context)) {
+    delay(delayTime)
+    job()
+}
 
 /**
  * 异步执行，常用于最外层
  * 多个 async 任务是并行的
  * 特点带返回值 async 返回的是一个Deferred<T>，需要调用其await()方法获取结果。
  */
-inline fun <T> taskAsync(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T): Deferred<T> = GlobalScope.async(context) {
-    try {
-        delay(delayTime)
-        job()
-    } catch (ext: Exception) {
-    }
-} as Deferred<T>
+inline fun <T> taskAsync(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T): Deferred<T> = GlobalScope.async(CoroutineExceptionHandler(context)) {
+    delay(delayTime)
+    job()
+}
 
 /**
  * 执行，常用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunch(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T) = GlobalScope.launch(context) {
-    try {
-        delay(delayTime)
-        job()
-    } catch (ext: Exception) {
-    }
+inline fun <T> taskLaunch(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T) = GlobalScope.launch(CoroutineExceptionHandler(context)) {
+    delay(delayTime)
+    job()
 }
 
 /**
@@ -103,11 +105,8 @@ inline fun <T> taskRepeat(context: CoroutineContext = EmptyCoroutineContext, rep
  * 心跳执行 默认重复次数1次，不能用于最外层
  */
 suspend inline fun <T> taskRepeatSus(repeat: Int = 1, delayTime: Long = 0, crossinline job: () -> T) = repeat(repeat) {
-    try {
-        delay(delayTime)
-        job()
-    } catch (ext: Exception) {
-    }
+    delay(delayTime)
+    job()
 }
 
 /**
