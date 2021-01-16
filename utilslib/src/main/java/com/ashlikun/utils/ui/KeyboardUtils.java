@@ -10,6 +10,9 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
+import com.ashlikun.utils.other.DimensUtils;
+import com.ashlikun.utils.other.SharedPreUtils;
+
 import static com.ashlikun.utils.AppUtils.getApp;
 
 /**
@@ -20,6 +23,26 @@ import static com.ashlikun.utils.AppUtils.getApp;
  * 功能介绍：软键盘工具
  */
 public class KeyboardUtils {
+
+    private static final String EXTRA_DEF_KEYBOARDHEIGHT = "DEF_KEYBOARDHEIGHT";
+    private static final int DEF_KEYBOARD_HEAGH_WITH_DP = 300;
+    private static int sDefKeyboardHeight = -1;
+
+    public static int getDefKeyboardHeight(Context context) {
+        if (sDefKeyboardHeight < 0) {
+            sDefKeyboardHeight = DimensUtils.dip2px(context, DEF_KEYBOARD_HEAGH_WITH_DP);
+        }
+        int height = SharedPreUtils.getInt(context, EXTRA_DEF_KEYBOARDHEIGHT, 0);
+        return sDefKeyboardHeight = height > 0 && sDefKeyboardHeight != height ? height : sDefKeyboardHeight;
+    }
+
+    public static void setDefKeyboardHeight(Context context, int height) {
+        if (sDefKeyboardHeight != height) {
+            SharedPreUtils.putInt(context, EXTRA_DEF_KEYBOARDHEIGHT, height);
+            sDefKeyboardHeight = height;
+        }
+    }
+
     private static void exitOrShowInput(IBinder iBinder, View view) {
 
         InputMethodManager inputMethodManager = (InputMethodManager) getApp().getSystemService(Context.INPUT_METHOD_SERVICE);
