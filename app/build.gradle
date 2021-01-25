@@ -38,6 +38,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api rootProject.ext.designVersion
+    api "androidx.core:core:+"
     api project(':utilslib')
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api "androidx.constraintlayout:constraintlayout:+"

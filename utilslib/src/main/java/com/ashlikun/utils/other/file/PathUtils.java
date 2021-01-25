@@ -53,31 +53,31 @@ public class PathUtils {
      * 获取根目录
      */
     public static String getRootPath() {
-        return Environment.getRootDirectory().getAbsolutePath();
+        return Environment.getRootDirectory().getPath();
     }
 
     /**
      * 获取data目录
      */
     public static String getDataPath() {
-        return Environment.getDataDirectory().getAbsolutePath();
+        return Environment.getDataDirectory().getPath();
     }
 
     /**
      * 获取下载缓存目录
      */
     public static String getDownloadCachePath() {
-        return Environment.getDownloadCacheDirectory().getAbsolutePath();
+        return Environment.getDownloadCacheDirectory().getPath();
     }
 
     /**
      * 获取 /data/data/package.
      */
-    public static String getInternalAppDataPath() {
+    public static String getInternalAppData() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             return AppUtils.getApp().getApplicationInfo().dataDir;
         }
-        return AppUtils.getApp().getDataDir().getAbsolutePath();
+        return AppUtils.getApp().getDataDir().getPath();
     }
 
     /**
@@ -85,23 +85,23 @@ public class PathUtils {
      */
     public static String getInternalAppCodeCacheDir() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return AppUtils.getApp().getApplicationInfo().dataDir + "/code_cache";
+            return AppUtils.getApp().getApplicationInfo().dataDir + File.separator + "code_cache";
         }
-        return AppUtils.getApp().getCodeCacheDir().getAbsolutePath();
+        return AppUtils.getApp().getCodeCacheDir().getPath();
     }
 
     /**
      * 获取 /data/data/package/cache.
      */
-    public static String getInternalAppCachePath() {
-        return AppUtils.getApp().getCacheDir().getAbsolutePath();
+    public static String getInternalAppCache() {
+        return AppUtils.getApp().getCacheDir().getPath();
     }
 
     /**
      * 获取 /data/data/package/databases.
      */
-    public static String getInternalAppDbsPath() {
-        return AppUtils.getApp().getApplicationInfo().dataDir + "/databases";
+    public static String getInternalAppDbs() {
+        return AppUtils.getApp().getApplicationInfo().dataDir + File.separator + "databases";
     }
 
     /**
@@ -109,166 +109,169 @@ public class PathUtils {
      *
      * @param name 数据库名称
      */
-    public static String getInternalAppDbPath(String name) {
-        return AppUtils.getApp().getDatabasePath(name).getAbsolutePath();
+    public static String getInternalAppDb(String name) {
+        return AppUtils.getApp().getDatabasePath(name).getPath();
     }
 
     /**
      * 获取 /data/data/package/files.
      */
-    public static String getInternalAppFilesPath() {
-        return AppUtils.getApp().getFilesDir().getAbsolutePath();
+    public static String getInternalAppFiles() {
+        return AppUtils.getApp().getFilesDir().getPath();
     }
 
     /**
      * 获取 /data/data/package/shared_prefs.
      */
-    public static String getInternalAppSpPath() {
-        return AppUtils.getApp().getApplicationInfo().dataDir + "shared_prefs";
+    public static String getInternalAppSp() {
+        return AppUtils.getApp().getApplicationInfo().dataDir + File.separator + "shared_prefs";
     }
 
     /**
      * 获取 /storage/emulated/0.
      */
-    public static String getExternalStoragePath() {
+    public static String getExternalStorage() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles();
         }
-        return Environment.getExternalStorageDirectory().getAbsolutePath();
+        return Environment.getExternalStorageDirectory().getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Music.
      */
-    public static String getExternalMusicPath() {
+    public static String getExternalMusic() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_MUSIC;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Podcasts.
      */
-    public static String getExternalPodcastsPath() {
+    public static String getExternalPodcasts() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_PODCASTS;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).getPath();
     }
 
     /**
      * 获取 of /storage/emulated/0/Ringtones.
      */
-    public static String getExternalRingtonesPath() {
+    public static String getExternalRingtones() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_RINGTONES;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).getPath();
     }
 
     /**
      * 获取 of /storage/emulated/0/Alarms.
      */
-    public static String getExternalAlarmsPath() {
+    public static String getExternalAlarms() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_RINGTONES;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Notifications.
      */
-    public static String getExternalNotificationsPath() {
+    public static String getExternalNotifications() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_NOTIFICATIONS;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Pictures.
      */
-    public static String getExternalPicturesPath() {
+    public static String getExternalPictures() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_PICTURES;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Movies.
      */
-    public static String getExternalMoviesPath() {
+    public static String getExternalMovies() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_MOVIES;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Download.
      */
-    public static String getExternalDownloadsPath() {
+    public static String getExternalDownloads() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_DOWNLOADS;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/DCIM.
      */
-    public static String getExternalDcimPath() {
+    public static String getExternalDcim() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_DCIM;
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Documents.
      */
-    public static String getExternalDocumentsPath() {
-        if (isExternalStorageDisable()) {
-            return "";
-        }
+    public static String getExternalDocuments() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Documents";
+            if (isExternalStorageDisable()) {
+                return getInternalAppFiles() + File.separator + "/Documents";
+            }
+            return Environment.getExternalStorageDirectory().getPath() + "/Documents";
         }
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        if (isExternalStorageDisable()) {
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_DOCUMENTS;
+        }
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package.
      */
-    public static String getExternalAppDataPath() {
+    public static String getExternalAppData() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppData();
         }
-        return AppUtils.getApp().getExternalCacheDir().getParentFile().getAbsolutePath();
+        return AppUtils.getApp().getExternalCacheDir().getParentFile().getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/cache.
      */
-    public static String getExternalAppCachePath() {
+    public static String getExternalAppCache() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppCache();
         }
         //noinspection ConstantConditions
-        return AppUtils.getApp().getExternalCacheDir().getAbsolutePath();
+        return AppUtils.getApp().getExternalCacheDir().getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files.
      */
-    public static String getExternalAppFilesPath() {
+    public static String getExternalAppFiles() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles();
         }
-        return AppUtils.getApp().getExternalFilesDir(null).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(null).getPath();
     }
 
     /**
@@ -276,115 +279,118 @@ public class PathUtils {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Music
      */
-    public static String getExternalAppMusicPath() {
+    public static String getExternalAppMusic() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_MUSIC;
         }
-        //noinspection ConstantConditions
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_MUSIC).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Podcasts.
      */
-    public static String getExternalAppPodcastsPath() {
+    public static String getExternalAppPodcasts() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_PODCASTS;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_PODCASTS).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_PODCASTS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Ringtones.
      */
-    public static String getExternalAppRingtonesPath() {
+    public static String getExternalAppRingtones() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_RINGTONES;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_RINGTONES).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_RINGTONES).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Alarms.
      */
-    public static String getExternalAppAlarmsPath() {
+    public static String getExternalAppAlarms() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_ALARMS;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_ALARMS).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_ALARMS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Notifications.
      */
-    public static String getExternalAppNotificationsPath() {
+    public static String getExternalAppNotifications() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_NOTIFICATIONS;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Pictures.
      */
-    public static String getExternalAppPicturesPath() {
+    public static String getExternalAppPictures() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_PICTURES;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Movies.
      */
-    public static String getExternalAppMoviesPath() {
+    public static String getExternalAppMovies() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_MOVIES;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_MOVIES).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Download.
      */
-    public static String getExternalAppDownloadPath() {
+    public static String getExternalAppDownload() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_DOWNLOADS;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/DCIM.
      */
-    public static String getExternalAppDcimPath() {
+    public static String getExternalAppDcim() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_DCIM;
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Documents.
      */
-    public static String getExternalAppDocumentsPath() {
-        if (isExternalStorageDisable()) {
-            return "";
-        }
+    public static String getExternalAppDocuments() {
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return AppUtils.getApp().getExternalFilesDir(null).getAbsolutePath() + "/Documents";
+            if (isExternalStorageDisable()) {
+                return getInternalAppFiles() + File.separator + "Documents";
+            }
+            return AppUtils.getApp().getExternalFilesDir(null).getPath() + File.separator + "Documents";
         }
-        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        if (isExternalStorageDisable()) {
+            return getInternalAppFiles() + File.separator + Environment.DIRECTORY_DOCUMENTS;
+        }
+        return AppUtils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getPath();
     }
 
     /**
      * 获取 /storage/emulated/0/Android/obb/package.
      */
-    public static String getExternalAppObbPath() {
+    public static String getExternalAppObb() {
         if (isExternalStorageDisable()) {
-            return "";
+            return getInternalAppFiles() + File.separator + "obb";
         }
-        return AppUtils.getApp().getObbDir().getAbsolutePath();
+        return AppUtils.getApp().getObbDir().getPath();
     }
 
     private static boolean isExternalStorageDisable() {

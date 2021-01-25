@@ -153,12 +153,8 @@ public class StatusBarCompat {
         window.setStatusBarColor(statusColor);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
-        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
-        View mChildView = mContentView.getChildAt(0);
-        if (mChildView != null) {
-            mChildView.setFitsSystemWindows(false);
-            ViewCompat.requestApplyInsets(mChildView);
-        }
+        window.getDecorView().setFitsSystemWindows(false);
+        window.getDecorView().requestApplyInsets();
         autoStatueTextColor(statusColor);
     }
 
@@ -173,11 +169,8 @@ public class StatusBarCompat {
             return;
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
-        View mChildView = mContentView.getChildAt(0);
-        if (mContentView != null) {
-            mChildView.setFitsSystemWindows(true);
-        }
+        window.getDecorView().setFitsSystemWindows(false);
+        window.getDecorView().requestApplyInsets();
     }
 
     /**
@@ -222,16 +215,10 @@ public class StatusBarCompat {
         } else {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
+        //隐藏状态栏和全屏
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-        ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
-        if (mContentView != null) {
-            View mChildView = mContentView.getChildAt(0);
-            if (mChildView != null) {
-                mChildView.setFitsSystemWindows(false);
-                ViewCompat.requestApplyInsets(mChildView);
-            }
-        }
+        window.getDecorView().setFitsSystemWindows(false);
+        window.getDecorView().requestApplyInsets();
     }
 
     /**
@@ -265,12 +252,8 @@ public class StatusBarCompat {
             }
         });
 
-        ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
-        View mChildView = mContentView.getChildAt(0);
-        if (mChildView != null) {
-            ViewCompat.setFitsSystemWindows(mChildView, false);
-            ViewCompat.requestApplyInsets(mChildView);
-        }
+        window.getDecorView().setFitsSystemWindows(false);
+        window.getDecorView().requestApplyInsets();
 
         ((View) appBarLayout.getParent()).setFitsSystemWindows(false);
         appBarLayout.setFitsSystemWindows(false);
