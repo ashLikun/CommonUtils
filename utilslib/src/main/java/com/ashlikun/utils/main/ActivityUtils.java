@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.ContextThemeWrapper;
 
@@ -94,7 +95,9 @@ public class ActivityUtils {
 
     /**
      * 方法功能：把栈顶activity切换到前台，如果应用未启动就打开应
-     * < uses-permission android:name =“android.permission.GET_TASKS” />
+     * <uses-permission android:name="android.permission.GET_TASKS" />
+     * //后台移动到前台需要
+     * <uses-permission android:name="android.permission.REORDER_TASKS" />
      *
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */

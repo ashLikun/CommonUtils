@@ -75,7 +75,83 @@ fun View?.getViewSize(onSizeListener: OnSizeListener) {
 
 }
 
+/**
+ * view树绘制的回调
+ *
+ * @param onDraw 监听回调
+ * @param isOneToRemove 是否只监听一次
+ */
+fun View?.addOnDrawListener(listener: () -> Unit, isOneToRemove: Boolean = true) {
+    this?.run {
+        viewTreeObserver.addOnDrawListener(object : ViewTreeObserver.OnDrawListener {
+            override fun onDraw() {
+                if (isOneToRemove) {
+                    viewTreeObserver.removeOnDrawListener(this)
+                }
+                listener.invoke()
+            }
+        })
+    }
+}
 
+/**
+ * view树绘制前的回调
+ *
+ * @param onDraw 监听回调
+ * @param isOneToRemove 是否只监听一次
+ */
+fun View?.addOnPreDrawListener(listener: () -> Boolean, isOneToRemove: Boolean = true) {
+    this?.run {
+        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                if (isOneToRemove) {
+                    viewTreeObserver.removeOnPreDrawListener(this)
+                }
+                return listener.invoke()
+            }
+        })
+    }
+}
+
+/**
+ * view树布局的回调
+ *
+ * @param onDraw 监听回调
+ * @param isOneToRemove 是否只监听一次
+ */
+fun View?.addOnGlobalLayoutListener(listener: () -> Unit, isOneToRemove: Boolean = true) {
+    this?.run {
+        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                if (isOneToRemove) {
+                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+                listener.invoke()
+            }
+        })
+    }
+}
+
+/**
+ * view树 窗口获取焦点的回调
+ *
+ * @param onDraw 监听回调
+ * @param isOneToRemove 是否只监听一次
+ */
+fun View?.addOnWindowFocusChangeListener(listener: (hasFocus: Boolean) -> Unit, isOneToRemove: Boolean = true) {
+    this?.run {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            viewTreeObserver.addOnWindowFocusChangeListener(object : ViewTreeObserver.OnWindowFocusChangeListener {
+                override fun onWindowFocusChanged(hasFocus: Boolean) {
+                    if (isOneToRemove) {
+                        viewTreeObserver.removeOnWindowFocusChangeListener(this)
+                    }
+                    listener.invoke(hasFocus)
+                }
+            })
+        }
+    }
+}
 
 /**
  * 从资源文件获取一个view
@@ -128,8 +204,8 @@ fun View?.getMarginBottom() = if (this?.layoutParams is ViewGroup.MarginLayoutPa
  */
 fun View?.setPaddings(leftPadding: Int = this?.paddingLeft
         ?: 0, topPadding: Int = this?.paddingTop ?: 0,
-                     rightPadding: Int = this?.paddingRight
-                             ?: 0, bottomPadding: Int = this?.paddingBottom
+                      rightPadding: Int = this?.paddingRight
+                              ?: 0, bottomPadding: Int = this?.paddingBottom
                 ?: 0) {
     this?.run {
         setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
@@ -205,7 +281,7 @@ fun View?.shadow(range: Int = this?.getPadding() ?: DimensUtils.dip2px(5f),
             setTag(999999882, color)
             setTag(999999883, bgColor)
             ViewCompat.setBackground(this, RoundShadowDrawable(context.resColor(color),
-                    ResUtils.getColor(context,bgColor),
+                    ResUtils.getColor(context, bgColor),
                     DimensUtils.dip2px(radius).toFloat(),
                     range.toFloat()))
         }
@@ -226,8 +302,8 @@ fun View?.shadowNoHardware(range: Int = this?.getPadding() ?: DimensUtils.dip2px
             setTag(999999882, color)
             setTag(999999883, bgColor)
             CanShadowDrawable.Builder.on(this)
-                    .bgColor(ResUtils.getColor(context,bgColor))
-                    .shadowColor(ResUtils.getColor(context,color))
+                    .bgColor(ResUtils.getColor(context, bgColor))
+                    .shadowColor(ResUtils.getColor(context, color))
                     .radius(DimensUtils.dip2px(radius))
                     .shadowRange(range.toFloat())
                     .corners(corners)

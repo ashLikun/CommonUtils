@@ -35,6 +35,22 @@ public class FileUtils {
     }
 
     /**
+     * 创建目录
+     *
+     * @param path
+     * @return
+     */
+    public static String createMkdirs(String path) {
+        if (path == null) {
+            return "";
+        }
+        File file = new File(path);
+        if (file.exists() || file.mkdirs()) {
+        }
+        return path;
+    }
+
+    /**
      * 方法功能：获取清单文件的mate值
      */
 
