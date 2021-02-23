@@ -86,7 +86,7 @@ public class BitmapUtil {
      * 把bitmap转换成Base64编码String
      */
     public static String base64Bitmap(Bitmap bitmap, int quality) {
-        return Base64Utils.encode(bitmapToByte(bitmap, quality));
+        return Base64Utils.encodeToStr(bitmapToByte(bitmap, quality));
     }
 
     /**

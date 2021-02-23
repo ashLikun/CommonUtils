@@ -16,13 +16,12 @@ public class AesAAUtil {
     /**
      * 密钥如超过16位，截至16位，不足16位，补/000至16位
      *
-     * @param key原密钥
      * @return 新密钥
      */
     public static String secureBytes(String key) {
-        if (key.length() > 16) {
-            key = key.substring(0, 16);
-        } else if (key.length() < 16) {
+        if (key.length() > 32) {
+            key = key.substring(0, 32);
+        } else if (key.length() < 32) {
             for (int i = (key.length() - 1); i < 15; i++) {
                 key += "\000";
             }
@@ -34,7 +33,6 @@ public class AesAAUtil {
      * AES解密 用于数据库储存
      *
      * @param sSrc
-     * @param sKey
      * @return
      * @throws Exception
      */
@@ -49,7 +47,7 @@ public class AesAAUtil {
                 return null;
             }
             // 判断Key是否为16位
-            if (sKey.length() != 16) {
+            if (sKey.length() != 32) {
                 // LogUtil.d("AesUtil", "Key长度不是16位");
                 sKey = secureBytes(sKey);
             }
@@ -75,7 +73,6 @@ public class AesAAUtil {
      * AES解密 用于数据库储存
      *
      * @param sSrc
-     * @param sKey
      * @return
      * @throws Exception
      */
@@ -90,7 +87,7 @@ public class AesAAUtil {
                 return null;
             }
             // 判断Key是否为16位
-            if (sKey.length() != 16) {
+            if (sKey.length() != 32) {
                 System.out.println("长度不是16");
                 // LogUtil.d("AesUtil", "Key长度不是16位");
                 sKey = secureBytes(sKey);
@@ -145,7 +142,7 @@ public class AesAAUtil {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
             byte[] encrypted = cipher.doFinal(sSrc.getBytes());
-            LogUtils.e(Base64Utils.encode(encrypted));
+            LogUtils.e(Base64Utils.encodeToStr(encrypted));
             return byte2hex(encrypted).toLowerCase();
         } catch (Exception e) {
             // TODO Auto-generated catch block

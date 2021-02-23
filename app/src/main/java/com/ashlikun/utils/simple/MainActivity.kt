@@ -28,7 +28,9 @@ import com.ashlikun.utils.ui.extend.windowBrightness
 import kotlinx.android.synthetic.main.main_viewgroup_activity.*
 import kotlinx.coroutines.delay
 import java.io.IOException
+import java.lang.Exception
 import java.util.*
+import javax.crypto.Cipher
 
 
 class MainActivity : AppCompatActivity() {
@@ -111,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 .start()
 
         buttonJump.background = DrawableUtils.createGradientDrawable(0xffff0000.toInt())
-                .roundRadiu(floatArrayOf(30f,30f,0f,20f))
+                .roundRadiu(floatArrayOf(30f, 30f, 0f, 20f))
                 .create()
     }
 
@@ -171,15 +173,29 @@ class MainActivity : AppCompatActivity() {
 //        NotificationUtil.show(10, builder!!)
 
 
-        taskLaunchMain {
-
-            LogUtils.e(Thread.currentThread().name)
-            val aa = taskAsync {
-                delay(3000)
-                LogUtils.e(Thread.currentThread().name)
-                1
-            }
-            LogUtils.e(aa.await())
+//        taskLaunchMain {
+//
+//            LogUtils.e(Thread.currentThread().name)
+//            val aa = taskAsync {
+//                delay(3000)
+//                LogUtils.e(Thread.currentThread().name)
+//                1
+//            }
+//            LogUtils.e(aa.await())
+//        }
+        var bb = "{\"nickname\":\"\\u5b59\\u8d5b-Simon\",\"mobile\":\"13285112318\"}"
+        var aa = "29b6a31a5eb0a39cd0caa8ad28380246859cea6dc879700b74efa7762d2054fd8914695d81656bb0e2f82e3a24f0e18360126f0780cce5b4e5b24faaaf05ecc9"
+        try {
+            var aadd = AESUtils.decrypt("KbajGl6wo5zQyqitKDgCRoWc6m3IeXALdO+ndi0gVP2JFGldgWVrsOL4Ljok8OGDYBJvB4DM5bTlsk+qrwXsyQ==", "8d68a9777b8b7115364452c712837616")
+            LogUtils.e(aadd)
+            var aaa = AESUtils.decryptHex(aa, "8d68a9777b8b7115364452c712837616")
+            LogUtils.e(aaa)
+            aadd = AESUtils.encrypt(bb, "8d68a9777b8b7115364452c712837616")
+            LogUtils.e(aadd)
+            aaa = AESUtils.encryptHex(bb, "8d68a9777b8b7115364452c712837616")
+            LogUtils.e(aaa)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

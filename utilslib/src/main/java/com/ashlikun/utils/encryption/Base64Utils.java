@@ -27,9 +27,22 @@ public class Base64Utils {
      * <p>
      * 方法功能：加密
      */
-    public static String encode(byte[] data) {
-        return Base64.encodeToString(data, Base64.NO_WRAP);
+    public static byte[] encode(byte[] data) {
+        return Base64.encode(data, Base64.NO_WRAP);
     }
+
+    public static byte[] encode(String data) {
+        return Base64.encode(data.getBytes(), Base64.NO_WRAP);
+    }
+
+    public static String encodeToStr(byte[] data) {
+        return new String(encode(data), Charsets.UTF_8);
+    }
+
+    public static String encodeToStr(String data) {
+        return new String(encode(data), Charsets.UTF_8);
+    }
+
 
     public static String getFileToBase64(String path) {
         return Base64.encodeToString(FileUtils.readByte(path), Base64.NO_WRAP);
@@ -45,6 +58,7 @@ public class Base64Utils {
     public static byte[] decode(String str) {
         return Base64.decode(str, Base64.NO_WRAP);
     }
+
     /**
      * 作者　　: 李坤
      * 创建时间: 2017/6/28 10:30
