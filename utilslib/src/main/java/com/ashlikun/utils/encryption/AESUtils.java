@@ -273,4 +273,10 @@ public class AESUtils {
         }
         return null;
     }
+
+    public static void main(String[] args) {
+        String aa = "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ==";
+        String decrypt = AESUtils.decrypt(aa, "8d68a9777b8b7115364452c712837616");
+        System.out.println("decrypt : " + decrypt);
+    }
 }

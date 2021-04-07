@@ -154,7 +154,7 @@ public class ApkUtils {
      * @return {@code true}: success<br>{@code false}: fail
      */
     public static boolean installAppSilent(final File file) {
-        return installAppSilent(file, null);
+        return installAppSilent(file, "-r ");
     }
 
 
@@ -177,7 +177,7 @@ public class ApkUtils {
      * {@code <uses-permission android:name="android.permission.INSTALL_PACKAGES" />}</p>
      *
      * @param file   文件
-     * @param params
+     * @param params -i AppUtils.getPageName() -r
      * @return {@code true}: success<br>{@code false}: fail
      */
     public static boolean installAppSilent(final File file, final String params) {
@@ -193,6 +193,25 @@ public class ApkUtils {
      * @param params
      * @param isRooted 是否是rooot
      * @return {@code true}: success<br>{@code false}: fail
+     * install [-lrtsfd] [PATH]：安装命令；
+     * -l ：锁定应用程序；
+     * -r：重新安装应用，且保留应用数据；
+     * -i：指定安装包的包名；
+     * -s：安装到sd卡；
+     * -f：安装到系统内置存储中（默认安装位置）；
+     * -g：授予应用程序清单中列出的所有权限（只有6.0系统可用）；
+     * uninstall [options] ‘pkgname’：卸载命令；
+     * -k：卸载应用且保留数据与缓存（如果不加-k则全部删除）；
+     * clear ‘pkgname’ ：对指定的package删除所有数据；
+     * enable ‘pkgname’ ：使package或component可用。（如：pm enable “package/class”）；
+     * disable ‘pkgname’ ：使package或component不可用。（如：pm disable “package/class”）；
+     * grant ‘pkgname’：授权给应用；
+     * revoke ‘pkgname’：撤销权限；
+     * set-install-location ‘location’：设置默认的安装位置。
+     * 其中0：让系统自动选择最佳的安装位置。1：安装到内部的设备存储空间。2：安装到外部的设备存储空间；
+     * get-install-location ：返回当前的安装位置。返回结果同上参数选项；
+     * create-user ‘USER_NAME’ ：增加一个新的USER；
+     * remove-user ‘USER_ID’ ：删除一个USER；
      */
     public static boolean installAppSilent(final File file,
                                            final String params,

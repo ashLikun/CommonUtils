@@ -9,6 +9,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.collection.SimpleArrayMap;
+
 import com.ashlikun.utils.AppUtils;
 
 import org.json.JSONArray;
@@ -33,9 +36,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import androidx.annotation.NonNull;
-import androidx.collection.SimpleArrayMap;
 
 import static com.ashlikun.utils.other.StringUtils.isSpace;
 
@@ -853,28 +853,28 @@ public class CacheDiskUtils {
     // other utils methods
     ///////////////////////////////////////////////////////////////////////////
 
-    private static byte[] string2Bytes(final String string) {
+    public static byte[] string2Bytes(final String string) {
         if (string == null) {
             return null;
         }
         return string.getBytes();
     }
 
-    private static String bytes2String(final byte[] bytes) {
+    public static String bytes2String(final byte[] bytes) {
         if (bytes == null) {
             return null;
         }
         return new String(bytes);
     }
 
-    private static byte[] jsonObject2Bytes(final JSONObject jsonObject) {
+    public static byte[] jsonObject2Bytes(final JSONObject jsonObject) {
         if (jsonObject == null) {
             return null;
         }
         return jsonObject.toString().getBytes();
     }
 
-    private static JSONObject bytes2JSONObject(final byte[] bytes) {
+    public static JSONObject bytes2JSONObject(final byte[] bytes) {
         if (bytes == null) {
             return null;
         }
@@ -886,14 +886,14 @@ public class CacheDiskUtils {
         }
     }
 
-    private static byte[] jsonArray2Bytes(final JSONArray jsonArray) {
+    public static byte[] jsonArray2Bytes(final JSONArray jsonArray) {
         if (jsonArray == null) {
             return null;
         }
         return jsonArray.toString().getBytes();
     }
 
-    private static JSONArray bytes2JSONArray(final byte[] bytes) {
+    public static JSONArray bytes2JSONArray(final byte[] bytes) {
         if (bytes == null) {
             return null;
         }
@@ -905,7 +905,7 @@ public class CacheDiskUtils {
         }
     }
 
-    private static byte[] parcelable2Bytes(final Parcelable parcelable) {
+    public static byte[] parcelable2Bytes(final Parcelable parcelable) {
         if (parcelable == null) {
             return null;
         }
@@ -916,7 +916,7 @@ public class CacheDiskUtils {
         return bytes;
     }
 
-    private static <T> T bytes2Parcelable(final byte[] bytes,
+    public static <T> T bytes2Parcelable(final byte[] bytes,
                                           final Parcelable.Creator<T> creator) {
         if (bytes == null) {
             return null;
@@ -929,7 +929,7 @@ public class CacheDiskUtils {
         return result;
     }
 
-    private static byte[] serializable2Bytes(final Serializable serializable) {
+    public static byte[] serializable2Bytes(final Serializable serializable) {
         if (serializable == null) {
             return null;
         }
@@ -953,7 +953,7 @@ public class CacheDiskUtils {
         }
     }
 
-    private static Object bytes2Object(final byte[] bytes) {
+    public static Object bytes2Object(final byte[] bytes) {
         if (bytes == null) {
             return null;
         }
@@ -975,7 +975,7 @@ public class CacheDiskUtils {
         }
     }
 
-    private static byte[] bitmap2Bytes(final Bitmap bitmap) {
+    public static byte[] bitmap2Bytes(final Bitmap bitmap) {
         if (bitmap == null) {
             return null;
         }
@@ -984,21 +984,21 @@ public class CacheDiskUtils {
         return baos.toByteArray();
     }
 
-    private static Bitmap bytes2Bitmap(final byte[] bytes) {
+    public static Bitmap bytes2Bitmap(final byte[] bytes) {
         return (bytes == null || bytes.length <= 0)
                 ? null
                 : BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
-    private static byte[] drawable2Bytes(final Drawable drawable) {
+    public static byte[] drawable2Bytes(final Drawable drawable) {
         return drawable == null ? null : bitmap2Bytes(drawable2Bitmap(drawable));
     }
 
-    private static Drawable bytes2Drawable(final byte[] bytes) {
+    public static Drawable bytes2Drawable(final byte[] bytes) {
         return bytes == null ? null : bitmap2Drawable(bytes2Bitmap(bytes));
     }
 
-    private static Bitmap drawable2Bitmap(final Drawable drawable) {
+    public static Bitmap drawable2Bitmap(final Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             if (bitmapDrawable.getBitmap() != null) {
@@ -1029,14 +1029,14 @@ public class CacheDiskUtils {
         return bitmap;
     }
 
-    private static Drawable bitmap2Drawable(final Bitmap bitmap) {
+    public static Drawable bitmap2Drawable(final Bitmap bitmap) {
         return bitmap == null
                 ? null
                 : new BitmapDrawable(AppUtils.getApp().getResources(), bitmap);
     }
 
 
-    private static void writeFileFromBytes(final File file, final byte[] bytes) {
+    public static void writeFileFromBytes(final File file, final byte[] bytes) {
         FileChannel fc = null;
         try {
             fc = new FileOutputStream(file, false).getChannel();
@@ -1055,7 +1055,7 @@ public class CacheDiskUtils {
         }
     }
 
-    private static byte[] readFile2Bytes(final File file) {
+    public static byte[] readFile2Bytes(final File file) {
         FileChannel fc = null;
         try {
             fc = new RandomAccessFile(file, "r").getChannel();

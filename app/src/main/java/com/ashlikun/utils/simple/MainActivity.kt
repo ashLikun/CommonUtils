@@ -8,7 +8,6 @@ import android.graphics.drawable.GradientDrawable
 import android.location.*
 import android.os.Bundle
 import android.text.TextUtils
-import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -19,18 +18,13 @@ import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
-import com.ashlikun.utils.other.coroutines.taskAsync
-import com.ashlikun.utils.other.coroutines.taskLaunchMain
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.ui.*
 import com.ashlikun.utils.ui.extend.windowBrightness
 import kotlinx.android.synthetic.main.main_viewgroup_activity.*
-import kotlinx.coroutines.delay
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
-import javax.crypto.Cipher
 
 
 class MainActivity : AppCompatActivity() {
@@ -184,16 +178,14 @@ class MainActivity : AppCompatActivity() {
 //            LogUtils.e(aa.await())
 //        }
         var bb = "{\"nickname\":\"\\u5b59\\u8d5b-Simon\",\"mobile\":\"13285112318\"}"
-        var aa = "29b6a31a5eb0a39cd0caa8ad28380246859cea6dc879700b74efa7762d2054fd8914695d81656bb0e2f82e3a24f0e18360126f0780cce5b4e5b24faaaf05ecc9"
+        var aa = "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ=="
         try {
-            var aadd = AESUtils.decrypt("KbajGl6wo5zQyqitKDgCRoWc6m3IeXALdO+ndi0gVP2JFGldgWVrsOL4Ljok8OGDYBJvB4DM5bTlsk+qrwXsyQ==", "8d68a9777b8b7115364452c712837616")
-            LogUtils.e(aadd)
             var aaa = AESUtils.decryptHex(aa, "8d68a9777b8b7115364452c712837616")
             LogUtils.e(aaa)
-            aadd = AESUtils.encrypt(bb, "8d68a9777b8b7115364452c712837616")
-            LogUtils.e(aadd)
-            aaa = AESUtils.encryptHex(bb, "8d68a9777b8b7115364452c712837616")
-            LogUtils.e(aaa)
+//            aadd = AESUtils.encrypt(bb, "8d68a9777b8b7115364452c712837616")
+//            LogUtils.e(aadd)
+//            aaa = AESUtils.encryptHex(bb, "8d68a9777b8b7115364452c712837616")
+//            LogUtils.e(aaa)
         } catch (e: Exception) {
             e.printStackTrace()
         }
