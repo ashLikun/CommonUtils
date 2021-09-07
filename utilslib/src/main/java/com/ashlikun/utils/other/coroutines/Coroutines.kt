@@ -41,11 +41,19 @@ val UnconfinedDispatcher = Dispatchers.Unconfined
  */
 val ThreadPoolDispatcher = ThreadPoolManage.get().executor.asCoroutineDispatcher()
 
+
+/**
+ * 本框架协成默认错误的处理,如果调用者处理了，那么这里不会调用
+ */
+val defaultCoroutineExceptionHandler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, t ->
+    t.printStackTrace()
+}
+
 inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContext {
     var ct = context
-    if (ct !is CoroutineExceptionHandler) {
-        ct = context + CoroutineExceptionHandler { _, t ->
-            t.printStackTrace()
+    if (context[CoroutineExceptionHandler.Key] == null) {
+        if (defaultCoroutineExceptionHandler != null && defaultCoroutineExceptionHandler is CoroutineExceptionHandler) {
+            ct = context + defaultCoroutineExceptionHandler
         }
     }
     return ct;
