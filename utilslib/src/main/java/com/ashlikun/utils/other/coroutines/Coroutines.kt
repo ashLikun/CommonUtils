@@ -52,7 +52,7 @@ val defaultCoroutineExceptionHandler: CoroutineExceptionHandler = CoroutineExcep
 inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContext {
     var ct = context
     if (context[CoroutineExceptionHandler.Key] == null) {
-        if (defaultCoroutineExceptionHandler != null && defaultCoroutineExceptionHandler is CoroutineExceptionHandler) {
+        if (defaultCoroutineExceptionHandler != null) {
             ct = context + defaultCoroutineExceptionHandler
         }
     }
