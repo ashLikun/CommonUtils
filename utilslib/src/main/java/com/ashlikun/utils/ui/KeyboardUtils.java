@@ -1,5 +1,7 @@
 package com.ashlikun.utils.ui;
 
+import static com.ashlikun.utils.AppUtils.getApp;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
@@ -12,8 +14,6 @@ import android.widget.FrameLayout;
 
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.SharedPreUtils;
-
-import static com.ashlikun.utils.AppUtils.getApp;
 
 /**
  * 作者　　: 李坤

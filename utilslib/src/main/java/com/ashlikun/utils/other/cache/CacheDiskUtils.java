@@ -1,5 +1,7 @@
 package com.ashlikun.utils.other.cache;
 
+import static com.ashlikun.utils.other.StringUtils.isSpace;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -37,15 +39,14 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.ashlikun.utils.other.StringUtils.isSpace;
-
 /**
- * 作者　　: 李坤
- * 创建时间: 2018/9/19　11:20
+ * @author　　: 李坤
+ * 创建时间: 2021/12/12 15:13
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：磁盘缓存
  */
+
 public class CacheDiskUtils {
     private static final long DEFAULT_MAX_SIZE = Long.MAX_VALUE;
     private static final int DEFAULT_MAX_COUNT = Integer.MAX_VALUE;
@@ -917,7 +918,7 @@ public class CacheDiskUtils {
     }
 
     public static <T> T bytes2Parcelable(final byte[] bytes,
-                                          final Parcelable.Creator<T> creator) {
+                                         final Parcelable.Creator<T> creator) {
         if (bytes == null) {
             return null;
         }

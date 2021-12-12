@@ -1,5 +1,7 @@
 package com.ashlikun.utils.ui;
 
+import static com.ashlikun.utils.AppUtils.getApp;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -29,8 +31,6 @@ import com.ashlikun.utils.other.MainHandle;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import static com.ashlikun.utils.AppUtils.getApp;
 
 /**
  * 作者　　: 李坤

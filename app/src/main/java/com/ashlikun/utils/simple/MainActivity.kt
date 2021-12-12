@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -20,17 +19,19 @@ import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
+import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.*
 import com.ashlikun.utils.ui.extend.windowBrightness
-import kotlinx.android.synthetic.main.main_viewgroup_activity.*
 import java.io.IOException
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     internal lateinit var statusBarCompat: StatusBarCompat
-    internal lateinit var imageView: ImageView
-    internal lateinit var textView: TextViewCompat
+    val binding by lazy {
+        MainViewgroupActivityBinding.inflate(layoutInflater)
+    }
+
     var currentProgress = 0
     internal var statusColor = -0x10000
 
@@ -38,12 +39,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppUtils.init(application)
         AppUtils.setDebug(true)
-        setContentView(R.layout.main_viewgroup_activity)
+        setContentView(binding.root)
         statusBarCompat = StatusBarCompat(this)
         statusBarCompat.setStatusBarColor(-0x1)
-        imageView = findViewById(R.id.imageView)
-        textView = findViewById(R.id.text)
-        buttonJump.setOnClickListener {
+        binding.buttonJump.setOnClickListener {
             val intent = Intent(this, Main2Activity::class.java)
             startActivity(intent)
         }
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         drawable.setColor(-0x5a3b1)
         windowBrightness = 10f
         drawable.cornerRadius = size / 2f
-        LogUtils.e("aaaaaaaaaaaaaa " + ProcessUtils.getCurProcessName());
+        LogUtils.e("aaaaaaaaaaaaaa " + ProcessUtils.curProcessName);
         DeviceUtil.get()
 //        textView.text = SpannableUtils.getBuilder("")
 //                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).changImageSize()
@@ -63,52 +62,57 @@ class MainActivity : AppCompatActivity() {
 //                .append("").setResourceId(R.mipmap.main_icon_catalogue_icon).setProportion(0.5f).changImageSize()
 //                .append("图案已保存到相册").setProportion(0.5f).setForegroundColorRes(R.color.colorAccent)
 //                .create()
-        textView.text = SpannableUtils.getBuilder("")
-                .append("相册\n").setForegroundColor(0xffff0000.toInt()).setBullet(20, resources.getColor(R.color.black), 30)
-                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n").setForegroundColor(0xffff0000.toInt()).setBullet(20, resources.getColor(R.color.black), 30)
-                .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册").setBullet(20, resources.getColor(R.color.black), 30)
-                .append("点击事件").setForegroundColorRes(R.color.black).setClickSpan(object : XClickableSpan(ResUtils.getColor(R.color.colorAccent)) {
-                    override fun onClick(widget: View) {
-                        LogUtils.e("11111111111点击事件11")
-                    }
+        binding.text.text = SpannableUtils.getBuilder("")
+            .append("相册\n").setForegroundColor(0xffff0000.toInt())
+            .setBullet(20, resources.getColor(R.color.black), 30)
+            .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册\n")
+            .setForegroundColor(0xffff0000.toInt())
+            .setBullet(20, resources.getColor(R.color.black), 30)
+            .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册")
+            .setBullet(20, resources.getColor(R.color.black), 30)
+            .append("点击事件").setForegroundColorRes(R.color.black)
+            .setClickSpan(object : XClickableSpan(ResUtils.getColor(R.color.colorAccent)) {
+                override fun onClick(widget: View) {
+                    LogUtils.e("11111111111点击事件11")
+                }
 
-                })
-                .create()
-        textView.movementMethod = FocusLinkMovementMethod.getInstance()
+            })
+            .create()
+        binding.text.movementMethod = FocusLinkMovementMethod.getInstance()
 
 //        textView.setOnClickListener {
 //            LogUtils.e("222222222222点击事件")
 //        }
-        textRoot.setOnClickListener {
+        binding.textRoot.setOnClickListener {
             LogUtils.e("333333333333333点击事件")
         }
         WorkFlow.Builder()
-                .addWork {
-                    object : Thread() {
-                        override fun run() {
-                            super.run()
-                            Thread.sleep(2000)
-                            Log.e("aaaa", "第一个执行完")
-                            it.onOk()
-                        }
-                    }.start()
-                }
-                .addWork {
-                    object : Thread() {
-                        override fun run() {
-                            super.run()
-                            Thread.sleep(3000)
-                            Log.e("aaaa", "第二个执行完")
-                            it.onOk()
-                        }
-                    }.start()
-                }
-                .build()
-                .start()
+            .addWork {
+                object : Thread() {
+                    override fun run() {
+                        super.run()
+                        Thread.sleep(2000)
+                        Log.e("aaaa", "第一个执行完")
+                        it.onOk()
+                    }
+                }.start()
+            }
+            .addWork {
+                object : Thread() {
+                    override fun run() {
+                        super.run()
+                        Thread.sleep(3000)
+                        Log.e("aaaa", "第二个执行完")
+                        it.onOk()
+                    }
+                }.start()
+            }
+            .build()
+            .start()
 
-        buttonJump.background = DrawableUtils.createGradientDrawable(0xffff0000.toInt())
-                .roundRadiu(floatArrayOf(30f, 30f, 0f, 20f))
-                .create()
+        binding.buttonJump.background = DrawableUtils.createGradientDrawable(0xffff0000.toInt())
+            .roundRadiu(floatArrayOf(30f, 30f, 0f, 20f))
+            .create()
     }
 
     fun onView1Click(view: View) {
@@ -123,7 +127,13 @@ class MainActivity : AppCompatActivity() {
             SuperToast.get("aaaaaaa").info()
             SuperToast.get("bbbbbb").info()
             val intent = Intent(this@MainActivity, NotificationActivity::class.java)
-            NotificationUtil.notification(123, R.mipmap.ic_launcher_round, "标题", "你收到通知啦", intent = intent)
+            NotificationUtil.notification(
+                123,
+                R.mipmap.ic_launcher_round,
+                "标题",
+                "你收到通知啦",
+                intent = intent
+            )
         }
     }
 
@@ -137,19 +147,28 @@ class MainActivity : AppCompatActivity() {
         // SuperToast.get("aaaaaaa").warn();
     }
 
-    val ss = "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
+    val ss =
+        "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
+
     fun onView4Click(view: View) {
         ThreadUtils.execute {
             ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
         }
-        val logo = BitmapUtil.decodeResource(this, R.mipmap.ic_launcher_round,
-                DimensUtils.dip2px(this, 50f),
-                DimensUtils.dip2px(this, 50f))
+        val logo = BitmapUtil.decodeResource(
+            this, R.mipmap.ic_launcher_round,
+            DimensUtils.dip2px(this, 50f),
+            DimensUtils.dip2px(this, 50f)
+        )
         //        imageView.setDrawingCacheEnabled(true);
         //        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
         //        imageView.setDrawingCacheEnabled(false);
-        val bitmap = BitmapUtil.decodeResource(this, R.mipmap.timg, ScreenInfoUtils.getWidth(), ScreenInfoUtils.getHeight())
-        imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo, null))
+        val bitmap = BitmapUtil.decodeResource(
+            this,
+            R.mipmap.timg,
+            ScreenInfoUtils.getWidth(),
+            ScreenInfoUtils.getHeight()
+        )
+        binding.imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo, null))
 
         val aaa = AesAAUtil.encrypt(ss, "NeYHTiTLQp8J" + "\u0000\u0000\u0000\u0000")
         val aaaa = AESUtils.encrypt(ss, "NeYHTiTLQp8J")
@@ -178,7 +197,8 @@ class MainActivity : AppCompatActivity() {
 //            LogUtils.e(aa.await())
 //        }
         var bb = "{\"nickname\":\"\\u5b59\\u8d5b-Simon\",\"mobile\":\"13285112318\"}"
-        var aa = "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ=="
+        var aa =
+            "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ=="
         try {
             var aaa = AESUtils.decryptHex(aa, "8d68a9777b8b7115364452c712837616")
             LogUtils.e(aaa)
@@ -207,64 +227,86 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         getLocation()
     }
 
     fun getLocation() {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1123)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@MainActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1123
+            )
             return
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0f, object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                Log.e("aaa", "location lat:" + location.latitude + ",lon:" + location.longitude)
-                val geocoder = Geocoder(this@MainActivity, Locale.getDefault())
-                var addresses: List<Address>? = null
-                try {
-                    addresses = geocoder.getFromLocation(location.latitude,
-                            location.longitude, 1)
-                } catch (ioException: IOException) {
+        locationManager.requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER,
+            0,
+            0f,
+            object : LocationListener {
+                override fun onLocationChanged(location: Location) {
+                    Log.e("aaa", "location lat:" + location.latitude + ",lon:" + location.longitude)
+                    val geocoder = Geocoder(this@MainActivity, Locale.getDefault())
+                    var addresses: List<Address>? = null
+                    try {
+                        addresses = geocoder.getFromLocation(
+                            location.latitude,
+                            location.longitude, 1
+                        )
+                    } catch (ioException: IOException) {
 
-                    Log.e("aaa", "服务不可用！", ioException)
+                        Log.e("aaa", "服务不可用！", ioException)
 
-                }
-
-                if (addresses == null || addresses.size == 0) {
-                    Log.e("aaa", "没有找到相关地址!")
-                } else {
-                    val address = addresses[0]
-                    val addressFragments = ArrayList<String>()
-                    var curAddr = ""
-                    for (i in 0 until address.maxAddressLineIndex) {
-                        addressFragments.add(address.getAddressLine(i))
-                        curAddr = curAddr + address.getAddressLine(i)
                     }
 
-                    if (!TextUtils.isEmpty(address.featureName)
+                    if (addresses == null || addresses.size == 0) {
+                        Log.e("aaa", "没有找到相关地址!")
+                    } else {
+                        val address = addresses[0]
+                        val addressFragments = ArrayList<String>()
+                        var curAddr = ""
+                        for (i in 0 until address.maxAddressLineIndex) {
+                            addressFragments.add(address.getAddressLine(i))
+                            curAddr = curAddr + address.getAddressLine(i)
+                        }
+
+                        if (!TextUtils.isEmpty(address.featureName)
                             && !addressFragments.isEmpty()
-                            && addressFragments[addressFragments.size - 1] != address.featureName) {
-                        addressFragments.add(address.featureName)
-                        curAddr = curAddr + address.featureName
+                            && addressFragments[addressFragments.size - 1] != address.featureName
+                        ) {
+                            addressFragments.add(address.featureName)
+                            curAddr = curAddr + address.featureName
+                        }
+                        Log.e("", "详情地址已经找到,地址:$curAddr")
                     }
-                    Log.e("", "详情地址已经找到,地址:$curAddr")
+
                 }
 
-            }
+                override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
 
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+                }
 
-            }
+                override fun onProviderEnabled(provider: String) {
 
-            override fun onProviderEnabled(provider: String) {
+                }
 
-            }
+                override fun onProviderDisabled(provider: String) {
 
-            override fun onProviderDisabled(provider: String) {
-
-            }
-        })
+                }
+            })
     }
 }

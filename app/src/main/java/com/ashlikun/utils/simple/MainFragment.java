@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashlikun.utils.ui.StatusBarCompat;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.ashlikun.utils.ui.StatusBarCompat;
 
 /**
  * 作者　　: 李坤

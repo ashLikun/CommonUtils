@@ -45,9 +45,10 @@ val ThreadPoolDispatcher = ThreadPoolManage.get().executor.asCoroutineDispatcher
 /**
  * 本框架协成默认错误的处理,如果调用者处理了，那么这里不会调用
  */
-val defaultCoroutineExceptionHandler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, t ->
-    t.printStackTrace()
-}
+val defaultCoroutineExceptionHandler: CoroutineExceptionHandler =
+    CoroutineExceptionHandler { _, t ->
+        t.printStackTrace()
+    }
 
 inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContext {
     var ct = context
@@ -65,7 +66,11 @@ inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContex
  *
  * 注意：该函数会阻塞代码继续执行
  */
-inline fun <T> taskBlock(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T): T = runBlocking(CoroutineExceptionHandler(context)) {
+inline fun <T> taskBlock(
+    context: CoroutineContext = EmptyCoroutineContext,
+    delayTime: Long = 0,
+    noinline job: suspend () -> T
+): T = runBlocking(CoroutineExceptionHandler(context)) {
     delay(delayTime)
     job()
 }
@@ -75,7 +80,11 @@ inline fun <T> taskBlock(context: CoroutineContext = EmptyCoroutineContext, dela
  * 多个 async 任务是并行的
  * 特点带返回值 async 返回的是一个Deferred<T>，需要调用其await()方法获取结果。
  */
-inline fun <T> taskAsync(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T): Deferred<T> = GlobalScope.async(CoroutineExceptionHandler(context)) {
+inline fun <T> taskAsync(
+    context: CoroutineContext = EmptyCoroutineContext,
+    delayTime: Long = 0,
+    noinline job: suspend () -> T
+): Deferred<T> = GlobalScope.async(CoroutineExceptionHandler(context)) {
     delay(delayTime)
     job()
 }
@@ -84,7 +93,11 @@ inline fun <T> taskAsync(context: CoroutineContext = EmptyCoroutineContext, dela
  * 执行，常用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunch(context: CoroutineContext = EmptyCoroutineContext, delayTime: Long = 0, noinline job: suspend () -> T) = GlobalScope.launch(CoroutineExceptionHandler(context)) {
+inline fun <T> taskLaunch(
+    context: CoroutineContext = EmptyCoroutineContext,
+    delayTime: Long = 0,
+    noinline job: suspend () -> T
+) = GlobalScope.launch(CoroutineExceptionHandler(context)) {
     delay(delayTime)
     job()
 }
@@ -93,18 +106,25 @@ inline fun <T> taskLaunch(context: CoroutineContext = EmptyCoroutineContext, del
  * 执行，在Android UI线程中执行，可以用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunchMain(delayTime: Long = 0, noinline job: suspend () -> T) = taskLaunch(MainDispatcher, delayTime, job)
+inline fun <T> taskLaunchMain(delayTime: Long = 0, noinline job: suspend () -> T) =
+    taskLaunch(MainDispatcher, delayTime, job)
 
 /**
  * 执行，在ThreadPoolDispatcher线程中执行，可以用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunchThreadPoll(delayTime: Long = 0, noinline job: suspend () -> T) = taskLaunch(ThreadPoolDispatcher, delayTime, job)
+inline fun <T> taskLaunchThreadPoll(delayTime: Long = 0, noinline job: suspend () -> T) =
+    taskLaunch(ThreadPoolDispatcher, delayTime, job)
 
 /**
  * 心跳执行 默认重复次数1次，可用于最外层
  */
-inline fun <T> taskRepeat(context: CoroutineContext = EmptyCoroutineContext, repeat: Int = 1, delayTime: Long = 0, noinline job: () -> T) = taskLaunch(context) {
+inline fun <T> taskRepeat(
+    context: CoroutineContext = EmptyCoroutineContext,
+    repeat: Int = 1,
+    delayTime: Long = 0,
+    noinline job: () -> T
+) = taskLaunch(context) {
     taskRepeatSus(repeat, delayTime, job)
 }
 
@@ -112,7 +132,11 @@ inline fun <T> taskRepeat(context: CoroutineContext = EmptyCoroutineContext, rep
 /**
  * 心跳执行 默认重复次数1次，不能用于最外层
  */
-suspend inline fun <T> taskRepeatSus(repeat: Int = 1, delayTime: Long = 0, crossinline job: () -> T) = repeat(repeat) {
+suspend inline fun <T> taskRepeatSus(
+    repeat: Int = 1,
+    delayTime: Long = 0,
+    crossinline job: () -> T
+) = repeat(repeat) {
     delay(delayTime)
     job()
 }
@@ -122,11 +146,13 @@ suspend inline fun <T> taskRepeatSus(repeat: Int = 1, delayTime: Long = 0, cross
  * 多个 withContext 任务是串行的
  * 特点带返回值
  */
-suspend inline fun <T> withContextMain(noinline block: suspend CoroutineScope.() -> T) = withContext(MainDispatcher, block)
+suspend inline fun <T> withContextMain(noinline block: suspend CoroutineScope.() -> T) =
+    withContext(MainDispatcher, block)
 
 /**
  * 切换线程到线程池
  * 多个 withContext 任务是串行的
  * 特点带返回值
  */
-suspend inline fun <T> withContextThreadPoll(noinline block: suspend CoroutineScope.() -> T) = withContext(ThreadPoolDispatcher, block)
+suspend inline fun <T> withContextThreadPoll(noinline block: suspend CoroutineScope.() -> T) =
+    withContext(ThreadPoolDispatcher, block)

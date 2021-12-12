@@ -1,6 +1,8 @@
 package com.ashlikun.utils.ui;
 
 
+import static com.ashlikun.utils.AppUtils.getApp;
+
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -8,8 +10,6 @@ import android.widget.Toast;
 
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.MainHandle;
-
-import static com.ashlikun.utils.AppUtils.getApp;
 
 
 public class ToastUtils {

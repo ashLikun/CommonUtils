@@ -59,7 +59,7 @@ public class SpannableUtils {
      * @return {@link Builder}
      */
     public static Builder getBuilder(@NonNull CharSequence text) {
-        return new Builder(AppUtils.getApp(),text);
+        return new Builder(AppUtils.getApp(), text);
     }
 
     public static Builder getBuilder(Context context, @NonNull CharSequence text) {
@@ -237,7 +237,7 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setForegroundColorRes(@ColorRes int color) {
-            this.foregroundColor = ResUtils.getColor(context,color);
+            this.foregroundColor = ResUtils.getColor(context, color);
             return this;
         }
 
@@ -253,7 +253,7 @@ public class SpannableUtils {
          * @return {@link Builder}
          */
         public Builder setBackgroundColorRes(@ColorRes int color) {
-            this.backgroundColor = ResUtils.getColor(context,color);
+            this.backgroundColor = ResUtils.getColor(context, color);
             return this;
         }
 
@@ -402,7 +402,7 @@ public class SpannableUtils {
          */
         public Builder setAlignTopRes(@DimenRes int alignTopOffset) {
             isAlignTop = true;
-            this.alignTopOffset = ResUtils.getDimensionPixelOffset(context,alignTopOffset);
+            this.alignTopOffset = ResUtils.getDimensionPixelOffset(context, alignTopOffset);
             return this;
         }
 
@@ -718,7 +718,7 @@ public class SpannableUtils {
                 if (imageIsBitmap) {
                     drawable = new BitmapDrawable(context.getResources(), bitmap);
                 } else if (imageIsResourceId) {
-                    drawable = ResUtils.getDrawable(context,resourceId);
+                    drawable = ResUtils.getDrawable(context, resourceId);
                 }
                 if (imageIsBitmap || imageIsResourceId) {
                     int width = drawable.getIntrinsicWidth();
@@ -746,7 +746,7 @@ public class SpannableUtils {
                 mBuilder.setSpan(new MaskFilterSpan(new BlurMaskFilter(radius, style)), start, end, flag);
             }
             if (bulletWidth > 0) {
-                mBuilder.setSpan(new XBulletSpan(bulletWidth, bulletColor, bulletGapWidth), start, end, flag);
+                mBuilder.setSpan(new XBulletSpan(bulletWidth, true, bulletColor, bulletGapWidth), start, end, flag);
             }
             //是否居上对齐
             if (isAlignTop) {

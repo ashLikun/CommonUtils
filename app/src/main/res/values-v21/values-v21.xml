@@ -14,7 +14,7 @@
 
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:buttonStyle">?android:attr/selectableItemBackground</item>
+        <!--<item name="android:buttonStyle">?android:attr/selectableItemBackground</item>-->
         <!--<item name="android:requiresFadingEdge">vertical</item>-->
         <!--<item name="android:requiresFadingEdge">vertical</item>-->
 

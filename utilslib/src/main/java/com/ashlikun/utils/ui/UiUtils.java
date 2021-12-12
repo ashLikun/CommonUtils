@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
 import com.google.android.material.tabs.TabLayout;
 

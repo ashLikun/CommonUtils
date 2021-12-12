@@ -1,13 +1,5 @@
 package com.ashlikun.utils.encryption;
 
-/**
- * 作者　　: 李坤
- * 创建时间: 2017/10/17　14:25
- * 邮箱　　：496546144@qq.com
- * <p>
- * 功能介绍：
- */
-
 import java.security.Provider;
 
 /**

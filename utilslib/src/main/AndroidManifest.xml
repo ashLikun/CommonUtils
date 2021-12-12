@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ashlikun.utils">
-    <application>
+
+
+    <uses-permission android:name="android.permission.REORDER_TASKS" /><application>
         <!--7.0 url的获取-->
         <provider
             android:name="androidx.core.content.FileProvider"

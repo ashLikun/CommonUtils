@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.view.View
+import com.ashlikun.utils.main.ActivityUtils
 import com.ashlikun.utils.ui.StatusBarCompat
 
 /**
@@ -13,13 +14,11 @@ import com.ashlikun.utils.ui.StatusBarCompat
  *
  * 功能介绍：Activity的一些扩展方法
  */
-fun Activity?.getRootView(): View? {
-    return this?.findViewById(android.R.id.content)
-}
+fun Activity?.getRootView() = this?.findViewById<View>(android.R.id.content)
 
-fun Activity?.getDecorView(): View? {
-    return this?.window?.decorView
-}
+fun Activity?.getDecorView() = this?.window?.decorView
+
+fun Context?.toActivity() = ActivityUtils.getActivity(this)
 
 var Activity.windowBrightness
     get() = window.attributes.screenBrightness

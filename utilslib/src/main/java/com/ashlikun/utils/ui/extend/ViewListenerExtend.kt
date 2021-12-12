@@ -6,7 +6,6 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.core.view.ViewCompat

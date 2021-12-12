@@ -1,8 +1,6 @@
 package com.ashlikun.utils.simple;
 
 
-import com.ashlikun.utils.encryption.AESUtils;
-
 import java.util.Base64;
 
 import javax.crypto.Cipher;

@@ -1,9 +1,6 @@
 package com.ashlikun.utils.ui.extend
 
 import android.content.Context
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.ui.ResUtils
 import com.ashlikun.utils.ui.ScreenInfoUtils
