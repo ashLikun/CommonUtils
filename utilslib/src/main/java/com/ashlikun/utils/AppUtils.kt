@@ -23,7 +23,7 @@ import java.io.File
  */
 object AppUtils {
     var isDebug = false
-    var app: Application? = null
+    lateinit var app: Application
         private set
 
     /**
@@ -45,9 +45,9 @@ object AppUtils {
     var versionCode = -10088
         get() {
             if (field < 0) {
-                val pm = app!!.packageManager
+                val pm = app.packageManager
                 try {
-                    val packageInfo = pm.getPackageInfo(app!!.packageName, 0)
+                    val packageInfo = pm.getPackageInfo(app.packageName, 0)
                     field = packageInfo.versionCode
                 } catch (e: NameNotFoundException) {
                     e.printStackTrace()
@@ -63,9 +63,9 @@ object AppUtils {
     var versionName: String = ""
         get() {
             if (TextUtils.isEmpty(field)) {
-                val pm = app!!.packageManager
+                val pm = app.packageManager
                 try {
-                    val packageInfo = pm.getPackageInfo(app!!.packageName, 0)
+                    val packageInfo = pm.getPackageInfo(app.packageName, 0)
                     field = packageInfo.versionName
                 } catch (e: NameNotFoundException) {
                     e.printStackTrace()
@@ -84,9 +84,9 @@ object AppUtils {
     var packageName: String = ""
         get() {
             if (TextUtils.isEmpty(field)) {
-                val pm = app!!.packageManager
+                val pm = app.packageManager
                 try {
-                    val packageInfo = pm.getPackageInfo(app!!.packageName, 0)
+                    val packageInfo = pm.getPackageInfo(app.packageName, 0)
                     field = packageInfo.packageName
                 } catch (e: NameNotFoundException) {
                     e.printStackTrace()
@@ -120,8 +120,8 @@ object AppUtils {
      */
     fun getUri(file: File): Uri {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val authority = app!!.packageName + ".Provider"
-            FileProvider.getUriForFile(app!!, authority, file)
+            val authority = app.packageName + ".Provider"
+            FileProvider.getUriForFile(app, authority, file)
         } else {
             Uri.fromFile(file)
         }
@@ -141,10 +141,10 @@ object AppUtils {
      */
     val packageInfo: PackageInfo?
         get() {
-            val packageManager = app!!.packageManager
+            val packageManager = app.packageManager
             var packageInfo: PackageInfo? = null
             try {
-                packageInfo = packageManager.getPackageInfo(app!!.packageName, 0)
+                packageInfo = packageManager.getPackageInfo(app.packageName, 0)
             } catch (e: NameNotFoundException) {
                 e.printStackTrace()
             }
