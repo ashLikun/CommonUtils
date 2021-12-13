@@ -16,6 +16,7 @@ import java.util.HashSet
 import kotlin.jvm.Synchronized
 import java.lang.StringBuilder
 import android.content.ContentResolver
+import com.ashlikun.utils.AppUtils
 import java.lang.Class
 
 /**
@@ -60,7 +61,7 @@ class ImpSpProvider : IContentProvider {
                     SP_CURSOR_COLUMN_VALUE
                 )
             )
-            val value = getValue(mode.name, mode.key, mode.type)
+            val value = getValue(mode.key, mode.name, mode.type)
             if (value != null) {
                 val rows = arrayOfNulls<Any>(3)
                 rows[0] = mode.name
@@ -92,8 +93,7 @@ class ImpSpProvider : IContentProvider {
                     }
                 }
             }
-            return if (setValue(mode.name, mode.key, obj)
-            ) Uri.parse("true") else null
+            return if (setValue(mode.key, obj, mode.name)) Uri.parse("true") else null
         }
         return null
     }
@@ -117,8 +117,7 @@ class ImpSpProvider : IContentProvider {
      * 获取sp内容
      */
     inline fun getValue(
-        name: String,
-        key: String, type: String
+        key: String, name: String, type: String
     ): Any? {
         val sp = getSP(name)
         //如果没有这个值，就返回null，调用者自己返回默认值
@@ -140,21 +139,21 @@ class ImpSpProvider : IContentProvider {
      * 保存sp内容
      */
     @Synchronized
-    fun <T> setValue(name: String, key: String, value: T): Boolean {
+    fun <T> setValue(key: String, value: T, name: String): Boolean {
         val sp = getSP(name) ?: return false
         val editor = sp.edit()
         if (value is String) {
-            editor.putString(key, value as String)
+            editor.putString(key, value)
         } else if (value is Int) {
-            editor.putInt(key, (value as Int))
+            editor.putInt(key, value)
         } else if (value is Boolean) {
-            editor.putBoolean(key, (value as Boolean))
+            editor.putBoolean(key, value)
         } else if (value is Float) {
-            editor.putFloat(key, (value as Float))
+            editor.putFloat(key, value)
         } else if (value is Long) {
-            editor.putLong(key, (value as Long))
-        } else if (value is MutableSet<*>) {
-            editor.putStringSet(key, value as MutableSet<String>)
+            editor.putLong(key, value)
+        } else if (value is Set<*>) {
+            editor.putStringSet(key, value as Set<String>)
         }
         return editor.commit()
     }
@@ -188,29 +187,25 @@ class ImpSpProvider : IContentProvider {
          * 设置Provider内容
          */
         fun setValueToProvider(
-            context: Context?,
-            name: String?,
-            key: String?,
-            value: Any?
+            key: String,
+            value: Any,
+            name: String,
         ): Boolean {
-            if (context == null || name == null || key == null || value == null) {
-                return false
-            }
             val cv = ContentValues()
             if (value is String) {
-                cv.put(VALUE, value as String?)
+                cv.put(VALUE, value)
             } else if (value is Int) {
-                cv.put(VALUE, value as Int?)
+                cv.put(VALUE, value)
             } else if (value is Boolean) {
-                cv.put(VALUE, value as Boolean?)
+                cv.put(VALUE, value)
             } else if (value is Float) {
-                cv.put(VALUE, value as Float?)
+                cv.put(VALUE, value)
             } else if (value is Long) {
-                cv.put(VALUE, value as Long?)
+                cv.put(VALUE, value)
             } else if (value is Set<*>) {
                 val builder = StringBuilder()
                 var isAdd = false
-                for (string in value as Set<String?>) {
+                for (string in value as Set<String>) {
                     if (isAdd) {
                         builder.append(COMMA_REPLACEMENT)
                     }
@@ -221,7 +216,7 @@ class ImpSpProvider : IContentProvider {
             }
             val uri = SpMode(name, key, value.javaClass).uri
             if (uri != null) {
-                val cr = context.contentResolver
+                val cr = AppUtils.app.contentResolver
                 return cr.update(uri, cv, null, null) > 0
             }
             return false
@@ -230,24 +225,20 @@ class ImpSpProvider : IContentProvider {
         /**
          * 获取provider内容
          */
-        fun getValueToProvider(
-            context: Context?,
-            name: String?,
-            key: String?, type: Class<*>?, defaultValue: Any
-        ): Any {
-            if (context == null || name == null || key == null || type == null) {
-                return defaultValue
-            }
+        fun <T> getValueToProvider(
+            key: String, defaultValue: T, name: String, type: Class<T>
+        ): T {
             val uri = SpMode(name, key, type).uri
             if (uri != null) {
-                val cr = context.contentResolver
+                val cr = AppUtils.app.contentResolver
                 val cursor = cr.query(uri, null, null, null, null) ?: return defaultValue
-                var result: Any? = null
+                var result: T? = null
                 if (cursor.moveToNext()) {
                     if (type.isAssignableFrom(String::class.java)) {
-                        result = cursor.getString(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE))
+                        result =
+                            cursor.getString(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE)) as T
                     } else if (type.isAssignableFrom(Int::class.java)) {
-                        result = cursor.getInt(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE))
+                        result = cursor.getInt(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE)) as T
                     } else if (type.isAssignableFrom(Boolean::class.java)) {
                         result = java.lang.Boolean.valueOf(
                             cursor.getString(
@@ -255,11 +246,11 @@ class ImpSpProvider : IContentProvider {
                                     SP_CURSOR_COLUMN_VALUE
                                 )
                             )
-                        )
+                        ) as T
                     } else if (type.isAssignableFrom(Float::class.java)) {
-                        result = cursor.getFloat(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE))
+                        result = cursor.getFloat(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE)) as T
                     } else if (type.isAssignableFrom(Long::class.java)) {
-                        result = cursor.getLong(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE))
+                        result = cursor.getLong(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE)) as T
                     } else if (type.isAssignableFrom(MutableSet::class.java)) {
                         val setStrs = cursor.getString(
                             cursor.getColumnIndex(
@@ -269,16 +260,14 @@ class ImpSpProvider : IContentProvider {
                         if (setStrs != null) {
                             val setStr = setStrs.split(COMMA_REPLACEMENT).toTypedArray()
                             if (setStr != null) {
-                                val set = HashSet<String>()
-                                for (s in setStr) {
-                                    set.add(s)
-                                }
-                                result = set
+                                val set = mutableSetOf<String>()
+                                set.addAll(setStr)
+                                result = set as T
                             }
                         }
                     }
                 }
-                return result ?: defaultValue
+                return (result ?: defaultValue)
             }
             return defaultValue
         }

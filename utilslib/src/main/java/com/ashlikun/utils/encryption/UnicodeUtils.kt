@@ -22,7 +22,7 @@ object UnicodeUtils {
      * unicode 转字符串
      */
     fun unicode2String(unicode: String): String? {
-        if (StringUtils.isEmpty(unicode)) {
+        if (unicode.isEmpty()) {
             return null
         }
         val m = reUnicode.matcher(unicode)

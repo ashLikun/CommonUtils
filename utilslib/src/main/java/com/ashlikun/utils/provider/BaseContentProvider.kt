@@ -9,17 +9,33 @@ import com.ashlikun.utils.provider.BaseContentProvider
 import com.ashlikun.utils.provider.ImpSpProvider
 
 /**
- * 作者　　: 李坤
- * 创建时间: 2018/5/30 0030　下午 3:44
+ * @author　　: 李坤
+ * 创建时间: 2021/12/13 22:47
  * 邮箱　　：496546144@qq.com
- *
  *
  * 功能介绍：项目中的内容提供者，
  * 一般用于主进程提供数据给其他进程,
  * 或者其他进程写入数据给主进程
  * 在清单文件声明了 android:exported="false"，不允许其他应用访问，只能当前应用访问，Provider
  */
+
 class BaseContentProvider : ContentProvider() {
+
+    companion object {
+        /**
+         * 构建url
+         */
+        const val CONTENT = "content://"
+        var AUTHORITY = ""
+        const val SEPARATOR = "/"
+        val CONTENT_URI = CONTENT + AUTHORITY
+
+        /**
+         * sp处理
+         */
+        const val HANDLE_SP = "handle_sp"
+    }
+
     /**
      * 处理这种类型的Provider
      */
@@ -42,7 +58,7 @@ class BaseContentProvider : ContentProvider() {
         sortOrder: String?
     ): Cursor? {
         createProvider(uri)
-        return provider?.query(context, uri)
+        return provider?.query(uri)
     }
 
     /**
@@ -53,23 +69,17 @@ class BaseContentProvider : ContentProvider() {
      */
     override fun getType(uri: Uri): String? {
         createProvider(uri)
-        return if (provider != null) {
-            provider!!.getType(context, uri)
-        } else null
+        return provider?.getType(uri)
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         createProvider(uri)
-        return if (provider != null) {
-            provider!!.insert(context, uri, values)
-        } else null
+        return provider?.insert(uri, values)
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         createProvider(uri)
-        return if (provider != null) {
-            provider!!.delete(context, uri)
-        } else 0
+        return provider?.delete(uri) ?: 0
     }
 
     override fun update(
@@ -82,26 +92,14 @@ class BaseContentProvider : ContentProvider() {
     }
 
     private fun createProvider(uri: Uri) {
-        val path = uri.path!!.split(SEPARATOR).toTypedArray()
-        val handle = path[1]
-        //根据不同类型实现不同处理器
-        if (HANDLE_SP == handle) {
-            provider = ImpSpProvider()
+        val path = uri.path?.split(SEPARATOR)?.toTypedArray()
+        if (path != null) {
+            val handle = path[1]
+            //根据不同类型实现不同处理器
+            if (HANDLE_SP == handle) {
+                provider = ImpSpProvider()
+            }
         }
     }
 
-    companion object {
-        /**
-         * 构建url
-         */
-        const val CONTENT = "content://"
-        var AUTHORITY = ""
-        const val SEPARATOR = "/"
-        val CONTENT_URI = CONTENT + AUTHORITY
-
-        /**
-         * sp处理
-         */
-        const val HANDLE_SP = "handle_sp"
-    }
 }

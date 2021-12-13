@@ -2,7 +2,6 @@ package com.ashlikun.utils.other.spannable
 
 import android.text.style.BulletSpan
 import android.text.style.LeadingMarginSpan
-import com.ashlikun.utils.other.spannable.XBulletSpan
 import android.os.Parcel
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -21,9 +20,9 @@ import com.ashlikun.utils.other.SpannableUtils
  */
 open class XBulletSpan(
     open var gapWidthX: Int = STANDARD_GAP_WIDTH,
-    open var wantColor: Boolean = true,
-    open var colorX: Int = 0,
-    open var radius: Int = 0
+    open var wantColor: Boolean,
+    open var colorX: Int,
+    open var radius: Int
 ) : BulletSpan(), LeadingMarginSpan {
 
     companion object {
@@ -56,8 +55,9 @@ open class XBulletSpan(
                 p.color = colorX
             }
             p.style = Paint.Style.FILL
-            drawBullet(c, p, x, dir, top, bottom, l)
-
+            if (l != null) {
+                drawBullet(c, p, x, dir, top, bottom, l)
+            }
             //还原
             if (wantColor) {
                 p.color = oldcolor
@@ -66,7 +66,7 @@ open class XBulletSpan(
         }
     }
 
-    fun drawBullet(c: Canvas, p: Paint?, x: Int, dir: Int, top: Int, bottom: Int, l: Layout?) {
+    fun drawBullet(c: Canvas, p: Paint?, x: Int, dir: Int, top: Int, bottom: Int, l: Layout) {
         val transY = SpannableUtils.getSpanDrawCententY(top, bottom, l)
         if (c.isHardwareAccelerated) {
             if (sBulletPath == null) {

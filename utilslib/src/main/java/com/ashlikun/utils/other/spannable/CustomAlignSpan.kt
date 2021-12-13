@@ -17,8 +17,8 @@ import android.text.TextPaint
  */
 class CustomAlignSpan(
     var alignTopOffset: Float,
-    var foregroundColor: Int,
-    var backgroundColor: Int
+    var foregroundColor: Int?,
+    var backgroundColor: Int?
 ) : ReplacementSpan() {
     override fun getSize(
         paint: Paint,
@@ -44,12 +44,12 @@ class CustomAlignSpan(
         paint: Paint
     ) {
         var text = text
-        if (foregroundColor != SpannableUtils.Builder.defaultValue) {
-            paint.color = foregroundColor
+        if (foregroundColor != null) {
+            paint.color = foregroundColor!!
         }
-        if (backgroundColor != SpannableUtils.Builder.defaultValue) {
+        if (backgroundColor != null) {
             if (paint is TextPaint) {
-                paint.bgColor = backgroundColor
+                paint.bgColor = backgroundColor!!
             }
         }
         text = text.subSequence(start, end)

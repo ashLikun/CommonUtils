@@ -37,7 +37,7 @@ object IntentUtils {
      * @param phone
      */
     fun sendSmsByPhone(phone: String) {
-        if (StringUtils.isEmpty(phone)) {
+        if (phone.isEmpty()) {
             return
         }
         val uri = Uri.parse("smsto:$phone")
@@ -70,7 +70,7 @@ object IntentUtils {
      * 根据手机好拨打电话
      */
     fun callPhone(phone: String) {
-        if (StringUtils.isEmpty(phone)) {
+        if (phone.isEmpty()) {
             return
         }
         val intent = Intent("android.intent.action.CALL", Uri.parse("tel:$phone"))

@@ -27,172 +27,70 @@ import java.lang.StringBuilder
 object SharedPreUtils {
     const val DEFAULT = "default"
     const val USER = "user"
-    fun putString(key: String, value: String?): Boolean {
-        return putString(DEFAULT, key, value)
+
+    fun putString(key: String, value: String, name: String = DEFAULT) =
+        setKeyAndValue(key, value, name)
+
+    fun getString(key: String, defaultValue: String = "", name: String = DEFAULT) =
+        getValue(key, defaultValue, name)
+
+    fun putInt(key: String, value: Int, name: String = DEFAULT) = setKeyAndValue(key, value, name)
+
+    fun getInt(key: String, defaultValue: Int = -1, name: String = DEFAULT) =
+        getValue(key, defaultValue, name)
+
+    fun putLong(key: String, value: Long, name: String = DEFAULT) = setKeyAndValue(key, value, name)
+
+
+    fun getLong(key: String, defaultValue: Long = -1L, name: String = DEFAULT) =
+        getValue(key, defaultValue, name)
+
+
+    fun putFloat(key: String, value: Float, name: String = DEFAULT) =
+        setKeyAndValue(key, value, name)
+
+
+    fun getFloat(key: String, defaultValue: Float = -1f, name: String = DEFAULT) =
+        getValue(key, defaultValue, name)
+
+
+    fun putBoolean(key: String, value: Boolean, name: String = DEFAULT): Boolean {
+        return setKeyAndValue(key, value, name)
     }
 
-    fun putString(name: String, key: String, value: String?): Boolean {
-        return setKeyAndValue(name, key, value)
-    }
 
-    fun getString(key: String, defaultValue: String = "", name: String = DEFAULT): String {
-        return getValue(name, key, String::class.java, defaultValue) as String
-    }
+    fun getBoolean(key: String, defaultValue: Boolean = false, name: String = DEFAULT) =
+        getValue(key, defaultValue, name)
 
-    fun getStringName(name: String, key: String): String {
-        return getValue(name, key, String::class.java, "")
-    }
 
-    fun putInt(key: String, value: Int): Boolean {
-        return putInt(DEFAULT, key, value)
-    }
+    fun putSet(key: String, value: Set<String>, name: String = DEFAULT) =
+        setKeyAndValue(key, value, name)
 
-    fun putInt(name: String, key: String, value: Int): Boolean {
-        return setKeyAndValue(name, key, value)
-    }
-
-    fun getInt(key: String): Int {
-        return getInt(key, -1)
-    }
-
-    fun getInt(key: String, defaultValue: Int): Int {
-        return getInt(DEFAULT, key, defaultValue)
-    }
-
-    fun getInt(name: String, key: String, defaultValue: Int): Int {
-        return getValue(name, key, Int::class.java, defaultValue) as Int
-    }
-
-    fun getInt(name: String, key: String): Int {
-        return getValue(name, key, Int::class.java, -1) as Int
-    }
-
-    fun putLong(key: String, value: Long): Boolean {
-        return putLong(DEFAULT, key, value)
-    }
-
-    fun putLong(name: String, key: String, value: Long): Boolean {
-        return setKeyAndValue(name, key, value)
-    }
-
-    fun getLong(key: String): Long {
-        return getLong(key, -1)
-    }
-
-    fun getLong(key: String, defaultValue: Long): Long {
-        return getLong(DEFAULT, key, defaultValue)
-    }
-
-    fun getLong(name: String, key: String, defaultValue: Long): Long {
-        return getValue(name, key, Long::class.java, defaultValue) as Long
-    }
-
-    fun getLong(name: String, key: String): Long {
-        return getValue(name, key, Long::class.java, -1) as Long
-    }
-
-    fun putFloat(key: String, value: Float): Boolean {
-        return putFloat(DEFAULT, key, value)
-    }
-
-    fun putFloat(name: String, key: String, value: Float): Boolean {
-        return setKeyAndValue(name, key, value)
-    }
-
-    fun getFloat(key: String): Float {
-        return getFloat(key, -1f)
-    }
-
-    fun getFloat(key: String, defaultValue: Float): Float {
-        return getFloat(DEFAULT, key, defaultValue)
-    }
-
-    fun getFloat(name: String, key: String): Float {
-        return getValue(name, key, Float::class.java, -1) as Float
-    }
-
-    fun getFloat(name: String, key: String, defaultValue: Float): Float {
-        return getValue(name, key, Float::class.java, defaultValue) as Float
-    }
-
-    fun putBoolean(key: String, value: Boolean): Boolean {
-        return putBoolean(DEFAULT, key, value)
-    }
-
-    fun putBoolean(name: String, key: String, value: Boolean): Boolean {
-        return setKeyAndValue(name, key, value)
-    }
-
-    fun getBoolean(key: String): Boolean {
-        return getBoolean(key, false)
-    }
-
-    fun getBoolean(
-        key: String,
-        defaultValue: Boolean
-    ): Boolean {
-        return getValue(DEFAULT, key, Boolean::class.java, defaultValue) as Boolean
-    }
-
-    fun getBoolean(
-        name: String, key: String,
-        defaultValue: Boolean
-    ): Boolean {
-        return getValue(name, key, Boolean::class.java, defaultValue) as Boolean
-    }
-
-    fun getBoolean(name: String, key: String): Boolean {
-        return getValue(name, key, Boolean::class.java, false) as Boolean
-    }
-
-    fun putSet(key: String, value: MutableSet<String>?): Boolean {
-        return putSet(DEFAULT, key, value)
-    }
-
-    fun putSet(name: String, key: String, value: MutableSet<String>?): Boolean {
-        return setKeyAndValue(name, key, value)
-    }
-
-    fun getSet(key: String): Set<String>? {
-        return getSet(key, mutableSetOf<String>())
-    }
 
     fun getSet(
         key: String,
-        defaultValue: MutableSet<String>?
-    ): MutableSet<String>? {
-        return getValue(DEFAULT, key, MutableSet::class.java, defaultValue) as MutableSet<String>?
-    }
+        defaultValue: MutableSet<String> = mutableSetOf(),
+        name: String = DEFAULT
+    ) = getValue(key, defaultValue, name)
 
-    fun getSet(name: String, key: String): MutableSet<String>? {
-        return getValue(name, key, MutableSet::class.java, null) as MutableSet<String>?
-    }
 
-    fun getSet(name: String, key: String, defaultValue: MutableSet<String>?): MutableSet<String>? {
-        return getValue(name, key, MutableSet::class.java, defaultValue) as MutableSet<String>?
-    }
-
-    fun remove(key: String): Boolean {
-        return remove(DEFAULT, key)
-    }
-
-    fun remove(name: String, key: String): Boolean {
+    fun remove(key: String, name: String = DEFAULT): Boolean {
         return if (isMainProcess) {
-            val editor = getSP(name).edit()
-            editor.remove(key)
-            editor.commit()
+            getSP(name).edit().remove(key).commit()
         } else {
             //其他进程，使用ContentProvider
-            ImpSpProvider.removeToProvider(AppUtils.app, name, key)
+            try {
+                return ImpSpProvider.removeToProvider(AppUtils.app, name, key)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
         }
     }
 
     fun clear(name: String = DEFAULT): Boolean {
         if (isMainProcess) {
-            val sp = getSP(name)
-            val editor = sp.edit()
-            editor.clear()
-            return editor.commit()
+            return getSP(name).edit().clear().commit()
         } else {
             //其他进程，使用ContentProvider
             try {
@@ -210,45 +108,39 @@ object SharedPreUtils {
      * @param name 文件名
      * @return 对应值
      */
-    inline fun <reified T> getValue(name: String, key: String, defaule: T): T {
+    inline fun <reified T> getValue(key: String, defaule: T, name: String = DEFAULT) =
+        getValueType(key, defaule, name, T::class.java)
+
+    inline fun <T> getValueType(key: String, defaule: T, name: String, type: Class<T>): T {
         if (isMainProcess) {
             val sp = getSP(name) ?: return defaule
             return when {
-                T::class.java.isAssignableFrom(String::class.java) -> sp.getString(
-                    key,
-                    defaule.toString()
+                type.isAssignableFrom(String::class.java) -> sp.getString(
+                    key, defaule.toString()
                 )
-                T::class.java.isAssignableFrom(Int::class.java) -> sp.getInt(
-                    key,
-                    (defaule as Int?)!!
+                type.isAssignableFrom(Int::class.java) -> sp.getInt(
+                    key, defaule as Int
                 )
-                T::class.java.isAssignableFrom(Boolean::class.java) -> sp.getBoolean(
-                    key,
-                    defaule as Boolean
+                type.isAssignableFrom(Boolean::class.java) -> sp.getBoolean(
+                    key, defaule as Boolean
                 )
-                T::class.java.isAssignableFrom(Float::class.java) -> sp.getFloat(
-                    key,
-                    (defaule as Float)
+                type.isAssignableFrom(Float::class.java) -> sp.getFloat(
+                    key, defaule as Float
                 )
-                T::class.java.isAssignableFrom(Long::class.java) -> sp.getLong(
-                    key,
-                    defaule as Long
+                type.isAssignableFrom(Long::class.java) -> sp.getLong(
+                    key, defaule as Long
                 )
-                T::class.java.isAssignableFrom(MutableSet::class.java) -> sp.getStringSet(
-                    key,
-                    defaule as MutableSet<String>
+                type.isAssignableFrom(MutableSet::class.java) -> sp.getStringSet(
+                    key, defaule as MutableSet<String>
                 )
                 else -> {
-                    sp.getString(
-                        key,
-                        defaule.toString()
-                    )
+                    sp.getString(key, defaule.toString())
                 }
             } as T
         } else {
             //其他进程，使用ContentProvider
             try {
-                return ImpSpProvider.getValueToProvider(AppUtils.app, name, key, defaule)
+                return ImpSpProvider.getValueToProvider(key, defaule, name, type)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -256,11 +148,8 @@ object SharedPreUtils {
         return defaule
     }
 
-    fun setKeyAndValue(key: String, value: Any?): Boolean {
-        return setKeyAndValue(DEFAULT, key, value)
-    }
 
-    fun setKeyAndValue(name: String, key: String, value: Any?): Boolean {
+    fun setKeyAndValue(key: String, value: Any, name: String = DEFAULT): Boolean {
         if (isMainProcess) {
             val sp = getSP(name) ?: return false
             val editor = sp.edit()
@@ -279,7 +168,7 @@ object SharedPreUtils {
         } else {
             //其他进程，使用ContentProvider
             try {
-                return ImpSpProvider.setValueToProvider(AppUtils.app, name, key, value)
+                return ImpSpProvider.setValueToProvider(key, value, name)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -308,7 +197,7 @@ object SharedPreUtils {
         Log.e("testGet", "getCurProcessName = " + curProcessName)
         Log.e("testGet", "getLong = " + getLong("sp_testLong", 999))
         Log.e("testGet", "getInt = " + getInt("sp_testInt"))
-        Log.e("testGet", "getString = " + getString("sp_testString", null))
+        Log.e("testGet", "getString = " + getString("sp_testString", ""))
         Log.e("testGet", "getBoolean = " + getBoolean("sp_testBoolean"))
         Log.e("testGet", "getFloat = " + getFloat("sp_testFloat"))
         val sb = StringBuilder("  sp_testSet  == ")

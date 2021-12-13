@@ -99,7 +99,7 @@ object FileIOUtils {
         filePath: String, key: String,
         value: String, comment: String = "no_comment"
     ) {
-        if (StringUtils.isEmpty(key) || StringUtils.isEmpty(filePath)) {
+        if (key.isEmpty() || filePath.isEmpty()) {
             return
         }
         var fis: FileInputStream? = null
