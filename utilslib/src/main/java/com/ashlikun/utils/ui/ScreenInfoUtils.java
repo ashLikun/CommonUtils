@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.RomUtils;
+import com.ashlikun.utils.ui.resources.ResUtils;
 
 /**
  * @author　　: 李坤

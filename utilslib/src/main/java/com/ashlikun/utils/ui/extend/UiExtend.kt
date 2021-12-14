@@ -2,10 +2,10 @@ package com.ashlikun.utils.ui.extend
 
 import android.content.Context
 import com.ashlikun.utils.other.DimensUtils
-import com.ashlikun.utils.ui.ResUtils
+import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.ScreenInfoUtils
-import com.ashlikun.utils.ui.SuperToast
-import com.ashlikun.utils.ui.ToastUtils
+import com.ashlikun.utils.ui.modal.SuperToast
+import com.ashlikun.utils.ui.modal.ToastUtils
 
 /**
  * 作者　　: 李坤

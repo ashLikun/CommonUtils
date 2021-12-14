@@ -20,7 +20,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.other.DimensUtils.dip2px
 import com.ashlikun.utils.other.spannable.*
-import com.ashlikun.utils.ui.ResUtils
+import com.ashlikun.utils.ui.resources.ResUtils
 
 /**
  * @author　　: 李坤

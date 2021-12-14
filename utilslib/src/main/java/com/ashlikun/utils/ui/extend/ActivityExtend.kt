@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.view.View
 import com.ashlikun.utils.main.ActivityUtils
-import com.ashlikun.utils.ui.StatusBarCompat
+import com.ashlikun.utils.ui.status.StatusBarCompat
 
 /**
  * 作者　　: 李坤

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.resources;
 
 import android.graphics.Color;
 

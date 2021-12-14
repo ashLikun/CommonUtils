@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.image;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

@@ -13,10 +13,11 @@ import androidx.annotation.ColorRes
 import androidx.core.view.ViewCompat
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
-import com.ashlikun.utils.ui.BitmapUtil
-import com.ashlikun.utils.ui.ResUtils
+import com.ashlikun.utils.ui.image.BitmapUtil
+import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.shadow.CanShadowDrawable
 import com.ashlikun.utils.ui.shadow.RoundShadowDrawable
+import com.ashlikun.utils.ui.status.StatusBarCompat
 
 /**
  * 作者　　: 李坤
@@ -35,7 +36,10 @@ inline fun View?.setViewSize(width: Int? = null, height: Int? = null) {
         this?.run {
             var params: ViewGroup.LayoutParams? = layoutParams
             if (params == null) {
-                params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                params = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
             if (height != null) {
                 params.height = height
@@ -77,12 +81,21 @@ inline fun View?.getViewSize(crossinline onSizeListener: OnSizeListener) {
 /**
  * 从资源文件获取一个view
  */
-inline fun Context.getInflaterView(res: Int, parent: ViewGroup? = null, attachToRoot: Boolean = parent != null) = (this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(res, parent, attachToRoot)
+inline fun Context.getInflaterView(
+    res: Int,
+    parent: ViewGroup? = null,
+    attachToRoot: Boolean = parent != null
+) = (this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+    res,
+    parent,
+    attachToRoot
+)
 
 /**
  * 设置ImageView渲染（Tint）
  */
-inline fun ImageView?.setImageViewTint(@ColorRes color: Int) = this?.setColorFilter(ResUtils.getColor(context, color))
+inline fun ImageView?.setImageViewTint(@ColorRes color: Int) =
+    this?.setColorFilter(ResUtils.getColor(context, color))
 
 /**
  * 按照原始的宽度，根据比例，缩放
@@ -108,26 +121,32 @@ inline fun View?.scaleViewByHeight(bili: Float) {
     }
 }
 
-inline fun View?.getMarginLeft() = if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.leftMargin
+inline fun View?.getMarginLeft() =
+    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.leftMargin
         ?: 0 else 0
 
-inline fun View?.getMarginTop() = if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.topMargin
+inline fun View?.getMarginTop() =
+    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.topMargin
         ?: 0 else 0
 
-inline fun View?.getMarginRight() = if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.rightMargin
+inline fun View?.getMarginRight() =
+    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.rightMargin
         ?: 0 else 0
 
-inline fun View?.getMarginBottom() = if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.bottomMargin
+inline fun View?.getMarginBottom() =
+    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.bottomMargin
         ?: 0 else 0
 
 /**
  * 设置view   Padding
  */
-inline fun View?.setPaddings(leftPadding: Int = this?.paddingLeft
+inline fun View?.setPaddings(
+    leftPadding: Int = this?.paddingLeft
         ?: 0, topPadding: Int = this?.paddingTop ?: 0,
-                             rightPadding: Int = this?.paddingRight
-                                     ?: 0, bottomPadding: Int = this?.paddingBottom
-                ?: 0) {
+    rightPadding: Int = this?.paddingRight
+        ?: 0, bottomPadding: Int = this?.paddingBottom
+        ?: 0
+) {
     this?.run {
         setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
     }
@@ -136,8 +155,10 @@ inline fun View?.setPaddings(leftPadding: Int = this?.paddingLeft
 /**
  * 设置view   Margin
  */
-inline fun View?.setMargin(leftMargin: Int = getMarginLeft(), topMargin: Int = getMarginTop(),
-                           rightMargin: Int = getMarginRight(), bottomMargin: Int = getMarginBottom()) {
+inline fun View?.setMargin(
+    leftMargin: Int = getMarginLeft(), topMargin: Int = getMarginTop(),
+    rightMargin: Int = getMarginRight(), bottomMargin: Int = getMarginBottom()
+) {
     this?.run {
         val params = layoutParams
         if (params != null && params is ViewGroup.MarginLayoutParams) {
@@ -151,21 +172,28 @@ inline fun View?.setMargin(leftMargin: Int = getMarginLeft(), topMargin: Int = g
 }
 
 
-inline fun View.padding() = Math.max(Math.max(paddingTop, paddingBottom), Math.max(paddingLeft, paddingRight))
+inline fun View.padding() =
+    Math.max(Math.max(paddingTop, paddingBottom), Math.max(paddingLeft, paddingRight))
 
-inline fun View?.shadow(range: Int = this?.padding() ?: DimensUtils.dip2px(5f),
-                        color: Int = R.color.lib_shadow_default,
-                        bgColor: Int = R.color.lib_shadow_default_bg,
-                        radius: Float = 0f) {
+inline fun View?.shadow(
+    range: Int = this?.padding() ?: DimensUtils.dip2px(5f),
+    color: Int = R.color.lib_shadow_default,
+    bgColor: Int = R.color.lib_shadow_default_bg,
+    radius: Float = 0f
+) {
     if (this != null) {
         if (getTag(999999881) != range || getTag(999999882) != color || getTag(999999883) != bgColor) {
             setTag(999999881, range)
             setTag(999999882, color)
             setTag(999999883, bgColor)
-            ViewCompat.setBackground(this, RoundShadowDrawable(context.resColor(color),
+            ViewCompat.setBackground(
+                this, RoundShadowDrawable(
+                    context.resColor(color),
                     ResUtils.getColor(context, bgColor),
                     DimensUtils.dip2px(radius).toFloat(),
-                    range.toFloat()))
+                    range.toFloat()
+                )
+            )
         }
     }
 }
@@ -173,23 +201,25 @@ inline fun View?.shadow(range: Int = this?.padding() ?: DimensUtils.dip2px(5f),
 /**
  * 阴影 效果好，但是被关闭硬件加速
  */
-inline fun View?.shadowNoHardware(range: Int = this?.padding() ?: DimensUtils.dip2px(5f),
-                                  color: Int = R.color.lib_shadow_default,
-                                  bgColor: Int = R.color.lib_shadow_default_bg,
-                                  radius: Float = 0f,
-                                  corners: Int = CanShadowDrawable.CORNER_ALL) {
+inline fun View?.shadowNoHardware(
+    range: Int = this?.padding() ?: DimensUtils.dip2px(5f),
+    color: Int = R.color.lib_shadow_default,
+    bgColor: Int = R.color.lib_shadow_default_bg,
+    radius: Float = 0f,
+    corners: Int = CanShadowDrawable.CORNER_ALL
+) {
     if (this != null) {
         if (getTag(999999881) != range || getTag(999999882) != color || getTag(999999883) != bgColor) {
             setTag(999999881, range)
             setTag(999999882, color)
             setTag(999999883, bgColor)
             CanShadowDrawable.Builder.on(this)
-                    .bgColor(ResUtils.getColor(context, bgColor))
-                    .shadowColor(ResUtils.getColor(context, color))
-                    .radius(DimensUtils.dip2px(radius))
-                    .shadowRange(range.toFloat())
-                    .corners(corners)
-                    .create()
+                .bgColor(ResUtils.getColor(context, bgColor))
+                .shadowColor(ResUtils.getColor(context, color))
+                .radius(DimensUtils.dip2px(radius))
+                .shadowRange(range.toFloat())
+                .corners(corners)
+                .create()
         }
     }
 }
@@ -231,3 +261,21 @@ inline fun View.setViewSaturation(sat: Float = 0f) {
         setLayerType(layerType, paint)
     }
 }
+
+/**
+ * 设置状态栏高度
+ */
+inline fun View.setStatusHeight(isNeedAndroidMHalf: Boolean = false) =
+    StatusBarCompat.setEmptyHeight(this, isNeedAndroidMHalf)
+
+/**
+ * 设置状态栏view的padding
+ */
+inline fun View.setStatusPadding() =
+    StatusBarCompat.setTransparentViewPadding(this)
+
+/**
+ * 设置状态栏view的Margin
+ */
+inline fun View.setStatusMargin() =
+    StatusBarCompat.setTransparentViewMargin(this)

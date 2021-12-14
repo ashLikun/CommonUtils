@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.modal;
 
 import static com.ashlikun.utils.AppUtils.getApp;
 
@@ -28,6 +28,8 @@ import androidx.core.view.ViewCompat;
 import com.ashlikun.utils.R;
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.MainHandle;
+import com.ashlikun.utils.ui.resources.ColorUtils;
+import com.ashlikun.utils.ui.resources.ResUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

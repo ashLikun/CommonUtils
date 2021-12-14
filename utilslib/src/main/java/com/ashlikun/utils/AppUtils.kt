@@ -10,7 +10,7 @@ import androidx.core.content.FileProvider
 import com.ashlikun.utils.ApplicationListener.OnChangListener
 import com.ashlikun.utils.bug.BugUtils
 import com.ashlikun.utils.provider.BaseContentProvider
-import com.ashlikun.utils.ui.ResUtils
+import com.ashlikun.utils.ui.resources.ResUtils
 import java.io.File
 
 /**

@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.modal;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.ashlikun.utils.R;
+import com.ashlikun.utils.ui.ScreenInfoUtils;
 
 /**
  * 作者　　: 李坤

@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.resources;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

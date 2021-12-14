@@ -22,7 +22,7 @@ import com.ashlikun.utils.ui.ActivityManager
  */
 object IntentUtils {
     fun jump(intent: Intent) {
-        val activity = ActivityManager.getForegroundActivity()
+        val activity = ActivityManager.foregroundActivity
         if (activity != null) {
             activity.startActivity(intent)
         } else {

@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.modal;
 
 
 import static com.ashlikun.utils.AppUtils.getApp;

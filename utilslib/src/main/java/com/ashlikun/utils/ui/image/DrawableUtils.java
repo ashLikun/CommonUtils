@@ -1,4 +1,4 @@
-package com.ashlikun.utils.ui;
+package com.ashlikun.utils.ui.image;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,6 +18,7 @@ import androidx.annotation.DrawableRes;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.ashlikun.utils.other.DimensUtils;
+import com.ashlikun.utils.ui.resources.ResUtils;
 
 
 /**

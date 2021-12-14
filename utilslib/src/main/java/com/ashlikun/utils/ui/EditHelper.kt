@@ -2,16 +2,13 @@ package com.ashlikun.utils.ui
 
 import com.ashlikun.utils.animator.AnimUtils.startShakeLeft
 import android.content.Context
-import com.ashlikun.utils.ui.EditHelper
 import java.util.ArrayList
-import com.ashlikun.utils.ui.EditHelper.EditHelperData
 import com.google.android.material.textfield.TextInputLayout
 import android.widget.TextView
 import java.lang.IndexOutOfBoundsException
 import android.view.View
 import androidx.annotation.StringRes
-import com.ashlikun.utils.animator.AnimUtils
-import com.ashlikun.utils.ui.SuperToast
+import com.ashlikun.utils.ui.modal.SuperToast
 import android.text.TextWatcher
 import android.text.Editable
 
