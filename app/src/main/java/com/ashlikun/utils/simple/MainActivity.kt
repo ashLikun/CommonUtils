@@ -17,10 +17,13 @@ import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
+import com.ashlikun.utils.other.coroutines.taskAsync
+import com.ashlikun.utils.other.coroutines.taskLaunchMain
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.*
+import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.windowBrightness
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
@@ -28,6 +31,9 @@ import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
 import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.status.StatusBarCompat
+import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
+import com.ashlikun.utils.ui.text.SpannableUtils
+import kotlinx.coroutines.delay
 import java.io.IOException
 import java.util.*
 
@@ -44,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppUtils.init(application)
-        AppUtils.setDebug(true)
+        AppUtils.isDebug = true
         setContentView(binding.root)
         statusBarCompat = StatusBarCompat(this)
         statusBarCompat.setStatusBarColor(-0x1)
@@ -77,14 +83,14 @@ class MainActivity : AppCompatActivity() {
             .append("文案已复制图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册图案已保存到相册")
             .setBullet(20, resources.getColor(R.color.black), 30)
             .append("点击事件").setForegroundColorRes(R.color.black)
-            .setClickSpan(object : XClickableSpan(ResUtils.getColor(R.color.colorAccent)) {
+            .setClickSpan(object : XClickableSpan(ResUtils.getColor(R.color.colorPrimary)) {
                 override fun onClick(widget: View) {
                     LogUtils.e("11111111111点击事件11")
                 }
 
             })
             .create()
-        binding.text.movementMethod = FocusLinkMovementMethod.getInstance()
+        binding.text.movementMethod = FocusLinkMovementMethod.instance
 
 //        textView.setOnClickListener {
 //            LogUtils.e("222222222222点击事件")
@@ -160,21 +166,13 @@ class MainActivity : AppCompatActivity() {
         ThreadUtils.execute {
             ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
         }
-        val logo = BitmapUtil.decodeResource(
-            this, R.mipmap.ic_launcher_round,
-            DimensUtils.dip2px(this, 50f),
-            DimensUtils.dip2px(this, 50f)
-        )
+        val logo = BitmapUtil.decodeResource(R.mipmap.ic_launcher_round, 50.dp, 50.dp)
         //        imageView.setDrawingCacheEnabled(true);
         //        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
         //        imageView.setDrawingCacheEnabled(false);
-        val bitmap = BitmapUtil.decodeResource(
-            this,
-            R.mipmap.timg,
-            ScreenInfoUtils.getWidth(),
-            ScreenInfoUtils.getHeight()
-        )
-        binding.imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo, null))
+        val bitmap =
+            BitmapUtil.decodeResource(R.mipmap.timg, ScreenUtils.width, ScreenUtils.height)
+        binding.imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo))
 
         val aaa = AesAAUtil.encrypt(ss, "NeYHTiTLQp8J" + "\u0000\u0000\u0000\u0000")
         val aaaa = AESUtils.encrypt(ss, "NeYHTiTLQp8J")
@@ -184,37 +182,36 @@ class MainActivity : AppCompatActivity() {
 
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {
-//        LogUtils.e(NotificationUtil.isNotificationEnabled(this))
-//        builder = NotificationUtil.createBuilder(R.mipmap.ic_launcher,
-//                "测试通知",
-//                "通知内容"
-//                , defaults = NotificationCompat.DEFAULT_ALL)
-//        NotificationUtil.show(10, builder!!)
+        LogUtils.e(NotificationUtil.isNotificationEnabled())
+        builder = NotificationUtil.createBuilder(
+            R.mipmap.ic_launcher,
+            "测试通知",
+            "通知内容", defaults = NotificationCompat.DEFAULT_ALL
+        )
+        NotificationUtil.show(10, builder!!)
+        taskLaunchMain {
 
-
-//        taskLaunchMain {
-//
-//            LogUtils.e(Thread.currentThread().name)
-//            val aa = taskAsync {
-//                delay(3000)
-//                LogUtils.e(Thread.currentThread().name)
-//                1
-//            }
-//            LogUtils.e(aa.await())
-//        }
-        var bb = "{\"nickname\":\"\\u5b59\\u8d5b-Simon\",\"mobile\":\"13285112318\"}"
-        var aa =
-            "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ=="
-        try {
-            var aaa = AESUtils.decryptHex(aa, "8d68a9777b8b7115364452c712837616")
-            LogUtils.e(aaa)
-//            aadd = AESUtils.encrypt(bb, "8d68a9777b8b7115364452c712837616")
-//            LogUtils.e(aadd)
-//            aaa = AESUtils.encryptHex(bb, "8d68a9777b8b7115364452c712837616")
-//            LogUtils.e(aaa)
-        } catch (e: Exception) {
-            e.printStackTrace()
+            LogUtils.e(Thread.currentThread().name)
+            val aa = taskAsync {
+                delay(3000)
+                LogUtils.e(Thread.currentThread().name)
+                1
+            }
+            LogUtils.e(aa.await())
         }
+//        var bb = "{\"nickname\":\"\\u5b59\\u8d5b-Simon\",\"mobile\":\"13285112318\"}"
+//        var aa =
+//            "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ=="
+//        try {
+//            var aaa = AESUtils.decryptHex(aa, "8d68a9777b8b7115364452c712837616")
+//            LogUtils.e(aaa)
+////            aadd = AESUtils.encrypt(bb, "8d68a9777b8b7115364452c712837616")
+////            LogUtils.e(aadd)
+////            aaa = AESUtils.encryptHex(bb, "8d68a9777b8b7115364452c712837616")
+////            LogUtils.e(aaa)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     val runable = Runnable {

@@ -52,7 +52,7 @@ class CountdownUtils(
      * 创建时间: 2017/6/28 10:36
      *
      *
-     * 方法功能：取消倒计时
+     * 取消倒计时
      */
     fun cancel() {
         countDownTimer?.cancel()

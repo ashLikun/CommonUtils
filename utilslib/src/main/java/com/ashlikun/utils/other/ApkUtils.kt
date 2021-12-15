@@ -109,12 +109,7 @@ object ApkUtils {
      * @param packagename
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isAppInstalled(packagename: String) = try {
-        AppUtils.app.packageManager.getPackageInfo(packagename, 0) != null
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    } != null
+    fun isAppInstalled(packagename: String) = AppUtils.getPackageInfo(packagename) != null
 
     /**
      * 静默安装

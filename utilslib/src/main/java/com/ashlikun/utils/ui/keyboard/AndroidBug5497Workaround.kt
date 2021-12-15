@@ -8,7 +8,7 @@ import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
 import com.ashlikun.utils.other.DimensUtils.dip2px
-import com.ashlikun.utils.ui.ScreenInfoUtils
+import com.ashlikun.utils.ui.ScreenUtils
 
 /**
  * @author　　: 李坤
@@ -62,8 +62,8 @@ class AndroidBug5497Workaround private constructor(window: Window) {
             }
             mChildOfContent.requestLayout()
             usableHeightPrevious = usableHeightNow
-            if (ScreenInfoUtils.getHeight() - usableHeightNow > dip2px(150f)) {
-                onSoftPop?.invoke(ScreenInfoUtils.getHeight() - usableHeightNow)
+            if (ScreenUtils.height - usableHeightNow > dip2px(150f)) {
+                onSoftPop?.invoke(ScreenUtils.height - usableHeightNow)
             } else {
                 onSoftClose?.invoke()
             }

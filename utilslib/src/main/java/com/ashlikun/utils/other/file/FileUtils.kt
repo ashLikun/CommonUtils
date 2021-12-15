@@ -43,7 +43,7 @@ object FileUtils {
     }
 
     /**
-     * 方法功能：获取清单文件的mate值
+     * 获取清单文件的mate值
      */
     fun getMetaValue(metaKey: String): String {
         var metaData: Bundle? = null
@@ -66,7 +66,7 @@ object FileUtils {
     }
 
     /**
-     * 方法功能：读取输入流
+     * 读取输入流
      */
     fun readByte(ins: InputStream) = FileIOUtils.is2Bytes(ins)
 

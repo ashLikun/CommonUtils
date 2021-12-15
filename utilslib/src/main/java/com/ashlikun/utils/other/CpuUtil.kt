@@ -1,17 +1,13 @@
 package com.ashlikun.utils.other
 
 import com.ashlikun.utils.other.file.FileIOUtils
-import com.ashlikun.utils.other.CpuUtil
-import com.ashlikun.utils.other.LogUtils
 import java.io.FileFilter
 import java.io.File
 import java.lang.Exception
-import com.ashlikun.utils.other.StringUtils
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
 import java.lang.ProcessBuilder
-import java.io.InputStream
 import java.lang.StringBuilder
 import java.util.regex.Pattern
 
@@ -38,7 +34,7 @@ object CpuUtil {
      * 输出cpu信息
      */
     fun printCpuInfo(): String {
-        val info = FileIOUtils.readFile2String(CPU_INFO_PATH)
+        val info = FileIOUtils.read2String(CPU_INFO_PATH)
         LogUtils.i("_______  CPU :   \n$info")
         return info
     }
@@ -111,7 +107,7 @@ object CpuUtil {
     val currentFreqency: Long
         get() {
             try {
-                return FileIOUtils.readFile2String(CPU_FREQ_CUR_PATH).trim().toLong()
+                return FileIOUtils.read2String(CPU_FREQ_CUR_PATH).trim().toLong()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -122,7 +122,7 @@ object IntentUtils {
     }
 
     /**
-     * 方法功能：同上
+     * 同上
      */
     fun startFileSelect(context: Fragment, type: String, requestCode: Int) {
         val intent = Intent()

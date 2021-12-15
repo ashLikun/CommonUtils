@@ -41,7 +41,7 @@ object HttpLocalUtils {
      * 邮箱　　：496546144@qq.com
      *
      *
-     * 方法功能：判断是否为漫游
+     * 判断是否为漫游
      */
     fun isNetworkRoaming(): Boolean {
         return NetWorkHelper.isNetworkRoaming()

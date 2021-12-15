@@ -8,7 +8,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.text.Layout
 import android.text.Spanned
-import com.ashlikun.utils.other.SpannableUtils
+import com.ashlikun.utils.ui.text.SpannableUtils
 
 /**
  * @author　　: 李坤

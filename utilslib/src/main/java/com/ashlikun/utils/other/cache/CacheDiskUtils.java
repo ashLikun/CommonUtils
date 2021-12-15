@@ -1,7 +1,5 @@
 package com.ashlikun.utils.other.cache;
 
-import static com.ashlikun.utils.other.StringUtils.isSpace;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.collection.SimpleArrayMap;
@@ -102,10 +101,10 @@ public class CacheDiskUtils {
      * @return the single {@link CacheDiskUtils} instance
      */
     public static CacheDiskUtils getInstance(String cacheName, final long maxSize, final int maxCount) {
-        if (isSpace(cacheName)) {
+        if (TextUtils.isEmpty(cacheName)) {
             cacheName = "cacheUtils";
         }
-        File file = new File(AppUtils.getApp().getCacheDir(), cacheName);
+        File file = new File(AppUtils.INSTANCE.getApp().getCacheDir(), cacheName);
         return getInstance(file, maxSize, maxCount);
     }
 
@@ -1033,7 +1032,7 @@ public class CacheDiskUtils {
     public static Drawable bitmap2Drawable(final Bitmap bitmap) {
         return bitmap == null
                 ? null
-                : new BitmapDrawable(AppUtils.getApp().getResources(), bitmap);
+                : new BitmapDrawable(AppUtils.INSTANCE.getApp().getResources(), bitmap);
     }
 
 

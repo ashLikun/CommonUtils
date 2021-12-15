@@ -1,7 +1,7 @@
 package com.ashlikun.utils.encryption
 
 import android.util.Base64
-import com.ashlikun.utils.other.file.FileUtils
+import com.ashlikun.utils.other.file.FileIOUtils
 
 /**
  * @author　　: 李坤
@@ -35,7 +35,7 @@ object Base64Utils {
     }
 
     fun getFileToBase64(path: String): String {
-        return Base64.encodeToString(FileUtils.readByte(path), Base64.NO_WRAP)
+        return Base64.encodeToString(FileIOUtils.read2Bytes(path), Base64.NO_WRAP)
     }
 
     /**

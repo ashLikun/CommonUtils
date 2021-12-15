@@ -41,7 +41,7 @@ object ActivityUtils {
     }
 
     /**
-     * 方法功能：从context中获取activity，如果context不是activity那么久返回null
+     * 从context中获取activity，如果context不是activity那么久返回null
      */
     fun getActivity(context: Context?): Activity? {
         if (context == null) {
@@ -66,7 +66,7 @@ object ActivityUtils {
         get() = AppUtils.activityLifecycleCallbacks.isForeground
 
     /**
-     * 方法功能：获取app运行状态
+     * 获取app运行状态
      *
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
@@ -92,7 +92,7 @@ object ActivityUtils {
     }
 
     /**
-     * 方法功能：把栈顶activity切换到前台，如果应用未启动就打开应
+     * 把栈顶activity切换到前台，如果应用未启动就打开应
      * <uses-permission android:name="android.permission.GET_TASKS"></uses-permission>
      * //后台移动到前台需要
      * <uses-permission android:name="android.permission.REORDER_TASKS"></uses-permission>

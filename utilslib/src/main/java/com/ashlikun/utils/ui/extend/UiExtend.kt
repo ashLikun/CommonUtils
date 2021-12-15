@@ -2,10 +2,10 @@ package com.ashlikun.utils.ui.extend
 
 import android.content.Context
 import com.ashlikun.utils.other.DimensUtils
-import com.ashlikun.utils.ui.resources.ResUtils
-import com.ashlikun.utils.ui.ScreenInfoUtils
+import com.ashlikun.utils.ui.ScreenUtils
 import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
+import com.ashlikun.utils.ui.resources.ResUtils
 
 /**
  * 作者　　: 李坤
@@ -43,46 +43,46 @@ inline val Double.px2sp
     get() = DimensUtils.px2sp(this.toFloat())
 
 /**
- * [ScreenInfoUtils]
+ * [ScreenUtils]
  * 屏幕宽度的几倍
  * 0.5.sw : 屏幕宽度的一半
  * 1.sw：屏幕宽度
  */
 inline val Double.sw
-    get() = (ScreenInfoUtils.width() * this).toInt()
+    get() = (ScreenUtils.width() * this).toInt()
 inline val Int.sw
-    get() = ScreenInfoUtils.width() * this
+    get() = ScreenUtils.width() * this
 
 /**
- * [ScreenInfoUtils]
+ * [ScreenUtils]
  * 屏幕高度的几倍
  * 0.5.sh : 屏幕高度的一半
  * 1.sh：屏幕高度
  */
 inline val Double.sh
-    get() = (ScreenInfoUtils.height() * this).toInt()
+    get() = (ScreenUtils.height() * this).toInt()
 inline val Int.sh
-    get() = ScreenInfoUtils.height() * this
+    get() = ScreenUtils.height() * this
 
 /**
- * [ScreenInfoUtils]
+ * [ScreenUtils]
  * 屏幕宽度减去 dp
  * 10.5.shSubDp : 屏幕宽度 减去 10.5dp
  */
 inline val Double.whSubDp
-    get() = ScreenInfoUtils.widthSub(this.toInt())
+    get() = ScreenUtils.width(this.toInt())
 inline val Int.whSubDp
-    get() = ScreenInfoUtils.widthSub(this)
+    get() = ScreenUtils.width(this)
 
 /**
- * [ScreenInfoUtils]
+ * [ScreenUtils]
  * 屏幕高度减去 dp
  * 10.5.shSubDp : 屏幕高度 减去 10.5dp
  */
 inline val Double.shSubDp
-    get() = ScreenInfoUtils.heightSubDp(this.toInt())
+    get() = ScreenUtils.height(this.toInt())
 inline val Int.shSubDp
-    get() = ScreenInfoUtils.heightSubDp(this)
+    get() = ScreenUtils.height(this)
 
 
 /**
@@ -117,13 +117,18 @@ inline fun Context.resDimension(resId: Int) = ResUtils.getDimension(this, resId)
 inline val Int.resDimensionPixelOffset
     get() = ResUtils.getDimensionPixelOffset(this)
 
-inline fun Int.resDimensionPixelOffset(context: Context) = ResUtils.getDimensionPixelOffset(context, this)
-inline fun Context.resDimensionPixelOffset(resId: Int) = ResUtils.getDimensionPixelOffset(this, resId)
+inline fun Int.resDimensionPixelOffset(context: Context) =
+    ResUtils.getDimensionPixelOffset(context, this)
+
+inline fun Context.resDimensionPixelOffset(resId: Int) =
+    ResUtils.getDimensionPixelOffset(this, resId)
 
 inline val Int.resDimensionPixelSize
     get() = ResUtils.getDimensionPixelSize(this)
 
-inline fun Int.resDimensionPixelSize(context: Context) = ResUtils.getDimensionPixelSize(context, this)
+inline fun Int.resDimensionPixelSize(context: Context) =
+    ResUtils.getDimensionPixelSize(context, this)
+
 inline fun Context.resDimensionPixelSize(resId: Int) = ResUtils.getDimensionPixelSize(this, resId)
 
 

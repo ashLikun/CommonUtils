@@ -4,7 +4,6 @@ import android.text.style.ReplacementSpan
 import android.graphics.Paint
 import android.graphics.Paint.FontMetricsInt
 import android.graphics.Canvas
-import com.ashlikun.utils.other.SpannableUtils
 import android.text.TextPaint
 
 /**

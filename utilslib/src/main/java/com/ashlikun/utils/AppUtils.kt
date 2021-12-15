@@ -7,20 +7,19 @@ import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
 import androidx.core.content.FileProvider
-import com.ashlikun.utils.ApplicationListener.OnChangListener
 import com.ashlikun.utils.bug.BugUtils
 import com.ashlikun.utils.provider.BaseContentProvider
 import com.ashlikun.utils.ui.resources.ResUtils
 import java.io.File
 
 /**
- * 作者　　: 李坤
- * 创建时间:2016/12/30　9:59
+ * @author　　: 李坤
+ * 创建时间: 2021.12.15 15:54
  * 邮箱　　：496546144@qq.com
- *
  *
  * 功能介绍：App 工具类
  */
+
 object AppUtils {
     var isDebug = false
     lateinit var app: Application
@@ -45,13 +44,7 @@ object AppUtils {
     var versionCode = -10088
         get() {
             if (field < 0) {
-                val pm = app.packageManager
-                try {
-                    val packageInfo = pm.getPackageInfo(app.packageName, 0)
-                    field = packageInfo.versionCode
-                } catch (e: NameNotFoundException) {
-                    e.printStackTrace()
-                }
+                field = packageInfo.versionCode
             }
             return field
         }
@@ -63,13 +56,7 @@ object AppUtils {
     var versionName: String = ""
         get() {
             if (TextUtils.isEmpty(field)) {
-                val pm = app.packageManager
-                try {
-                    val packageInfo = pm.getPackageInfo(app.packageName, 0)
-                    field = packageInfo.versionName
-                } catch (e: NameNotFoundException) {
-                    e.printStackTrace()
-                }
+                field = packageInfo.versionName
             }
             if (field == null) {
                 field = ""
@@ -84,34 +71,25 @@ object AppUtils {
     var packageName: String = ""
         get() {
             if (TextUtils.isEmpty(field)) {
-                val pm = app.packageManager
-                try {
-                    val packageInfo = pm.getPackageInfo(app.packageName, 0)
-                    field = packageInfo.packageName
-                } catch (e: NameNotFoundException) {
-                    e.printStackTrace()
-                }
-            }
-            if (field == null) {
-                field = ""
+                field = packageInfo.packageName
             }
             return field
         }
         private set
-    var activityLifecycleCallbacks = ApplicationListener()
 
+    var activityLifecycleCallbacks = ApplicationListener()
 
     /**
      * 前后台监听
      */
-    fun addAppRunChang(listener: OnChangListener) {
+    fun addAppRunChang(listener: OnChangForeground) {
         activityLifecycleCallbacks.addOnChangListener(listener)
     }
 
     /**
      * 前后台监听
      */
-    fun removeAppRunChang(listener: OnChangListener) {
+    fun removeAppRunChang(listener: OnChangForeground) {
         activityLifecycleCallbacks.removeOnChangListener(listener)
     }
 
@@ -139,15 +117,16 @@ object AppUtils {
     /**
      * 获取App包 信息版本号
      */
-    val packageInfo: PackageInfo?
-        get() {
-            val packageManager = app.packageManager
-            var packageInfo: PackageInfo? = null
-            try {
-                packageInfo = packageManager.getPackageInfo(app.packageName, 0)
-            } catch (e: NameNotFoundException) {
-                e.printStackTrace()
-            }
-            return packageInfo
+    val packageInfo: PackageInfo
+        get() = app.packageManager.getPackageInfo(app.packageName, 0)
+
+    /**
+     * 获取其他App包 信息版本号
+     */
+    fun getPackageInfo(packageName: String = app.packageName, flag: Int = 0) =
+        try {
+            app.packageManager.getPackageInfo(packageName, flag)
+        } catch (e: Exception) {
+            null
         }
 }

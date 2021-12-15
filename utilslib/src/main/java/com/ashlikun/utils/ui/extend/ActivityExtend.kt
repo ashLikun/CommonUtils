@@ -44,7 +44,7 @@ fun Activity.setStatusBarVisible(show: Boolean, statusBar: StatusBarCompat? = nu
 }
 
 /**
- * 方法功能：从context中获取activity，如果context不是activity那么久返回null
+ * 从context中获取activity，如果context不是activity那么久返回null
  */
 fun Context?.getActivity(): Activity? {
     fun getActivity(context: Context?): Activity? {

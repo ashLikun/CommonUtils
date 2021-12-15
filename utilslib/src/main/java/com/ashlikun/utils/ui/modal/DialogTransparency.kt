@@ -6,8 +6,7 @@ import com.ashlikun.utils.R
 import android.app.Dialog
 import android.view.View
 import android.os.Bundle
-import android.view.WindowManager
-import com.ashlikun.utils.ui.ScreenInfoUtils
+import com.ashlikun.utils.ui.ScreenUtils
 import android.view.Gravity
 
 /**
@@ -33,9 +32,9 @@ class DialogTransparency @JvmOverloads constructor(
         super.onCreate(savedInstanceState)
         val lp = window!!.attributes
         //设置宽度
-        lp.width = ScreenInfoUtils.getWidth()
+        lp.width = ScreenUtils.width
         //设置宽度
-        lp.height = ScreenInfoUtils.getHeight()
+        lp.height = ScreenUtils.height
         window!!.attributes = lp
         window!!.attributes.gravity = Gravity.CENTER
     }

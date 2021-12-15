@@ -35,7 +35,7 @@ import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.RomUtils;
 import com.ashlikun.utils.ui.resources.ResUtils;
-import com.ashlikun.utils.ui.ScreenInfoUtils;
+import com.ashlikun.utils.ui.ScreenUtils;
 
 import java.lang.reflect.Method;
 
@@ -326,7 +326,7 @@ public class NotchHelper {
     private static Rect get3rdSafeInsetRect(Context context) {
         // 全面屏设置项更改
         if (RomUtils.INSTANCE.isHuawei()) {
-            boolean isHuaweiNotchSetToShow = ScreenInfoUtils.huaweiIsNotchSetToShowInSetting();
+            boolean isHuaweiNotchSetToShow = ScreenUtils.INSTANCE.huaweiIsNotchSetToShowInSetting();
             if (sHuaweiIsNotchSetToShow != null && sHuaweiIsNotchSetToShow != isHuaweiNotchSetToShow) {
                 clearLandscapeRectInfo();
             }
@@ -364,7 +364,7 @@ public class NotchHelper {
             rect.bottom = 0;
         } else if (RomUtils.INSTANCE.isOppo()) {
             // 设置-显示-应用全屏显示-凹形区域显示控制
-            rect.top = ScreenInfoUtils.getStatusBarHeight();
+            rect.top = ScreenUtils.INSTANCE.getStatusBarHeight();
             rect.bottom = 0;
         } else if (RomUtils.INSTANCE.isHuawei()) {
             int[] notchSize = getNotchSizeInHuawei();
@@ -383,7 +383,7 @@ public class NotchHelper {
             rect.left = getNotchHeightInVivo();
             rect.right = 0;
         } else if (RomUtils.INSTANCE.isOppo()) {
-            rect.left = ScreenInfoUtils.getStatusBarHeight();
+            rect.left = ScreenUtils.INSTANCE.getStatusBarHeight();
             rect.right = 0;
         } else if (RomUtils.INSTANCE.isHuawei()) {
             if (sHuaweiIsNotchSetToShow) {
@@ -406,7 +406,7 @@ public class NotchHelper {
             rect.bottom = getNotchHeightInVivo();
         } else if (RomUtils.INSTANCE.isOppo()) {
             rect.top = 0;
-            rect.bottom = ScreenInfoUtils.getStatusBarHeight();
+            rect.bottom = ScreenUtils.INSTANCE.getStatusBarHeight();
         } else if (RomUtils.INSTANCE.isHuawei()) {
             int[] notchSize = getNotchSizeInHuawei();
             rect.top = 0;
@@ -424,7 +424,7 @@ public class NotchHelper {
             rect.right = getNotchHeightInVivo();
             rect.left = 0;
         } else if (RomUtils.INSTANCE.isOppo()) {
-            rect.right = ScreenInfoUtils.getStatusBarHeight();
+            rect.right = ScreenUtils.INSTANCE.getStatusBarHeight();
             rect.left = 0;
         } else if (RomUtils.INSTANCE.isHuawei()) {
             if (sHuaweiIsNotchSetToShow) {
@@ -464,7 +464,7 @@ public class NotchHelper {
     public static int getNotchWidthInXiaomi() {
         int resourceId = AppUtils.INSTANCE.getApp().getResources().getIdentifier("notch_width", "dimen", "android");
         if (resourceId > 0) {
-            return ResUtils.getDimensionPixelSize(resourceId);
+            return ResUtils.INSTANCE.getDimensionPixelSize(resourceId);
         }
         return -1;
     }
@@ -472,9 +472,9 @@ public class NotchHelper {
     public static int getNotchHeightInXiaomi() {
         int resourceId = AppUtils.INSTANCE.getApp().getResources().getIdentifier("notch_height", "dimen", "android");
         if (resourceId > 0) {
-            return ResUtils.getDimensionPixelSize(resourceId);
+            return ResUtils.INSTANCE.getDimensionPixelSize(resourceId);
         }
-        return ScreenInfoUtils.getStatusBarHeight();
+        return ScreenUtils.INSTANCE.getStatusBarHeight();
     }
 
     public static int getNotchWidthInVivo() {

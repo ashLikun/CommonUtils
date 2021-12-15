@@ -212,7 +212,7 @@ class CameraUtils(private val context: Context = AppUtils.app) : SurfaceHolder.C
      * 创建时间: 2016/11/25 14:55
      *
      *
-     * 方法功能：从摄像头的大小参数里面获取与指定的大小相似的大小
+     * 从摄像头的大小参数里面获取与指定的大小相似的大小
      */
     private fun getOptimalPreviewSize(sizes: List<Camera.Size>, w: Int, h: Int): Camera.Size {
         val ASPECT_TOLERANCE = 0.1

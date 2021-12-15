@@ -17,7 +17,7 @@ import android.text.Editable
  * 创建时间: 2017/6/28 13:30
  *
  *
- * 方法功能：输入框检查工具
+ * 输入框检查工具
  * 1：最后再调用check正则判断
  * 2：可监听输入状态，然后回掉接口判断
  */
@@ -34,7 +34,7 @@ class EditHelper(var context: Context) {
      * 创建时间: 2017/6/28 13:32
      *
      *
-     * 方法功能：设置监听的输入框
+     * 设置监听的输入框
      *
      * @param edits 多个被检测的EditView对象
      */
@@ -54,7 +54,7 @@ class EditHelper(var context: Context) {
      * 创建时间: 2017/6/28 13:33
      *
      *
-     * 方法功能：清空
+     * 清空
      */
     fun clear(): EditHelper {
         if (mEdithelpdatas != null) {
@@ -93,7 +93,7 @@ class EditHelper(var context: Context) {
      * 创建时间: 2017/6/28 13:37
      *
      *
-     * 方法功能：检查是否满足
+     * 检查是否满足
      */
     fun check(): Boolean {
         return try {
@@ -118,7 +118,7 @@ class EditHelper(var context: Context) {
      * 创建时间: 2017/6/28 13:37
      *
      *
-     * 方法功能：检查某个view是否满足
+     * 检查某个view是否满足
      */
     fun check(index: Int): Boolean {
         return try {

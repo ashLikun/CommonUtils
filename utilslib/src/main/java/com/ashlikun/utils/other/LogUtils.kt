@@ -52,8 +52,9 @@ object LogUtils {
      *
      * @param content
      */
-    fun d(content: Any, tr: Throwable? = null) {
+    fun d(content: Any?, tr: Throwable? = null) {
         if (!AppUtils.isDebug) return
+        if (content == null) return
         val tag = generateTag()
         if (tr == null) Log.d(tag, content.toString()) else Log.d(tag, content.toString(), tr)
     }
@@ -64,8 +65,9 @@ object LogUtils {
      * @param content
      */
 
-    fun e(content: Any, tr: Throwable? = null) {
+    fun e(content: Any?, tr: Throwable? = null) {
         if (!AppUtils.isDebug) return
+        if (content == null) return
         val tag = generateTag()
         if (tr == null) Log.e(tag, content.toString()) else Log.e(tag, content.toString(), tr)
     }
@@ -77,8 +79,9 @@ object LogUtils {
      * @param content
      */
 
-    fun i(content: Any, tr: Throwable? = null) {
+    fun i(content: Any?, tr: Throwable? = null) {
         if (!AppUtils.isDebug) return
+        if (content == null) return
         val tag = generateTag()
         if (tr == null) Log.i(tag, content.toString()) else Log.i(tag, content.toString(), tr)
     }
@@ -88,8 +91,9 @@ object LogUtils {
      *
      * @param content
      */
-    fun v(content: Any, tr: Throwable? = null) {
+    fun v(content: Any?, tr: Throwable? = null) {
         if (!AppUtils.isDebug) return
+        if (content == null) return
         val tag = generateTag()
         if (tr == null) Log.v(tag, content.toString()) else Log.v(tag, content.toString(), tr)
     }
@@ -100,16 +104,18 @@ object LogUtils {
      * @param content
      */
 
-    fun w(content: Any, tr: Throwable? = null) {
+    fun w(content: Any?, tr: Throwable? = null) {
         if (!AppUtils.isDebug) return
+        if (content == null) return
         val tag = generateTag()
         if (tr == null) Log.w(tag, content.toString()) else Log.w(tag, content.toString(), tr)
     }
 
     fun w(tr: Throwable) = w("", tr)
 
-    fun wtf(content: Any, tr: Throwable? = null) {
+    fun wtf(content: Any?, tr: Throwable? = null) {
         if (!AppUtils.isDebug) return
+        if (content == null) return
         val tag = generateTag()
         if (tr == null) Log.wtf(tag, content.toString()) else Log.wtf(tag, content.toString(), tr)
     }

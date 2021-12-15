@@ -17,7 +17,7 @@ import android.graphics.Color
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import androidx.core.view.ViewCompat
-import com.ashlikun.utils.ui.ScreenInfoUtils
+import com.ashlikun.utils.ui.ScreenUtils
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import android.annotation.SuppressLint
@@ -42,8 +42,7 @@ import com.ashlikun.utils.ui.resources.ColorUtils
  */
 
 class StatusBarCompat(
-    var activity: Activity,
-    var context: Context
+    var activity: Activity
 ) {
     var window = activity.window
 
@@ -112,7 +111,7 @@ class StatusBarCompat(
     }
 
     fun setStatusBarColorRes(@ColorRes statusColor: Int) {
-        setStatusBarColor(context.resources.getColor(statusColor))
+        setStatusBarColor(activity.resources.getColor(statusColor))
     }
 
     fun setStatusBarColorWhite() {
@@ -241,7 +240,7 @@ class StatusBarCompat(
         toolbar.fitsSystemWindows = false
         if (toolbar.tag == null) {
             val lp = toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams
-            val statusBarHeight = ScreenInfoUtils.getStatusBarHeight()
+            val statusBarHeight = ScreenUtils.statusBarHeight
             lp.height += statusBarHeight
             toolbar.layoutParams = lp
             toolbar.setPadding(
@@ -303,7 +302,7 @@ class StatusBarCompat(
          */
         fun setEmptyHeight(view: View, isNeedAndroidMHalf: Boolean = false) {
             if (isSetStatusColor) {
-                val h = ScreenInfoUtils.getStatusBarHeight()
+                val h = ScreenUtils.statusBarHeight
                 if (isNeedAndroidMHalf && isSetHaleColor) {
                     view.setBackgroundColor(HALF_COLOR)
                 }
@@ -330,7 +329,7 @@ class StatusBarCompat(
             val params = viewTop.layoutParams
             if (params is MarginLayoutParams) {
                 params.topMargin = (params.topMargin
-                        + ScreenInfoUtils.getStatusBarHeight())
+                        + ScreenUtils.statusBarHeight)
             }
             viewTop.layoutParams = params
         }
@@ -342,7 +341,7 @@ class StatusBarCompat(
             if (isSetStatusColor) {
                 viewTop.setPadding(
                     viewTop.paddingLeft,
-                    viewTop.paddingTop + ScreenInfoUtils.getStatusBarHeight(),
+                    viewTop.paddingTop + ScreenUtils.statusBarHeight,
                     viewTop.paddingRight,
                     viewTop.paddingBottom
                 )

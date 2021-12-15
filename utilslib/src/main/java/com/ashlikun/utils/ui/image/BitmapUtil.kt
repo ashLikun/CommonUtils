@@ -5,7 +5,7 @@ import com.ashlikun.utils.encryption.Base64Utils.encodeToStr
 import com.ashlikun.utils.encryption.Base64Utils.decode
 import android.media.MediaMetadataRetriever
 import java.io.ByteArrayOutputStream
-import com.ashlikun.utils.ui.ScreenInfoUtils
+import com.ashlikun.utils.ui.ScreenUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
@@ -57,8 +57,8 @@ object BitmapUtil {
      */
     fun cropBitmap(
         bitmap: Bitmap,
-        width: Int = ScreenInfoUtils.width(),
-        height: Int = ScreenInfoUtils.height(),
+        width: Int = ScreenUtils.width(),
+        height: Int = ScreenUtils.height(),
         x: Int = 0,
         y: Int = 0
     ): Bitmap {
@@ -139,20 +139,8 @@ object BitmapUtil {
     /**
      * 保存图片
      */
-    fun saveBitmap(bitmap: Bitmap, file: File): Boolean {
-        var fos: FileOutputStream? = null
-        try {
-            fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            fos.flush()
-            return true
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            FileIOUtils.close(fos)
-        }
-        return false
-    }
+    fun saveBitmap(bitmap: Bitmap?, file: File, quality: Int = 100) =
+        FileIOUtils.writeImage(bitmap, file, quality)
 
     /**
      * 将图片按照某个角度进行旋转
@@ -161,10 +149,9 @@ object BitmapUtil {
      * @param degree 旋转角度
      * @return 旋转后的图片
      */
-    fun rotateBitmapByDegree(bm: Bitmap, degree: Int): Bitmap {
-        if (degree % 360 == 0) {
-            return bm
-        }
+    fun rotateBitmapByDegree(bm: Bitmap?, degree: Int): Bitmap? {
+        if (bm == null) return null
+        if (degree % 360 == 0) return bm
         // 根据旋转角度，生成旋转矩阵
 
         // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
@@ -211,7 +198,7 @@ object BitmapUtil {
      * @param height 希望的高度
      */
     fun decodeResource(
-        context: Context, resourseId: Int,
+        resourseId: Int,
         width: Int, height: Int
     ): Bitmap? {
         // 获取资源图片
@@ -219,7 +206,7 @@ object BitmapUtil {
         if (width > 0 && height > 0) {
             opts = Options()
             opts.inJustDecodeBounds = true
-            BitmapFactory.decodeResource(context.resources, resourseId, opts)
+            BitmapFactory.decodeResource(app.resources, resourseId, opts)
             // 计算图片缩放比例
             opts.inSampleSize = computeSampleSize(opts, width, height)
             opts.inJustDecodeBounds = false
@@ -228,7 +215,7 @@ object BitmapUtil {
         }
         try {
             // decodeStream直接调用JNI>>nativeDecodeAsset()来完成decode，无�?再使用java层的createBitmap，从而节省了java层的空间
-            return BitmapFactory.decodeResource(context.resources, resourseId, opts)
+            return BitmapFactory.decodeResource(app.resources, resourseId, opts)
         } catch (e: OutOfMemoryError) {
             e.printStackTrace()
         }
@@ -396,11 +383,11 @@ object BitmapUtil {
         if (view.measuredWidth == 0 || view.measuredHeight == 0) {
             view.measure(
                 View.MeasureSpec.makeMeasureSpec(
-                    ScreenInfoUtils.getWidth(),
+                    ScreenUtils.width,
                     View.MeasureSpec.AT_MOST
                 ),
                 View.MeasureSpec.makeMeasureSpec(
-                    ScreenInfoUtils.getWidth() * 10,
+                    ScreenUtils.width * 10,
                     View.MeasureSpec.AT_MOST
                 )
             )
@@ -429,14 +416,12 @@ object BitmapUtil {
      * @return true 成功，false:失败
      */
     fun saveImageToGallery(context: Context, bmp: Bitmap, file: File): Boolean {
-        return if (saveBitmap(bmp, file)) {
-            updatePhotoMedia(context, file)
-        } else false
+        return if (saveBitmap(bmp, file)) updatePhotoMedia(context, file) else false
     }
 
     /**
      * 刷新相册
-     *
+     *  建议使用MediaStore ，这里自动刷新
      * @return true 成功，false:失败
      */
     fun updatePhotoMedia(context: Context, file: File): Boolean {
@@ -444,10 +429,7 @@ object BitmapUtil {
         if (file.exists()) {
             try {
                 context.sendBroadcast(
-                    Intent(
-                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.fromFile(file)
-                    )
+                    Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file))
                 )
                 return true
             } catch (e: Exception) {
@@ -464,8 +446,10 @@ object BitmapUtil {
      * @param matrix logo对应的变换矩阵（大小位置）,默认移动到底部右边的位置
      * @return 合成水印图片
      */
-    fun getWaterMaskImage(src: Bitmap, logo: Bitmap, matrix: Matrix): Bitmap {
-        var matrix = matrix
+    fun getWaterMaskImage(src: Bitmap?, logo: Bitmap?, matrix: Matrix = Matrix()): Bitmap? {
+        if (src == null || logo == null) {
+            return null
+        }
         //原图宽高
         val w = src.width
         val h = src.height
@@ -478,12 +462,8 @@ object BitmapUtil {
         val canvas = Canvas(newBitmap)
         //绘制原始图片
         canvas.drawBitmap(src, 0f, 0f, null)
-        if (matrix == null) {
-            //新建矩阵
-            matrix = Matrix()
-            //对矩阵作位置偏移，移动到底部右边的位置
-            matrix.postTranslate((w - ww).toFloat(), (h - wh).toFloat())
-        }
+        //对矩阵作位置偏移，移动到底部右边的位置
+        matrix.postTranslate((w - ww).toFloat(), (h - wh).toFloat())
         //将logo绘制到画布上并做矩阵变换
         canvas.drawBitmap(logo, matrix, null)
         // 保存状态

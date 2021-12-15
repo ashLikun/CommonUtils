@@ -53,17 +53,17 @@ inline fun String.copyFile(destPath: String, deleteSrc: Boolean = false) = FileI
  * 从输入流中写入文件
  */
 inline fun InputStream.writeFile(filePath: String, append: Boolean = false) =
-    FileIOUtils.writeFileFromIS(
+    FileIOUtils.writeIs(
         filePath, this, append
     )
 
 inline fun InputStream.writeFile(file: File, append: Boolean = false) =
-    FileIOUtils.writeFileFromIS(
+    FileIOUtils.writeIs(
         file, this, append
     )
 
 inline fun File.writeFile(ins: InputStream, append: Boolean = false) =
-    FileIOUtils.writeFileFromIS(
+    FileIOUtils.writeIs(
         this, ins, append
     )
 
@@ -71,17 +71,17 @@ inline fun File.writeFile(ins: InputStream, append: Boolean = false) =
  * 从输入流中写入文件
  */
 inline fun ByteArray.writeFile(filePath: String, append: Boolean = false) =
-    FileIOUtils.writeFileFromBytesByStream(
+    FileIOUtils.writeByte(
         File(filePath), this, append
     )
 
 inline fun ByteArray.writeFile(file: File, append: Boolean = false) =
-    FileIOUtils.writeFileFromBytesByStream(
+    FileIOUtils.writeByte(
         file, this, append
     )
 
 inline fun File.writeFile(bytes: ByteArray, append: Boolean = false) =
-    FileIOUtils.writeFileFromBytesByStream(
+    FileIOUtils.writeByte(
         this, bytes, append
     )
 
@@ -89,17 +89,17 @@ inline fun File.writeFile(bytes: ByteArray, append: Boolean = false) =
  * 从字符串中写入文件
  */
 inline fun String.writeFile(filePath: String, append: Boolean = false) =
-    FileIOUtils.writeFileFromString(
+    FileIOUtils.writeString(
         filePath, this, append
     )
 
 inline fun String.writeFile(file: File, append: Boolean = false) =
-    FileIOUtils.writeFileFromString(
+    FileIOUtils.writeString(
         file, this, append
     )
 
 inline fun File.writeFile(content: String, append: Boolean = false) =
-    FileIOUtils.writeFileFromString(
+    FileIOUtils.writeString(
         this, content, append
     )
 
@@ -107,11 +107,11 @@ inline fun File.writeFile(content: String, append: Boolean = false) =
  * 返回文件中的行
  */
 inline fun File.read2List(charsetName: String = "", st: Int = 0, end: Int = 0x7FFFFFFF) =
-    FileIOUtils.readFile2List(
+    FileIOUtils.read2List(
         this, charsetName, st, end
     )
 
 inline fun File.read2String(charsetName: String = "") =
-    FileIOUtils.readFile2String(
+    FileIOUtils.read2String(
         this, charsetName
     )

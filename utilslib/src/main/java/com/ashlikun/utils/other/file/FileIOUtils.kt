@@ -1,6 +1,5 @@
 package com.ashlikun.utils.other.file
 
-import android.content.Context
 import java.io.InputStream
 import java.lang.Exception
 import java.io.IOException
@@ -58,24 +57,29 @@ object FileIOUtils {
      * 把Bitmap写入文件
      *
      * @param bm       数据流
-     * @param path     文件路径
+     * @param file     文件
      * @param recreate 如果文件存在，是否需要删除重建
      * @return 是否写入成功
      */
-    fun writeImage(bm: Bitmap, path: String, recreate: Boolean = true): Boolean {
+    fun writeImage(
+        bm: Bitmap?,
+        file: File,
+        quality: Int = 100,
+        recreate: Boolean = true
+    ): Boolean {
+        if (bm == null) return false
         var res = false
         try {
-            val f = File(path)
-            if (recreate && f.exists()) {
-                f.delete()
+            if (recreate && file.exists()) {
+                file.delete()
             }
-            if (createOrExistsFile(f)) {
-                val bos = BufferedOutputStream(FileOutputStream(f))
+            if (createOrExistsFile(file)) {
+                val bos = BufferedOutputStream(FileOutputStream(file))
                 //写入缓存
-                if (path != null && (path.contains("png") || path.contains("PNG"))) {
-                    bm.compress(Bitmap.CompressFormat.PNG, 80, bos)
+                if (file != null && (file.path.endsWith(".png") || file.path.endsWith(".PNG"))) {
+                    bm.compress(Bitmap.CompressFormat.PNG, quality, bos)
                 } else {
-                    bm.compress(Bitmap.CompressFormat.JPEG, 80, bos)
+                    bm.compress(Bitmap.CompressFormat.JPEG, quality, bos)
                 }
                 bos.flush()
                 bos.close()
@@ -149,64 +153,6 @@ object FileIOUtils {
         return value ?: ""
     }
 
-    /**
-     * 把字符串键值对的map写入文件
-     */
-    fun writeMap(
-        filePath: String, map: Map<String, String>,
-        append: Boolean, comment: String = "no_comment"
-    ) {
-        if (map.isNullOrEmpty() || filePath.isNullOrEmpty()) return
-        var fis: FileInputStream? = null
-        var fos: FileOutputStream? = null
-        val f = File(filePath)
-        try {
-            if (!f.exists() || !f.isFile) {
-                f.createNewFile()
-            }
-            val p = Properties()
-            if (append) {
-                fis = FileInputStream(f)
-                // 先读取文件，再把键值对追加到后面
-                p.load(fis)
-            }
-            p.putAll(map)
-            fos = FileOutputStream(f)
-            p.store(fos, comment)
-        } catch (e: Exception) {
-        } finally {
-            close(fis)
-            close(fos)
-        }
-    }
-
-    /**
-     * 把字符串键值对的文件读入map
-     */
-    fun readMap(
-        filePath: String
-    ): Map<String, String> {
-        if (filePath.isNullOrEmpty()) {
-            return mapOf()
-        }
-        var map: Map<String, String>? = null
-        var fis: FileInputStream? = null
-        val f = File(filePath)
-        try {
-            if (!f.exists() || !f.isFile) {
-                f.createNewFile()
-            }
-            fis = FileInputStream(f)
-            val p = Properties()
-            p.load(fis)
-            // 因为properties继承了map，所以直接通过p来构造一个map
-            map = p.toMap() as Map<String, String>
-        } catch (e: Exception) {
-        } finally {
-            close(fis)
-        }
-        return map ?: mapOf()
-    }
 
     /**
      * 复制文件，可以选择是否删除源文件
@@ -248,16 +194,47 @@ object FileIOUtils {
     }
 
     /**
+     * 把字符串键值对的map写入文件
+     */
+    fun writeMap(
+        filePath: String, map: Map<String, String>,
+        append: Boolean, comment: String = "no_comment"
+    ) {
+        if (map.isNullOrEmpty() || filePath.isNullOrEmpty()) return
+        var fis: FileInputStream? = null
+        var fos: FileOutputStream? = null
+        val f = File(filePath)
+        try {
+            if (!f.exists() || !f.isFile) {
+                f.createNewFile()
+            }
+            val p = Properties()
+            if (append) {
+                fis = FileInputStream(f)
+                // 先读取文件，再把键值对追加到后面
+                p.load(fis)
+            }
+            p.putAll(map)
+            fos = FileOutputStream(f)
+            p.store(fos, comment)
+        } catch (e: Exception) {
+        } finally {
+            close(fis)
+            close(fos)
+        }
+    }
+
+    /**
      * 从输入流中写入文件。
      */
-    fun writeFileFromIS(
+    fun writeIs(
         filePath: String, ins: InputStream, append: Boolean = false
-    ) = writeFileFromIS(File(filePath), ins, append)
+    ) = writeIs(File(filePath), ins, append)
 
     /**
      * 从输入流中写入文件
      */
-    fun writeFileFromIS(
+    fun writeIs(
         file: File, ins: InputStream, append: Boolean = false
     ): Boolean {
         if (!createOrExistsFile(file)) {
@@ -284,7 +261,7 @@ object FileIOUtils {
     /**
      * 从字节流写入文件。
      */
-    fun writeFileFromBytesByStream(
+    fun writeByte(
         file: File, bytes: ByteArray, append: Boolean = false
     ): Boolean {
         if (bytes == null || !createOrExistsFile(file)) {
@@ -306,14 +283,14 @@ object FileIOUtils {
     /**
      * 按通道从字节写入文件。
      */
-    fun writeFileFromBytesByChannel(
+    fun writeByteByChannel(
         filePath: String, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
-    ) = writeFileFromBytesByChannel(File(filePath), bytes, append, isForce)
+    ) = writeByteByChannel(File(filePath), bytes, append, isForce)
 
     /**
      * 按通道从字节写入文件
      */
-    fun writeFileFromBytesByChannel(
+    fun writeByteByChannel(
         file: File, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
     ): Boolean {
         var fc: FileChannel? = null
@@ -336,14 +313,14 @@ object FileIOUtils {
     /**
      * 通过映射从字节写入文件。
      */
-    fun writeFileFromBytesByMap(
+    fun writeByteByMap(
         filePath: String, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
-    ) = writeFileFromBytesByMap(File(filePath), bytes, append, isForce)
+    ) = writeByteByMap(File(filePath), bytes, append, isForce)
 
     /**
      * 通过映射从字节写入文件
      */
-    fun writeFileFromBytesByMap(
+    fun writeByteByMap(
         file: File, bytes: ByteArray, append: Boolean = true, isForce: Boolean = false
     ): Boolean {
         if (!createOrExistsFile(file)) {
@@ -369,14 +346,14 @@ object FileIOUtils {
     /**
      * 从字符串中写入文件。
      */
-    fun writeFileFromString(
+    fun writeString(
         filePath: String, content: String, append: Boolean = false
-    ) = writeFileFromString(File(filePath), content, append)
+    ) = writeString(File(filePath), content, append)
 
     /**
      * 从字符串中写入文件。
      */
-    fun writeFileFromString(
+    fun writeString(
         file: File, content: String, append: Boolean = false
     ): Boolean {
         if (!createOrExistsFile(file)) {
@@ -398,16 +375,44 @@ object FileIOUtils {
     // 写和读的分界线
     ///////////////////////////////////////////////////////////////////////////
     /**
-     * 返回文件中的行
+     * 把字符串键值对的文件读入map
      */
-    fun readFile2List(
-        filePath: String, charsetName: String = "", st: Int = 0, end: Int = 0x7FFFFFFF,
-    ) = readFile2List(File(filePath), charsetName, st, end)
+    fun readMap(
+        filePath: String
+    ): Map<String, String> {
+        if (filePath.isNullOrEmpty()) {
+            return mapOf()
+        }
+        var map: Map<String, String>? = null
+        var fis: FileInputStream? = null
+        val f = File(filePath)
+        try {
+            if (!f.exists() || !f.isFile) {
+                f.createNewFile()
+            }
+            fis = FileInputStream(f)
+            val p = Properties()
+            p.load(fis)
+            // 因为properties继承了map，所以直接通过p来构造一个map
+            map = p.toMap() as Map<String, String>
+        } catch (e: Exception) {
+        } finally {
+            close(fis)
+        }
+        return map ?: mapOf()
+    }
 
     /**
      * 返回文件中的行
      */
-    fun readFile2List(
+    fun read2List(
+        filePath: String, charsetName: String = "", st: Int = 0, end: Int = 0x7FFFFFFF,
+    ) = read2List(File(filePath), charsetName, st, end)
+
+    /**
+     * 返回文件中的行
+     */
+    fun read2List(
         file: File, charsetName: String = "", st: Int = 0, end: Int = 0x7FFFFFFF
     ): MutableList<String> {
         if (st > end) {
@@ -446,14 +451,14 @@ object FileIOUtils {
     /**
      * 在文件中返回字符串。
      */
-    fun readFile2String(filePath: String, charsetName: String = "") =
-        readFile2String(File(filePath), charsetName)
+    fun read2String(filePath: String, charsetName: String = "") =
+        read2String(File(filePath), charsetName)
 
     /**
      * 在文件中返回字符串。
      */
-    fun readFile2String(file: File, charsetName: String = ""): String {
-        val bytes = readFile2BytesByStream(file)
+    fun read2String(file: File, charsetName: String = ""): String {
+        val bytes = read2Bytes(file)
         return if (StringUtils.isSpace(charsetName)) bytes.toString() else bytes.toString(
             Charset.forName(
                 charsetName
@@ -464,12 +469,12 @@ object FileIOUtils {
     /**
      * 按流返回文件中的字节。
      */
-    fun readFile2BytesByStream(filePath: String) = readFile2BytesByStream(File(filePath))
+    fun read2Bytes(filePath: String) = read2Bytes(File(filePath))
 
     /**
      * 按流返回文件中的字节。
      */
-    fun readFile2BytesByStream(file: File): ByteArray {
+    fun read2Bytes(file: File): ByteArray {
         return if (!file.exists()) {
             ByteArray(0)
         } else try {
@@ -483,12 +488,12 @@ object FileIOUtils {
     /**
      * 按通道返回文件中的字节。
      */
-    fun readFile2BytesByChannel(filePath: String) = readFile2BytesByChannel(File(filePath))
+    fun read2BytesByChannel(filePath: String) = read2BytesByChannel(File(filePath))
 
     /**
      * 按通道返回文件中的字节。
      */
-    fun readFile2BytesByChannel(file: File): ByteArray {
+    fun read2BytesByChannel(file: File): ByteArray {
         if (!file.exists()) {
             return ByteArray(0)
         }

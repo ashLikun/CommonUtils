@@ -20,7 +20,7 @@ import androidx.annotation.ColorInt
 
 object AnimUtils {
     /**
-     * 方法功能：上下抖动动画，用于提醒用户去点击
+     * 上下抖动动画，用于提醒用户去点击
      * @param scaleMax:缩放的最大值 0.85
      * @param rotation:转动角度   6
      */
@@ -28,7 +28,7 @@ object AnimUtils {
         getShakeUp(view, scaleMax, rotation).apply { start() }
 
     /**
-     * 方法功能：上下抖动动画，用于提醒用户去点击
+     * 上下抖动动画，用于提醒用户去点击
      *
      * @param scaleMax:缩放的最大值 0.85
      * @param rotation:转动角度   6

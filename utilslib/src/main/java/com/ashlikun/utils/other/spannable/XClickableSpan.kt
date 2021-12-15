@@ -10,8 +10,10 @@ import android.text.TextPaint
  *
  *
  * 功能介绍：点击事件Span
+ * 点击后的背景颜色(HighLightColor)属于TextView的属性，Android4.0以上默认是淡绿色，低版本的是黄色。
  */
 abstract class XClickableSpan(
+    //文字颜色
     open var color: Int = 0,
     open var underlineText: Boolean = false,
     open var colorIsSet: Boolean = true

@@ -26,7 +26,7 @@ class AutoHeightLayout @JvmOverloads constructor(
     var maxParentHeightChange: OnMaxParentHeightChange? = null
 
     var maxParentHeight = 0
-    var softKeyboardHeight = KeyboardUtils.getDefKeyboardHeight(context)
+    var softKeyboardHeight = KeyboardUtils.getDefKeyboardHeight()
     var configurationChangedFlag = false
 
 

@@ -15,15 +15,14 @@ import androidx.core.app.NotificationManagerCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.IntentUtils
 import java.util.*
+
 /**
- * 作者　　: 李坤
- * 创建时间: 2017/8/7 15:07
+ * @author　　: 李坤
+ * 创建时间: 2021.12.15 15:39
  * 邮箱　　：496546144@qq.com
- *
  *
  * 功能介绍：通知栏工具
  */
-
 object NotificationUtil {
     private var LedID = 0
 
@@ -72,16 +71,17 @@ object NotificationUtil {
      * @param msg           主题消息
      * @param autoCancel    是否自动取消，点击的时候
      */
-    @JvmStatic
-    fun notification(activityClass: String,
-                     bundle: Bundle,
-                     id: Int,
-                     icon: Int,
-                     largeIcon: Bitmap? = null,
-                     title: String,
-                     msg: String,
-                     autoCancel: Boolean = true,
-                     defaults: Int = Notification.DEFAULT_ALL): NotificationCompat.Builder {
+    fun notification(
+        activityClass: String,
+        bundle: Bundle,
+        id: Int,
+        icon: Int,
+        largeIcon: Bitmap? = null,
+        title: String,
+        msg: String,
+        autoCancel: Boolean = true,
+        defaults: Int = Notification.DEFAULT_ALL
+    ): NotificationCompat.Builder {
         // 设置通知的事件消息
         val intent = Intent()
         intent.setPackage(AppUtils.app.packageName)
@@ -98,19 +98,21 @@ object NotificationUtil {
      * @param msg            主题消息
      * @param autoCancel     是否自动取消，点击的时候
      */
-    @JvmStatic
     fun notification(
-            notificationId: Int,
-            icon: Int,
-            title: String,
-            msg: String,
-            largeIcon: Bitmap? = null,
-            autoCancel: Boolean = true,
-            intent: Intent? = null,
-            defaults: Int = Notification.DEFAULT_ALL): NotificationCompat.Builder {
+        notificationId: Int,
+        icon: Int,
+        title: String,
+        msg: String,
+        largeIcon: Bitmap? = null,
+        autoCancel: Boolean = true,
+        intent: Intent? = null,
+        defaults: Int = Notification.DEFAULT_ALL
+    ): NotificationCompat.Builder {
 
-        return show(notificationId,
-                createBuilder(icon, title, msg, largeIcon, autoCancel, intent, defaults = defaults))
+        return show(
+            notificationId,
+            createBuilder(icon, title, msg, largeIcon, autoCancel, intent, defaults = defaults)
+        )
     }
 
     /**
@@ -128,37 +130,39 @@ object NotificationUtil {
      * @param defaults 提示类型  声音：[NotificationCompat.DEFAULT_SOUND], 震动：[NotificationCompat.DEFAULT_VIBRATE], 顶部灯光：[NotificationCompat.DEFAULT_LIGHTS],
      * @param importance 渠道优先级  高（有声音和提示）：[NotificationManager.IMPORTANCE_HIGH]
      */
-    @JvmStatic
-    fun createBuilder(icon: Int,
-                      title: String,
-                      msg: String,
-                      largeIcon: Bitmap? = null,
-                      autoCancel: Boolean = true,
-                      intent: Intent? = null,
-                      pendingIntent: PendingIntent? = null,
-                      channelName: String = "默认通知",
-                      channelGroupName: String = AppUtils.appName,
-                      lockscreenVisibility: Boolean? = null,
-                      importance: Int = NotificationManager.IMPORTANCE_HIGH,
-                      defaults: Int = Notification.DEFAULT_ALL): NotificationCompat.Builder {
-        createChannel(channelName = channelName,
-                channelGroupName = channelGroupName,
-                lockscreenVisibility = lockscreenVisibility,
-                importance = importance,
-                defaults = defaults
+    fun createBuilder(
+        icon: Int,
+        title: String,
+        msg: String,
+        largeIcon: Bitmap? = null,
+        autoCancel: Boolean = true,
+        intent: Intent? = null,
+        pendingIntent: PendingIntent? = null,
+        channelName: String = "默认通知",
+        channelGroupName: String = AppUtils.appName,
+        lockscreenVisibility: Boolean? = null,
+        importance: Int = NotificationManager.IMPORTANCE_HIGH,
+        defaults: Int = Notification.DEFAULT_ALL
+    ): NotificationCompat.Builder {
+        createChannel(
+            channelName = channelName,
+            channelGroupName = channelGroupName,
+            lockscreenVisibility = lockscreenVisibility,
+            importance = importance,
+            defaults = defaults
         )
         val builder = NotificationCompat.Builder(AppUtils.app, channelName)
-                //左部图标
-                .setSmallIcon(icon)
-                //大图标
-                .setLargeIcon(largeIcon)
-                //设置通知的优先级：最大
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                //上部标题
-                .setContentTitle(title)
-                //中部通知内容
-                .setContentText(msg)
-                .setAutoCancel(autoCancel)
+            //左部图标
+            .setSmallIcon(icon)
+            //大图标
+            .setLargeIcon(largeIcon)
+            //设置通知的优先级：最大
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            //上部标题
+            .setContentTitle(title)
+            //中部通知内容
+            .setContentText(msg)
+            .setAutoCancel(autoCancel)
         //通知的声音震动等都随系统,也可以选择使用声音文件，setSound(uri)
         builder.setDefaults(defaults)
         if (defaults == NotificationCompat.DEFAULT_ALL || (defaults and NotificationCompat.DEFAULT_LIGHTS) != 0) {
@@ -168,9 +172,13 @@ object NotificationUtil {
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent)
         } else if (intent != null) {
-            builder.setContentIntent(PendingIntent.getActivity(AppUtils.app, 0, intent,
+            builder.setContentIntent(
+                PendingIntent.getActivity(
+                    AppUtils.app, 0, intent,
                     //允许更新
-                    PendingIntent.FLAG_UPDATE_CURRENT))
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
         }
         return builder
     }
@@ -178,19 +186,19 @@ object NotificationUtil {
     /**
      * 创建渠道
      */
-    @JvmStatic
     fun createChannel(
         channelName: String = "默认通知",
         channelGroupName: String = AppUtils.appName,
         lockscreenVisibility: Boolean? = null,
         importance: Int = NotificationManager.IMPORTANCE_HIGH,
-        defaults: Int = Notification.DEFAULT_ALL) {
+        defaults: Int = Notification.DEFAULT_ALL
+    ) {
         // 此处必须兼容android O设备，否则系统版本在O以上可能不展示通知栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                    channelName,
-                    channelName,
-                    importance
+                channelName,
+                channelName,
+                importance
             )
             channel.enableVibration(defaults == NotificationCompat.DEFAULT_ALL || (defaults and NotificationCompat.DEFAULT_VIBRATE) != 0)
             if (defaults == NotificationCompat.DEFAULT_ALL || (defaults and NotificationCompat.DEFAULT_LIGHTS) != 0) {
@@ -220,8 +228,11 @@ object NotificationUtil {
     /**
      * 显示或者更新通知
      */
-    @JvmStatic
-    fun show(notificationId: Int, builder: NotificationCompat.Builder, tag: String = AppUtils.appName): NotificationCompat.Builder {
+    fun show(
+        notificationId: Int,
+        builder: NotificationCompat.Builder,
+        tag: String = AppUtils.appName
+    ): NotificationCompat.Builder {
         val nm = NotificationManagerCompat.from(AppUtils.app)
         //用消息的id对应的hashCode作为通知id
         //如果没有就创建，如果有就更新，
@@ -239,7 +250,6 @@ object NotificationUtil {
      * @param tag，通知的tag
      * @param notificationId，通知的id
      */
-    @JvmStatic
     fun cancel(notificationId: Int, tag: String = AppUtils.appName) {
         val nm = NotificationManagerCompat.from(AppUtils.app)
         //撤销指定id通知
@@ -249,7 +259,6 @@ object NotificationUtil {
     /**
      * 取消全部通知
      */
-    @JvmStatic
     fun cancel() {
         val nm = NotificationManagerCompat.from(AppUtils.app)
         //撤销本程序发出的全部通知
@@ -260,12 +269,10 @@ object NotificationUtil {
     /********************************************************************************************
      * 下面是手机顶部小灯的通知
      */
-    @JvmStatic
     fun lightLed(context: Context, colorOx: Int, durationMS: Int) {
         lightLed(context, colorOx, 0, durationMS)
     }
 
-    @JvmStatic
     fun lightLed(context: Context, colorOx: Int, startOffMS: Int, durationMS: Int) {
         val nm = NotificationManagerCompat.from(AppUtils.app)
         val notification = Notification()
@@ -278,20 +285,23 @@ object NotificationUtil {
         nm.cancel(LedID)
     }
 
-    @JvmStatic
-    fun lightLed(context: Context, colorOx: Int, startOffMS: Int, durationMS: Int,
-                 repeat: Int) {
+    fun lightLed(
+        context: Context, colorOx: Int, startOffMS: Int, durationMS: Int,
+        repeat: Int
+    ) {
         var repeat = repeat
         if (repeat < 1) {
             repeat = 1
         }
         val handler = Handler(Looper.getMainLooper())
         for (i in 0 until repeat) {
-            handler.postDelayed({ lightLed(context, colorOx, startOffMS, durationMS) }, ((startOffMS + durationMS) * i).toLong())
+            handler.postDelayed(
+                { lightLed(context, colorOx, startOffMS, durationMS) },
+                ((startOffMS + durationMS) * i).toLong()
+            )
         }
     }
 
-    @JvmStatic
     fun lightLed(context: Context, patterns: ArrayList<LightPattern>?) {
         if (patterns == null) {
             return

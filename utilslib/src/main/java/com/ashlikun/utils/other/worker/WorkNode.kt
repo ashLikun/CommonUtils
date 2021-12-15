@@ -28,7 +28,7 @@ class WorkNode(var worker: Worker) : Node {
     override fun onWork(callBack: CallBack) {
         this.callBack = callBack
         //限制线程
-        if (ThreadUtils.isMainThread()) {
+        if (ThreadUtils.isMainThread) {
             worker.invoke(this)
         } else {
             MainHandle.post { worker.invoke(this) }

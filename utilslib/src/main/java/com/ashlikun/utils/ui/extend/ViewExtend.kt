@@ -13,6 +13,7 @@ import androidx.annotation.ColorRes
 import androidx.core.view.ViewCompat
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
+import com.ashlikun.utils.ui.UiUtils
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.shadow.CanShadowDrawable
@@ -121,21 +122,17 @@ inline fun View?.scaleViewByHeight(bili: Float) {
     }
 }
 
-inline fun View?.getMarginLeft() =
-    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.leftMargin
-        ?: 0 else 0
+inline fun View.getMarginLeft() =
+    if (this.layoutParams is ViewGroup.MarginLayoutParams) (this.layoutParams as ViewGroup.MarginLayoutParams).leftMargin else 0
 
-inline fun View?.getMarginTop() =
-    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.topMargin
-        ?: 0 else 0
+inline fun View.getMarginTop() =
+    if (this.layoutParams is ViewGroup.MarginLayoutParams) (this.layoutParams as ViewGroup.MarginLayoutParams).topMargin else 0
 
-inline fun View?.getMarginRight() =
-    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.rightMargin
-        ?: 0 else 0
+inline fun View.getMarginRight() =
+    if (this.layoutParams is ViewGroup.MarginLayoutParams) (this.layoutParams as ViewGroup.MarginLayoutParams).rightMargin else 0
 
-inline fun View?.getMarginBottom() =
-    if (this?.layoutParams is ViewGroup.MarginLayoutParams?) (this?.layoutParams as ViewGroup.MarginLayoutParams?)?.bottomMargin
-        ?: 0 else 0
+inline fun View.getMarginBottom() =
+    if (this.layoutParams is ViewGroup.MarginLayoutParams) (this.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin else 0
 
 /**
  * 设置view   Padding
@@ -155,26 +152,20 @@ inline fun View?.setPaddings(
 /**
  * 设置view   Margin
  */
-inline fun View?.setMargin(
+inline fun View.setMargin(
     leftMargin: Int = getMarginLeft(), topMargin: Int = getMarginTop(),
     rightMargin: Int = getMarginRight(), bottomMargin: Int = getMarginBottom()
-) {
-    this?.run {
-        val params = layoutParams
-        if (params != null && params is ViewGroup.MarginLayoutParams) {
-            params.leftMargin = leftMargin
-            params.topMargin = topMargin
-            params.rightMargin = rightMargin
-            params.bottomMargin = bottomMargin
-            layoutParams = params
-        }
-    }
-}
+) = UiUtils.setViewMargin(this, leftMargin, topMargin, rightMargin, bottomMargin)
 
-
+/**
+ * 获取最大的Padding
+ */
 inline fun View.padding() =
-    Math.max(Math.max(paddingTop, paddingBottom), Math.max(paddingLeft, paddingRight))
+    paddingTop.coerceAtLeast(paddingBottom).coerceAtLeast(paddingLeft.coerceAtLeast(paddingRight))
 
+/**
+ * RoundShadowDrawable 阴影
+ */
 inline fun View?.shadow(
     range: Int = this?.padding() ?: DimensUtils.dip2px(5f),
     color: Int = R.color.lib_shadow_default,

@@ -1,4 +1,4 @@
-package com.ashlikun.utils.other
+package com.ashlikun.utils.ui.text
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -218,7 +218,7 @@ object SpannableUtils {
         }
 
         /**
-         * 方法功能：设置前景色
+         * 设置前景色
          *
          * @param color 前景色
          */
