@@ -2,10 +2,7 @@ package com.ashlikun.utils.provider.mode
 
 import android.net.Uri
 import com.ashlikun.utils.provider.BaseContentProvider
-import java.lang.Exception
-import java.lang.Class
 import com.ashlikun.utils.provider.ImpSpProvider
-import java.lang.StringBuilder
 
 /**
  * @author　　: 李坤

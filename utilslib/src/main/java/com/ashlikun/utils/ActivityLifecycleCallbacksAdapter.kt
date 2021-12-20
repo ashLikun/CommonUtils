@@ -1,7 +1,7 @@
 package com.ashlikun.utils
 
-import android.app.Application.ActivityLifecycleCallbacks
 import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 
 /**

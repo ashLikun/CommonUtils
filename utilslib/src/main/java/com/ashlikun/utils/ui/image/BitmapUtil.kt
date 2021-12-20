@@ -1,24 +1,21 @@
 package com.ashlikun.utils.ui.image
 
-import com.ashlikun.utils.AppUtils.app
-import com.ashlikun.utils.encryption.Base64Utils.encodeToStr
-import com.ashlikun.utils.encryption.Base64Utils.decode
-import android.media.MediaMetadataRetriever
-import java.io.ByteArrayOutputStream
-import com.ashlikun.utils.ui.ScreenUtils
-import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
-import java.lang.OutOfMemoryError
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.BitmapDrawable
 import android.content.Context
-import android.graphics.BitmapFactory.Options
-import android.view.View
 import android.content.Intent
 import android.graphics.*
+import android.graphics.BitmapFactory.Options
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.view.View
+import com.ashlikun.utils.AppUtils.app
+import com.ashlikun.utils.encryption.Base64Utils.decode
+import com.ashlikun.utils.encryption.Base64Utils.encodeToStr
 import com.ashlikun.utils.other.file.FileIOUtils
+import com.ashlikun.utils.ui.ScreenUtils
+import java.io.ByteArrayOutputStream
+import java.io.File
 
 /**
  * @author　　: 李坤

@@ -2,7 +2,6 @@ package com.ashlikun.utils
 
 import android.app.Application
 import android.content.pm.PackageInfo
-import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Build
 import android.text.TextUtils

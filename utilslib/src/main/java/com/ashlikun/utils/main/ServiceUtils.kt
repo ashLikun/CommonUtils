@@ -1,9 +1,8 @@
 package com.ashlikun.utils.main
 
 import android.app.ActivityManager
-import java.lang.Class
-import com.ashlikun.utils.AppUtils
 import android.content.Context
+import com.ashlikun.utils.AppUtils
 
 /**
  * @author　　: 李坤

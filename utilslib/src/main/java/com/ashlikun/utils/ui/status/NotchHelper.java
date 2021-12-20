@@ -34,8 +34,8 @@ import android.view.WindowManager;
 import com.ashlikun.utils.AppUtils;
 import com.ashlikun.utils.other.DimensUtils;
 import com.ashlikun.utils.other.RomUtils;
-import com.ashlikun.utils.ui.resources.ResUtils;
 import com.ashlikun.utils.ui.ScreenUtils;
+import com.ashlikun.utils.ui.resources.ResUtils;
 
 import java.lang.reflect.Method;
 

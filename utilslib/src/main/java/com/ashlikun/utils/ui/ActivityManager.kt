@@ -1,10 +1,7 @@
 package com.ashlikun.utils.ui
 
-import java.lang.Class
 import android.app.Activity
-import java.util.ArrayList
-import java.util.Stack
-import java.lang.Exception
+import java.util.*
 
 /**
  * @author　　: 李坤

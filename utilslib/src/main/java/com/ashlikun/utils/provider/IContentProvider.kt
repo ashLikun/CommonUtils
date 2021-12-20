@@ -1,9 +1,8 @@
 package com.ashlikun.utils.provider
 
-import android.content.Context
-import android.net.Uri
-import android.database.Cursor
 import android.content.ContentValues
+import android.database.Cursor
+import android.net.Uri
 
 /**
  * 作者　　: 李坤

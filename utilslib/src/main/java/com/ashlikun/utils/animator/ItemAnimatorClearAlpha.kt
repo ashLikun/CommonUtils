@@ -2,7 +2,6 @@ package com.ashlikun.utils.animator
 
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemAnimator.ItemHolderInfo
 
 /**
  * @author　　: 李坤

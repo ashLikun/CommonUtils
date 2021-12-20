@@ -1,9 +1,6 @@
 package com.ashlikun.utils.other
 
 import android.os.Looper
-import java.lang.Runnable
-import com.ashlikun.utils.other.ThreadPoolManage
-import com.ashlikun.utils.other.MainHandle
 
 /**
  * @author　　: 李坤

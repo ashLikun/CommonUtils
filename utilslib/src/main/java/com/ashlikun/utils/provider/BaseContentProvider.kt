@@ -1,12 +1,9 @@
 package com.ashlikun.utils.provider
 
 import android.content.ContentProvider
-import com.ashlikun.utils.provider.IContentProvider
-import android.net.Uri
-import android.database.Cursor
 import android.content.ContentValues
-import com.ashlikun.utils.provider.BaseContentProvider
-import com.ashlikun.utils.provider.ImpSpProvider
+import android.database.Cursor
+import android.net.Uri
 
 /**
  * @author　　: 李坤

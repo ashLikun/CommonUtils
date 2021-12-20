@@ -1,16 +1,11 @@
 package com.ashlikun.utils.ui.resources
 
-import com.ashlikun.utils.AppUtils.app
-import androidx.annotation.ColorRes
-import android.util.TypedValue
-import com.ashlikun.utils.AppUtils
 import android.content.Context
-import android.os.Build
-import androidx.annotation.DrawableRes
 import android.graphics.drawable.Drawable
-import androidx.annotation.DimenRes
-import androidx.annotation.StringRes
-import androidx.annotation.AnyRes
+import android.os.Build
+import android.util.TypedValue
+import androidx.annotation.*
+import com.ashlikun.utils.AppUtils.app
 
 /**
  * 作者　　: 李坤

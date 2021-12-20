@@ -1,10 +1,9 @@
 package com.ashlikun.utils.ui.keyboard
 
-import kotlin.jvm.JvmOverloads
 import android.content.Context
-import android.util.AttributeSet
-import android.graphics.Rect
 import android.content.res.Configuration
+import android.graphics.Rect
+import android.util.AttributeSet
 import com.ashlikun.utils.ui.extend.getActivity
 
 typealias  OnMaxParentHeightChange = (height: Int) -> Unit

@@ -1,14 +1,14 @@
 package com.ashlikun.utils.ui.text
 
-import android.text.method.LinkMovementMethod
-import android.view.View.OnLongClickListener
-import android.view.View
-import android.widget.TextView
-import android.text.Spannable
-import android.view.MotionEvent
-import android.text.style.ClickableSpan
 import android.text.Selection
+import android.text.Spannable
+import android.text.method.LinkMovementMethod
 import android.text.method.MovementMethod
+import android.text.style.ClickableSpan
+import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnLongClickListener
+import android.widget.TextView
 
 /**
  * @author　　: 李坤

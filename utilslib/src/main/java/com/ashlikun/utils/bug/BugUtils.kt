@@ -1,17 +1,10 @@
 package com.ashlikun.utils.bug
 
-import java.lang.Class
-import java.lang.reflect.Constructor
-import java.lang.Exception
-import java.lang.reflect.Method
-import com.ashlikun.utils.other.ThreadPoolManage
-import java.lang.Runnable
-import com.ashlikun.utils.bug.BugUtils
 import android.app.Activity
-import android.os.Build
-import com.ashlikun.utils.other.LogUtils
 import android.content.pm.ActivityInfo
 import android.content.res.TypedArray
+import android.os.Build
+import com.ashlikun.utils.other.LogUtils
 import com.ashlikun.utils.other.coroutines.taskLaunch
 
 /**

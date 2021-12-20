@@ -1,20 +1,12 @@
 package com.ashlikun.utils.other
 
-import com.ashlikun.utils.main.ProcessUtils.isMainProcess
-import com.ashlikun.utils.main.ProcessUtils.curProcessName
 import android.content.Context
-import com.ashlikun.utils.other.SharedPreUtils
-import java.util.HashSet
-import com.ashlikun.utils.main.ProcessUtils
-import android.content.SharedPreferences.Editor
-import com.ashlikun.utils.provider.ImpSpProvider
-import kotlin.jvm.JvmOverloads
-import android.content.SharedPreferences
-import java.lang.Exception
-import java.lang.Class
 import android.util.Log
 import com.ashlikun.utils.AppUtils
-import java.lang.StringBuilder
+import com.ashlikun.utils.main.ProcessUtils.curProcessName
+import com.ashlikun.utils.main.ProcessUtils.isMainProcess
+import com.ashlikun.utils.provider.ImpSpProvider
+import java.util.*
 
 /**
  * @author　　: 李坤

@@ -1,23 +1,14 @@
 package com.ashlikun.utils.provider
 
-import com.ashlikun.utils.other.SharedPreUtils.getSP
-import com.ashlikun.utils.provider.IContentProvider
-import android.content.Context
-import android.content.SharedPreferences
-import com.ashlikun.utils.other.SharedPreUtils
-import android.content.SharedPreferences.Editor
-import android.net.Uri
-import android.database.Cursor
-import com.ashlikun.utils.provider.mode.SpMode
-import android.database.MatrixCursor
-import com.ashlikun.utils.provider.ImpSpProvider
 import android.content.ContentValues
-import java.util.HashSet
-import kotlin.jvm.Synchronized
-import java.lang.StringBuilder
-import android.content.ContentResolver
+import android.content.Context
+import android.database.Cursor
+import android.database.MatrixCursor
+import android.net.Uri
 import com.ashlikun.utils.AppUtils
-import java.lang.Class
+import com.ashlikun.utils.other.SharedPreUtils.getSP
+import com.ashlikun.utils.provider.mode.SpMode
+import java.util.*
 
 /**
  * 作者　　: 李坤

@@ -57,7 +57,7 @@ inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContex
             ct = context + defaultCoroutineExceptionHandler
         }
     }
-    return ct;
+    return ct
 }
 
 
@@ -93,10 +93,10 @@ inline fun <T> taskAsync(
  * 执行，常用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunch(
+inline fun taskLaunch(
     context: CoroutineContext = EmptyCoroutineContext,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
+    noinline job: suspend () -> Unit
 ) = GlobalScope.launch(CoroutineExceptionHandler(context)) {
     delay(delayTime)
     job()
@@ -106,24 +106,24 @@ inline fun <T> taskLaunch(
  * 执行，在Android UI线程中执行，可以用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunchMain(delayTime: Long = 0, noinline job: suspend () -> T) =
+inline fun taskLaunchMain(delayTime: Long = 0, noinline job: suspend () -> Unit) =
     taskLaunch(MainDispatcher, delayTime, job)
 
 /**
  * 执行，在ThreadPoolDispatcher线程中执行，可以用于最外层
  * 无阻塞的
  */
-inline fun <T> taskLaunchThreadPoll(delayTime: Long = 0, noinline job: suspend () -> T) =
+inline fun taskLaunchThreadPoll(delayTime: Long = 0, noinline job: suspend () -> Unit) =
     taskLaunch(ThreadPoolDispatcher, delayTime, job)
 
 /**
  * 心跳执行 默认重复次数1次，可用于最外层
  */
-inline fun <T> taskRepeat(
+inline fun taskRepeat(
     context: CoroutineContext = EmptyCoroutineContext,
     repeat: Int = 1,
     delayTime: Long = 0,
-    noinline job: () -> T
+    noinline job: () -> Unit
 ) = taskLaunch(context) {
     taskRepeatSus(repeat, delayTime, job)
 }
@@ -132,10 +132,10 @@ inline fun <T> taskRepeat(
 /**
  * 心跳执行 默认重复次数1次，不能用于最外层
  */
-suspend inline fun <T> taskRepeatSus(
+suspend inline fun taskRepeatSus(
     repeat: Int = 1,
     delayTime: Long = 0,
-    crossinline job: () -> T
+    crossinline job: () -> Unit
 ) = repeat(repeat) {
     delay(delayTime)
     job()

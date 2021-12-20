@@ -1,10 +1,5 @@
 package com.ashlikun.utils.encryption
 
-import com.ashlikun.utils.other.StringUtils
-import java.util.regex.Matcher
-import com.ashlikun.utils.encryption.UnicodeUtils
-import java.lang.StringBuffer
-import java.lang.Exception
 import java.util.regex.Pattern
 
 /**

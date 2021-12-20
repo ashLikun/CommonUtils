@@ -5,27 +5,18 @@
  */
 package com.ashlikun.utils.other
 
-import com.ashlikun.utils.AppUtils.app
-import android.os.Build
-import android.content.Context
-import com.ashlikun.utils.AppUtils
-import android.telephony.TelephonyManager
-import java.lang.StringBuffer
 import android.annotation.SuppressLint
 import android.app.Service
-import android.provider.Settings.Secure
-import java.lang.Exception
-import com.ashlikun.utils.other.DeviceUtil
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.os.Vibrator
-import android.net.Uri
+import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
-import android.content.SharedPreferences
-import java.util.UUID
-import android.content.SharedPreferences.Editor
-import java.util.Locale
+import android.net.ConnectivityManager
+import android.net.Uri
+import android.os.Build
+import android.os.Vibrator
+import android.provider.Settings.Secure
+import android.telephony.TelephonyManager
+import com.ashlikun.utils.AppUtils.app
+import java.util.*
 
 /**
  * 作者　　: 李坤

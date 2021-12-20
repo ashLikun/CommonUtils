@@ -1,17 +1,14 @@
 package com.ashlikun.utils.other
 
-import com.ashlikun.utils.AppUtils.app
-import android.content.Intent
 import android.app.Activity
-import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.other.StringUtils
+import android.content.Intent
 import android.net.Uri
-import com.ashlikun.utils.other.IntentUtils
-import java.io.File
-import java.io.IOException
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
+import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.ui.ActivityManager
+import java.io.File
+import java.io.IOException
 
 /**
  * @author　　: 李坤

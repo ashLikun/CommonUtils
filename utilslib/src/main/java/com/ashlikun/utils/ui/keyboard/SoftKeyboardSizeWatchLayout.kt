@@ -1,12 +1,9 @@
 package com.ashlikun.utils.ui.keyboard
 
-import kotlin.jvm.JvmOverloads
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import java.util.ArrayList
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.graphics.Rect
 
 /**
  * 软键盘弹起

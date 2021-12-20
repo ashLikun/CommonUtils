@@ -3,7 +3,6 @@ package com.ashlikun.utils.assist
 import android.content.Context
 import android.os.PowerManager
 import com.ashlikun.utils.other.LogUtils
-import java.lang.Exception
 
 /**
  * @author　　: 李坤

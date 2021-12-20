@@ -1,13 +1,11 @@
 package com.ashlikun.utils.simple
 
 import android.R
-import kotlin.jvm.JvmOverloads
 import android.content.Context
-import android.util.AttributeSet
-import android.content.res.TypedArray
 import android.graphics.Rect
-import android.view.MotionEvent
 import android.text.method.MovementMethod
+import android.util.AttributeSet
+import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatTextView
 import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 

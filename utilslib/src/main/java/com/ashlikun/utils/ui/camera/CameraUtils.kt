@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
-import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.WindowManager

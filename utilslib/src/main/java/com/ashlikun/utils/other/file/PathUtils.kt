@@ -1,19 +1,18 @@
 package com.ashlikun.utils.other.file
 
-import java.io.File
-import com.ashlikun.utils.other.StringUtils
-import android.content.Intent
-import com.ashlikun.utils.AppUtils
-import android.os.Environment
-import android.os.Build
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.Uri
-import android.provider.DocumentsContract
 import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
-import android.database.Cursor
+import com.ashlikun.utils.AppUtils
+import java.io.File
 
 /**
  * @author　　: 李坤

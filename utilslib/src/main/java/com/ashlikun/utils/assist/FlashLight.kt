@@ -2,7 +2,6 @@ package com.ashlikun.utils.assist
 
 import android.hardware.Camera
 import android.os.Build
-import android.os.Handler
 import com.ashlikun.utils.other.coroutines.taskLaunch
 import kotlinx.coroutines.Job
 

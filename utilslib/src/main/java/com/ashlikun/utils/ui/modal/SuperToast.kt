@@ -23,7 +23,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.R
-import com.ashlikun.utils.other.DimensUtils.dip2px
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.resources.ColorUtils

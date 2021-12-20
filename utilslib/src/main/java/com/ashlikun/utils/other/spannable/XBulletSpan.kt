@@ -1,13 +1,13 @@
 package com.ashlikun.utils.other.spannable
 
-import android.text.style.BulletSpan
-import android.text.style.LeadingMarginSpan
-import android.os.Parcel
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.Parcel
 import android.text.Layout
 import android.text.Spanned
+import android.text.style.BulletSpan
+import android.text.style.LeadingMarginSpan
 import com.ashlikun.utils.ui.text.SpannableUtils
 
 /**

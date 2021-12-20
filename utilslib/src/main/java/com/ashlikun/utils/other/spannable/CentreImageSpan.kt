@@ -1,11 +1,10 @@
 package com.ashlikun.utils.other.spannable
 
-import android.graphics.drawable.Drawable
-import android.text.style.ImageSpan
+import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Paint.FontMetricsInt
-import android.graphics.Rect
-import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.text.style.ImageSpan
 
 /**
  * @author　　: 李坤

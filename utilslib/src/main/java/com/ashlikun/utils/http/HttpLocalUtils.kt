@@ -1,7 +1,5 @@
 package com.ashlikun.utils.http
 
-import com.ashlikun.utils.AppUtils
-
 object HttpLocalUtils {
     /**
      * 判断是否有网络

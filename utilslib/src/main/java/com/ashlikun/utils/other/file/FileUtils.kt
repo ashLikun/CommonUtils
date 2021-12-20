@@ -1,21 +1,14 @@
 package com.ashlikun.utils.other.file
 
-import java.io.File
-import android.content.Context
-import android.os.Bundle
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
-import java.io.InputStream
-import java.io.ByteArrayOutputStream
-import java.lang.Exception
-import java.io.FileInputStream
-import java.io.FileNotFoundException
+import android.os.Bundle
 import android.util.Log
 import com.ashlikun.utils.AppUtils
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 import java.text.DecimalFormat
-import kotlin.Throws
-import kotlin.jvm.JvmOverloads
 
 /**
  * @author　　: 李坤

@@ -1,7 +1,7 @@
 package com.ashlikun.utils.other.spannable
 
-import android.text.style.ClickableSpan
 import android.text.TextPaint
+import android.text.style.ClickableSpan
 
 /**
  * 作者　　: 李坤

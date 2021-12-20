@@ -1,14 +1,12 @@
 package com.ashlikun.utils.encryption
 
-import com.ashlikun.utils.encryption.Md5Utils
 import android.text.TextUtils
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.io.File
 import java.io.FileInputStream
-import java.lang.Exception
 import java.io.IOException
 import java.math.BigInteger
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import kotlin.experimental.and
 
 /**

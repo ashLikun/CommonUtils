@@ -1,7 +1,5 @@
 package com.ashlikun.utils.other
 
-import java.lang.StackTraceElement
-import com.ashlikun.utils.other.LogUtils
 import android.util.Log
 import com.ashlikun.utils.AppUtils
 

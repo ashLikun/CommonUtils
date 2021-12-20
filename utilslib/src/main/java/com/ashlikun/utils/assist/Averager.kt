@@ -1,8 +1,7 @@
 package com.ashlikun.utils.assist
 
-import java.util.ArrayList
-import kotlin.jvm.Synchronized
 import com.ashlikun.utils.other.LogUtils
+import java.util.*
 
 /**
  * @author　　: 李坤

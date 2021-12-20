@@ -1,16 +1,12 @@
 package com.ashlikun.utils.ui.image
 
-import com.ashlikun.utils.other.DimensUtils.dip2px
-import com.ashlikun.utils.AppUtils.app
-import android.graphics.drawable.GradientDrawable
-import android.graphics.Paint
-import com.ashlikun.utils.other.DimensUtils
-import com.ashlikun.utils.AppUtils
-import android.text.TextUtils
 import android.graphics.Canvas
-import android.graphics.Paint.FontMetricsInt
-import com.ashlikun.utils.ui.image.TextDrawable
+import android.graphics.Paint
+import android.graphics.drawable.GradientDrawable
+import android.text.TextUtils
 import androidx.annotation.ColorInt
+import com.ashlikun.utils.AppUtils.app
+import com.ashlikun.utils.other.DimensUtils.dip2px
 
 /**
  * @author　　: 李坤

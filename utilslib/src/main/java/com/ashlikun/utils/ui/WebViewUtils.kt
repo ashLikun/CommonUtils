@@ -1,18 +1,12 @@
 package com.ashlikun.utils.ui
 
+import android.os.Build
+import android.webkit.WebSettings
+import android.webkit.WebView
 import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.AppUtils.versionName
 import com.ashlikun.utils.other.StringUtils.isEmpty
-import java.lang.StringBuilder
-import android.webkit.WebView
-import android.webkit.WebSettings
-import android.os.Build
-import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.ui.WebViewUtils
-import android.annotation.TargetApi
 import java.util.regex.Matcher
-import java.lang.Exception
-import com.ashlikun.utils.other.StringUtils
 import java.util.regex.Pattern
 
 /**

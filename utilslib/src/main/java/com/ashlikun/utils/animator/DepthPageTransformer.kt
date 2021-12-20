@@ -1,8 +1,7 @@
 package com.ashlikun.utils.animator
 
-import androidx.viewpager.widget.ViewPager
 import android.view.View
-import com.ashlikun.utils.animator.DepthPageTransformer
+import androidx.viewpager.widget.ViewPager
 
 /**
  * @author　　: 李坤

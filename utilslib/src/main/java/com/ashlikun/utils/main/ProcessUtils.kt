@@ -1,20 +1,15 @@
 package com.ashlikun.utils.main
 
-import com.ashlikun.utils.main.ProcessUtils
-import android.text.TextUtils
-import com.ashlikun.utils.AppUtils
-import android.os.Build
-import android.app.Application
-import java.lang.Class
-import com.ashlikun.utils.other.ClassUtils
-import android.app.ActivityManager.RunningAppProcessInfo
-import android.content.Context
-import java.util.HashSet
-import java.util.Collections
 import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.app.Application
+import android.content.Context
+import android.os.Build
 import android.os.Process
-import java.util.Arrays
+import android.text.TextUtils
+import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.other.ClassUtils
+import java.util.*
 
 /**
  * @author　　: 李坤

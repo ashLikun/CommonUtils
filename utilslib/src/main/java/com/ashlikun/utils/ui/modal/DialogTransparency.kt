@@ -1,13 +1,12 @@
 package com.ashlikun.utils.ui.modal
 
-import kotlin.jvm.JvmOverloads
-import android.content.Context
-import com.ashlikun.utils.R
 import android.app.Dialog
-import android.view.View
+import android.content.Context
 import android.os.Bundle
-import com.ashlikun.utils.ui.ScreenUtils
 import android.view.Gravity
+import android.view.View
+import com.ashlikun.utils.R
+import com.ashlikun.utils.ui.ScreenUtils
 
 /**
  * @author　　: 李坤

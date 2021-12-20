@@ -1,10 +1,10 @@
 package com.ashlikun.utils.other.spannable
 
-import android.text.style.ReplacementSpan
+import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Paint.FontMetricsInt
-import android.graphics.Canvas
 import android.text.TextPaint
+import android.text.style.ReplacementSpan
 
 /**
  * @author　　: 李坤

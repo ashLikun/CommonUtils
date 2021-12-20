@@ -1,6 +1,5 @@
 package com.ashlikun.utils.ui
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.graphics.Point
@@ -9,7 +8,6 @@ import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.*
 import com.ashlikun.utils.AppUtils.app
-import com.ashlikun.utils.other.DimensUtils.dip2px
 import com.ashlikun.utils.other.RomUtils.isXiaomi
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.resources.ResUtils.getDimensionPixelSize

@@ -3,9 +3,6 @@ package com.ashlikun.utils.other
 import android.os.Build
 import com.ashlikun.utils.other.DeviceUtil.Companion.deviceBrand
 import com.ashlikun.utils.other.DeviceUtil.Companion.manufacturer
-import com.ashlikun.utils.other.RomUtils
-import com.ashlikun.utils.other.DeviceUtil
-import java.util.*
 
 /**
  * @author　　: 李坤

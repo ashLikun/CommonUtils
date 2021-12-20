@@ -4,14 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
-import android.net.NetworkInfo
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.assist.NetworkUtils
-import com.ashlikun.utils.assist.NetworkUtils.NetType
-import java.lang.reflect.Method
-import java.lang.Exception
 import com.ashlikun.utils.other.LogUtils
-import com.ashlikun.utils.assist.NetworkUtils.NetWorkType
 
 /**
  * @author　　: 李坤

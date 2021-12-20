@@ -1,14 +1,11 @@
 package com.ashlikun.utils.animator
 
 import android.animation.*
-import android.view.View
-import com.ashlikun.utils.animator.AnimUtils
-import com.ashlikun.utils.other.DimensUtils
-import kotlin.jvm.JvmOverloads
-import android.widget.TextView
-import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.util.TypedValue
+import android.view.View
+import android.widget.TextView
 import androidx.annotation.ColorInt
+import com.ashlikun.utils.other.DimensUtils
 
 /**
  * @author　　: 李坤

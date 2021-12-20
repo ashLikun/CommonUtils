@@ -1,22 +1,19 @@
 package com.ashlikun.utils.ui.modal
 
-import com.ashlikun.utils.ui.keyboard.KeyboardUtils.exitInput
-import android.view.View
-import com.google.android.material.snackbar.Snackbar
-import com.ashlikun.utils.ui.keyboard.KeyboardUtils
-import com.ashlikun.utils.ui.modal.SnackbarUtil
 import android.app.Activity
-import com.ashlikun.utils.ui.UiUtils
 import android.graphics.Color
-import android.view.ViewGroup
-import com.google.android.material.snackbar.SnackbarContentLayout
-import android.widget.TextView
-import com.google.android.material.snackbar.Snackbar.SnackbarLayout
-import android.view.LayoutInflater
-import android.widget.LinearLayout
 import android.view.Gravity
-import com.ashlikun.utils.ui.modal.DialogTransparency
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.ashlikun.utils.R
+import com.ashlikun.utils.ui.UiUtils
+import com.ashlikun.utils.ui.keyboard.KeyboardUtils.exitInput
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.SnackbarLayout
+import com.google.android.material.snackbar.SnackbarContentLayout
 
 /**
  * 作者　　: 李坤

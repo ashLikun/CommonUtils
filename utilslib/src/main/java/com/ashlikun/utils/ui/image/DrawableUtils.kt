@@ -11,7 +11,6 @@ import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.resColor
-import com.ashlikun.utils.ui.extend.resDrawable
 import kotlin.math.max
 
 /**
