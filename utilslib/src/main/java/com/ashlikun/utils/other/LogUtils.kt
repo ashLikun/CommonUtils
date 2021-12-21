@@ -10,13 +10,21 @@ import com.ashlikun.utils.AppUtils
  *
  * 功能介绍：项目的Log工具
  */
-fun log(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
-fun loge(content: Any, tr: Throwable? = null) = LogUtils.e(content, tr)
-fun logw(content: Any, tr: Throwable? = null) = LogUtils.w(content, tr)
-fun logi(content: Any, tr: Throwable? = null) = LogUtils.i(content, tr)
-fun logd(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
-fun logv(content: Any, tr: Throwable? = null) = LogUtils.v(content, tr)
-fun logwtf(content: Any, tr: Throwable? = null) = LogUtils.wtf(content, tr)
+inline fun log(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
+inline fun loge(content: Any, tr: Throwable? = null) = LogUtils.e(content, tr)
+inline fun logw(content: Any, tr: Throwable? = null) = LogUtils.w(content, tr)
+inline fun logi(content: Any, tr: Throwable? = null) = LogUtils.i(content, tr)
+inline fun logd(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
+inline fun logv(content: Any, tr: Throwable? = null) = LogUtils.v(content, tr)
+inline fun logwtf(content: Any, tr: Throwable? = null) = LogUtils.wtf(content, tr)
+
+inline fun Any.logg(tr: Throwable? = null) = LogUtils.d(this, tr)
+inline fun Any.logge(tr: Throwable? = null) = LogUtils.e(this, tr)
+inline fun Any.loggw(tr: Throwable? = null) = LogUtils.w(this, tr)
+inline fun Any.loggi(tr: Throwable? = null) = LogUtils.i(this, tr)
+inline fun Any.loggd(tr: Throwable? = null) = LogUtils.d(this, tr)
+inline fun Any.loggv(tr: Throwable? = null) = LogUtils.v(this, tr)
+inline fun Any.loggwtf(tr: Throwable? = null) = LogUtils.wtf(this, tr)
 
 object LogUtils {
 

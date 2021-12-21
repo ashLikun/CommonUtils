@@ -7,6 +7,7 @@ import com.ashlikun.utils.main.ProcessUtils.curProcessName
 import com.ashlikun.utils.main.ProcessUtils.isMainProcess
 import com.ashlikun.utils.provider.ImpSpProvider
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * @author　　: 李坤
@@ -28,13 +29,13 @@ object SharedPreUtils {
 
     fun putInt(key: String, value: Int, name: String = DEFAULT) = setKeyAndValue(key, value, name)
 
-    fun getInt(key: String, defaultValue: Int = -1, name: String = DEFAULT) =
+    fun getInt(key: String, defaultValue: Int = 0, name: String = DEFAULT) =
         getValue(key, defaultValue, name)
 
     fun putLong(key: String, value: Long, name: String = DEFAULT) = setKeyAndValue(key, value, name)
 
 
-    fun getLong(key: String, defaultValue: Long = -1L, name: String = DEFAULT) =
+    fun getLong(key: String, defaultValue: Long = 0L, name: String = DEFAULT) =
         getValue(key, defaultValue, name)
 
 
@@ -42,9 +43,8 @@ object SharedPreUtils {
         setKeyAndValue(key, value, name)
 
 
-    fun getFloat(key: String, defaultValue: Float = -1f, name: String = DEFAULT) =
+    fun getFloat(key: String, defaultValue: Float = 0f, name: String = DEFAULT) =
         getValue(key, defaultValue, name)
-
 
     fun putBoolean(key: String, value: Boolean, name: String = DEFAULT): Boolean {
         return setKeyAndValue(key, value, name)
@@ -100,44 +100,44 @@ object SharedPreUtils {
      * @param name 文件名
      * @return 对应值
      */
-    inline fun <reified T> getValue(key: String, defaule: T, name: String = DEFAULT) =
-        getValueType(key, defaule, name, T::class.java)
+    inline fun <reified T> getValue(key: String, default: T, name: String = DEFAULT) =
+        getValueType(key, default, name, T::class)
 
-    inline fun <T> getValueType(key: String, defaule: T, name: String, type: Class<T>): T {
+    inline fun <T> getValueType(key: String, default: T, name: String, type: KClass<*>): T {
         if (isMainProcess) {
-            val sp = getSP(name) ?: return defaule
-            return when {
-                type.isAssignableFrom(String::class.java) -> sp.getString(
-                    key, defaule.toString()
+            val sp = getSP(name) ?: return default
+            return when (type) {
+                String::class -> sp.getString(
+                    key, default.toString()
                 )
-                type.isAssignableFrom(Int::class.java) -> sp.getInt(
-                    key, defaule as Int
+                Int::class -> sp.getInt(
+                    key, default as Int
                 )
-                type.isAssignableFrom(Boolean::class.java) -> sp.getBoolean(
-                    key, defaule as Boolean
+                Boolean::class -> sp.getBoolean(
+                    key, default as Boolean
                 )
-                type.isAssignableFrom(Float::class.java) -> sp.getFloat(
-                    key, defaule as Float
+                Float::class -> sp.getFloat(
+                    key, default as Float
                 )
-                type.isAssignableFrom(Long::class.java) -> sp.getLong(
-                    key, defaule as Long
+                Long::class -> sp.getLong(
+                    key, default as Long
                 )
-                type.isAssignableFrom(MutableSet::class.java) -> sp.getStringSet(
-                    key, defaule as MutableSet<String>
+                MutableSet::class -> sp.getStringSet(
+                    key, default as MutableSet<String>
                 )
                 else -> {
-                    sp.getString(key, defaule.toString())
+                    sp.getString(key, default.toString())
                 }
             } as T
         } else {
             //其他进程，使用ContentProvider
             try {
-                return ImpSpProvider.getValueToProvider(key, defaule, name, type)
+                return ImpSpProvider.getValueToProvider(key, default, name, type)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
-        return defaule
+        return default
     }
 
 

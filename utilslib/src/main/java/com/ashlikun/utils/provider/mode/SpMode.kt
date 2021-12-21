@@ -3,6 +3,7 @@ package com.ashlikun.utils.provider.mode
 import android.net.Uri
 import com.ashlikun.utils.provider.BaseContentProvider
 import com.ashlikun.utils.provider.ImpSpProvider
+import kotlin.reflect.KClass
 
 /**
  * @author　　: 李坤
@@ -65,15 +66,15 @@ class SpMode {
      * @param key  sp 键
      * @param type 值得类型
      */
-    constructor(name: String, key: String, type: Class<*>) {
+    constructor(name: String, key: String, type: KClass<*>) {
         var typeStr = "Object"
         when {
-            type.isAssignableFrom(String::class.java) -> typeStr = ImpSpProvider.TYPE_STRING
-            type.isAssignableFrom(Int::class.java) -> typeStr = ImpSpProvider.TYPE_INT
-            type.isAssignableFrom(Boolean::class.java) -> typeStr = ImpSpProvider.TYPE_BOOLEAN
-            type.isAssignableFrom(Float::class.java) -> typeStr = ImpSpProvider.TYPE_FLOAT
-            type.isAssignableFrom(Long::class.java) -> typeStr = ImpSpProvider.TYPE_LONG
-            MutableSet::class.java.isAssignableFrom(type) -> typeStr = ImpSpProvider.TYPE_STRING_SET
+            type == String::class -> typeStr = ImpSpProvider.TYPE_STRING
+            type == Int::class -> typeStr = ImpSpProvider.TYPE_INT
+            type == Boolean::class -> typeStr = ImpSpProvider.TYPE_BOOLEAN
+            type == Float::class -> typeStr = ImpSpProvider.TYPE_FLOAT
+            type == Long::class -> typeStr = ImpSpProvider.TYPE_LONG
+            type == MutableSet::class -> typeStr = ImpSpProvider.TYPE_STRING_SET
         }
         createUrl(name, key, typeStr)
     }

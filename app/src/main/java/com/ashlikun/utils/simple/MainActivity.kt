@@ -125,6 +125,18 @@ class MainActivity : AppCompatActivity() {
         binding.buttonJump.background = DrawableUtils.createGradientDrawable(0xffff0000.toInt())
             .roundRadiu(floatArrayOf(30f, 30f, 0f, 20f))
             .create()
+
+        SharedPreUtils.putString("testString", "testString")
+        SharedPreUtils.putInt("testInt", 22)
+        SharedPreUtils.putBoolean("testBoolean", true)
+        SharedPreUtils.putFloat("testFloat", 33f)
+        SharedPreUtils.putLong("testLong", 22332)
+
+        SharedPreUtils.getString("testString").logge()
+        SharedPreUtils.getInt("testInt").logge()
+        SharedPreUtils.getBoolean("testBoolean").logge()
+        SharedPreUtils.getFloat("testFloat").logge()
+        SharedPreUtils.getLong("testLong").logge()
     }
 
     fun onView1Click(view: View) {
