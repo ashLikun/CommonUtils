@@ -312,7 +312,7 @@ class DeviceUtil private constructor() {
                 var uuid = sp?.getString("uuid", "") ?: ""
                 if (uuid.isEmpty()) {
                     uuid = UUID.randomUUID().toString()
-                    sp?.edit()?.putString("uuid", uuid)?.commit()
+                    sp?.edit()?.putString("uuid", uuid)?.apply()
                 }
                 return uuid
             }

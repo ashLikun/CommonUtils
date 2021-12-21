@@ -20,6 +20,7 @@ import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.taskAsync
 import com.ashlikun.utils.other.coroutines.taskLaunchMain
 import com.ashlikun.utils.other.spannable.XClickableSpan
+import com.ashlikun.utils.other.store.StoreUtils
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.*
@@ -126,17 +127,20 @@ class MainActivity : AppCompatActivity() {
             .roundRadiu(floatArrayOf(30f, 30f, 0f, 20f))
             .create()
 
-        SharedPreUtils.putString("testString", "testString")
-        SharedPreUtils.putInt("testInt", 22)
-        SharedPreUtils.putBoolean("testBoolean", true)
-        SharedPreUtils.putFloat("testFloat", 33f)
-        SharedPreUtils.putLong("testLong", 22332)
+//        StoreUtils.putString("testString", "testString")
+//        StoreUtils.putInt("testInt", 22)
+//        StoreUtils.putBoolean("testBoolean", true)
+//        StoreUtils.putFloat("testFloat", 33f)
+//        StoreUtils.putLong("testLong", 22332)
+//        StoreUtils.putSet("testSet", setOf("aadd"))
 
-        SharedPreUtils.getString("testString").logge()
-        SharedPreUtils.getInt("testInt").logge()
-        SharedPreUtils.getBoolean("testBoolean").logge()
-        SharedPreUtils.getFloat("testFloat").logge()
-        SharedPreUtils.getLong("testLong").logge()
+        StoreUtils.getString("testString").logge()
+        StoreUtils.getInt("testInt").logge()
+        StoreUtils.getBoolean("testBoolean").logge()
+        StoreUtils.getFloat("testFloat").logge()
+        StoreUtils.getLong("testLong").logge()
+        StoreUtils.getSet("testSet").logge()
+        StoreUtils.getParcelable("testParcelable", TestParcelable())?.logge()
     }
 
     fun onView1Click(view: View) {

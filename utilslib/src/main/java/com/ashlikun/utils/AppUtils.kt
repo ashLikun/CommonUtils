@@ -7,6 +7,7 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.core.content.FileProvider
 import com.ashlikun.utils.bug.BugUtils
+import com.ashlikun.utils.other.store.MMKVUtils
 import com.ashlikun.utils.provider.BaseContentProvider
 import com.ashlikun.utils.ui.resources.ResUtils
 import java.io.File

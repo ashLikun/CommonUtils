@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.other.SharedPreUtils.getSP
+import com.ashlikun.utils.other.store.StoreUtils
 import com.ashlikun.utils.provider.mode.SpMode
 import java.util.*
 import kotlin.reflect.KClass
@@ -20,6 +20,9 @@ import kotlin.reflect.KClass
  * 功能介绍：内容提供者用到的sp,只处理[BaseContentProvider.HANDLE_SP]类型
  */
 class ImpSpProvider : IContentProvider {
+    fun getSP(name: String = StoreUtils.DEFAULT) =
+        AppUtils.app.getSharedPreferences(name, Context.MODE_PRIVATE)
+
     fun contains(name: String): Boolean {
         val sp = getSP()
         return sp != null && sp.contains(name)
@@ -28,14 +31,16 @@ class ImpSpProvider : IContentProvider {
     fun remove(name: String, key: String): Boolean {
         val editor = getSP(name).edit()
         editor.remove(key)
-        return editor.commit()
+        editor.apply()
+        return true
     }
 
     fun clear(name: String): Boolean {
         val sp = getSP(name)
         val editor = sp.edit()
         editor.clear()
-        return editor.commit()
+        editor.apply()
+        return true
     }
 
     /**
@@ -147,7 +152,8 @@ class ImpSpProvider : IContentProvider {
         } else if (value is Set<*>) {
             editor.putStringSet(key, value as Set<String>)
         }
-        return editor.commit()
+        editor.apply()
+        return true
     }
 
     companion object {
@@ -214,8 +220,8 @@ class ImpSpProvider : IContentProvider {
         /**
          * 获取provider内容
          */
-        fun <T> getValueToProvider(
-            key: String, defaultValue: T, name: String, type: KClass<*>
+        fun <T : Any> getValueToProvider(
+            key: String, defaultValue: T, name: String, type: KClass<T>
         ): T {
             val uri = SpMode(name, key, type).uri
             if (uri != null) {
@@ -239,20 +245,14 @@ class ImpSpProvider : IContentProvider {
                             cursor.getFloat(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE)) as T
                         Long::class -> result =
                             cursor.getLong(cursor.getColumnIndex(SP_CURSOR_COLUMN_VALUE)) as T
-                        MutableSet::class -> {
+                        Set::class -> {
                             val setStrs = cursor.getString(
                                 cursor.getColumnIndex(
                                     SP_CURSOR_COLUMN_VALUE
                                 )
                             )
-                            if (setStrs != null) {
-                                val setStr = setStrs.split(COMMA_REPLACEMENT).toTypedArray()
-                                if (setStr != null) {
-                                    val set = mutableSetOf<String>()
-                                    set.addAll(setStr)
-                                    result = set as T
-                                }
-                            }
+                            val setStr = setStrs?.split(COMMA_REPLACEMENT)?.toTypedArray()
+                            result = setStr?.toSet() as T
                         }
                     }
                 }

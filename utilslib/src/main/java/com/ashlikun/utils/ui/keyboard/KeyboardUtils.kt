@@ -12,8 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.DimensUtils.dip2px
-import com.ashlikun.utils.other.SharedPreUtils.getInt
-import com.ashlikun.utils.other.SharedPreUtils.putInt
+import com.ashlikun.utils.other.store.StoreUtils
 import kotlin.math.abs
 
 /**
@@ -32,7 +31,7 @@ object KeyboardUtils {
         if (sDefKeyboardHeight < 0) {
             sDefKeyboardHeight = dip2px(AppUtils.app, DEF_KEYBOARD_HEAGH_WITH_DP.toFloat())
         }
-        val height = getInt(EXTRA_DEF_KEYBOARDHEIGHT, 0)
+        val height = StoreUtils.getInt(EXTRA_DEF_KEYBOARDHEIGHT, 0)
         return if (height > 0 && sDefKeyboardHeight != height) height else sDefKeyboardHeight.also {
             sDefKeyboardHeight = it
         }
@@ -40,7 +39,7 @@ object KeyboardUtils {
 
     fun setDefKeyboardHeight(context: Context?, height: Int) {
         if (sDefKeyboardHeight != height) {
-            putInt(EXTRA_DEF_KEYBOARDHEIGHT, height)
+            StoreUtils.putInt(EXTRA_DEF_KEYBOARDHEIGHT, height)
             sDefKeyboardHeight = height
         }
     }
