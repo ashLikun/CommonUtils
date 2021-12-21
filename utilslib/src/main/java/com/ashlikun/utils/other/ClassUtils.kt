@@ -61,7 +61,7 @@ object ClassUtils {
     /**
      * 获取全部Field，包括父类
      */
-    fun getAllFields(claxx: Class<*>): MutableList<Field> {
+    fun getAllFields(claxx: Class<*>?): MutableList<Field> {
         var claxx: Class<*>? = claxx
         val fieldList = mutableListOf<Field>()
         while (claxx != null && claxx != Any::class.java) {
@@ -80,7 +80,7 @@ object ClassUtils {
     /**
      * 获取指定的字段
      */
-    fun getField(claxx: Class<*>, fieldName: String): Field? {
+    fun getField(claxx: Class<*>?, fieldName: String): Field? {
         var claxx: Class<*>? = claxx
         if (fieldName.isEmpty()) {
             return null
@@ -105,7 +105,8 @@ object ClassUtils {
      * @param object    要反射的对象
      * @param fieldName 要反射的字段名称
      */
-    fun getFieldValue(obj: Any, fieldName: String): Any? {
+    fun getFieldValue(obj: Any?, fieldName: String): Any? {
+        if (obj == null) return null
         if (fieldName.isEmpty()) {
             return null
         }
@@ -127,7 +128,8 @@ object ClassUtils {
      * @param object    要反射的对象
      * @param fieldName 要反射的字段名称
      */
-    fun setFieldValue(obj: Any, fieldName: String, value: Any?): Field? {
+    fun setFieldValue(obj: Any?, fieldName: String, value: Any?): Field? {
+        if (obj == null) return null
         if (fieldName.isEmpty()) {
             return null
         }
@@ -147,7 +149,7 @@ object ClassUtils {
     /**
      * 获取全部Method，包括父类
      */
-    fun getAllMethods(claxx: Class<*>): MutableList<Method> {
+    fun getAllMethods(claxx: Class<*>?): MutableList<Method> {
         var claxx: Class<*>? = claxx
         val fieldList = mutableListOf<Method>()
         while (claxx != null && claxx != Any::class.java) {
@@ -165,7 +167,7 @@ object ClassUtils {
      * 获取指定的方法
      */
     fun getMethod(
-        claxx: Class<*>, methodName: String, vararg parameterTypes: Class<*>?
+        claxx: Class<*>?, methodName: String, vararg parameterTypes: Class<*>?
     ): Method? {
         var claxx: Class<*>? = claxx
         if (methodName.isEmpty()) {
@@ -194,11 +196,12 @@ object ClassUtils {
      * @param args 值
      */
     fun callMethod(
-        obj: Any,
+        obj: Any?,
         methodName: String,
         parameterTypes: Array<Class<*>?>? = null,
         vararg args: Any?
     ): Any? {
+        if (obj == null) return null
         if (methodName.isEmpty()) {
             return null
         }
@@ -230,7 +233,7 @@ object ClassUtils {
      * @return
      */
     fun callStaticMethod(
-        claxx: Class<*>,
+        claxx: Class<*>?,
         methodName: String,
         parameterTypes: Array<Class<*>?>?,
         vararg args: Any?
@@ -255,7 +258,8 @@ object ClassUtils {
     /**
      * 获取泛型类型 第一个，如果不带泛型返回null,
      */
-    fun getGenericType(cls: Class<*>): Type? {
+    fun getGenericType(cls: Class<*>?): Type? {
+        if (cls == null) return null
         val types: Type? = cls.genericSuperclass
         var parentypes: Array<Type?> //泛型类型集合
         if (types is ParameterizedType) {
@@ -285,14 +289,14 @@ object ClassUtils {
     /**
      * 是否有Class注解
      */
-    fun hasClassAnnotation(clazz: Class<*>, annotationClass: Class<out Annotation>) =
+    fun hasClassAnnotation(clazz: Class<*>?, annotationClass: Class<out Annotation>) =
         getClassAnnotation(clazz, annotationClass) != null
 
     /**
      * 是否有字段注解
      */
     fun hasFieldAnnotation(
-        clazz: Class<*>,
+        clazz: Class<*>?,
         annotationClass: Class<out Annotation>?, fieldName: String
     ) = getFieldAnnotation(clazz, annotationClass, fieldName) != null
 
@@ -317,8 +321,8 @@ object ClassUtils {
      * @param annotationClass 注解类
      * @return a A object.
      */
-    fun <A : Annotation?> getClassAnnotation(clazz: Class<*>, annotationClass: Class<A>): A? {
-        return clazz.getAnnotation(annotationClass)
+    fun <A : Annotation?> getClassAnnotation(clazz: Class<*>?, annotationClass: Class<A>): A? {
+        return clazz?.getAnnotation(annotationClass)
     }
 
     /**
@@ -330,9 +334,10 @@ object ClassUtils {
      * @return a A object.
      */
     fun <A : Annotation> getFieldAnnotation(
-        clazz: Class<*>,
+        clazz: Class<*>?,
         annotationClass: Class<A>?, fieldName: String
     ): A? {
+        if (clazz == null) return null
         return try {
             val field = clazz.getDeclaredField(fieldName)
             field.getAnnotation(annotationClass)
@@ -355,9 +360,10 @@ object ClassUtils {
      * @return a A object.
      */
     fun <A : Annotation> getMethodAnnotation(
-        clazz: Class<*>,
+        clazz: Class<*>?,
         annotationClass: Class<A>?, methodName: String, vararg paramType: Class<*>?
     ): A? {
+        if (clazz == null) return null
         return try {
             val method = clazz.getDeclaredMethod(methodName, *paramType)
             method.getAnnotation(annotationClass)
