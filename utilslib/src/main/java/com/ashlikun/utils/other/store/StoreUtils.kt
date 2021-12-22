@@ -3,9 +3,7 @@ package com.ashlikun.utils.other.store
 import android.content.Context
 import android.os.Parcelable
 import android.util.Log
-import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.main.ProcessUtils
-import com.tencent.mmkv.MMKV
 import java.util.*
 
 /**

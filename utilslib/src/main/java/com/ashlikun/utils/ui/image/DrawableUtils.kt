@@ -173,22 +173,18 @@ object DrawableUtils {
             )
         }
         val radis = max(radius.dp.toFloat(), radiusPx.toFloat())
-        if (radis > 0) {
+        when {
             //使用全角
-            cornerRadius = radis
-        } else if (radiusArr?.size == 8) {
-            cornerRadii = radiusArr.map { it.dp.toFloat() }.toFloatArray()
-        } else if (radiusArr?.size == 4) {
-            cornerRadii = floatArrayOf(
+            radis > 0 -> cornerRadius = radis
+            radiusArr?.size == 8 -> cornerRadii = radiusArr.map { it.dp.toFloat() }.toFloatArray()
+            radiusArr?.size == 4 -> cornerRadii = floatArrayOf(
                 radiusArr[0].dp.toFloat(), radiusArr[0].dp.toFloat(),
                 radiusArr[1].dp.toFloat(), radiusArr[1].dp.toFloat(),
                 radiusArr[2].dp.toFloat(), radiusArr[2].dp.toFloat(),
                 radiusArr[3].dp.toFloat(), radiusArr[3].dp.toFloat()
             )
-        } else if (radiusArrPx?.size == 8) {
-            cornerRadii = radiusArrPx.map { it.toFloat() }.toFloatArray()
-        } else if (radiusArrPx?.size == 4) {
-            cornerRadii = floatArrayOf(
+            radiusArrPx?.size == 8 -> cornerRadii = radiusArrPx.map { it.toFloat() }.toFloatArray()
+            radiusArrPx?.size == 4 -> cornerRadii = floatArrayOf(
                 radiusArrPx[0].toFloat(), radiusArrPx[0].toFloat(),
                 radiusArrPx[1].toFloat(), radiusArrPx[1].toFloat(),
                 radiusArrPx[2].toFloat(), radiusArrPx[2].toFloat(),
@@ -336,10 +332,7 @@ object DrawableUtils {
     fun createTextDraw(
         textView: TextView,
         @DrawableRes drawableId: Int? = null,
-        /**
-         * 左：1,上：2,右：3,下：4
-         * 默认 右
-         */
+        //左：1,上：2,右：3,下：4      默认 右
         location: Int = 3,
         width: Int = 0,
         height: Int = 0,
