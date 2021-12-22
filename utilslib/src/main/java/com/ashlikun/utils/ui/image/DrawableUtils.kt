@@ -11,6 +11,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.resColor
+import com.ashlikun.utils.ui.extend.resDrawable
 import kotlin.math.max
 
 /**
@@ -20,33 +21,74 @@ import kotlin.math.max
  *
  * 功能介绍：Drawable 常用的工具
  */
+inline fun TextView.setColorStateList(
+    @ColorRes normal: Int,
+    @ColorRes select: Int? = null,
+    @ColorRes pressed: Int? = null,
+    @ColorRes enable: Int? = null
+) {
+    setTextColor(
+        DrawableUtils.createColorStateList(
+            normal, select = select, pressed = pressed, enable = enable
+        )
+    )
+}
+
+inline fun TextView.setColorStateListColor(
+    @ColorInt normal: Int,
+    @ColorInt select: Int? = null,
+    @ColorInt pressed: Int? = null,
+    @ColorInt enable: Int? = null
+) {
+    setTextColor(
+        DrawableUtils.createColorStateListColor(
+            normal, select = select, pressed = pressed, enable = enable
+        )
+    )
+}
+
 object DrawableUtils {
     /**
      * 获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
      */
     fun createColorStateList(
         @ColorRes normal: Int,
-        @ColorRes pressed: Int? = null,
         @ColorRes select: Int? = null,
+        @ColorRes pressed: Int? = null,
         @ColorRes enable: Int? = null
+    ) = createColorStateListColor(
+        normal = normal.resColor,
+        select = select?.resColor,
+        pressed = pressed?.resColor,
+        enable = enable?.resColor
+    )
+
+    /**
+     * 获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
+     */
+    fun createColorStateListColor(
+        @ColorInt normal: Int,
+        @ColorInt select: Int? = null,
+        @ColorInt pressed: Int? = null,
+        @ColorInt enable: Int? = null
     ): ColorStateList {
         val colors = mutableListOf<Int>()
         val states = arrayListOf<IntArray>()
         if (pressed != null) {
             states.add(intArrayOf(R.attr.state_pressed, R.attr.state_enabled))
-            colors.add(pressed.resColor)
+            colors.add(pressed)
         }
         if (select != null) {
             states.add(intArrayOf(R.attr.state_selected))
-            colors.add(select.resColor)
+            colors.add(select)
         }
         if (enable != null) {
             states.add(intArrayOf(-R.attr.state_enabled))
-            colors.add(enable.resColor)
+            colors.add(enable)
         }
         //默认的
         states.add(intArrayOf())
-        colors.add(normal.resColor)
+        colors.add(normal)
         return ColorStateList(states.toTypedArray(), colors.toIntArray())
     }
 
@@ -75,23 +117,28 @@ object DrawableUtils {
 
     /**
      * @param normal:填充的颜色
-     * @param strokeColorId:边框颜色
+     * @param strokeColor:边框颜色
      * @param radius:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 dp
      * @param radiusPx:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 px
      * @param strokeWidthPx:边框宽度  px
      * @param strokeWidth:边框宽度  dp
      */
     fun getGradientDrawable(
-        @ColorRes normal: Int,
+        @ColorInt normal: Int? = null,
+        @ColorInt strokeColor: Int? = null,
+        @ColorRes normalId: Int? = null,
         @ColorRes strokeColorId: Int? = null,
         radiusPx: IntArray = intArrayOf(),
         strokeWidthPx: Int = 0,
         radius: FloatArray = floatArrayOf(),
         strokeWidth: Float = 0f
     ) = GradientDrawable().apply {
-        setColor(normal.resColor)
-        if (strokeColorId != null) {
-            setStroke(max(strokeWidth.dp, strokeWidthPx), strokeColorId.resColor)
+        setColor(normal ?: normalId?.resColor ?: throw RuntimeException("normal 和 normalId 必须选择一个"))
+        if (strokeColorId != null || strokeColor != null) {
+            setStroke(
+                max(strokeWidth.dp, strokeWidthPx),
+                (strokeColor ?: strokeColorId?.resColor)!!
+            )
         }
         if (radius.size == 8) {
             cornerRadii = radius.map { it.dp.toFloat() }.toFloatArray()
@@ -143,17 +190,37 @@ object DrawableUtils {
      * @param pressed 按下的资源
      * @param select 选择的资源
      * @param enabled 不可用的资源
+     */
+    fun getStateListDrawable(
+        @DrawableRes normalId: Int,
+        @DrawableRes pressedId: Int? = null,
+        @DrawableRes selectId: Int? = null,
+        @DrawableRes enabledId: Int? = null
+    ) = getStateListDrawable(
+        normalId.resDrawable,
+        pressedId?.resDrawable,
+        selectId?.resDrawable,
+        enabledId?.resDrawable
+    )
+
+    /**
+     * 获取StateListDrawable实例
+     *
+     * @param normal  默认的资源
+     * @param pressed 按下的资源
+     * @param select 选择的资源
+     * @param enabled 不可用的资源
      * @param strokeColorId  边框颜色
      * @param cornerRadius 圆角半径  DP
      * @param strokeWidth  边框宽度 dP
      */
     @SuppressLint("ResourceType")
-    fun getStateListDrawable(
-        @DrawableRes normal: Int,
-        @DrawableRes pressed: Int? = null,
-        @DrawableRes select: Int? = null,
-        @DrawableRes enabled: Int? = null,
-        @DrawableRes strokeColorId: Int,
+    fun getStateListDrawableColor(
+        @ColorRes normal: Int,
+        @ColorRes pressed: Int? = null,
+        @ColorRes select: Int? = null,
+        @ColorRes enabled: Int? = null,
+        @ColorRes strokeColorId: Int,
         radiusPx: Int = 0,
         strokeWPx: Int = 0,
         radius: Float = 0f,

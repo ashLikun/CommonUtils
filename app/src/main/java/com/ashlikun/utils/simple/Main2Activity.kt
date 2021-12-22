@@ -6,6 +6,8 @@ import com.ashlikun.utils.animator.AnimUtils
 import com.ashlikun.utils.other.LogUtils
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.simple.databinding.MainActivity2Binding
+import com.ashlikun.utils.ui.extend.resDrawable
+import com.ashlikun.utils.ui.image.DrawableUtils
 
 /**
  * 作者　　: 李坤
@@ -23,6 +25,7 @@ class Main2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        DrawableUtils.getStateListDrawable(R.mipmap.aaaaaa.resDrawable)
         binding.ceshi.setOnClickListener {
             AnimUtils.updateTextSize(binding.textView, 30f, 50f).apply { start() }
         }
