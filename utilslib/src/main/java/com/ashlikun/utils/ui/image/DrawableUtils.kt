@@ -1,9 +1,9 @@
 package com.ashlikun.utils.ui.image
 
 import android.R
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.*
+import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -44,6 +44,57 @@ inline fun TextView.setColorStateListColor(
         DrawableUtils.createColorStateListColor(
             normal, select = select, pressed = pressed, enable = enable
         )
+    )
+}
+
+
+inline fun View.setGradientDrawable(
+    @ColorInt normal: Int? = null,
+    @ColorInt strokeColor: Int? = null,
+    @ColorRes normalId: Int? = null,
+    @ColorRes strokeColorId: Int? = null,
+    strokeSizePx: Int = 0,
+    strokeSize: Float = 0f,
+    radius: Float = 0f,
+    radiusPx: Int = 0,
+    radiusArr: FloatArray? = null,
+    radiusArrPx: IntArray? = null,
+) {
+    background = DrawableUtils.getGradientDrawable(
+        normal = normal,
+        strokeColor = strokeColor,
+        normalId = normalId,
+        strokeColorId = strokeColorId,
+        strokeSizePx = strokeSizePx,
+        strokeSize = strokeSize,
+        radius = radius,
+        radiusPx = radiusPx,
+        radiusArr = radiusArr,
+        radiusArrPx = radiusArrPx,
+    )
+}
+
+inline fun View.setStateListDrawable(
+    normal: Drawable,
+    select: Drawable? = null,
+    pressed: Drawable? = null,
+    enabled: Drawable? = null
+) {
+    background = DrawableUtils.getStateListDrawable(
+        normal = normal, select = select,
+        pressed = pressed, enabled = enabled,
+    )
+}
+
+inline fun View.setStateListDrawable(
+    @DrawableRes normalId: Int,
+    @DrawableRes selectId: Int? = null,
+    @DrawableRes pressedId: Int? = null,
+    @DrawableRes enabledId: Int? = null
+) {
+    background = DrawableUtils.getStateListDrawable(
+        normalId = normalId, selectId = selectId,
+        pressedId = pressedId, enabledId = enabledId,
     )
 }
 
@@ -94,70 +145,54 @@ object DrawableUtils {
 
     /**
      * @param normal:填充的颜色
-     * @param strokeColorId:边框颜色
-     * @param radius:圆角半径   dp
-     * @param strokeW:边框宽度   dp
-     * @param radiusPx:圆角半径   px
-     * @param strokeWPx:边框宽度   px
-     */
-    fun getGradientDrawable(
-        @ColorRes normal: Int,
-        @ColorRes strokeColorId: Int? = null,
-        radiusPx: Int = 0,
-        strokeWPx: Int = 0,
-        radius: Float = 0f,
-        strokeW: Float = 0f,
-    ) = GradientDrawable().apply {
-        setColor(normal.resColor)
-        if (strokeColorId != null) {
-            setStroke(max(strokeW.dp, strokeWPx), strokeColorId.resColor)
-        }
-        cornerRadius = max(radius.dp.toFloat(), radiusPx.toFloat())
-    }
-
-    /**
-     * @param normal:填充的颜色
      * @param strokeColor:边框颜色
-     * @param radius:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 dp
-     * @param radiusPx:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 px
-     * @param strokeWidthPx:边框宽度  px
-     * @param strokeWidth:边框宽度  dp
+     * @param strokeSizePx:边框宽度  px
+     * @param strokeSize:边框宽度  dp
+     * @param radius:圆角半径 dp
+     * @param radiusPx:圆角半径 px
+     * @param radiusArr:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 dp
+     * @param radiusArrPx:圆角半径[左上，右上，右下，左下]或者8个值也可以4个值得一个 px
      */
     fun getGradientDrawable(
         @ColorInt normal: Int? = null,
         @ColorInt strokeColor: Int? = null,
         @ColorRes normalId: Int? = null,
         @ColorRes strokeColorId: Int? = null,
-        radiusPx: IntArray = intArrayOf(),
-        strokeWidthPx: Int = 0,
-        radius: FloatArray = floatArrayOf(),
-        strokeWidth: Float = 0f
+        strokeSizePx: Int = 0,
+        strokeSize: Float = 0f,
+        radius: Float = 0f,
+        radiusPx: Int = 0,
+        radiusArr: FloatArray? = null,
+        radiusArrPx: IntArray? = null,
     ) = GradientDrawable().apply {
         setColor(normal ?: normalId?.resColor ?: throw RuntimeException("normal 和 normalId 必须选择一个"))
         if (strokeColorId != null || strokeColor != null) {
             setStroke(
-                max(strokeWidth.dp, strokeWidthPx),
+                max(strokeSize.dp, strokeSizePx),
                 (strokeColor ?: strokeColorId?.resColor)!!
             )
         }
-        if (radius.size == 8) {
-            cornerRadii = radius.map { it.dp.toFloat() }.toFloatArray()
-        } else if (radius.size == 4) {
+        val radis = max(radius.dp.toFloat(), radiusPx.toFloat())
+        if (radis > 0) {
+            //使用全角
+            cornerRadius = radis
+        } else if (radiusArr?.size == 8) {
+            cornerRadii = radiusArr.map { it.dp.toFloat() }.toFloatArray()
+        } else if (radiusArr?.size == 4) {
             cornerRadii = floatArrayOf(
-                radius[0].dp.toFloat(), radius[0].dp.toFloat(),
-                radius[1].dp.toFloat(), radius[1].dp.toFloat(),
-                radius[2].dp.toFloat(), radius[2].dp.toFloat(),
-                radius[3].dp.toFloat(), radius[3].dp.toFloat()
+                radiusArr[0].dp.toFloat(), radiusArr[0].dp.toFloat(),
+                radiusArr[1].dp.toFloat(), radiusArr[1].dp.toFloat(),
+                radiusArr[2].dp.toFloat(), radiusArr[2].dp.toFloat(),
+                radiusArr[3].dp.toFloat(), radiusArr[3].dp.toFloat()
             )
-        }
-        if (radiusPx.size == 8) {
-            cornerRadii = radiusPx.map { it.toFloat() }.toFloatArray()
-        } else if (radiusPx.size == 4) {
+        } else if (radiusArrPx?.size == 8) {
+            cornerRadii = radiusArrPx.map { it.toFloat() }.toFloatArray()
+        } else if (radiusArrPx?.size == 4) {
             cornerRadii = floatArrayOf(
-                radiusPx[0].toFloat(), radiusPx[0].toFloat(),
-                radiusPx[1].toFloat(), radiusPx[1].toFloat(),
-                radiusPx[2].toFloat(), radiusPx[2].toFloat(),
-                radiusPx[3].toFloat(), radiusPx[3].toFloat()
+                radiusArrPx[0].toFloat(), radiusArrPx[0].toFloat(),
+                radiusArrPx[1].toFloat(), radiusArrPx[1].toFloat(),
+                radiusArrPx[2].toFloat(), radiusArrPx[2].toFloat(),
+                radiusArrPx[3].toFloat(), radiusArrPx[3].toFloat()
             )
         }
     }
@@ -167,14 +202,14 @@ object DrawableUtils {
      * 获取StateListDrawable实例
      *
      * @param normal  默认的资源
-     * @param pressed 按下的资源
      * @param select 选择的资源
+     * @param pressed 按下的资源
      * @param enabled 不可用的资源
      */
     fun getStateListDrawable(
         normal: Drawable,
-        pressed: Drawable? = null,
         select: Drawable? = null,
+        pressed: Drawable? = null,
         enabled: Drawable? = null
     ) = StateListDrawable().apply {
         addState(intArrayOf(R.attr.state_pressed, R.attr.state_enabled), pressed)
@@ -187,14 +222,14 @@ object DrawableUtils {
      * 获取StateListDrawable实例
      *
      * @param normal  默认的资源
-     * @param pressed 按下的资源
      * @param select 选择的资源
+     * @param pressed 按下的资源
      * @param enabled 不可用的资源
      */
     fun getStateListDrawable(
         @DrawableRes normalId: Int,
-        @DrawableRes pressedId: Int? = null,
         @DrawableRes selectId: Int? = null,
+        @DrawableRes pressedId: Int? = null,
         @DrawableRes enabledId: Int? = null
     ) = getStateListDrawable(
         normalId.resDrawable,
@@ -212,9 +247,9 @@ object DrawableUtils {
      * @param enabled 不可用的资源
      * @param strokeColorId  边框颜色
      * @param cornerRadius 圆角半径  DP
-     * @param strokeWidth  边框宽度 dP
+     * @param strokeSizePx  边框宽度 px
+     * @param strokeSize  边框宽度 dP
      */
-    @SuppressLint("ResourceType")
     fun getStateListDrawableColor(
         @ColorRes normal: Int,
         @ColorRes pressed: Int? = null,
@@ -222,41 +257,41 @@ object DrawableUtils {
         @ColorRes enabled: Int? = null,
         @ColorRes strokeColorId: Int,
         radiusPx: Int = 0,
-        strokeWPx: Int = 0,
+        strokeSizePx: Int = 0,
         radius: Float = 0f,
-        strokeW: Float = 0f,
+        strokeSize: Float = 0f,
     ): StateListDrawable {
         val normal = getGradientDrawable(
-            normal,
+            normalId = normal,
             strokeColorId = strokeColorId,
             radiusPx = radiusPx,
-            strokeWPx = strokeWPx,
+            strokeSizePx = strokeSizePx,
             radius = radius,
-            strokeW = strokeW
+            strokeSize = strokeSize
         )
         val pressed = if (pressed == null) null else getGradientDrawable(
-            pressed,
+            normalId = pressed,
             strokeColorId = strokeColorId,
             radiusPx = radiusPx,
-            strokeWPx = strokeWPx,
+            strokeSizePx = strokeSizePx,
             radius = radius,
-            strokeW = strokeW
+            strokeSize = strokeSize
         )
         val select = if (select == null) null else getGradientDrawable(
-            select,
+            normalId = select,
             strokeColorId = strokeColorId,
             radiusPx = radiusPx,
-            strokeWPx = strokeWPx,
+            strokeSizePx = strokeSizePx,
             radius = radius,
-            strokeW = strokeW
+            strokeSize = strokeSize
         )
         val enabled = if (enabled == null) null else getGradientDrawable(
-            enabled,
+            normalId = enabled,
             strokeColorId = strokeColorId,
             radiusPx = radiusPx,
-            strokeWPx = strokeWPx,
+            strokeSizePx = strokeSizePx,
             radius = radius,
-            strokeW = strokeW
+            strokeSize = strokeSize
         )
         return getStateListDrawable(
             normal = normal,
@@ -265,7 +300,6 @@ object DrawableUtils {
             enabled = enabled
         )
     }
-
 
     /**
      * 把drawable渲染成指定的颜色
