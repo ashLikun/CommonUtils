@@ -17,16 +17,16 @@ import java.util.regex.Pattern
  *
  * 功能介绍：处理日期时间的工具类
  */
-inline fun Calendar.formatTime(format: String = DateUtils.YMD_HMS) =
+inline fun Calendar?.formatTime(format: String = DateUtils.YMD_HMS) =
     DateUtils.getFormatTime(this, format)
 
-inline fun Calendar.formatYmd() =
+inline fun Calendar?.formatYmd() =
     DateUtils.getFormatTime(this, DateUtils.YMD)
 
-inline fun Calendar.formatYmdHms() =
+inline fun Calendar?.formatYmdHms() =
     DateUtils.getFormatTime(this, DateUtils.YMD_HMS)
 
-inline fun Calendar.formatHMS() =
+inline fun Calendar?.formatHMS() =
     DateUtils.getFormatTime(this, DateUtils.HMS)
 
 inline fun Calendar.addDay(dayAmount: Int) =
@@ -96,9 +96,10 @@ object DateUtils {
      * @param format   格式
      * @return 时间字符串
      */
-    fun getFormatTime(calendar: Calendar, format: String = YMD_HMS) =
+    fun getFormatTime(calendar: Calendar?, format: String = YMD_HMS) =
         try {
-            SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)
+            if (calendar == null) ""
+            else SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)
         } catch (e: ParseException) {
             e.printStackTrace()
             ""
@@ -183,13 +184,13 @@ object DateUtils {
      * 根据日期对象来获取日期中的时间(YMD)
      * @return 时间字符串, 格式为: YMD
      */
-    fun getYmd(calender: Calendar) = getFormatTime(calender, YMD)
+    fun getYmd(calender: Calendar?) = getFormatTime(calender, YMD)
 
     /**
      *：根据日期对象来获取日期中的完整时间
      * @return 时间字符串, 格式为: yyyy-MM-dd HH:mm:ss
      */
-    fun getYmdHms(calender: Calendar) = getFormatTime(calender, YMD_HMS)
+    fun getYmdHms(calender: Calendar?) = getFormatTime(calender, YMD_HMS)
 
     /**
      * 获取某天的结束时间,
