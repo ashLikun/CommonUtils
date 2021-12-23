@@ -43,9 +43,10 @@ object BitmapUtil {
     /**
      * bitmap转换成byte数组
      */
-    fun bitmapToByte(b: Bitmap, quality: Int = 100): ByteArray {
+    fun bitmapToByte(b: Bitmap?, quality: Int = 100): ByteArray {
+        if (b == null) return ByteArray(0)
         val o = ByteArrayOutputStream()
-        b.compress(Bitmap.CompressFormat.JPEG, quality, o)
+        b?.compress(Bitmap.CompressFormat.JPEG, quality, o)
         return o.toByteArray()
     }
 
@@ -53,12 +54,13 @@ object BitmapUtil {
      * 裁剪图片
      */
     fun cropBitmap(
-        bitmap: Bitmap,
+        bitmap: Bitmap?,
         width: Int = ScreenUtils.width(),
         height: Int = ScreenUtils.height(),
         x: Int = 0,
         y: Int = 0
-    ): Bitmap {
+    ): Bitmap? {
+        if (bitmap == null) return null
         // 得到图片的宽，高
         val w = bitmap.width
         //按比例计算
@@ -69,14 +71,14 @@ object BitmapUtil {
     /**
      * byte数组转换成bitmap
      */
-    fun byteToBitmap(b: ByteArray): Bitmap? {
-        return if (b.isEmpty()) null else BitmapFactory.decodeByteArray(b, 0, b.size)
+    fun byteToBitmap(b: ByteArray?): Bitmap? {
+        return if (b?.isEmpty() != false) null else BitmapFactory.decodeByteArray(b, 0, b.size)
     }
 
     /**
      * 把bitmap转换成Base64编码String
      */
-    fun bitmap2Base64(bitmap: Bitmap, quality: Int = 100): String {
+    fun bitmap2Base64(bitmap: Bitmap?, quality: Int = 100): String {
         return encodeToStr(bitmapToByte(bitmap, quality))
     }
 
@@ -90,20 +92,18 @@ object BitmapUtil {
     /**
      * 按照指定宽高缩放
      */
-    fun scaleImageTo(org: Bitmap, newWidth: Int, newHeight: Int): Bitmap? {
+    fun scaleImageTo(org: Bitmap?, newWidth: Int, newHeight: Int): Bitmap? {
+        if (org == null) return null
         return scaleImage(org, newWidth.toFloat() / org.width, newHeight.toFloat() / org.height)
     }
 
     /**
      * 按照指定宽高系数缩放bitmap
      */
-    fun scaleImage(org: Bitmap, scaleWidth: Float, scaleHeight: Float): Bitmap {
+    fun scaleImage(org: Bitmap?, scaleWidth: Float, scaleHeight: Float): Bitmap? {
+        if (org == null) return null
         return Bitmap.createBitmap(
-            org,
-            0,
-            0,
-            org.width,
-            org.height,
+            org, 0, 0, org.width, org.height,
             Matrix().apply { postScale(scaleWidth, scaleHeight) },
             true
         )
@@ -112,7 +112,8 @@ object BitmapUtil {
     /**
      * 获取圆形图片
      */
-    fun toRoundCorner(bitmap: Bitmap): Bitmap {
+    fun toRoundCorner(bitmap: Bitmap?): Bitmap? {
+        if (bitmap == null) return null
         val height = bitmap.height
         val width = bitmap.height
         val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -165,9 +166,8 @@ object BitmapUtil {
      * 如果不是BitmapDrawable 那么要注意宽高
      */
     fun drawableToBitmap(drawable: Drawable): Bitmap {
-        return if (drawable is BitmapDrawable) {
-            drawable.bitmap
-        } else {
+        return if (drawable is BitmapDrawable) drawable.bitmap
+        else {
             //获得drawable的基本信息
             val bitmap = Bitmap
                 .createBitmap(
@@ -412,7 +412,7 @@ object BitmapUtil {
      *
      * @return true 成功，false:失败
      */
-    fun saveImageToGallery(context: Context, bmp: Bitmap, file: File): Boolean {
+    fun saveImageToGallery(context: Context, bmp: Bitmap?, file: File): Boolean {
         return if (saveBitmap(bmp, file)) updatePhotoMedia(context, file) else false
     }
 
