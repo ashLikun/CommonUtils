@@ -22,11 +22,11 @@ import kotlin.math.max
  * 功能介绍：Drawable 常用的工具
  */
 inline fun TextView.setColorStateList(
-    @ColorRes normalId: Int,
+    @ColorRes normalId: Int? = null,
     @ColorRes selectId: Int? = null,
     @ColorRes pressedId: Int? = null,
     @ColorRes enableId: Int? = null,
-    @ColorInt normal: Int,
+    @ColorInt normal: Int? = null,
     @ColorInt select: Int? = null,
     @ColorInt pressed: Int? = null,
     @ColorInt enable: Int? = null
