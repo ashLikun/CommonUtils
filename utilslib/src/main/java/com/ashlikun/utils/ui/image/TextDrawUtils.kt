@@ -6,6 +6,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
 import com.ashlikun.utils.ui.extend.resDrawable
+import kotlin.math.max
 
 /**
  * 作者　　: 李坤
@@ -16,8 +17,9 @@ import com.ashlikun.utils.ui.extend.resDrawable
  */
 /**
  * 创建一个TextView的上下左右Drawable
- * @param width:dp
- * @param height:dp
+ * @param size:px 宽度高度px, 取最大值
+ * @param width:px
+ * @param height:px
  * @param tintColor: 颜色值
  */
 class TextDrawUtils(
@@ -25,6 +27,8 @@ class TextDrawUtils(
     @DrawableRes var drawableId: Int? = null,
     //左：1,上：2,右：3,下：4      默认 右
     var location: Int = 3,
+    //宽度高度px, 取最大值
+    var size: Int? = null,
     var width: Int = 0,
     var height: Int = 0,
     @ColorInt var tintColor: Int? = null,
@@ -33,6 +37,8 @@ class TextDrawUtils(
     var drawable: Drawable
 
     init {
+        width = max(width, size ?: 0)
+        height = max(height, size ?: 0)
         this.drawable = (drawable ?: drawableId?.resDrawable)!!
         createDrawable()
         val yiyou = textView.compoundDrawables

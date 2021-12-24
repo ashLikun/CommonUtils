@@ -311,8 +311,9 @@ object DrawableUtils {
 
     /**
      * 创建一个TextView的上下左右Drawable
-     * @param width:dp
-     * @param height:dp
+     * @param size:px 宽度高度px, 取最大值
+     * @param width:px
+     * @param height:px
      * @param tintColor: 颜色值
      */
     fun createTextDraw(
@@ -320,11 +321,13 @@ object DrawableUtils {
         @DrawableRes drawableId: Int? = null,
         //左：1,上：2,右：3,下：4      默认 右
         location: Int = 3,
+        //宽度高度px, 取最大值
+        size: Int? = null,
         width: Int = 0,
         height: Int = 0,
         @ColorInt tintColor: Int? = null,
         drawable: Drawable? = null,
-    ) = TextDrawUtils(textView, drawableId, location, width, height, tintColor, drawable)
+    ) = TextDrawUtils(textView, drawableId, location, size, width, height, tintColor, drawable)
 
     fun createGradientDrawable(color: Int): BuilderGradient {
         return BuilderGradient(color)
