@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui.image
 
 import android.graphics.drawable.Drawable
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
 import com.ashlikun.utils.ui.extend.resDrawable
@@ -13,24 +14,34 @@ import com.ashlikun.utils.ui.extend.resDrawable
  *
  * 功能介绍：TextView的上下左右Drawable，兼容大小
  */
-
+/**
+ * 创建一个TextView的上下左右Drawable
+ * @param width:dp
+ * @param height:dp
+ * @param tintColor: 颜色值
+ */
 class TextDrawUtils(
     var textView: TextView,
     @DrawableRes var drawableId: Int? = null,
-    /**
-     * 左：1,上：2,右：3,下：4
-     * 默认 右
-     */
+    //左：1,上：2,右：3,下：4      默认 右
     var location: Int = 3,
     var width: Int = 0,
     var height: Int = 0,
-    var tintColor: Int? = null,
+    @ColorInt var tintColor: Int? = null,
     drawable: Drawable? = null,
 ) {
-    lateinit var drawable: Drawable
+    var drawable: Drawable
 
     init {
         this.drawable = (drawable ?: drawableId?.resDrawable)!!
+        createDrawable()
+        val yiyou = textView.compoundDrawables
+        when (location) {
+            1 -> textView.setCompoundDrawables(drawable, yiyou[1], yiyou[2], yiyou[3])
+            2 -> textView.setCompoundDrawables(yiyou[0], drawable, yiyou[2], yiyou[3])
+            3 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], drawable, yiyou[3])
+            4 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], yiyou[2], drawable)
+        }
     }
 
     fun createDrawable(): Drawable {
@@ -59,17 +70,4 @@ class TextDrawUtils(
         drawable.setBounds(0, 0, width, height)
         return drawable
     }
-
-    fun set() {
-        createDrawable()
-        val yiyou = textView.compoundDrawables
-        when (location) {
-            1 -> textView.setCompoundDrawables(drawable, yiyou[1], yiyou[2], yiyou[3])
-            2 -> textView.setCompoundDrawables(yiyou[0], drawable, yiyou[2], yiyou[3])
-            3 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], drawable, yiyou[3])
-            4 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], yiyou[2], drawable)
-        }
-    }
-
-
 }

@@ -22,27 +22,19 @@ import kotlin.math.max
  * 功能介绍：Drawable 常用的工具
  */
 inline fun TextView.setColorStateList(
-    @ColorRes normal: Int,
-    @ColorRes select: Int? = null,
-    @ColorRes pressed: Int? = null,
-    @ColorRes enable: Int? = null
-) {
-    setTextColor(
-        DrawableUtils.createColorStateList(
-            normal, select = select, pressed = pressed, enable = enable
-        )
-    )
-}
-
-inline fun TextView.setColorStateListColor(
+    @ColorRes normalId: Int,
+    @ColorRes selectId: Int? = null,
+    @ColorRes pressedId: Int? = null,
+    @ColorRes enableId: Int? = null,
     @ColorInt normal: Int,
     @ColorInt select: Int? = null,
     @ColorInt pressed: Int? = null,
     @ColorInt enable: Int? = null
 ) {
     setTextColor(
-        DrawableUtils.createColorStateListColor(
-            normal, select = select, pressed = pressed, enable = enable
+        DrawableUtils.createColorStateList(
+            normal = normal, select = select, pressed = pressed, enable = enable,
+            normalId = normalId, selectId = selectId, pressedId = pressedId, enableId = enableId
         )
     )
 }
@@ -103,43 +95,34 @@ object DrawableUtils {
      * 获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
      */
     fun createColorStateList(
-        @ColorRes normal: Int,
-        @ColorRes select: Int? = null,
-        @ColorRes pressed: Int? = null,
-        @ColorRes enable: Int? = null
-    ) = createColorStateListColor(
-        normal = normal.resColor,
-        select = select?.resColor,
-        pressed = pressed?.resColor,
-        enable = enable?.resColor
-    )
-
-    /**
-     * 获取ColorStateList ，，对TextView设置不同状态时其文字颜色。
-     */
-    fun createColorStateListColor(
-        @ColorInt normal: Int,
+        @ColorRes normalId: Int? = null,
+        @ColorRes selectId: Int? = null,
+        @ColorRes pressedId: Int? = null,
+        @ColorRes enableId: Int? = null,
+        @ColorInt normal: Int? = null,
         @ColorInt select: Int? = null,
         @ColorInt pressed: Int? = null,
         @ColorInt enable: Int? = null
     ): ColorStateList {
         val colors = mutableListOf<Int>()
         val states = arrayListOf<IntArray>()
-        if (pressed != null) {
+        if (pressed != null || pressedId != null) {
             states.add(intArrayOf(R.attr.state_pressed, R.attr.state_enabled))
-            colors.add(pressed)
+            colors.add(pressed ?: pressedId?.resColor!!)
         }
-        if (select != null) {
+        if (select != null || selectId != null) {
             states.add(intArrayOf(R.attr.state_selected))
-            colors.add(select)
+            colors.add(select ?: selectId?.resColor!!)
         }
-        if (enable != null) {
+        if (enable != null || enableId != null) {
             states.add(intArrayOf(-R.attr.state_enabled))
-            colors.add(enable)
+            colors.add(enable ?: enableId?.resColor!!)
         }
         //默认的
         states.add(intArrayOf())
-        colors.add(normal)
+        colors.add(
+            normal ?: normalId?.resColor ?: throw RuntimeException("normal 和 normalId 必须选择一个")
+        )
         return ColorStateList(states.toTypedArray(), colors.toIntArray())
     }
 
@@ -328,6 +311,9 @@ object DrawableUtils {
 
     /**
      * 创建一个TextView的上下左右Drawable
+     * @param width:dp
+     * @param height:dp
+     * @param tintColor: 颜色值
      */
     fun createTextDraw(
         textView: TextView,
@@ -336,7 +322,7 @@ object DrawableUtils {
         location: Int = 3,
         width: Int = 0,
         height: Int = 0,
-        tintColor: Int? = null,
+        @ColorInt tintColor: Int? = null,
         drawable: Drawable? = null,
     ) = TextDrawUtils(textView, drawableId, location, width, height, tintColor, drawable)
 
