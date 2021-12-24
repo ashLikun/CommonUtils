@@ -297,7 +297,8 @@ class StatusBarCompat(
          * 设置页面顶部一个null的view的高度，
          * 只有当设置状态栏透明的时候用到,因为此时跟布局会顶到状态栏里面
          */
-        fun setEmptyHeight(view: View, isNeedAndroidMHalf: Boolean = false) {
+        fun setEmptyHeight(view: View?, isNeedAndroidMHalf: Boolean = false) {
+            if(view == null) return
             if (isSetStatusColor) {
                 val h = ScreenUtils.statusBarHeight
                 if (isNeedAndroidMHalf && isSetHaleColor) {
@@ -318,7 +319,8 @@ class StatusBarCompat(
         /**
          * 一般用于fragment是透明状态栏得时候,调用这个方法
          */
-        fun setTransparentViewMargin(viewTop: View) {
+        fun setTransparentViewMargin(viewTop: View?) {
+            if (viewTop == null) return
             //5.0以下不设置
             if (!isSetStatusColor) {
                 return
@@ -334,7 +336,8 @@ class StatusBarCompat(
         /**
          * 设置状态栏view的padding
          */
-        fun setTransparentViewPadding(viewTop: View) {
+        fun setTransparentViewPadding(viewTop: View?) {
+            if (viewTop == null) return
             if (isSetStatusColor) {
                 viewTop.setPadding(
                     viewTop.paddingLeft,
