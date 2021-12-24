@@ -60,6 +60,7 @@ object KeyboardUtils {
      * 显示软键盘
      */
     fun showInput(view: View) {
+        if (view == null) return
         exitOrShowInput(null, view)
     }
 
@@ -67,6 +68,7 @@ object KeyboardUtils {
      * 退出软键盘
      */
     fun exitInput(activity: Activity) {
+        if (activity == null) return
         if (activity.currentFocus?.windowToken != null) {
             exitOrShowInput(activity.currentFocus?.windowToken!!, null)
         }
@@ -76,13 +78,15 @@ object KeyboardUtils {
      * 退出软键盘
      */
     fun exitInput(iBinder: IBinder) {
+        if (iBinder == null) return
         exitOrShowInput(iBinder, null)
     }
 
     /**
      * 退出软键盘
      */
-    fun exitInput(view: View) {
+    fun exitInput(view: View?) {
+        if (view == null) return
         exitOrShowInput(view.windowToken, null)
     }
 
@@ -92,7 +96,8 @@ object KeyboardUtils {
      * @param activity
      * @return
      */
-    fun isOpenInput(activity: Activity): Boolean {
+    fun isOpenInput(activity: Activity?): Boolean {
+        if (activity == null) return false
         return isOpenInput(activity.window.decorView)
     }
 
@@ -101,7 +106,8 @@ object KeyboardUtils {
      *
      * @param view 页面跟布局
      */
-    fun isOpenInput(view: View): Boolean {
+    fun isOpenInput(view: View?): Boolean {
+        if (view == null) return false
         //获取当前屏幕内容的高度
         val screenHeight = view.height
         //获取View可见区域的bottom
@@ -111,25 +117,28 @@ object KeyboardUtils {
     }
 
     fun setOnInputChang(
-        activity: Activity, onSoftPop: OnSoftPop? = null,
+        activity: Activity?, onSoftPop: OnSoftPop? = null,
         onSoftClose: OnSoftClose? = null
     ) {
+        if (activity == null) return
         val content = activity.findViewById<FrameLayout>(R.id.content)
         setOnInputChang(content.getChildAt(0), onSoftPop, onSoftClose)
     }
 
     fun setOnInputChang(
-        window: Window,
+        window: Window?,
         onSoftPop: OnSoftPop? = null,
         onSoftClose: OnSoftClose? = null
     ) {
+        if (window == null) return
         setOnInputChang(window.decorView, onSoftPop, onSoftClose)
     }
 
     fun setOnInputChang(
-        view: View, onSoftPop: OnSoftPop? = null,
+        view: View?, onSoftPop: OnSoftPop? = null,
         onSoftClose: OnSoftClose? = null
     ) {
+        if (view == null) return
         //界面出现变动都会调用这个监听事件
         view.viewTreeObserver.addOnGlobalLayoutListener(
             KeyboardOnGlobalLayoutListener(
