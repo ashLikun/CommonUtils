@@ -284,7 +284,7 @@ object DrawableUtils {
      * 把drawable渲染成指定的颜色
      */
     fun getTintDrawable(drawable: Drawable, @ColorInt color: Int) =
-        DrawableCompat.wrap(drawable).mutate().setTint(color)
+        DrawableCompat.wrap(drawable).mutate().apply { setTint(color) }
 
     /**
      * 改变Drawable大小
