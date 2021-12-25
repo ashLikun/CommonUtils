@@ -212,7 +212,7 @@ object DateUtils {
      * @return 开始时间 2005-10-01 00:00:00.000
      */
     fun getStartTime(calender: Calendar = Calendar.getInstance()): Calendar {
-        calender!![Calendar.HOUR_OF_DAY] = 0
+        calender[Calendar.HOUR_OF_DAY] = 0
         calender[Calendar.MINUTE] = 0
         calender[Calendar.SECOND] = 0
         calender[Calendar.MILLISECOND] = 0
@@ -231,11 +231,11 @@ object DateUtils {
      * @return 对应的日期对象
      */
     fun getTime(
-        year: Int, month: Int, date: Int, hourOfDay: Int,
+        year: Int, month: Int, date: Int, hourOfDay: Int = 0,
         minute: Int = 0, second: Int = 0
     ): Calendar {
         val cal = Calendar.getInstance()
-        cal[year, month - 1, date, hourOfDay, minute] = second
+        cal.set(year, month - 1, date, hourOfDay, minute, second)
         cal[Calendar.MILLISECOND] = 0
         return cal
     }
