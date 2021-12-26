@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.ashlikun.utils.other.DimensUtils.dip2px
+import com.ashlikun.utils.ui.extend.getInflaterView
 import com.google.android.material.tabs.TabLayout
 
 typealias OnSizeListener = (width: Int, height: Int) -> Unit
@@ -22,10 +23,7 @@ object UiUtils {
      * @param context 不同的 context 对应不同的LayoutInflater
      */
     fun getInflaterView(context: Context, res: Int): View {
-        return (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-            res,
-            null
-        )
+        return LayoutInflater.from(context).inflate(res, null)
     }
 
     /**
@@ -33,10 +31,7 @@ object UiUtils {
      * @param context 不同的 context 对应不同的LayoutInflater
      */
     fun getInflaterView(context: Context, res: Int, parent: ViewGroup?): View {
-        return (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-            res,
-            parent
-        )
+        return LayoutInflater.from(context).inflate(res, parent)
     }
 
     /**
@@ -49,11 +44,7 @@ object UiUtils {
         parent: ViewGroup?,
         attachToRoot: Boolean
     ): View {
-        return (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-            res,
-            parent,
-            attachToRoot
-        )
+        return LayoutInflater.from(context).inflate(res, parent, attachToRoot)
     }
 
     /**

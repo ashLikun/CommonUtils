@@ -29,6 +29,10 @@ import com.ashlikun.utils.ui.status.StatusBarCompat
  */
 typealias OnSizeListener = (width: Int, height: Int) -> Unit
 
+val View.layoutInflater
+    get() = LayoutInflater.from(context)
+
+
 /**
  * 设置view大小
  */
@@ -86,7 +90,7 @@ inline fun Context.getInflaterView(
     res: Int,
     parent: ViewGroup? = null,
     attachToRoot: Boolean = parent != null
-) = (this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+) = LayoutInflater.from(this).inflate(
     res,
     parent,
     attachToRoot
