@@ -4,6 +4,7 @@ import android.R
 import android.content.res.ColorStateList
 import android.graphics.drawable.*
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -52,7 +53,7 @@ inline fun View.setGradientDrawable(
     radiusArr: FloatArray? = null,
     radiusArrPx: IntArray? = null,
 ) {
-    background = DrawableUtils.getGradientDrawable(
+    val bg = DrawableUtils.getGradientDrawable(
         normal = normal,
         strokeColor = strokeColor,
         normalId = normalId,
@@ -64,6 +65,8 @@ inline fun View.setGradientDrawable(
         radiusArr = radiusArr,
         radiusArrPx = radiusArrPx,
     )
+    if (this is ImageView) setImageDrawable(bg)
+    else background = bg
 }
 
 inline fun View.setStateListDrawable(
@@ -72,10 +75,13 @@ inline fun View.setStateListDrawable(
     pressed: Drawable? = null,
     enabled: Drawable? = null
 ) {
-    background = DrawableUtils.getStateListDrawable(
+    val bg = DrawableUtils.getStateListDrawable(
         normal = normal, select = select,
         pressed = pressed, enabled = enabled,
     )
+    if (this is ImageView) setImageDrawable(bg)
+    else background = bg
+
 }
 
 inline fun View.setStateListDrawable(
@@ -84,10 +90,12 @@ inline fun View.setStateListDrawable(
     @DrawableRes pressedId: Int? = null,
     @DrawableRes enabledId: Int? = null
 ) {
-    background = DrawableUtils.getStateListDrawable(
+    val bg = DrawableUtils.getStateListDrawable(
         normalId = normalId, selectId = selectId,
         pressedId = pressedId, enabledId = enabledId,
     )
+    if (this is ImageView) setImageDrawable(bg)
+    else background = bg
 }
 
 object DrawableUtils {
