@@ -219,10 +219,10 @@ object DrawableUtils {
         @DrawableRes pressedId: Int? = null,
         @DrawableRes enabledId: Int? = null
     ) = getStateListDrawable(
-        normalId.resDrawable,
-        pressedId?.resDrawable,
-        selectId?.resDrawable,
-        enabledId?.resDrawable
+        normal = normalId.resDrawable,
+        select = selectId?.resDrawable,
+        pressed = pressedId?.resDrawable,
+        enabled = enabledId?.resDrawable
     )
 
     /**
@@ -239,8 +239,8 @@ object DrawableUtils {
      */
     fun getStateListDrawableColor(
         @ColorRes normal: Int,
-        @ColorRes pressed: Int? = null,
         @ColorRes select: Int? = null,
+        @ColorRes pressed: Int? = null,
         @ColorRes enabled: Int? = null,
         @ColorRes strokeColorId: Int,
         radiusPx: Int = 0,
@@ -256,16 +256,17 @@ object DrawableUtils {
             radius = radius,
             strokeSize = strokeSize
         )
-        val pressed = if (pressed == null) null else getGradientDrawable(
-            normalId = pressed,
+
+        val select = if (select == null) null else getGradientDrawable(
+            normalId = select,
             strokeColorId = strokeColorId,
             radiusPx = radiusPx,
             strokeSizePx = strokeSizePx,
             radius = radius,
             strokeSize = strokeSize
         )
-        val select = if (select == null) null else getGradientDrawable(
-            normalId = select,
+        val pressed = if (pressed == null) null else getGradientDrawable(
+            normalId = pressed,
             strokeColorId = strokeColorId,
             radiusPx = radiusPx,
             strokeSizePx = strokeSizePx,
@@ -282,8 +283,8 @@ object DrawableUtils {
         )
         return getStateListDrawable(
             normal = normal,
-            pressed = pressed,
             select = select,
+            pressed = pressed,
             enabled = enabled
         )
     }
