@@ -130,14 +130,18 @@ class DeviceUtil private constructor() {
      * 获取sim卡的状态
      */
     val simState: String
-        get() = when (telephonyManager?.simState) {
-            TelephonyManager.SIM_STATE_UNKNOWN -> "未知SIM状态_" + TelephonyManager.SIM_STATE_UNKNOWN
-            TelephonyManager.SIM_STATE_ABSENT -> "没插SIM卡_" + TelephonyManager.SIM_STATE_ABSENT
-            TelephonyManager.SIM_STATE_PIN_REQUIRED -> "锁定SIM状态_需要用户的PIN码解锁_" + TelephonyManager.SIM_STATE_PIN_REQUIRED
-            TelephonyManager.SIM_STATE_PUK_REQUIRED -> "锁定SIM状态_需要用户的PUK码解锁_" + TelephonyManager.SIM_STATE_PUK_REQUIRED
-            TelephonyManager.SIM_STATE_NETWORK_LOCKED -> "锁定SIM状态_需要网络的PIN码解锁_" + TelephonyManager.SIM_STATE_NETWORK_LOCKED
-            TelephonyManager.SIM_STATE_READY -> "就绪SIM状态_" + TelephonyManager.SIM_STATE_READY
-            else -> "未知SIM状态_" + TelephonyManager.SIM_STATE_UNKNOWN
+        get() = try {
+            when (telephonyManager?.simState) {
+                TelephonyManager.SIM_STATE_UNKNOWN -> "未知SIM状态_" + TelephonyManager.SIM_STATE_UNKNOWN
+                TelephonyManager.SIM_STATE_ABSENT -> "没插SIM卡_" + TelephonyManager.SIM_STATE_ABSENT
+                TelephonyManager.SIM_STATE_PIN_REQUIRED -> "锁定SIM状态_需要用户的PIN码解锁_" + TelephonyManager.SIM_STATE_PIN_REQUIRED
+                TelephonyManager.SIM_STATE_PUK_REQUIRED -> "锁定SIM状态_需要用户的PUK码解锁_" + TelephonyManager.SIM_STATE_PUK_REQUIRED
+                TelephonyManager.SIM_STATE_NETWORK_LOCKED -> "锁定SIM状态_需要网络的PIN码解锁_" + TelephonyManager.SIM_STATE_NETWORK_LOCKED
+                TelephonyManager.SIM_STATE_READY -> "就绪SIM状态_" + TelephonyManager.SIM_STATE_READY
+                else -> "未知SIM状态_" + TelephonyManager.SIM_STATE_UNKNOWN
+            }
+        } catch (e: Exception) {
+            "异常"
         }
 
     /**
@@ -146,41 +150,49 @@ class DeviceUtil private constructor() {
      * @return
      */
     val phoneType: String
-        get() = when (telephonyManager?.phoneType) {
-            TelephonyManager.PHONE_TYPE_NONE -> "PhoneType: 无信号_" + TelephonyManager.PHONE_TYPE_NONE
-            TelephonyManager.PHONE_TYPE_GSM -> "PhoneType: GSM信号_" + TelephonyManager.PHONE_TYPE_GSM
-            TelephonyManager.PHONE_TYPE_CDMA -> "PhoneType: CDMA信号_" + TelephonyManager.PHONE_TYPE_CDMA
-            else -> "PhoneType: 无信号_" + TelephonyManager.PHONE_TYPE_NONE
+        get() = try {
+            when (telephonyManager?.phoneType) {
+                TelephonyManager.PHONE_TYPE_NONE -> "PhoneType: 无信号_" + TelephonyManager.PHONE_TYPE_NONE
+                TelephonyManager.PHONE_TYPE_GSM -> "PhoneType: GSM信号_" + TelephonyManager.PHONE_TYPE_GSM
+                TelephonyManager.PHONE_TYPE_CDMA -> "PhoneType: CDMA信号_" + TelephonyManager.PHONE_TYPE_CDMA
+                else -> "PhoneType: 无信号_" + TelephonyManager.PHONE_TYPE_NONE
+            }
+        } catch (e: Exception) {
+            "异常"
         }
 
     /**
      * 服务商名称：例如：中国移动、联通 　　 SIM卡的状态必须是 SIM_STATE_READY就绪状态(使用getSimState()判断).
      */
     val simOpertorName: String
-        get() = if (telephonyManager?.simState == TelephonyManager.SIM_STATE_READY) {
-            val sb = StringBuffer()
-            sb.append("SimOperatorName: ").append(
-                telephonyManager!!.simOperatorName
-            )
-            sb.append("\n")
-            sb.append("SimOperator: ")
-                .append(telephonyManager!!.simOperator)
-            sb.append("\n")
-            sb.append("Phone:").append(telephonyManager!!.line1Number)
-            sb.toString()
-        } else {
-            val sb = StringBuffer()
-            sb.append("SimOperatorName: ").append("未知")
-            sb.append("\n")
-            sb.append("SimOperator: ").append("未知")
-            sb.toString()
+        get() = try {
+            if (telephonyManager?.simState == TelephonyManager.SIM_STATE_READY) {
+                val sb = StringBuffer()
+                sb.append("SimOperatorName: ").append(
+                    telephonyManager!!.simOperatorName
+                )
+                sb.append("\n")
+                sb.append("SimOperator: ")
+                    .append(telephonyManager!!.simOperator)
+                sb.append("\n")
+                sb.append("Phone:").append(telephonyManager!!.line1Number)
+                sb.toString()
+            } else {
+                val sb = StringBuffer()
+                sb.append("SimOperatorName: ").append("未知")
+                sb.append("\n")
+                sb.append("SimOperator: ").append("未知")
+                sb.toString()
+            }
+        } catch (e: Exception) {
+            "异常"
         }
 
     /**
      * 获取手机的基本设置
      */
     val phoneSettings: String
-        get() {
+        get() = try {
             val buf = StringBuffer()
             var str = Secure.getString(
                 context.contentResolver,
@@ -204,7 +216,9 @@ class DeviceUtil private constructor() {
             )
             buf.append("APP位置来源:")
             buf.append(str)
-            return buf.toString()
+            buf.toString()
+        } catch (e: Exception) {
+            "异常"
         }
 
     /**
@@ -213,31 +227,38 @@ class DeviceUtil private constructor() {
      * @return
      */
     val callState: String
-        get() = when (telephonyManager!!.callState) {
-            TelephonyManager.CALL_STATE_IDLE -> "电话状态[CallState]: 挂断"
-            TelephonyManager.CALL_STATE_OFFHOOK -> "电话状态[CallState]: 接听"
-            TelephonyManager.CALL_STATE_RINGING -> "电话状态[CallState]: 来电"
-            else -> "电话状态[CallState]: 未知"
+        get() = try {
+            when (telephonyManager!!.callState) {
+                TelephonyManager.CALL_STATE_IDLE -> "电话状态[CallState]: 挂断"
+                TelephonyManager.CALL_STATE_OFFHOOK -> "电话状态[CallState]: 接听"
+                TelephonyManager.CALL_STATE_RINGING -> "电话状态[CallState]: 来电"
+                else -> "电话状态[CallState]: 未知"
+            }
+        } catch (e: Exception) {
+            "异常"
         }
 
     // 设置基本信息
     fun findData() {
-        telephonyManager = context
-            .getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         try {
-            imei = telephonyManager!!.deviceId
+            telephonyManager = context
+                .getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
         } catch (e: Exception) {
         }
         try {
-            mMobileVersion = telephonyManager!!.deviceSoftwareVersion
+            imei = telephonyManager?.deviceId
         } catch (e: Exception) {
         }
         try {
-            netwrokIso = telephonyManager!!.networkCountryIso
+            mMobileVersion = telephonyManager?.deviceSoftwareVersion
         } catch (e: Exception) {
         }
         try {
-            sIM = telephonyManager!!.simSerialNumber
+            netwrokIso = telephonyManager?.networkCountryIso
+        } catch (e: Exception) {
+        }
+        try {
+            sIM = telephonyManager?.simSerialNumber
         } catch (e: Exception) {
         }
         deviceID = deviceId
