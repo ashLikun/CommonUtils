@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() {
     fun onView4Click(view: View) {
         ThreadUtils.execute {
             ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
+            LogUtils.e("aaaaaaaaaaaaaaaaaa    ")
         }
         val logo = BitmapUtil.decodeResource(R.mipmap.ic_launcher_round, 50.dp, 50.dp)
         //        imageView.setDrawingCacheEnabled(true);

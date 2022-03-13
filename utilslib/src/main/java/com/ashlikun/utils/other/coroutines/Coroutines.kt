@@ -39,7 +39,7 @@ val UnconfinedDispatcher = Dispatchers.Unconfined
 /**
  * 利用自定义线程池
  */
-val ThreadPoolDispatcher = ThreadPoolManage.get().executor.asCoroutineDispatcher()
+val ThreadPoolDispatcher = ThreadPoolManage.get().asCoroutineDispatcher()
 
 
 /**

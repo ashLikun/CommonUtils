@@ -12,18 +12,18 @@ import java.util.concurrent.*
  *          推荐使用kotlin协成
  */
 
-class ThreadPoolManage private constructor() {
-    val executor: ExecutorService
+class ThreadPoolManage private constructor(
+    POOL_SIZE: Int = Runtime.getRuntime().availableProcessors() / 2
+) :
+//仿照okhttp
+    ThreadPoolExecutor(
+        POOL_SIZE, POOL_SIZE * 2, 0, TimeUnit.SECONDS,
+        SynchronousQueue(), threadFactory("thread_pool_manage", false)
 
-    /**
-     * 在线程池中执行线程
-     */
-    fun execute(command: Runnable) {
-        executor.execute(command)
-    }
-
+    ) {
     companion object {
         private val instance by lazy { ThreadPoolManage() }
+
         fun get(): ThreadPoolManage = instance
 
         /**
@@ -42,12 +42,4 @@ class ThreadPoolManage private constructor() {
         }
     }
 
-    init {
-        val POOL_SIZE = Runtime.getRuntime().availableProcessors() / 2
-        //仿照okhttp
-        executor = ThreadPoolExecutor(
-            POOL_SIZE, POOL_SIZE * 2, 0, TimeUnit.SECONDS,
-            SynchronousQueue(), threadFactory("thread_pool_manage", false)
-        )
-    }
 }
