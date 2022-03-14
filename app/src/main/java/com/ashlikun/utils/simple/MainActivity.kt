@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.location.*
 import android.os.Bundle
+import android.os.Process
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -91,13 +93,17 @@ class MainActivity : AppCompatActivity() {
 
             })
             .create()
-        binding.text.movementMethod = FocusLinkMovementMethod.instance
+        binding.text.setMovementMethods(FocusLinkMovementMethod.instance)
 
-//        textView.setOnClickListener {
+//        binding.text.setOnClickListener {
 //            LogUtils.e("222222222222点击事件")
 //        }
         binding.textRoot.setOnClickListener {
             LogUtils.e("333333333333333点击事件")
+        }
+        binding.textRoot.setOnLongClickListener {
+            LogUtils.e("4444444444点击事件")
+            true
         }
         WorkFlow.Builder()
             .addWork {

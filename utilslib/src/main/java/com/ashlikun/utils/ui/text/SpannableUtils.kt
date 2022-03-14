@@ -410,10 +410,11 @@ object SpannableUtils {
          * 设置点击事件
          *
          * 需添加view.setMovementMethod(LinkMovementMethod.getInstance())
-         *
+         * view.setMovementMethod(FocusLinkMovementMethod.getInstance())
+         * 导致的上层View点击事件无法响应解决方案 --> TextViewCompat
          * @param clickSpan 点击事件
          */
-        fun setClickSpan(clickSpan: XClickableSpan): Builder {
+        fun setClickSpan(clickSpan: ClickableSpan): Builder {
             this.clickSpan = clickSpan
             return this
         }
@@ -607,6 +608,10 @@ object SpannableUtils {
                         }
                     }
                 }
+            }
+            //设置ClickableSpan 点击结尾空白位置也响应点击的问题
+            if (clickSpan != null) {
+                mBuilder.append("\u200b")
             }
             clean()
         }

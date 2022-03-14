@@ -84,7 +84,6 @@ class TextViewCompat @JvmOverloads constructor(
         setClickable(isClickable)
         setLongClickable(isLongClickable)
     }
-
     /**
      * 设置了ClickableSpan导致的上层View点击事件无法响应解决方案
      */

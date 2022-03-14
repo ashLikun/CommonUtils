@@ -16,12 +16,12 @@ import android.widget.TextView
  * 邮箱　　：496546144@qq.com
  *
  * 功能介绍：
- * 设置TextView(setClickSpan)点击时候的背景
+ * 设置TextView(setClickSpan)点击时候的背景，手中抬起背景颜色还在问题
  * 是否设置选择--->TextViewCompat || widget.getLineSpacingExtra() > 0 || widget.getLineSpacingMultiplier() != 1
  * 满足一个就不设置
  */
 
-class FocusLinkMovementMethod : LinkMovementMethod(), OnLongClickListener {
+class FocusLinkMovementMethod(val isOpenSelect:Boolean = true) : LinkMovementMethod(), OnLongClickListener {
     var clickDown = false
 
     @JvmField
@@ -30,9 +30,6 @@ class FocusLinkMovementMethod : LinkMovementMethod(), OnLongClickListener {
         return clickUp
     }
 
-    //是否设置选择
-    val isOpenSelect: Boolean
-        get() = true
 
     override fun onTouchEvent(
         widget: TextView, buffer: Spannable,
@@ -40,7 +37,6 @@ class FocusLinkMovementMethod : LinkMovementMethod(), OnLongClickListener {
     ): Boolean {
         clickUp = false
         val action = event.action
-        val isOpenSelect = isOpenSelect
         if (action == MotionEvent.ACTION_UP ||
             action == MotionEvent.ACTION_DOWN
         ) {
@@ -54,7 +50,7 @@ class FocusLinkMovementMethod : LinkMovementMethod(), OnLongClickListener {
             val line = layout.getLineForVertical(y)
             val off = layout.getOffsetForHorizontal(line, x.toFloat())
             val links = buffer.getSpans(off, off, ClickableSpan::class.java)
-            if (links.size != 0) {
+            if (links.isNotEmpty()) {
                 if (action == MotionEvent.ACTION_UP) {
                     if (isOpenSelect) {
                         Selection.removeSelection(buffer)
