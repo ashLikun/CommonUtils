@@ -3,6 +3,7 @@ package com.ashlikun.utils.ui.extend
 import android.os.Parcelable
 import com.ashlikun.utils.other.cache.CacheDiskUtils
 import java.io.Serializable
+import java.util.*
 
 /**
  * 作者　　: 李坤
@@ -45,4 +46,25 @@ fun <T> Parcelable.copy(creator: Parcelable.Creator<T>): T {
     // 读取字节流
     val obs = CacheDiskUtils.bytes2Parcelable(byte, creator)
     return obs as T
+}
+
+/**
+ * 出栈
+ */
+fun <T> Stack<T>.popOrNull(): T? {
+    return try {
+        this.pop()
+    } catch (e: Exception) {
+        null
+    }
+}
+/**
+ * 出栈
+ */
+fun <T> Stack<T>.lastElementOrNull(): T? {
+    return try {
+        this.lastElement()
+    } catch (e: Exception) {
+        null
+    }
 }

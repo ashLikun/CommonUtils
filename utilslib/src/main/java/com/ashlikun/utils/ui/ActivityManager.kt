@@ -1,6 +1,8 @@
 package com.ashlikun.utils.ui
 
 import android.app.Activity
+import com.ashlikun.utils.ui.extend.lastElementOrNull
+import com.ashlikun.utils.ui.extend.popOrNull
 import java.util.*
 
 /**
@@ -58,9 +60,8 @@ class ActivityManager private constructor() {
      */
     fun exitActivity(activity: Activity?) {
         if (activity == null) return
-        if (activityStack.contains(activity)) {
-            // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
-            activityStack.remove(activity)
+        // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
+        if(activityStack.remove(activity)) {
             if (!activity.isFinishing) {
                 activity.finish()
             }
@@ -117,7 +118,8 @@ class ActivityManager private constructor() {
      * 获得当前栈顶Activity
      */
     fun currentActivity(): Activity? {
-        var activity = activityStack.lastElement()
+        var activity = activityStack.lastElementOrNull()
+
         if (activity?.isFinishing == true) {
             activityStack.remove(activity)
             return currentActivity()
@@ -144,12 +146,10 @@ class ActivityManager private constructor() {
     /**
      * 将当前Activity从栈中退出
      */
-    fun removeActivity(activity: Activity?) {
-        if (activity == null) return
-        if (activityStack.contains(activity)) {
-            // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
-            activityStack.remove(activity)
-        }
+    fun removeActivity(activity: Activity?): Boolean {
+        if (activity == null) return false
+        // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
+        return activityStack.remove(activity)
     }
 
     /**
@@ -176,7 +176,7 @@ class ActivityManager private constructor() {
      * 退出栈顶activity
      */
     fun exitTopActivity() {
-        activityStack.pop()?.finish()
+        activityStack.popOrNull()?.finish()
     }
 
     /**
