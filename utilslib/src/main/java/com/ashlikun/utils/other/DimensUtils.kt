@@ -1,7 +1,9 @@
 package com.ashlikun.utils.other
 
 import android.content.Context
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
+import com.ashlikun.utils.ui.ActivityManager
 
 /**
  * @author　　: 李坤
@@ -48,7 +50,7 @@ object DimensUtils {
      * 将px值转换为dip或dp值，保证尺寸大小不变
      */
     fun px2dip(pxValue: Float): Int {
-        val scale = app.resources.displayMetrics.density
+        val scale = AppUtils.resources.displayMetrics.density
         return (pxValue / scale + 0.5f).toInt()
     }
 
@@ -56,7 +58,7 @@ object DimensUtils {
      * 将dip或dp值转换为px值，保证尺寸大小不变
      */
     fun dip2px(dipValue: Float): Int {
-        val scale = app.resources.displayMetrics.density
+        val scale = AppUtils.resources.displayMetrics.density
         return (dipValue * scale + 0.5f).toInt()
     }
 
@@ -64,7 +66,8 @@ object DimensUtils {
      * 将px值转换为sp值，保证文字大小不变
      */
     fun px2sp(pxValue: Float): Int {
-        val fontScale = app.resources.displayMetrics.scaledDensity
+        val fontScale =
+            AppUtils.resources.displayMetrics.scaledDensity
         return (pxValue / fontScale + 0.5f).toInt()
     }
 
@@ -72,7 +75,8 @@ object DimensUtils {
      * 将sp值转换为px值，保证文字大小不变
      */
     fun sp2px(spValue: Float): Int {
-        val fontScale = app.resources.displayMetrics.scaledDensity
+        val fontScale =
+            AppUtils.resources.displayMetrics.scaledDensity
         return (spValue * fontScale + 0.5f).toInt()
     }
 }

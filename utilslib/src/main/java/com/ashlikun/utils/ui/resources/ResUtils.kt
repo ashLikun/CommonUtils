@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.TypedValue
 import androidx.annotation.*
+import androidx.core.content.ContextCompat
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
 
 /**
@@ -21,7 +23,7 @@ object ResUtils {
      */
     fun havRes(@ColorRes resId: Int): Boolean {
         val typedValue = TypedValue()
-        app.resources.getValue(resId, typedValue, true)
+        AppUtils.resources.getValue(resId, typedValue, true)
         if (typedValue.type >= TypedValue.TYPE_FIRST_INT
             && typedValue.type <= TypedValue.TYPE_LAST_INT
         ) {
@@ -33,25 +35,19 @@ object ResUtils {
     }
 
     fun getColor(context: Context, @ColorRes color: Int): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.theme != null) {
-            context.resources.getColor(color, context.theme)
-        } else context.resources.getColor(color)
+        return ContextCompat.getColor(context, color)
     }
 
     fun getColor(@ColorRes color: Int): Int {
-        return app.resources.getColor(color)
+        return ContextCompat.getColor(AppUtils.context, color)
     }
 
     fun getDrawable(context: Context, @DrawableRes drawable: Int): Drawable {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            context.resources.getDrawable(drawable, context.theme)
-        } else {
-            context.resources.getDrawable(drawable)
-        }
+        return ContextCompat.getDrawable(context, drawable)!!
     }
 
     fun getDrawable(@DrawableRes drawable: Int): Drawable {
-        return app.resources.getDrawable(drawable)
+        return getDrawable(AppUtils.context, drawable)
     }
 
     fun getDimension(context: Context, @DimenRes dimen: Int): Float {
@@ -59,7 +55,7 @@ object ResUtils {
     }
 
     fun getDimension(@DimenRes dimen: Int): Float {
-        return app.resources.getDimension(dimen)
+        return AppUtils.resources.getDimension(dimen)
     }
 
     fun getString(context: Context, @StringRes str: Int): String {
@@ -67,7 +63,7 @@ object ResUtils {
     }
 
     fun getString(@StringRes str: Int): String {
-        return app.resources.getString(str)
+        return AppUtils.resources.getString(str)
     }
 
     fun getDimensionPixelOffset(context: Context, @DimenRes resId: Int): Int {
@@ -75,7 +71,7 @@ object ResUtils {
     }
 
     fun getDimensionPixelOffset(@DimenRes resId: Int): Int {
-        return app.resources.getDimensionPixelOffset(resId)
+        return AppUtils.resources.getDimensionPixelOffset(resId)
     }
 
     fun getDimensionPixelSize(context: Context, @DimenRes resId: Int): Int {
@@ -83,7 +79,7 @@ object ResUtils {
     }
 
     fun getDimensionPixelSize(@DimenRes resId: Int): Int {
-        return app.resources.getDimensionPixelSize(resId)
+        return AppUtils.resources.getDimensionPixelSize(resId)
     }
 
     /**
@@ -95,7 +91,7 @@ object ResUtils {
      */
     fun getValue(@AnyRes id: Int): Float {
         val typedValue = TypedValue()
-        app.resources.getValue(id, typedValue, true)
+        AppUtils.resources.getValue(id, typedValue, true)
         return TypedValue.complexToFloat(typedValue.data)
     }
 }

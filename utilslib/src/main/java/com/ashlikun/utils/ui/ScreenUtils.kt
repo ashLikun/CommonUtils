@@ -7,6 +7,7 @@ import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.*
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.other.RomUtils.isXiaomi
 import com.ashlikun.utils.ui.extend.dp
@@ -50,7 +51,7 @@ object ScreenUtils {
      * @return
      */
     fun width(subDp: Int = 0, subPx: Int = 0): Int {
-        val displayMetrics = app.resources.displayMetrics
+        val displayMetrics = AppUtils.resources.displayMetrics
         return displayMetrics.widthPixels - max(subPx, subDp.dp)
     }
 
@@ -73,7 +74,7 @@ object ScreenUtils {
      */
     val statusBarHeight: Int
         get() {
-            val resourceId = app.resources.getIdentifier("status_bar_height", "dimen", "android")
+            val resourceId = AppUtils.resources.getIdentifier("status_bar_height", "dimen", "android")
             if (resourceId > 0) {
                 return getDimensionPixelSize(resourceId)
             }

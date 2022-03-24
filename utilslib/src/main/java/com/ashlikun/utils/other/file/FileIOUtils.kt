@@ -29,7 +29,7 @@ object FileIOUtils {
     fun readAssets(name: String): String {
         var inputStream: InputStream? = null
         try {
-            inputStream = AppUtils.app.resources.assets.open(name)
+            inputStream = AppUtils.resources.assets.open(name)
             return is2Bytes(inputStream).toString()
         } catch (e: Exception) {
         } finally {

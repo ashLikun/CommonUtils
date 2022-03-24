@@ -336,7 +336,7 @@ class SuperToast private constructor(builder: Builder) {
             }
             if (INIT_OFFSET_Y == 0) {
                 val resourceId: Int =
-                    AppUtils.app.getResources().getIdentifier("toast_y_offset", "dimen", "android")
+                    AppUtils.resources.getIdentifier("toast_y_offset", "dimen", "android")
                 if (resourceId > 0) {
                     INIT_OFFSET_Y = getDimensionPixelSize(resourceId)
                 }

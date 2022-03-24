@@ -1032,7 +1032,7 @@ public class CacheDiskUtils {
     public static Drawable bitmap2Drawable(final Bitmap bitmap) {
         return bitmap == null
                 ? null
-                : new BitmapDrawable(AppUtils.INSTANCE.getApp().getResources(), bitmap);
+                : new BitmapDrawable(AppUtils.INSTANCE.getResources(), bitmap);
     }
 
 

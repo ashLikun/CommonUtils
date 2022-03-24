@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.view.View
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.encryption.Base64Utils.decode
 import com.ashlikun.utils.encryption.Base64Utils.encodeToStr
@@ -32,7 +33,7 @@ object BitmapUtil {
     fun getVideoFrame(path: String, wDp: Int, hDp: Int): Bitmap? {
         var wDp = wDp
         var hDp = hDp
-        val scale = app.resources.displayMetrics.density
+        val scale = AppUtils.resources.displayMetrics.density
         wDp = (wDp * scale + 0.5f).toInt()
         hDp = (hDp * scale + 0.5f).toInt()
         val media = MediaMetadataRetriever()
@@ -203,7 +204,7 @@ object BitmapUtil {
         if (width > 0 && height > 0) {
             opts = Options()
             opts.inJustDecodeBounds = true
-            BitmapFactory.decodeResource(app.resources, resourseId, opts)
+            BitmapFactory.decodeResource(AppUtils.resources, resourseId, opts)
             // 计算图片缩放比例
             opts.inSampleSize = computeSampleSize(opts, width, height)
             opts.inJustDecodeBounds = false
@@ -212,7 +213,7 @@ object BitmapUtil {
         }
         try {
             // decodeStream直接调用JNI>>nativeDecodeAsset()来完成decode，无�?再使用java层的createBitmap，从而节省了java层的空间
-            return BitmapFactory.decodeResource(app.resources, resourseId, opts)
+            return BitmapFactory.decodeResource(AppUtils.resources, resourseId, opts)
         } catch (e: OutOfMemoryError) {
             e.printStackTrace()
         }
