@@ -60,9 +60,32 @@ inline fun CoroutineExceptionHandler(context: CoroutineContext): CoroutineContex
     return ct
 }
 
+/**
+ * 默认作用域
+ */
+fun DefaultScope(): CoroutineScope =
+    CoroutineScope(SupervisorJob() + DefaultDispatcher + defaultCoroutineExceptionHandler)
 
 /**
- * 在主线程中顺序执行，属于顶级协程函数，一般用于最外层
+ * IO作用域
+ */
+fun IoScope(): CoroutineScope =
+    CoroutineScope(SupervisorJob() + IODispatcher + defaultCoroutineExceptionHandler)
+
+/**
+ * 自定义线程池作用域
+ */
+fun ThreadPoolScope(): CoroutineScope =
+    CoroutineScope(SupervisorJob() + ThreadPoolDispatcher + defaultCoroutineExceptionHandler)
+
+/**
+ * 主线程作用域，顶级处理异常
+ */
+fun MainScopeX(): CoroutineScope =
+    CoroutineScope(SupervisorJob() + MainDispatcher + defaultCoroutineExceptionHandler)
+
+/**
+ * 在主线程中顺序执行，属于顶级协程函数，一般用于最外层 [Dispatchers.Default] 线程
  *
  * 注意：该函数会阻塞代码继续执行
  */
@@ -76,7 +99,7 @@ inline fun <T> taskBlock(
 }
 
 /**
- * 异步执行，常用于最外层
+ * 异步执行，常用于最外层 [Dispatchers.Default] 线程
  * 多个 async 任务是并行的
  * 特点带返回值 async 返回的是一个Deferred<T>，需要调用其await()方法获取结果。
  */
@@ -90,7 +113,7 @@ inline fun <T> taskAsync(
 }
 
 /**
- * 执行，常用于最外层
+ * 执行，常用于最外层 [Dispatchers.Default] 线程
  * 无阻塞的
  */
 inline fun taskLaunch(
@@ -102,19 +125,46 @@ inline fun taskLaunch(
     job()
 }
 
+
 /**
  * 执行，在Android UI线程中执行，可以用于最外层
  * 无阻塞的
  */
-inline fun taskLaunchMain(delayTime: Long = 0, noinline job: suspend () -> Unit) =
-    taskLaunch(MainDispatcher, delayTime, job)
+inline fun taskLaunchMain(
+    context: CoroutineContext = EmptyCoroutineContext,
+    delayTime: Long = 0,
+    noinline job: suspend () -> Unit
+) = MainScopeX().launch(CoroutineExceptionHandler(context)) {
+    delay(delayTime)
+    job()
+}
+
+
+/**
+ * 执行，在Android IO线程中执行，可以用于最外层  [Dispatchers.IO] 线程
+ * 无阻塞的
+ */
+inline fun taskLaunchIO(
+    context: CoroutineContext = EmptyCoroutineContext,
+    delayTime: Long = 0,
+    noinline job: suspend () -> Unit
+) = IoScope().launch(context) {
+    delay(delayTime)
+    job()
+}
 
 /**
  * 执行，在ThreadPoolDispatcher线程中执行，可以用于最外层
  * 无阻塞的
  */
-inline fun taskLaunchThreadPoll(delayTime: Long = 0, noinline job: suspend () -> Unit) =
-    taskLaunch(ThreadPoolDispatcher, delayTime, job)
+inline fun taskLaunchThreadPoll(
+    context: CoroutineContext = EmptyCoroutineContext,
+    delayTime: Long = 0,
+    noinline job: suspend () -> Unit
+) = ThreadPoolScope().launch(context) {
+    delay(delayTime)
+    job()
+}
 
 /**
  * 心跳执行 默认重复次数1次，可用于最外层
@@ -148,6 +198,14 @@ suspend inline fun taskRepeatSus(
  */
 suspend inline fun <T> withContextMain(noinline block: suspend CoroutineScope.() -> T) =
     withContext(MainDispatcher, block)
+
+/**
+ * 切换到IO线程
+ * 多个 withContext 任务是串行的
+ * 特点带返回值
+ */
+suspend inline fun <T> withContextIO(noinline block: suspend CoroutineScope.() -> T) =
+    withContext(IODispatcher, block)
 
 /**
  * 切换线程到线程池

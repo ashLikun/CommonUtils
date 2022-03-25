@@ -212,6 +212,7 @@ class MainActivity : AppCompatActivity() {
             "通知内容", defaults = NotificationCompat.DEFAULT_ALL
         )
         NotificationUtil.show(10, builder!!)
+
         taskLaunchMain {
 
             LogUtils.e(Thread.currentThread().name)

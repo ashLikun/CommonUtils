@@ -3,6 +3,7 @@ package com.ashlikun.utils.assist
 import android.hardware.Camera
 import android.os.Build
 import com.ashlikun.utils.other.coroutines.taskLaunch
+import com.ashlikun.utils.other.coroutines.taskLaunchMain
 import kotlinx.coroutines.Job
 
 /**
@@ -41,7 +42,7 @@ class FlashLight(var camera: Camera? = null) {
         camera?.setParameters(parameter)
         job?.cancel()
         if (isAutoOff) {
-            job = taskLaunch(delayTime = OFF_TIME) {
+            job = taskLaunchMain(delayTime = OFF_TIME) {
                 off()
             }
         }
