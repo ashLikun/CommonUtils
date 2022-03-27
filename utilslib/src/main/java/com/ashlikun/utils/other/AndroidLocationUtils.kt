@@ -94,7 +94,7 @@ object AndroidLocationUtils {
         }
         mListener = listener
         val provider = mLocationManager!!.getBestProvider(criteria, true)
-        val location = mLocationManager!!.getLastKnownLocation(provider)
+        val location = mLocationManager!!.getLastKnownLocation(provider ?: "")
         if (location != null) {
             listener.getLastKnownLocation(location)
         }
@@ -102,10 +102,10 @@ object AndroidLocationUtils {
             myLocationListener = MyLocationListener()
         }
         mLocationManager!!.requestLocationUpdates(
-            provider,
+            provider!!,
             minTime,
             minDistance.toFloat(),
-            myLocationListener
+            myLocationListener!!
         )
         return true
     }
@@ -117,7 +117,7 @@ object AndroidLocationUtils {
     fun unregister() {
         if (mLocationManager != null) {
             if (myLocationListener != null) {
-                mLocationManager!!.removeUpdates(myLocationListener)
+                mLocationManager!!.removeUpdates(myLocationListener!!)
                 myLocationListener = null
             }
             mLocationManager = null

@@ -69,14 +69,14 @@ class PhoneReceiver : BroadcastReceiver() {
         if (NEW_OUTGOING_CALL == intent.action) {
             isDialOut = true
             val outNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER)
-            if (!isEmpty(outNumber)) {
+            if (!outNumber.isNullOrEmpty()) {
                 number = outNumber
             }
             phoneListener?.invoke(CallState.Outgoing, number)
         } else if (PHONE_STATE == intent.action) {
             val state = intent.getStringExtra(INTENT_STATE)
             val inNumber = intent.getStringExtra(INTENT_INCOMING_NUMBER)
-            if (!isEmpty(inNumber)) {
+            if (!inNumber.isNullOrEmpty()) {
                 number = inNumber
             }
             if (RINGING == state) {

@@ -3,7 +3,7 @@ package com.ashlikun.utils.other
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import java.lang.ref.SoftReference
+import java.lang.ref.WeakReference
 
 /**
  * @author　　: 李坤
@@ -16,25 +16,33 @@ import java.lang.ref.SoftReference
 class MainHandle private constructor(looper: Looper) {
     var mainHandle = Handler(looper)
 
-    fun posts(runnable: Runnable) {
-        mainHandle.post(SoftRunnable(runnable))
+    fun post(runnable: Runnable) {
+        if (isMain) {
+            runnable.run()
+        } else {
+            mainHandle.post(SoftRunnable(runnable))
+        }
     }
 
-    fun postDelayeds(runnable: Runnable, delayMillis: Long) {
+    fun postDelayed(runnable: Runnable, delayMillis: Long) {
         mainHandle.postDelayed(SoftRunnable(runnable), delayMillis)
     }
 
-    fun postDelayeds(runnable: Runnable, token: Any, delayMillis: Long) {
+    fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
         val message = Message.obtain(get()?.mainHandle, SoftRunnable(runnable))
         message.obj = token
         get().mainHandle.sendMessageDelayed(message, delayMillis)
+    }
+
+    fun removeCallbacks(runable: Runnable) {
+        mainHandle.removeCallbacks(runable)
     }
 
     /**
      * 解决回调内存泄露
      */
     class SoftRunnable(runnable: Runnable) : Runnable {
-        var runnable: SoftReference<Runnable?>? = SoftReference(runnable)
+        var runnable: WeakReference<Runnable?>? = WeakReference(runnable)
         override fun run() {
             runnable?.get()?.run()
         }

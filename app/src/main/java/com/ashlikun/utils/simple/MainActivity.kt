@@ -7,15 +7,13 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.location.*
 import android.os.Bundle
-import android.os.Process
 import android.text.TextUtils
-import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
@@ -25,7 +23,8 @@ import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
-import com.ashlikun.utils.ui.*
+import com.ashlikun.utils.ui.NotificationUtil
+import com.ashlikun.utils.ui.ScreenUtils
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.windowBrightness
 import com.ashlikun.utils.ui.image.BitmapUtil
@@ -52,14 +51,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppUtils.init(application)
-        AppUtils.isDebug = true
         setContentView(binding.root)
         statusBarCompat = StatusBarCompat(this)
         statusBarCompat.setStatusBarColor(-0x1)
         binding.buttonJump.setOnClickListener {
+            ToastUtils.show("22222222")
             val intent = Intent(this, Main2Activity::class.java)
             startActivity(intent)
+
         }
         val drawable = GradientDrawable()
         val size = DimensUtils.dip2px(this, 4f)
@@ -185,8 +184,9 @@ class MainActivity : AppCompatActivity() {
         "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
 
     fun onView4Click(view: View) {
+        Toast.makeText(this.application,"wwwwww",Toast.LENGTH_SHORT).show()
         ThreadUtils.execute {
-            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
+//            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
             LogUtils.e("aaaaaaaaaaaaaaaaaa    ")
         }
         val logo = BitmapUtil.decodeResource(R.mipmap.ic_launcher_round, 50.dp, 50.dp)
@@ -201,6 +201,8 @@ class MainActivity : AppCompatActivity() {
         val aaaa = AESUtils.encrypt(ss, "NeYHTiTLQp8J")
         LogUtils.e("aaaa " + aaa ?: "")
         LogUtils.e("aaaaaaaa    " + aaaa)
+
+        ToastUtils.show("1111111111")
     }
 
     var builder: NotificationCompat.Builder? = null

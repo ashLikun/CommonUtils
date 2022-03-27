@@ -13,7 +13,7 @@ import android.os.Bundle
  */
 
 abstract class ActivityLifecycleCallbacksAdapter : ActivityLifecycleCallbacks {
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle) {}
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
     override fun onActivityStarted(activity: Activity) {}
     override fun onActivityResumed(activity: Activity) {}
     override fun onActivityPaused(activity: Activity) {}

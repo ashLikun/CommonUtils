@@ -136,7 +136,7 @@ inline fun Context.resDimensionPixelSize(resId: Int) = ResUtils.getDimensionPixe
  * Toast
  */
 
-inline fun String.toast(duration: Int = ToastUtils.LENGTH_LONG) = ToastUtils.show(this, duration)
+inline fun String.toast() = ToastUtils.show(this)
 inline fun String.toastInfo() = SuperToast.showInfoMessage(this)
 inline fun String.toastError() = SuperToast.showErrorMessage(this)
 inline fun String.toastConfirm() = SuperToast.showConfirmMessage(this)

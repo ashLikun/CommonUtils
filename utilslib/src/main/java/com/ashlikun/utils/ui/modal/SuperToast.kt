@@ -51,8 +51,8 @@ class SuperToast private constructor(builder: Builder) {
     private fun cretae(builder: Builder) {
         initToast(builder)
         val mView: View
-        if (builder.layoutId == R.layout.toast_super && mToast!!.view != null && TOAST_VIEW_TAG == mToast!!.view.tag) {
-            mView = mToast!!.view
+        if (builder.layoutId == R.layout.toast_super && mToast!!.view != null && TOAST_VIEW_TAG == mToast?.view?.tag) {
+            mView = mToast?.view!!
         } else {
             mView = LayoutInflater.from(AppUtils.app).inflate(builder.layoutId, null)
             mView.tag = TOAST_VIEW_TAG

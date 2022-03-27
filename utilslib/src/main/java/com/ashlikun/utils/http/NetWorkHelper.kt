@@ -91,11 +91,9 @@ object NetWorkHelper {
     fun isMobileDataEnable(): Boolean {
         val connectivityManager = AppUtils.app
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        var isMobileDataEnable = false
-        isMobileDataEnable = connectivityManager.getNetworkInfo(
+        return connectivityManager.getNetworkInfo(
             ConnectivityManager.TYPE_MOBILE
-        ).isConnectedOrConnecting
-        return isMobileDataEnable
+        )?.isConnectedOrConnecting ?: false
     }
 
     /**
@@ -105,10 +103,8 @@ object NetWorkHelper {
     fun isWifiDataEnable(): Boolean {
         val connectivityManager = AppUtils.app
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        var isWifiDataEnable = false
-        isWifiDataEnable = connectivityManager.getNetworkInfo(
+        return connectivityManager.getNetworkInfo(
             ConnectivityManager.TYPE_WIFI
-        ).isConnectedOrConnecting
-        return isWifiDataEnable
+        )?.isConnectedOrConnecting ?: false
     }
 }

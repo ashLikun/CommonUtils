@@ -1,119 +1,145 @@
 package com.ashlikun.utils.ui.modal
 
-import android.os.Looper
-import android.text.TextUtils
-import android.view.Gravity
-import android.widget.Toast
+import android.content.res.Resources.NotFoundException
+import android.view.LayoutInflater
+import android.view.View
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.other.DimensUtils.dip2px
-import com.ashlikun.utils.other.MainHandle
+import com.ashlikun.utils.ui.modal.toast.ToastLogInterceptor
+import com.ashlikun.utils.ui.modal.toast.ToastStrategy
+import com.ashlikun.utils.ui.modal.toast.ToastSystemStrategy
+import com.ashlikun.utils.ui.modal.toast.config.IToastInterceptor
+import com.ashlikun.utils.ui.modal.toast.config.IToastStrategy
+import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
+import com.ashlikun.utils.ui.modal.toast.style.BlackToastStyle
+import com.ashlikun.utils.ui.modal.toast.style.LocationToastStyle
+import com.ashlikun.utils.ui.modal.toast.style.ViewToastStyle
+import com.ashlikun.utils.ui.modal.toast.style.WhiteToastStyle
+
+
+/**
+ * @author　　: 李坤
+ * 创建时间: 2022/3/26 22:15
+ * 邮箱　　：496546144@qq.com
+ * 参考https://github.com/getActivity/ToastUtils
+ * 功能介绍：Toast 框架（专治 Toast 疑难杂症）
+ */
 
 object ToastUtils {
-    private var myToast: Toast? = null
-    var LENGTH_SHORT = Toast.LENGTH_SHORT
-    var LENGTH_LONG = Toast.LENGTH_LONG
-    fun getMyToast(): Toast {
-        initToast(false)
-        return myToast!!
+    /**
+     * Toast 默认处理策略
+     */
+    private val defaultStrategy by lazy {
+        ToastSystemStrategy().apply {
+            bindStyle(toastStyle!!)
+        }
     }
 
     /**
-     * 默认Toast，时间短
-     *
-     * @param content
+     * Toast 默认样式
      */
-    fun getToastShort(content: String?) {
-        Toast.makeText(AppUtils.app, content, Toast.LENGTH_SHORT).show()
+    private val defaultToastStyle by lazy {
+        BlackToastStyle()
     }
 
     /**
-     * 默认Toast，时间长
-     *
-     * @param content 内容
+     * Toast 处理策略
      */
-    fun getToastLong(content: String?) {
-        Toast.makeText(AppUtils.app, content, Toast.LENGTH_LONG).show()
-    }
+    var toastStrategy: IToastStrategy? = null
+        get() = field ?: defaultStrategy
 
-    fun show(text: String, duration: Int) {
-        show(text, false, duration)
-    }
+    /**
+     * Toast 样式
+     */
+    var toastStyle: IToastStyle<*>? = null
+        get() = field ?: defaultToastStyle
 
-    fun show(text: String, cancelBefore: Boolean = false, duration: Int = LENGTH_LONG) {
-        if (TextUtils.isEmpty(text)) {
-            return
-        }
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            MainHandle.post {
-                cretae(
-                    text,
-                    cancelBefore,
-                    duration,
-                    Gravity.BOTTOM,
-                    0,
-                    dip2px(AppUtils.app, 20f)
-                )
-            }
-        } else {
-            cretae(text, cancelBefore, duration, Gravity.BOTTOM, 0, dip2px(AppUtils.app, 20f))
-        }
-    }
+    /**
+     * 设置 Toast 拦截器（可以根据显示的内容决定是否拦截这个Toast）
+     * 场景：打印 Toast 内容日志、根据 Toast 内容是否包含敏感字来动态切换其他方式显示（这里可以使用我的另外一套框架 XToast）
+     */
+    var interceptor: IToastInterceptor = ToastLogInterceptor()
 
-    fun showLong(text: String) {
-        show(text, false, LENGTH_LONG)
-    }
-
-    fun showShort(text: String) {
-        show(text, false, LENGTH_SHORT)
-    }
-
-    fun showLong(text: String, cancelBefore: Boolean) {
-        show(text, cancelBefore, LENGTH_LONG)
-    }
-
-    fun showShort(text: String, cancelBefore: Boolean) {
-        show(text, cancelBefore, LENGTH_SHORT)
-    }
-
-    private fun initToast(cancelBefore: Boolean) {
-        if (myToast == null) {
-            myToast = Toast.makeText(AppUtils.app, "", Toast.LENGTH_SHORT)
-        } else {
-            if (cancelBefore) {
-                myToast!!.cancel()
-            }
-            myToast = Toast.makeText(AppUtils.app, "", Toast.LENGTH_SHORT)
+    /**
+     * 显示 Toast
+     */
+    fun show(id: Int) {
+        try {
+            // 如果这是一个资源 id
+            show(AppUtils.resources.getText(id))
+        } catch (ignored: NotFoundException) {
+            // 如果这是一个 int 整数
+            show(id.toString())
         }
     }
 
-    fun show(
-        text: String, cancelBefore: Boolean, duration: Int,
-        gravity: Int, xOffsetDp: Int, yOffsetDp: Int
+    /**
+     * 获取一个toast
+     */
+    fun create(style: IToastStyle<*>) = ToastSystemStrategy().apply {
+        bindStyle(style)
+    }
+
+    /**
+     * 创建一个以window为载体的自定义toast
+     */
+    fun createWindow(style: IToastStyle<*>) = ToastStrategy().apply {
+        bindStyle(style)
+    }
+
+    fun show(text: CharSequence) {
+        // 如果是空对象或者空文本就不显示
+        if (text.isEmpty()) return
+        toastStrategy?.show(text)
+    }
+
+    /**
+     * 取消吐司的显示
+     */
+    fun cancel() {
+        toastStrategy?.cancel()
+    }
+
+    /**
+     * 设置吐司的位置
+     *
+     * @param gravity 重心
+     */
+    fun setGravity(gravity: Int) {
+        setGravity(gravity, 0, 0)
+    }
+
+    fun setGravity(gravity: Int, xOffset: Int, yOffset: Int) {
+        setGravity(gravity, xOffset, yOffset, 0f, 0f)
+    }
+
+    fun setGravity(
+        gravity: Int, xOffset: Int, yOffset: Int, horizontalMargin: Float, verticalMargin: Float
     ) {
-        if (text.isEmpty()) {
-            return
-        }
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            MainHandle.post { cretae(text, cancelBefore, duration, gravity, xOffsetDp, yOffsetDp) }
-        } else {
-            cretae(text, cancelBefore, duration, gravity, xOffsetDp, yOffsetDp)
-        }
-    }
-
-    //要在主线程
-    fun cretae(
-        text: String?, cancelBefore: Boolean, duration: Int,
-        gravity: Int, xOffsetDp: Int, yOffsetDp: Int
-    ) {
-        initToast(cancelBefore)
-        if (myToast != null) {
-            myToast!!.setGravity(
-                gravity, dip2px(AppUtils.app, xOffsetDp.toFloat()),
-                dip2px(AppUtils.app, yOffsetDp.toFloat())
+        toastStrategy?.bindStyle(
+            LocationToastStyle(
+                toastStyle!!, gravity, xOffset, yOffset, horizontalMargin.toInt(),
+                verticalMargin.toInt()
             )
-            myToast!!.setText(text)
-            myToast!!.duration = duration
-            myToast!!.show()
-        }
+        )
+    }
+
+    /**
+     * 给当前 Toast 设置新的布局
+     */
+    fun setView(id: Int) {
+        if (id == View.NO_ID) return
+        setStyle(ViewToastStyle(LayoutInflater.from(AppUtils.app).inflate(id, null), toastStyle))
+    }
+
+    /**
+     * 初始化全局的 Toast 样式
+     *
+     * @param style         样式实现类，框架已经实现两种不同的样式
+     * 黑色样式：[BlackToastStyle]
+     * 白色样式：[WhiteToastStyle]
+     */
+    fun setStyle(style: IToastStyle<*>) {
+        toastStyle = style
+        toastStrategy?.bindStyle(style)
     }
 }

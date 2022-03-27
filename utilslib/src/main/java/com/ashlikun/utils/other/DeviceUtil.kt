@@ -267,7 +267,7 @@ class DeviceUtil private constructor() {
                 .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val info = cm.activeNetworkInfo
             // WIFI/MOBILE
-            netType = info.typeName
+            netType = info?.typeName
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
