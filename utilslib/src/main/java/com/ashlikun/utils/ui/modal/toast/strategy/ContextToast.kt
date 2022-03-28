@@ -6,6 +6,7 @@ import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.modal.toast.ToastImpl
 import com.ashlikun.utils.ui.modal.toast.ToastStrategy
+import com.ashlikun.utils.ui.modal.toast.config.OnCallback
 import java.lang.ref.WeakReference
 
 /**
@@ -17,6 +18,15 @@ import java.lang.ref.WeakReference
  */
 
 open class ContextToast : CustomToast() {
+
+    override var callback: OnCallback? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                mToastImpl.callback = value
+            }
+        }
+
     /** Toast 实现类  */
     private val mToastImpl by lazy {
         ToastImpl(AppUtils.context, this)

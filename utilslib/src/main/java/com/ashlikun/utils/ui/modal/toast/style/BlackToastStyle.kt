@@ -1,6 +1,5 @@
 package com.ashlikun.utils.ui.modal.toast.style
 
-import android.R
 import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
 import android.widget.TextView
 import android.content.Context
@@ -12,6 +11,8 @@ import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.graphics.drawable.GradientDrawable
 import com.ashlikun.utils.other.DimensUtils
+import com.ashlikun.utils.ui.resources.ResUtils
+import com.ashlikun.utils.R
 
 /**
  * @author　　: 李坤
@@ -23,7 +24,7 @@ import com.ashlikun.utils.other.DimensUtils
 open class BlackToastStyle : IToastStyle<TextView> {
     override fun createView(context: Context): TextView {
         val textView = TextView(context)
-        textView.id = R.id.message
+        textView.id = android.R.id.message
         textView.gravity = getTextGravity(context)
         textView.setTextColor(getTextColor(context))
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize(context).toFloat())
@@ -73,7 +74,7 @@ open class BlackToastStyle : IToastStyle<TextView> {
     }
 
     protected open fun getTextColor(context: Context): Int {
-        return 0XEEFFFFFF.toInt()
+        return ResUtils.getColor(context, R.color.toast_black_text_color)
     }
 
     protected fun getTextSize(context: Context) = DimensUtils.sp2px(context, 14f)
@@ -85,7 +86,7 @@ open class BlackToastStyle : IToastStyle<TextView> {
     protected open fun getBackgroundDrawable(context: Context): Drawable {
         val drawable = GradientDrawable()
         // 设置颜色
-        drawable.setColor(-0x78000000)
+        drawable.setColor(ResUtils.getColor(context, R.color.toast_black_bg_color))
         // 设置圆角
         drawable.cornerRadius = DimensUtils.dip2px(context, 10f).toFloat()
         return drawable

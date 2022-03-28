@@ -1,10 +1,16 @@
 package com.ashlikun.utils.ui.modal.toast.strategy
 
 import android.app.Application
+import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.modal.toast.config.IToast
+import com.ashlikun.utils.ui.modal.toast.config.OnCallback
+import kotlinx.coroutines.Runnable
 
 /**
  * @author　　: 李坤
@@ -18,6 +24,14 @@ open class SystemToast(application: Application) : IToast {
     val toast by lazy {
         Toast.makeText(application, "", Toast.LENGTH_SHORT)
     }
+    override var callback: OnCallback? = null
+
+    /** 短吐司显示的时长  */
+    open var shortDuration = 2000
+
+    /** 长吐司显示的时长  */
+    open var longDuration = 3500
+
 
     /** 吐司消息 View  */
     private var mMessageView: TextView? = null
@@ -53,7 +67,34 @@ open class SystemToast(application: Application) : IToast {
         toast.setMargin(horizontalMargin, verticalMargin)
     }
 
+    val call = @RequiresApi(Build.VERSION_CODES.R)
+    object : Toast.Callback() {
+        override fun onToastShown() {
+            super.onToastShown()
+            callback?.invoke(true)
+        }
+
+
+        override fun onToastHidden() {
+            super.onToastHidden()
+            callback?.invoke(false)
+        }
+    }
+
     override fun show() {
+        if (callback != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                toast.removeCallback(call)
+                toast.addCallback(call)
+            } else {
+                callback?.invoke(true)
+                // 添加一个移除吐司的任务
+                MainHandle.get().postDelayed(
+                    { callback?.invoke(false) },
+                    if (getDuration() == Toast.LENGTH_LONG) longDuration.toLong() else shortDuration.toLong()
+                )
+            }
+        }
         toast.show()
     }
 

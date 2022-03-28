@@ -12,7 +12,7 @@ import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
  *
  * 功能介绍：Toast View 包装样式实现
  */
-class ViewToastStyle(private val view: View, private val mStyle: IToastStyle<*>?) :
+open class ViewToastStyle(private val view: View, private val mStyle: IToastStyle<*>?) :
     IToastStyle<View> {
     override fun createView(context: Context): View {
         return view

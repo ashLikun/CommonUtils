@@ -1,11 +1,11 @@
 package com.ashlikun.utils.ui.modal.toast.style
 
-import com.ashlikun.utils.ui.modal.toast.style.BlackToastStyle
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.util.TypedValue
+import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
+import com.ashlikun.utils.ui.resources.ResUtils
 
 /**
  * @author　　: 李坤
@@ -17,15 +17,15 @@ import com.ashlikun.utils.other.DimensUtils
 
 class WhiteToastStyle : BlackToastStyle() {
     override fun getTextColor(context: Context): Int {
-        return 0XBB000000.toInt()
+        return ResUtils.getColor(context, R.color.toast_white_text_color)
     }
 
     override fun getBackgroundDrawable(context: Context): Drawable {
         val drawable = GradientDrawable()
         // 设置颜色
-        drawable.setColor(0XFFEAEAEA.toInt())
+        drawable.setColor(ResUtils.getColor(context, R.color.toast_white_bg_color))
         // 设置圆角
-        drawable.cornerRadius = DimensUtils.sp2px(context, 8f).toFloat()
+        drawable.cornerRadius = DimensUtils.dip2px(context, 10f).toFloat()
         return drawable
     }
 }

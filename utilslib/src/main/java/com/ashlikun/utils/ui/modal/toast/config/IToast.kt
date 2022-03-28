@@ -1,6 +1,5 @@
 package com.ashlikun.utils.ui.modal.toast.config
 
-import android.R
 import android.view.View
 import android.widget.TextView
 
@@ -11,8 +10,11 @@ import android.widget.TextView
  * 参考https://github.com/getActivity/ToastUtils
  * 功能介绍：Toast 接口
  */
+typealias OnCallback = (isShow: Boolean) -> Unit
 
 interface IToast {
+    var callback: OnCallback?
+
     /**
      * 显示
      */
@@ -81,7 +83,6 @@ interface IToast {
      */
     fun setMargin(horizontalMargin: Float, verticalMargin: Float)
 
-
     /**
      * 智能获取用于显示消息的 TextView
      */
@@ -89,18 +90,20 @@ interface IToast {
         val view = getView() ?: return null
         if (view is TextView) {
             if (view.getId() == View.NO_ID) {
-                view.setId(R.id.message)
-            } else require(view.getId() == R.id.message) {
+                view.setId(android.R.id.message)
+            } else require(view.getId() == android.R.id.message) {
                 // 必须将 TextView 的 id 值设置成 android.R.id.message
                 "You must set the ID value of TextView to android.R.id.message"
             }
             return view
         }
-        val messageView = view.findViewById<View>(R.id.message)
+        val messageView = view.findViewById<View>(android.R.id.message)
         if (messageView is TextView) {
             return messageView
         }
         return null
 //        throw IllegalArgumentException("You must include a TextView with an ID value of android.R.id.message")
     }
+
+
 }

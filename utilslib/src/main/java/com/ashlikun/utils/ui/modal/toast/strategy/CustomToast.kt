@@ -46,13 +46,13 @@ abstract class CustomToast : IToast {
     private var mVerticalMargin = 0f
 
     /** Toast 动画  */
-    private var mAnimations = R.style.Animation_Toast
+    open var animations = R.style.Animation_Toast
 
     /** 短吐司显示的时长  */
-    private var mShortDuration = 2000
+    open var shortDuration = 2000
 
     /** 长吐司显示的时长  */
-    private var mLongDuration = 3500
+    open var longDuration = 3500
 
     override fun setText(id: Int) {
         if (mView == null) {
@@ -113,28 +113,5 @@ abstract class CustomToast : IToast {
         return mVerticalMargin
     }
 
-    open fun setAnimationsId(animationsId: Int) {
-        mAnimations = animationsId
-    }
-
-    open fun getAnimationsId(): Int {
-        return mAnimations
-    }
-
-    open fun setShortDuration(duration: Int) {
-        mShortDuration = duration
-    }
-
-    open fun getShortDuration(): Int {
-        return mShortDuration
-    }
-
-    open fun setLongDuration(duration: Int) {
-        mLongDuration = duration
-    }
-
-    open fun getLongDuration(): Int {
-        return mLongDuration
-    }
 
 }

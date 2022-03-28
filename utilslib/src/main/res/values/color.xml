@@ -4,10 +4,14 @@
     <color name="SwipeRefreshLayout_2">#ffEA4335</color>
     <color name="SwipeRefreshLayout_3">#ff34A853</color>
     <color name="SwipeRefreshLayout_4">#ffFBBC05</color>
-    <color name="super_toast_color_info">#000000</color>
+    <color name="super_toast_color_info">#88000000</color>
     <color name="super_toast_color_confirm">#CC4caf50</color>
     <color name="super_toast_color_warning">#CCdd8500</color>
     <color name="super_toast_color_error">#CCFF0000</color>
     <color name="lib_shadow_default">#ffaaaaaa</color>
     <color name="lib_shadow_default_bg">#00000000</color>
+    <color name="toast_black_bg_color">#88000000</color>
+    <color name="toast_black_text_color">#EEFFFFFF</color>
+    <color name="toast_white_bg_color">#FFEAEAEA</color>
+    <color name="toast_white_text_color">#BB000000</color>
 </resources>

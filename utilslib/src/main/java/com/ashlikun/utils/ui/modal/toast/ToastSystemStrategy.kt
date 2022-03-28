@@ -39,7 +39,7 @@ open class ToastSystemStrategy : ToastStrategy() {
             //系统默认
             else -> SystemToast(AppUtils.app)
         }
-
+        toast.callback = callback
         // targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
         // targetSdkVersion < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：

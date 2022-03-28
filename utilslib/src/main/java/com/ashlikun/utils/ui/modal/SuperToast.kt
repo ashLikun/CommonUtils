@@ -4,10 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -25,11 +27,17 @@ import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.extend.dp
+import com.ashlikun.utils.ui.modal.toast.ToastSystemStrategy
+import com.ashlikun.utils.ui.modal.toast.config.IToastStrategy
+import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
+import com.ashlikun.utils.ui.modal.toast.config.OnCallback
+import com.ashlikun.utils.ui.modal.toast.style.ViewToastStyle
 import com.ashlikun.utils.ui.resources.ColorUtils
 import com.ashlikun.utils.ui.resources.ResUtils.getColor
 import com.ashlikun.utils.ui.resources.ResUtils.getDimensionPixelSize
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
+import java.lang.ref.WeakReference
 
 /**
  * @author　　: 李坤
@@ -38,50 +46,51 @@ import java.lang.annotation.RetentionPolicy
  *
  * 功能介绍：自定义toast样式
  */
-typealias ToastDismissed = () -> Unit
 
 class SuperToast private constructor(builder: Builder) {
     @IntDef(value = [Info, Confirm, Warning, Error])
     @Retention(RetentionPolicy.SOURCE)
     annotation class Type
 
-    var animSet: AnimatorSet? = null
+
+    init {
+        MainHandle.post {
+            cretae(builder)
+        }
+    }
+
+    var dialog: DialogTransparency? = null
 
     //要在主线程
     private fun cretae(builder: Builder) {
         initToast(builder)
-        val mView: View
-        if (builder.layoutId == R.layout.toast_super && mToast!!.view != null && TOAST_VIEW_TAG == mToast?.view?.tag) {
-            mView = mToast?.view!!
-        } else {
-            mView = LayoutInflater.from(AppUtils.app).inflate(builder.layoutId, null)
-            mView.tag = TOAST_VIEW_TAG
-        }
-        setViewContent(mView, builder)
-        startAnim(builder, mView)
-        mToast!!.setGravity(builder.gravity, builder.offsetX, builder.offsetY)
-        mToast!!.view = mView
-        mToast!!.duration = builder.duration
-        mToast!!.show()
-        if (builder.isFinish || builder.isCancelable) {
-            var dialog: DialogTransparency? = null
-            if (builder.activity != null) {
-                dialog = DialogTransparency(builder.activity!!)
-                dialog.show()
-            }
-            val dialog2 = dialog
-            MainHandle.postDelayed({
-                builder.callback?.invoke()
-                dialog2?.dismiss()
-                if (builder.isFinish && builder.activity != null && !builder.activity!!.isFinishing) {
-                    builder.activity!!.finish()
+        mToast?.get()?.bindStyle(builder.getStyle())
+        startAnim(builder)
+        mToast?.get()?.addCallback(true) {
+            if (builder.isFinish || builder.isCancelable) {
+                if (it) {
+                    if (builder.activity != null) {
+                        dialog = DialogTransparency(builder.activity!!)
+                        dialog?.show()
+                        builder.callback?.invoke(true)
+                    }
+                } else {
+                    builder.callback?.invoke(false)
+                    dialog?.dismiss()
+                    dialog = null
+                    if (builder.isFinish && builder.activity != null && !builder.activity!!.isFinishing) {
+                        builder.activity!!.finish()
+                    }
                 }
-            }, if (mToast!!.duration == Toast.LENGTH_SHORT) 2000 else 3500)
+            }
         }
+        mToast?.get()?.show(builder.msg)
+
     }
 
-    private fun startAnim(builder: Builder, mView: View) {
-        mView.clearAnimation()
+    var animSet: AnimatorSet? = null
+    private fun startAnim(builder: Builder) {
+        builder.rootView.clearAnimation()
         if (animSet == null) {
             animSet = AnimatorSet()
         } else {
@@ -89,57 +98,13 @@ class SuperToast private constructor(builder: Builder) {
         }
         if (builder.animator == null) {
             builder.animator = AnimatorSet()
-            val alpha = ObjectAnimator.ofFloat(mView, "alpha", 0f, 1f)
-            val scaleX = ObjectAnimator.ofFloat(mView, "scaleX", 0f, 1f)
-            val scaleY = ObjectAnimator.ofFloat(mView, "scaleY", 0f, 1f)
+            val alpha = ObjectAnimator.ofFloat(builder.rootView, "alpha", 0f, 1f)
+            val scaleX = ObjectAnimator.ofFloat(builder.rootView, "scaleX", 0f, 1f)
+            val scaleY = ObjectAnimator.ofFloat(builder.rootView, "scaleY", 0f, 1f)
             (builder.animator as AnimatorSet?)!!.playTogether(scaleX, scaleY, alpha)
             (builder.animator as AnimatorSet?)!!.duration = 300
         }
         builder.animator!!.start()
-    }
-
-    private fun setViewContent(view: View, builder: Builder) {
-        if (!builder.isCustom) {
-            if (builder.backGroundDrawable != null) {
-                ViewCompat.setBackground(view, builder.backGroundDrawable)
-            } else {
-                val drawable = GradientDrawable()
-                drawable.setColor(builder.backgroundColor)
-                drawable.setStroke(1.dp, getBackgroundShen(builder.backgroundColor))
-                drawable.cornerRadius = 4.dp.toFloat()
-                ViewCompat.setBackground(view, drawable)
-            }
-            val imageView = view.findViewById<View>(R.id.img) as ImageView
-            if (!builder.isShowIcon) {
-                imageView.visibility = View.GONE
-            } else {
-                var draw = ContextCompat.getDrawable(view.context, builder.iconRes)
-                //自动设置文字颜色
-                if ("auto_tintColor" == imageView.tag) {
-                    draw = DrawableCompat.wrap(draw!!)
-                    DrawableCompat.setTint(
-                        draw,
-                        if (ColorUtils.isColorDrak(builder.backgroundColor)) -0x1 else -0x1000000
-                    )
-                }
-                imageView.setImageDrawable(draw)
-            }
-            val textView = view.findViewById<View>(R.id.msg) as TextView
-            //自动设置文字颜色
-            if ("auto_textColor" == textView.tag) {
-                textView.setTextColor(if (ColorUtils.isColorDrak(builder.backgroundColor)) -0x1 else -0x1000000)
-            }
-            textView.text = builder.msg
-        } else {
-            (view.findViewById<View>(R.id.msg) as TextView).text = builder.msg
-        }
-    }
-
-    private fun getBackgroundShen(backgroundColor: Int): Int {
-        val red = (Color.red(backgroundColor) * COLOR_DEPTH).toInt()
-        val green = (Color.green(backgroundColor) * COLOR_DEPTH).toInt()
-        val blue = (Color.blue(backgroundColor) * COLOR_DEPTH).toInt()
-        return Color.argb(Color.alpha(backgroundColor), red, green, blue)
     }
 
     class Builder(val msg: String) {
@@ -178,8 +143,8 @@ class SuperToast private constructor(builder: Builder) {
         //要finish的activity
         var activity: Activity? = null
 
-        //toast销毁的回调
-        var callback: ToastDismissed? = null
+        //toast显示 销毁的回调
+        var callback: OnCallback? = null
 
         //toast的动画
         var animator: Animator? = null
@@ -269,7 +234,7 @@ class SuperToast private constructor(builder: Builder) {
             return this
         }
 
-        fun setFinishCallback(callback: ToastDismissed): Builder {
+        fun setFinishCallback(callback: OnCallback): Builder {
             this.callback = callback
             isFinish = true
             return this
@@ -346,19 +311,76 @@ class SuperToast private constructor(builder: Builder) {
             }
             SuperToast(this)
         }
+
+        fun getStyle() = ViewToastStyle(initView(),
+            object : IToastStyle<View> {
+                override fun getGravity() = gravity
+                override fun getXOffset() = offsetX
+                override fun getYOffset() = offsetY
+                override fun createView(context: Context) =
+                    LayoutInflater.from(AppUtils.app).inflate(layoutId, null)
+            })
+
+        private fun getBackgroundShen(backgroundColor: Int): Int {
+            val red = (Color.red(backgroundColor) * COLOR_DEPTH).toInt()
+            val green = (Color.green(backgroundColor) * COLOR_DEPTH).toInt()
+            val blue = (Color.blue(backgroundColor) * COLOR_DEPTH).toInt()
+            return Color.argb(Color.alpha(backgroundColor), red, green, blue)
+        }
+
+        val rootView by lazy {
+            LayoutInflater.from(AppUtils.app).inflate(layoutId, null)
+        }
+
+        private fun initView(): View {
+
+            if (!isCustom) {
+                if (backGroundDrawable != null) {
+                    ViewCompat.setBackground(rootView, backGroundDrawable)
+                } else {
+                    val drawable = GradientDrawable()
+                    drawable.setColor(backgroundColor)
+//                    drawable.setStroke(1.dp, getBackgroundShen(backgroundColor))
+                    drawable.cornerRadius = 10.dp.toFloat()
+                    ViewCompat.setBackground(rootView, drawable)
+                }
+                val imageView = rootView.findViewById<View>(R.id.img) as ImageView
+                if (!isShowIcon) {
+                    imageView.visibility = View.GONE
+                } else {
+                    var draw = ContextCompat.getDrawable(rootView.context, iconRes)
+                    //自动设置文字颜色
+                    if ("auto_tintColor" == imageView.tag) {
+                        draw = DrawableCompat.wrap(draw!!)
+                        DrawableCompat.setTint(
+                            draw,
+                            if (ColorUtils.isColorDrak(backgroundColor)) -0x1 else -0x1000000
+                        )
+                    }
+                    imageView.setImageDrawable(draw)
+                }
+                val textView = rootView.findViewById<View>(android.R.id.message) as TextView
+                //自动设置文字颜色
+                if ("auto_textColor" == textView.tag) {
+                    textView.setTextColor(if (ColorUtils.isColorDrak(backgroundColor)) -0x1 else -0x1000000)
+                }
+            }
+            return rootView
+        }
+
+
     }
 
 
     companion object {
-        private var mToast: Toast? = null
-        private const val TOAST_VIEW_TAG = "TOAST_VIEW_TAG"
+        private var mToast: WeakReference<IToastStrategy>? = null
         private const val Info = 1 //正常
         private const val Confirm = 2 //完成
         private const val Warning = 3 //警告 orange
         private const val Error = 4 //错误 red
         private const val NO_RES = -1 //
         private const val COLOR_DEPTH = 0.92f //
-        private const val INIT_GRAVITY = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM //
+        private const val INIT_GRAVITY = Gravity.CENTER_HORIZONTAL or Gravity.CENTER //
         var CHANG_GRAVITY = INIT_GRAVITY //可以改变
         var INIT_OFFSET_Y = 0
         fun setGravity(gravity: Int) {
@@ -370,13 +392,11 @@ class SuperToast private constructor(builder: Builder) {
         }
 
         private fun initToast(builder: Builder) {
+            if (builder.cancelBefore()) {
+                mToast?.get()?.cancel()
+            }
             if (mToast == null) {
-                mToast = Toast.makeText(AppUtils.app, "", Toast.LENGTH_SHORT)
-            } else {
-                if (builder.cancelBefore()) {
-                    mToast!!.cancel()
-                }
-                mToast = Toast.makeText(AppUtils.app, "", Toast.LENGTH_SHORT)
+                mToast = WeakReference(ToastSystemStrategy())
             }
         }
 
@@ -424,11 +444,5 @@ class SuperToast private constructor(builder: Builder) {
         }
     }
 
-    init {
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            MainHandle.post { cretae(builder) }
-        } else {
-            cretae(builder)
-        }
-    }
+
 }

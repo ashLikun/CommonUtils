@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.extend.click
+import com.ashlikun.utils.ui.modal.toast.config.OnCallback
 import com.ashlikun.utils.ui.modal.toast.strategy.CustomToast
 import java.lang.ref.WeakReference
 
@@ -24,6 +25,11 @@ internal class ToastImpl(
     //当前的吐司对象
     private val mToast: CustomToast
 ) {
+    /**
+     * 回调
+     */
+    var callback: OnCallback? = null
+
     /**
      * WindowManager 辅助类
      */
@@ -85,7 +91,7 @@ internal class ToastImpl(
         params.y = mToast.getYOffset()
         params.verticalMargin = mToast.getVerticalMargin()
         params.horizontalMargin = mToast.getHorizontalMargin()
-        params.windowAnimations = mToast.getAnimationsId()
+        params.windowAnimations = mToast.animations
 
         // 如果是全局显示
         if (mGlobalShow) {
@@ -100,13 +106,14 @@ internal class ToastImpl(
             // 添加一个移除吐司的任务
             MainHandle.get().postDelayed(
                 { cancel() },
-                if (mToast.getDuration() == Toast.LENGTH_LONG) mToast.getLongDuration()
-                    .toLong() else mToast.getShortDuration().toLong()
+                if (mToast.getDuration() == Toast.LENGTH_LONG) mToast.longDuration
+                    .toLong() else mToast.shortDuration.toLong()
             )
             // 注册生命周期管控
             mWindowLifecycle.register(this@ToastImpl)
             // 当前已经显示
             isShow = true
+            callback?.invoke(true)
         } catch (e: IllegalStateException) {
             // 如果这个 View 对象被重复添加到 WindowManager 则会抛出异常
             // java.lang.IllegalStateException: View android.widget.TextView has already been added to the window manager.
@@ -121,6 +128,7 @@ internal class ToastImpl(
         try {
             val windowManager = mWindowLifecycle.windowManager ?: return@Runnable
             windowManager.removeViewImmediate(mToast.getView())
+            callback?.invoke(false)
         } catch (e: IllegalArgumentException) {
             // 如果当前 WindowManager 没有附加这个 View 则会抛出异常
             // java.lang.IllegalArgumentException: View=android.widget.TextView not attached to window manager

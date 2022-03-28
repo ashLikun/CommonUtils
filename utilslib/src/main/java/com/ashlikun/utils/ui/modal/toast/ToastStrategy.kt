@@ -8,9 +8,7 @@ import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.modal.ToastUtils
-import com.ashlikun.utils.ui.modal.toast.config.IToast
-import com.ashlikun.utils.ui.modal.toast.config.IToastStrategy
-import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
+import com.ashlikun.utils.ui.modal.toast.config.*
 import com.ashlikun.utils.ui.modal.toast.strategy.*
 import java.lang.ref.WeakReference
 
@@ -23,7 +21,8 @@ import java.lang.ref.WeakReference
  * 功能介绍：Toast 默认处理器
  * 优先级是：[ContextToast]->[SafeToast]->[NotificationToast]->[SystemToast]
  */
-open class ToastStrategy : IToastStrategy {
+
+open class ToastStrategy : ICallToastStrategy() {
     /**
      * Toast 对象
      */
@@ -37,9 +36,13 @@ open class ToastStrategy : IToastStrategy {
     /** 最新的文本  */
     @Volatile
     private var mLatestText: CharSequence = ""
+
+
     override fun bindStyle(style: IToastStyle<*>) {
         mToastStyle = style
     }
+
+    override fun getToast() = mToastReference?.get()
 
     override fun create(): IToast {
         val toast = when {
@@ -59,7 +62,7 @@ open class ToastStrategy : IToastStrategy {
             //系统默认
             else -> SystemToast(AppUtils.app)
         }
-
+        toast.callback = callback
         // targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
         // targetSdkVersion < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：

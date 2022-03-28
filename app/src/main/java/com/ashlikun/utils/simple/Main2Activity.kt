@@ -7,6 +7,7 @@ import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.simple.databinding.MainActivity2Binding
 import com.ashlikun.utils.ui.extend.resDrawable
 import com.ashlikun.utils.ui.image.DrawableUtils
+import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
 
 /**
@@ -28,8 +29,12 @@ class Main2Activity : AppCompatActivity() {
         DrawableUtils.getStateListDrawable(R.mipmap.aaaaaa.resDrawable)
         binding.ceshi.setOnClickListener {
 //            AnimUtils.updateTextSize(binding.textView, 30f, 50f).apply { start() }
-            ToastUtils.show("dddddddd")
-            finish()
+//            ToastUtils.show("dddddddd")
+//            finish()
+
+            SuperToast["12121"].apply {
+                setFinish(this@Main2Activity)
+            }.show()
         }
     }
 

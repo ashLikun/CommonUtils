@@ -16,7 +16,7 @@ import android.widget.Toast
  * 功能介绍：Toast 显示安全处理
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-class SafeToast(application: Application?) : NotificationToast(application) {
+class SafeToast(application: Application) : NotificationToast(application) {
     /**
      * 是否已经 Hook 了一次 TN 内部类
      */
