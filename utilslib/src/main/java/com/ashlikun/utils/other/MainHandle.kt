@@ -3,6 +3,7 @@ package com.ashlikun.utils.other
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.os.SystemClock
 import java.lang.ref.WeakReference
 
 /**
@@ -34,6 +35,10 @@ class MainHandle private constructor(looper: Looper) {
         get().mainHandle.sendMessageDelayed(message, delayMillis)
     }
 
+    fun sendMessageDelayed(msg: Message, delayMillis: Long): Boolean {
+        return mainHandle.sendMessageAtTime(msg, delayMillis)
+    }
+
     fun removeCallbacks(runable: Runnable) {
         mainHandle.removeCallbacks(runable)
     }
@@ -53,17 +58,17 @@ class MainHandle private constructor(looper: Looper) {
         fun get(): MainHandle = instance
 
         fun post(runnable: Runnable) {
-            get().mainHandle.post(SoftRunnable(runnable))
+            get().post(SoftRunnable(runnable))
         }
 
         fun postDelayed(runnable: Runnable, delayMillis: Long) {
-            get().mainHandle.postDelayed(SoftRunnable(runnable), delayMillis)
+            get().postDelayed(SoftRunnable(runnable), delayMillis)
         }
 
         fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
             val message = Message.obtain(get().mainHandle, SoftRunnable(runnable))
             message.obj = token
-            get().mainHandle.sendMessageDelayed(message, delayMillis)
+            get().sendMessageDelayed(message, delayMillis)
         }
 
         /**
