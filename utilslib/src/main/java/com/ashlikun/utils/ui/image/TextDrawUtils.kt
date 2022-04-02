@@ -34,27 +34,27 @@ class TextDrawUtils(
     @ColorInt var tintColor: Int? = null,
     drawable: Drawable? = null,
 ) {
-    var drawable: Drawable
+    var mDrawable: Drawable
 
     init {
         width = max(width, size ?: 0)
         height = max(height, size ?: 0)
-        this.drawable = (drawable ?: drawableId?.resDrawable)!!
+        mDrawable = (drawable ?: drawableId?.resDrawable)!!
         createDrawable()
         val yiyou = textView.compoundDrawables
         when (location) {
-            1 -> textView.setCompoundDrawables(drawable, yiyou[1], yiyou[2], yiyou[3])
-            2 -> textView.setCompoundDrawables(yiyou[0], drawable, yiyou[2], yiyou[3])
-            3 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], drawable, yiyou[3])
-            4 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], yiyou[2], drawable)
+            1 -> textView.setCompoundDrawables(mDrawable, yiyou[1], yiyou[2], yiyou[3])
+            2 -> textView.setCompoundDrawables(yiyou[0], mDrawable, yiyou[2], yiyou[3])
+            3 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], mDrawable, yiyou[3])
+            4 -> textView.setCompoundDrawables(yiyou[0], yiyou[1], yiyou[2], mDrawable)
         }
     }
 
     fun createDrawable(): Drawable {
         //是否改变宽高
         var isChang = true
-        val drawWidth = drawable.minimumWidth.toFloat()
-        val drawHeight = drawable.minimumHeight.toFloat()
+        val drawWidth = mDrawable.minimumWidth.toFloat()
+        val drawHeight = mDrawable.minimumHeight.toFloat()
         if (width == 0 && height == 0) {
             width = drawWidth.toInt()
             height = drawHeight.toInt()
@@ -68,12 +68,12 @@ class TextDrawUtils(
         }
         //如果使用tint，必须使用DrawableCompat.wrap
         if (isChang || tintColor != null) {
-            drawable = DrawableCompat.wrap(drawable).mutate()
+            mDrawable = DrawableCompat.wrap(mDrawable).mutate()
             if (tintColor != null) {
-                DrawableCompat.setTint(drawable, tintColor!!)
+                DrawableCompat.setTint(mDrawable, tintColor!!)
             }
         }
-        drawable.setBounds(0, 0, width, height)
-        return drawable
+        mDrawable.setBounds(0, 0, width, height)
+        return mDrawable
     }
 }
