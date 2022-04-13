@@ -49,6 +49,11 @@ internal class SharedPreUtils : IStore {
         return setKeyAndValue(key, value, name)
     }
 
+    override fun putByteArray(key: String, value: ByteArray, name: String) = setKeyAndValue(key, value, name)
+    override fun getByteArray(key: String, defaultValue: ByteArray, name: String) = getValue(key, defaultValue, name)
+    override fun getDouble(key: String, defaultValue: Double, name: String) = getValue(key, defaultValue, name)
+
+    override fun putDouble(key: String, value: Double, name: String) = setKeyAndValue(key, value, name)
 
     override fun getBoolean(key: String, defaultValue: Boolean, name: String) =
         getValue(key, defaultValue, name)

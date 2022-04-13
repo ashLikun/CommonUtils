@@ -37,26 +37,33 @@ interface IStore {
 
 
     fun getFloat(
-        key: String,
-        defaultValue: Float = 0f,
-        name: String = StoreUtils.DEFAULT
+        key: String, defaultValue: Float = 0f, name: String = StoreUtils.DEFAULT
     ): Float
+
+    fun putDouble(key: String, value: Double, name: String = StoreUtils.DEFAULT): Boolean
+
+
+    fun getDouble(
+        key: String, defaultValue: Double = 0.0, name: String = StoreUtils.DEFAULT
+    ): Double
 
     fun putBoolean(key: String, value: Boolean, name: String = StoreUtils.DEFAULT): Boolean
 
 
     fun getBoolean(
-        key: String,
-        defaultValue: Boolean = false,
-        name: String = StoreUtils.DEFAULT
+        key: String, defaultValue: Boolean = false, name: String = StoreUtils.DEFAULT
     ): Boolean
+
+    fun putByteArray(key: String, value: ByteArray, name: String = StoreUtils.DEFAULT): Boolean
+
+    fun getByteArray(
+        key: String, defaultValue: ByteArray = ByteArray(0), name: String = StoreUtils.DEFAULT
+    ): ByteArray
 
     fun putSet(key: String, value: Set<String>, name: String = StoreUtils.DEFAULT): Boolean
 
     fun getSet(
-        key: String,
-        defaultValue: Set<String> = setOf(),
-        name: String = StoreUtils.DEFAULT
+        key: String, defaultValue: Set<String> = setOf(), name: String = StoreUtils.DEFAULT
     ): Set<String>
 
     fun putParcelable(key: String, value: Parcelable, name: String): Boolean

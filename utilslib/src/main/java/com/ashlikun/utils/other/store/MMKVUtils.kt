@@ -52,24 +52,24 @@ internal class MMKVUtils : IStore {
     override fun getFloat(key: String, defaultValue: Float, name: String) =
         getValue(key, defaultValue)
 
-    override fun putBoolean(key: String, value: Boolean, name: String): Boolean {
-        return setKeyAndValue(key, value)
-    }
+    override fun putDouble(key: String, value: Double, name: String) = setKeyAndValue(key, value)
+
+    override fun getDouble(key: String, defaultValue: Double, name: String) = getValue(key, defaultValue)
+
+    override fun putBoolean(key: String, value: Boolean, name: String) = setKeyAndValue(key, value)
 
 
     override fun getBoolean(key: String, defaultValue: Boolean, name: String) =
         getValue(key, defaultValue)
 
+    override fun putByteArray(key: String, value: ByteArray, name: String) = setKeyAndValue(key, value)
+    override fun getByteArray(key: String, defaultValue: ByteArray, name: String) = getValue(key, defaultValue)
 
     override fun putSet(key: String, value: Set<String>, name: String) =
         setKeyAndValue(key, value)
 
-
     override fun getSet(
-        key: String,
-        defaultValue: Set<String>,
-        name: String
-    ) = getValue(key, defaultValue)
+        key: String, defaultValue: Set<String>, name: String) = getValue(key, defaultValue)
 
     override fun putParcelable(key: String, value: Parcelable, name: String) =
         setKeyAndValue(key, value)
@@ -107,13 +107,13 @@ internal class MMKVUtils : IStore {
             Boolean::class -> kv.decodeBool(key, default as Boolean)
             Float::class -> kv.decodeFloat(key, default as Float)
             Long::class -> kv.decodeLong(key, default as Long)
-            Set::class -> kv.decodeStringSet(key, default as Set<String>)
+            Double::class -> kv.decodeDouble(key, default as Double)
+            ByteArray::class -> kv.decodeBytes(key, default as? ByteArray)
+            Set::class -> kv.decodeStringSet(key, default as? Set<String>)
             Parcelable::class -> kv.decodeParcelable(
-                key,
-                type.java as Class<Parcelable>,
-                default as Parcelable
+                key, type.java as? Class<Parcelable>, default as? Parcelable
             )
-            else -> kv.encode(key, default.toString())
+            else -> kv.decodeString(key, default.toString())
         } as T
     }
 
@@ -124,8 +124,11 @@ internal class MMKVUtils : IStore {
             is Boolean -> kv.encode(key, value)
             is Float -> kv.encode(key, value)
             is Long -> kv.encode(key, value)
+            is Double -> kv.encode(key, value)
+            is Parcelable -> kv.encode(key, value)
+            is ByteArray -> kv.encode(key, value)
             is Set<*> -> kv.encode(key, value as Set<String>)
-            else -> false
+            else -> kv.encode(key, value.toString())
         }
     }
 }
