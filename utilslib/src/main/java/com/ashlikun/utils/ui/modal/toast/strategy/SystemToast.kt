@@ -67,23 +67,22 @@ open class SystemToast(application: Application) : IToast {
         toast.setMargin(horizontalMargin, verticalMargin)
     }
 
-    val call = @RequiresApi(Build.VERSION_CODES.R)
-    object : Toast.Callback() {
-        override fun onToastShown() {
-            super.onToastShown()
-            callback?.invoke(true)
-        }
-
-
-        override fun onToastHidden() {
-            super.onToastHidden()
-            callback?.invoke(false)
-        }
-    }
 
     override fun show() {
         if (callback != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val call = object : Toast.Callback() {
+                    override fun onToastShown() {
+                        super.onToastShown()
+                        callback?.invoke(true)
+                    }
+
+
+                    override fun onToastHidden() {
+                        super.onToastHidden()
+                        callback?.invoke(false)
+                    }
+                }
                 toast.removeCallback(call)
                 toast.addCallback(call)
             } else {
