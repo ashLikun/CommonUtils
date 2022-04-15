@@ -69,7 +69,7 @@ open class NotificationToast(application: Application) :
         private val mSource: Any
     ) : InvocationHandler {
         @Throws(Throwable::class)
-        override fun invoke(proxy: Any, method: Method, args: Array<Any>): Any {
+        override fun invoke(proxy: Any, method: Method, args: Array<Any>): Any? {
             when (method.name) {
                 "enqueueToast", "enqueueToastEx", "cancelToast" ->                 // 将包名修改成系统包名，这样就可以绕过系统的拦截
                     // 部分华为机将 enqueueToast 修改成了 enqueueToastEx

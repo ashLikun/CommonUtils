@@ -35,7 +35,7 @@ class SafeToast(application: Application) : NotificationToast(application) {
             // 获取 Toast.mTN 字段对象
             val mTNField = Toast::class.java.getDeclaredField("mTN")
             mTNField.isAccessible = true
-            val mTN = mTNField[this]
+            val mTN = mTNField[toast]
 
             // 获取 mTN 中的 mHandler 字段对象
             val mHandlerField = mTNField.type.getDeclaredField("mHandler")
@@ -49,12 +49,10 @@ class SafeToast(application: Application) : NotificationToast(application) {
 
             // 偷梁换柱
             mHandlerField[mTN] = SafeHandler(mHandler)
-        } catch (e: IllegalAccessException) {
+        } catch (e: Exception) {
             // Android 9.0 上反射会出现报错
             // Accessing hidden field Landroid/widget/Toast;->mTN:Landroid/widget/Toast$TN;
             // java.lang.NoSuchFieldException: No field mTN in class Landroid/widget/Toast;
-            e.printStackTrace()
-        } catch (e: NoSuchFieldException) {
             e.printStackTrace()
         }
     }
