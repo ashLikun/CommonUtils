@@ -121,8 +121,8 @@ object StoreUtils {
         store.putParcelable(key, value, name)
 
 
-    fun <T : Parcelable> getParcelable(key: String, defaultValue: T, name: String = DEFAULT) =
-        store.getParcelable(key, defaultValue as Parcelable, name)
+    fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, name: String = DEFAULT) =
+        store.getParcelable(key, defaultValue as? Parcelable, name)
 
     fun remove(key: String, name: String = DEFAULT) = store.remove(key, name)
 

@@ -73,7 +73,7 @@ internal class SharedPreUtils : IStore {
         throw RuntimeException("SharedPre no Parcelable")
 
 
-    override fun <T : Parcelable> getParcelable(key: String, defaultValue: T, name: String) =
+    override fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, name: String) =
         throw RuntimeException("SharedPre no Parcelable")
 
     override fun remove(key: String, name: String): Boolean {

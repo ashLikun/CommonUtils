@@ -29,20 +29,20 @@ internal class MMKVUtils : IStore {
         setKeyAndValue(key, value)
 
     override fun getString(key: String, defaultValue: String, name: String) =
-        getValue(key, defaultValue)
+        getValue(key, defaultValue)!!
 
     override fun putInt(key: String, value: Int, name: String) =
-        setKeyAndValue(key, value)
+        setKeyAndValue(key, value)!!
 
     override fun getInt(key: String, defaultValue: Int, name: String) =
-        getValue(key, defaultValue)
+        getValue(key, defaultValue)!!
 
     override fun putLong(key: String, value: Long, name: String) =
         setKeyAndValue(key, value)
 
 
     override fun getLong(key: String, defaultValue: Long, name: String) =
-        getValue(key, defaultValue)
+        getValue(key, defaultValue)!!
 
 
     override fun putFloat(key: String, value: Float, name: String) =
@@ -50,33 +50,33 @@ internal class MMKVUtils : IStore {
 
 
     override fun getFloat(key: String, defaultValue: Float, name: String) =
-        getValue(key, defaultValue)
+        getValue(key, defaultValue)!!
 
     override fun putDouble(key: String, value: Double, name: String) = setKeyAndValue(key, value)
 
-    override fun getDouble(key: String, defaultValue: Double, name: String) = getValue(key, defaultValue)
+    override fun getDouble(key: String, defaultValue: Double, name: String) = getValue(key, defaultValue)!!
 
     override fun putBoolean(key: String, value: Boolean, name: String) = setKeyAndValue(key, value)
 
 
     override fun getBoolean(key: String, defaultValue: Boolean, name: String) =
-        getValue(key, defaultValue)
+        getValue(key, defaultValue)!!
 
     override fun putByteArray(key: String, value: ByteArray, name: String) = setKeyAndValue(key, value)
-    override fun getByteArray(key: String, defaultValue: ByteArray, name: String) = getValue(key, defaultValue)
+    override fun getByteArray(key: String, defaultValue: ByteArray, name: String) = getValue(key, defaultValue)!!
 
     override fun putSet(key: String, value: Set<String>, name: String) =
         setKeyAndValue(key, value)
 
     override fun getSet(
-        key: String, defaultValue: Set<String>, name: String) = getValue(key, defaultValue)
+        key: String, defaultValue: Set<String>, name: String) = getValue(key, defaultValue)!!
 
     override fun putParcelable(key: String, value: Parcelable, name: String) =
         setKeyAndValue(key, value)
 
 
-    override fun <T : Parcelable> getParcelable(key: String, defaultValue: T, name: String): T {
-        return getValue(key, defaultValue as Parcelable) as T
+    override fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, name: String): T? {
+        return getValue(key, defaultValue as? Parcelable?) as? T
     }
 
     override fun remove(key: String, name: String): Boolean {
@@ -97,10 +97,10 @@ internal class MMKVUtils : IStore {
      */
     inline fun <reified T : Any> getValue(
         key: String,
-        default: T,
+        default: T?,
     ) = getValueType(key, default, T::class)
 
-    fun <T : Any> getValueType(key: String, default: T, type: KClass<T>): T {
+    fun <T : Any> getValueType(key: String, default: T?, type: KClass<T>): T? {
         return when (type) {
             String::class -> kv.decodeString(key, default.toString())
             Int::class -> kv.decodeInt(key, default as Int)
@@ -108,13 +108,13 @@ internal class MMKVUtils : IStore {
             Float::class -> kv.decodeFloat(key, default as Float)
             Long::class -> kv.decodeLong(key, default as Long)
             Double::class -> kv.decodeDouble(key, default as Double)
-            ByteArray::class -> kv.decodeBytes(key, default as? ByteArray)
+            ByteArray::class -> kv.decodeBytes(key, default as ByteArray)
             Set::class -> kv.decodeStringSet(key, default as? Set<String>)
             Parcelable::class -> kv.decodeParcelable(
-                key, type.java as? Class<Parcelable>, default as? Parcelable
+                key, type.java as? Class<Parcelable>, default as? Parcelable?
             )
             else -> kv.decodeString(key, default.toString())
-        } as T
+        } as? T?
     }
 
     fun setKeyAndValue(key: String, value: Any): Boolean {
