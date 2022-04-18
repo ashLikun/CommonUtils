@@ -142,7 +142,7 @@ object DrawableUtils {
             colors.add(enable ?: enableId?.resColor!!)
         }
         if (focused != null || focusedId != null) {
-            states.add(intArrayOf(-R.attr.state_focused))
+            states.add(intArrayOf(R.attr.state_focused))
             colors.add(focused ?: focusedId?.resColor!!)
         }
         //默认的
@@ -222,7 +222,7 @@ object DrawableUtils {
         addState(intArrayOf(R.attr.state_pressed, R.attr.state_enabled), pressed)
         addState(intArrayOf(R.attr.state_selected), select)
         addState(intArrayOf(-R.attr.state_enabled), enabled)
-        addState(intArrayOf(-R.attr.state_focused), focused)
+        addState(intArrayOf(R.attr.state_focused), focused)
         addState(intArrayOf(), normal)
     }
 
