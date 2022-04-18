@@ -374,10 +374,10 @@ class SuperToast private constructor(builder: Builder) {
 
     companion object {
         private var mToast: WeakReference<IToastStrategy>? = null
-        private const val Info = 1 //正常
-        private const val Confirm = 2 //完成
-        private const val Warning = 3 //警告 orange
-        private const val Error = 4 //错误 red
+        const val Info = 1 //正常
+        const val Confirm = 2 //完成
+        const val Warning = 3 //警告 orange
+        const val Error = 4 //错误 red
         private const val NO_RES = -1 //
         private const val COLOR_DEPTH = 0.92f //
         private const val INIT_GRAVITY = Gravity.CENTER_HORIZONTAL or Gravity.CENTER //

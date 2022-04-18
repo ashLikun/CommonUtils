@@ -21,18 +21,24 @@ import java.util.*
  * 2：可监听输入状态，然后回掉接口判断
  */
 class EditHelper(var context: Context) {
-    private var isAnim = IS_ANIM
-    private var mEdithelpdatas: ArrayList<EditHelperData>? = null
-    fun setAnim(anim: Boolean): EditHelper {
-        isAnim = anim
-        return this
+    companion object {
+        /**
+         * 全局默认的是否动画
+         */
+        var IS_ANIM = true
     }
 
+    var isAnim = IS_ANIM
+
+    //显示toast回调
+    var showToas: ((msg: String) -> Unit)? = null
+
+    //显示的toast类型
+    var toastType = SuperToast.Info
+    private var mEdithelpdatas: ArrayList<EditHelperData>? = null
+
+
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 13:32
-     *
-     *
      * 设置监听的输入框
      *
      * @param edits 多个被检测的EditView对象
@@ -49,10 +55,6 @@ class EditHelper(var context: Context) {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 13:33
-     *
-     *
      * 清空
      */
     fun clear(): EditHelper {
@@ -71,6 +73,8 @@ class EditHelper(var context: Context) {
             if (!isAnim) {
                 edits.setAnim(false)
             }
+
+            edits.helper = this
             addTextChangedListener(edits)
         }
         return this
@@ -88,10 +92,6 @@ class EditHelper(var context: Context) {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 13:37
-     *
-     *
      * 检查是否满足
      */
     fun check(): Boolean {
@@ -113,10 +113,6 @@ class EditHelper(var context: Context) {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/6/28 13:37
-     *
-     *
      * 检查某个view是否满足
      */
     fun check(index: Int): Boolean {
@@ -125,9 +121,7 @@ class EditHelper(var context: Context) {
                 return false
             }
             val e = mEdithelpdatas!![index]
-            if (e == null || !e.check(context)) {
-                false
-            } else true
+            !(e == null || !e.check(context))
         } catch (e: IndexOutOfBoundsException) {
             e.printStackTrace()
             true
@@ -139,6 +133,7 @@ class EditHelper(var context: Context) {
         var msg: String
         var regex: String
         var isAnim = true
+        lateinit var helper: EditHelper
 
         constructor(textView: View, regex: String, msg: String) {
             this.regex = regex
@@ -200,7 +195,11 @@ class EditHelper(var context: Context) {
                         startShakeLeft(view, 0.95f, 3f)
                     }
                 } else {
-                    SuperToast.get(msg).warn()
+                    if (helper.showToas != null) {
+                        helper.showToas!!.invoke(msg)
+                    } else {
+                        SuperToast[msg].setType(helper.toastType).show()
+                    }
                     if (isAnim) {
                         startShakeLeft(view!!, 0.85f, 6f)
                     }
@@ -230,10 +229,5 @@ class EditHelper(var context: Context) {
         }
     }
 
-    companion object {
-        /**
-         * 全局默认的是否动画
-         */
-        var IS_ANIM = true
-    }
+
 }
