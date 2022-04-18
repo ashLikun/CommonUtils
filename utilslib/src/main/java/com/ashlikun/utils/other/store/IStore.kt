@@ -68,7 +68,7 @@ interface IStore {
 
     fun putParcelable(key: String, value: Parcelable, name: String): Boolean
 
-    fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, name: String): T?
+    fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, cls: Class<T>, name: String): T?
 
     fun remove(key: String, name: String = StoreUtils.DEFAULT): Boolean
 

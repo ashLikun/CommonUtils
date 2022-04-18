@@ -35,6 +35,7 @@ import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.status.StatusBarCompat
 import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 import com.ashlikun.utils.ui.text.SpannableUtils
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.delay
 import java.io.IOException
 import java.util.*
@@ -132,12 +133,13 @@ class MainActivity : AppCompatActivity() {
             .roundRadiu(floatArrayOf(30f, 30f, 0f, 20f))
             .create()
 
-//        StoreUtils.putString("testString", "testString")
-//        StoreUtils.putInt("testInt", 22)
-//        StoreUtils.putBoolean("testBoolean", true)
-//        StoreUtils.putFloat("testFloat", 33f)
-//        StoreUtils.putLong("testLong", 22332)
-//        StoreUtils.putSet("testSet", setOf("aadd"))
+        StoreUtils.putString("testString", "testString")
+        StoreUtils.putInt("testInt", 22)
+        StoreUtils.putBoolean("testBoolean", true)
+        StoreUtils.putFloat("testFloat", 33f)
+        StoreUtils.putLong("testLong", 22332)
+        StoreUtils.putSet("testSet", setOf("aadd"))
+        StoreUtils.putParcelable("testParcelable", TestParcelable("333", 444))
 
         StoreUtils.getString("testString").logge()
         StoreUtils.getInt("testInt").logge()
@@ -145,7 +147,9 @@ class MainActivity : AppCompatActivity() {
         StoreUtils.getFloat("testFloat").logge()
         StoreUtils.getLong("testLong").logge()
         StoreUtils.getSet("testSet").logge()
-        StoreUtils.getParcelable("testParcelable", TestParcelable())?.logge()
+        MMKV.defaultMMKV().decodeParcelable("testParcelable", TestParcelable::class.java)?.logge()
+        val aa: TestParcelable? = StoreUtils.getParcelable("testParcelable")
+        aa?.logge()
     }
 
     fun onView1Click(view: View) {
@@ -184,7 +188,7 @@ class MainActivity : AppCompatActivity() {
         "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
 
     fun onView4Click(view: View) {
-        Toast.makeText(this.application,"wwwwww",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
         ThreadUtils.execute {
 //            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
             LogUtils.e("aaaaaaaaaaaaaaaaaa    ")

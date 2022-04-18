@@ -75,8 +75,8 @@ internal class MMKVUtils : IStore {
         setKeyAndValue(key, value)
 
 
-    override fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, name: String): T? {
-        return getValue(key, defaultValue as? Parcelable?) as? T
+    override fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, cls: Class<T>, name: String): T? {
+        return kv.decodeParcelable(key, cls)
     }
 
     override fun remove(key: String, name: String): Boolean {
