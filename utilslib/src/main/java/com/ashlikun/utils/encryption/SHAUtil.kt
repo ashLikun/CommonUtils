@@ -42,11 +42,7 @@ object SHAUtil {
             val bytes = md5.digest(string.toByteArray())
             var result = ""
             for (b in bytes) {
-                var temp = Integer.toHexString((b and 0xff.toByte()).toInt())
-                if (temp.length == 1) {
-                    temp = "0$temp"
-                }
-                result += temp
+                result += String.format("%02x", b and 0xFF.toByte())
             }
             return result
         } catch (e: NoSuchAlgorithmException) {

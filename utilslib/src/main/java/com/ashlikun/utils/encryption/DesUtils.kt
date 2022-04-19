@@ -7,7 +7,10 @@ package com.ashlikun.utils.encryption
 
 import android.annotation.SuppressLint
 import androidx.annotation.IntDef
+import com.ashlikun.utils.other.HexUtils
 import com.ashlikun.utils.other.StringUtils
+import com.ashlikun.utils.other.hexToBytes
+import com.ashlikun.utils.other.toHexStr
 import java.io.UnsupportedEncodingException
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
@@ -66,9 +69,9 @@ object DesUtils {
             cipher.init(type, keyFactory.generateSecret(desKey), random)
             return if (type == Cipher.ENCRYPT_MODE) {
                 val byteContent = content.toByteArray(charset("utf-8"))
-                StringUtils.parseByte2HexStr(cipher.doFinal(byteContent))
+                cipher.doFinal(byteContent).toHexStr.uppercase()
             } else {
-                val byteContent = StringUtils.parseHexStr2Byte(content)
+                val byteContent = content.hexToBytes
                 String(cipher.doFinal(byteContent))
             }
         } catch (e: NoSuchAlgorithmException) {

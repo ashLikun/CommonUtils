@@ -46,16 +46,22 @@ object UnicodeUtils {
             val c = string[i]
             // 转换为unicode
             hex = Integer.toHexString(c.code)
-            if (hex.length == 4) {
-                unicode.append("\\u")
-            } else if (hex.length == 2) {
-                unicode.append("\\u00")
-            } else if (hex.length == 3) {
-                unicode.append("\\u0")
-            } else if (hex.length == 1) {
-                unicode.append("\\u0")
-            } else {
-                unicode.append("\\u")
+            when (hex.length) {
+                4 -> {
+                    unicode.append("\\u")
+                }
+                2 -> {
+                    unicode.append("\\u00")
+                }
+                3 -> {
+                    unicode.append("\\u0")
+                }
+                1 -> {
+                    unicode.append("\\u0")
+                }
+                else -> {
+                    unicode.append("\\u")
+                }
             }
             unicode.append(hex)
         }

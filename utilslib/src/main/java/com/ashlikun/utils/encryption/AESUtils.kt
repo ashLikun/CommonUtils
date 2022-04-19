@@ -1,6 +1,8 @@
 package com.ashlikun.utils.encryption
 
 import androidx.annotation.IntDef
+import com.ashlikun.utils.other.hexToBytes
+import com.ashlikun.utils.other.toHexStr
 import java.io.UnsupportedEncodingException
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
@@ -160,7 +162,7 @@ object AESUtils {
                 if (base64OrHex == 1) {
                     Base64Utils.decode(content)
                 } else if (base64OrHex == 2) {
-                    hex2byte(content)
+                    content.hexToBytes
                 } else {
                     content.toByteArray()
                 }
@@ -174,7 +176,7 @@ object AESUtils {
                     if (base64OrHex == 1) {
                         Base64Utils.encodeToStr(reslutByte)
                     } else if (base64OrHex == 2) {
-                        byte2hex(reslutByte)
+                        reslutByte.toHexStr.uppercase()
                     } else {
                         String(reslutByte)
                     }
@@ -191,39 +193,6 @@ object AESUtils {
         return null
     }
 
-    /**
-     * 16进制转byte
-     */
-    fun hex2byte(strhex: String?): ByteArray? {
-        if (strhex == null) {
-            return null
-        }
-        val l = strhex.length
-        if (l % 2 == 1) {
-            return null
-        }
-        val b = ByteArray(l / 2)
-        for (i in 0 until l / 2) {
-            b[i] = strhex.substring(i * 2, i * 2 + 2).toInt(
-                16
-            ).toByte()
-        }
-        return b
-    }
-
-    fun byte2hex(b: ByteArray): String {
-        var hs = ""
-        var stmp = ""
-        for (n in b.indices) {
-            stmp = Integer.toHexString((b[n] and 0XFF.toByte()).toInt())
-            hs = if (stmp.length == 1) {
-                hs + "0" + stmp
-            } else {
-                hs + stmp
-            }
-        }
-        return hs.uppercase()
-    }
 
     /**
      * 密钥key ,默认补的数字，补全16位数，以保证安全补全至少16位长度,android和ios对接通过

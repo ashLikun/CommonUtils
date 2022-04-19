@@ -1,6 +1,7 @@
 package com.ashlikun.utils.encryption
 
 import android.text.TextUtils
+import com.ashlikun.utils.other.toHexStr
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -18,12 +19,6 @@ import kotlin.experimental.and
  */
 
 object Md5Utils {
-    /**
-     * 加密
-     */
-    fun getMD5(string: String): String {
-        return getMD5(string, "")
-    }
 
     /**
      * MD5加密(多次)
@@ -42,20 +37,12 @@ object Md5Utils {
      * @param slat   加密盐值key
      * @return 加密结果字符串
      */
-    fun getMD5(string: String, slat: String): String {
+    fun getMD5(string: String, slat: String = "", uppercase: Boolean = true): String {
         if (TextUtils.isEmpty(string)) return ""
         try {
             val md5 = MessageDigest.getInstance("MD5")
-            val bytes = md5.digest((string + slat).toByteArray())
-            var result = ""
-            for (b in bytes) {
-                var temp = Integer.toHexString((b and 0xff.toByte()).toInt())
-                if (temp.length == 1) {
-                    temp = "0$temp"
-                }
-                result += temp
-            }
-            return result
+            val result = md5.digest((string + slat).toByteArray()).toHexStr
+            return if (uppercase) result.uppercase() else result
         } catch (e: NoSuchAlgorithmException) {
             e.printStackTrace()
         }
