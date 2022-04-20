@@ -1,15 +1,25 @@
 package com.ashlikun.utils.other
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import com.ashlikun.utils.AppUtils
+import java.io.ByteArrayInputStream
 import java.io.File
+import java.io.InputStream
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.security.cert.CertificateEncodingException
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 
 /**
  * @author　　: 李坤
@@ -274,4 +284,36 @@ object ApkUtils {
             }
             return false
         }
+
+    /**
+     * 这个是获取当前Apk   SHA1的方法
+     */
+    fun getCertificateSHA1Fingerprint(): String {
+
+        //获取当前要获取SHA1值的包名，也可以用其他的包名，但需要注意，
+        //在用其他包名的前提是，此方法传递的参数Context应该是对应包的上下文。
+        try {
+            //获得包的所有内容信息类
+            val packageInfo = AppUtils.app.packageManager.getPackageInfo(AppUtils.app.packageName, PackageManager.GET_SIGNATURES)
+            //签名信息
+            val cert = packageInfo!!.signatures[0].toByteArray()
+            //证书工厂类，这个类实现了出厂合格证算法的功能
+            val cf = CertificateFactory.getInstance("X509")
+            //将签名转换为字节数组流
+            val input: InputStream = ByteArrayInputStream(cert)
+            //X509证书，X.509是一种非常通用的证书格式
+            val c = cf!!.generateCertificate(input) as X509Certificate
+            //加密算法的类，这里的参数可以使MD4,MD5等加密算法
+            val md = MessageDigest.getInstance("SHA1")
+            //获得公钥
+            val publicKey = md.digest(c!!.encoded)
+            //字节到十六进制的格式转换
+            return publicKey.toHexStr
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
+    }
+
+
 }

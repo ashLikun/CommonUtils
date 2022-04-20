@@ -128,6 +128,22 @@ class EditHelper(var context: Context) {
         }
     }
 
+    /**
+     * 检查某个view是否满足
+     */
+    fun check(editView: View): Boolean {
+        return try {
+            if (mEdithelpdatas == null) {
+                return false
+            }
+            val e = mEdithelpdatas!!.find { it.view == editView }
+            !(e == null || !e.check(context))
+        } catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+            true
+        }
+    }
+
     class EditHelperData {
         var view: View
         var msg: String

@@ -54,8 +54,11 @@ class SuperToast private constructor(builder: Builder) {
 
 
     init {
-        MainHandle.post {
-            cretae(builder)
+        //msg不为空显示
+        if (builder.msg.isNotEmpty()) {
+            MainHandle.post {
+                cretae(builder)
+            }
         }
     }
 
@@ -63,10 +66,10 @@ class SuperToast private constructor(builder: Builder) {
 
     //要在主线程
     private fun cretae(builder: Builder) {
-        initToast(builder)
-        mToast?.get()?.bindStyle(builder.getStyle())
+        val toast = initToast(builder)
+        toast.bindStyle(builder.getStyle())
         startAnim(builder)
-        mToast?.get()?.addCallback(true) {
+        toast.addCallback(true) {
             if (builder.isFinish || builder.isCancelable) {
                 if (it) {
                     if (builder.activity != null) {
@@ -84,8 +87,7 @@ class SuperToast private constructor(builder: Builder) {
                 }
             }
         }
-        mToast?.get()?.show(builder.msg)
-
+        toast.show(builder.msg)
     }
 
     var animSet: AnimatorSet? = null
@@ -391,13 +393,16 @@ class SuperToast private constructor(builder: Builder) {
             CHANG_GRAVITY = INIT_GRAVITY
         }
 
-        private fun initToast(builder: Builder) {
+        private fun initToast(builder: Builder): ToastSystemStrategy {
+            var toastS = mToast?.get() as? ToastSystemStrategy?
             if (builder.cancelBefore()) {
-                mToast?.get()?.cancel()
+                toastS?.cancel()
             }
-            if (mToast == null) {
+            if (toastS == null) {
+                toastS = ToastSystemStrategy()
                 mToast = WeakReference(ToastSystemStrategy())
             }
+            return toastS!!
         }
 
         operator fun get(msg: String): Builder {
