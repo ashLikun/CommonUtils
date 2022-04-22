@@ -56,7 +56,7 @@ internal class ToastImpl(
             return
         }
         MainHandle.get().removeCallbacks(mShowRunnable)
-        MainHandle.get().post(mShowRunnable)
+        MainHandle.get().post(runnable = mShowRunnable)
     }
 
     /**
@@ -69,7 +69,7 @@ internal class ToastImpl(
         }
         MainHandle.get().removeCallbacks(mShowRunnable)
         MainHandle.get().removeCallbacks(mCancelRunnable)
-        MainHandle.get().post(mCancelRunnable)
+        MainHandle.get().post(runnable = mCancelRunnable)
     }
 
     private val mShowRunnable = Runnable {
@@ -105,8 +105,8 @@ internal class ToastImpl(
             windowManager.addView(mToast.getView(), params)
             // 添加一个移除吐司的任务
             MainHandle.get().postDelayed(
-                { cancel() },
-                if (mToast.getDuration() == Toast.LENGTH_LONG) mToast.longDuration
+                runnable = { cancel() },
+                delayMillis = if (mToast.getDuration() == Toast.LENGTH_LONG) mToast.longDuration
                     .toLong() else mToast.shortDuration.toLong()
             )
             // 注册生命周期管控

@@ -28,10 +28,10 @@ task clean(type: Delete) {
 }
 ext {
     superVersion = "1.2.+"
-    compileSdkVersion = 30
+    compileSdkVersion = 31
     buildToolsVersion = "30.0.2"
     designVersion = "com.google.android.material:material:" + superVersion
-    targetSdkVersion = 26
+    targetSdkVersion = 28
     minSdkVersion = 21
     versionCode = 1
     versionName = "0.0.1"

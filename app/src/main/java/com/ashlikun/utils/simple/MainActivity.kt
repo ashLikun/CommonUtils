@@ -271,7 +271,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startPost() {
         if (currentProgress <= 100) {
-            MainHandle.postDelayed(runable, 1000)
+            MainHandle.postDelayed(runnable = runable, delayMillis = 1000)
         }
     }
 

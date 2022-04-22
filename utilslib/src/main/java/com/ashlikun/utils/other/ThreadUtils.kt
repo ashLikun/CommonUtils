@@ -69,6 +69,6 @@ object ThreadUtils : ExecutorService {
      * 切换到主线程
      */
     fun toMain(command: Runnable) {
-        MainHandle.post(command)
+        MainHandle.post(runnable = command)
     }
 }

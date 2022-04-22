@@ -36,10 +36,11 @@ class Main2Activity : AppCompatActivity() {
                 setFinish(this@Main2Activity)
             }.show()
         }
+        aa()
     }
 
     fun aa(): Unit {
-        MainHandle.postDelayed({
+        MainHandle.postDelayed(this, {
             LogUtils.e("aaaaaaa")
         }, 5000)
     }

@@ -86,9 +86,9 @@ open class ToastStrategy : ICallToastStrategy() {
         //主线程执行
         MainHandle.get().removeCallbacks(mShowRunnable)
         if (delayMillis > 0) {
-            MainHandle.get().postDelayed(mShowRunnable, delayMillis)
+            MainHandle.get().postDelayed(runnable = mShowRunnable, delayMillis = delayMillis)
         } else {
-            MainHandle.get().post(mShowRunnable)
+            MainHandle.get().post(runnable = mShowRunnable)
         }
 
     }
@@ -99,7 +99,7 @@ open class ToastStrategy : ICallToastStrategy() {
 
     override fun cancel() {
         MainHandle.get().removeCallbacks(mShowRunnable)
-        MainHandle.get().post(mCancelRunnable)
+        MainHandle.get().post(runnable = mCancelRunnable)
 
     }
 

@@ -37,12 +37,12 @@ open class ContextToast : CustomToast() {
         // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
         // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
         // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
-        MainHandle.get().postDelayed(mShowRunnable, DELAY_TIMEOUT)
+        MainHandle.get().postDelayed(runnable = mShowRunnable, delayMillis = DELAY_TIMEOUT)
     }
 
     override fun cancel() {
         MainHandle.get().removeCallbacks(mCancelRunnable)
-        MainHandle.get().post(mCancelRunnable)
+        MainHandle.get().post(runnable = mCancelRunnable)
     }
 
     /**

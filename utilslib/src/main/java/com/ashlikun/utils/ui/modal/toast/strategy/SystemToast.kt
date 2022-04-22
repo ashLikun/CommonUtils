@@ -89,8 +89,8 @@ open class SystemToast(application: Application) : IToast {
                 callback?.invoke(true)
                 // 添加一个移除吐司的任务
                 MainHandle.get().postDelayed(
-                    { callback?.invoke(false) },
-                    if (getDuration() == Toast.LENGTH_LONG) longDuration.toLong() else shortDuration.toLong()
+                    runnable = { callback?.invoke(false) },
+                    delayMillis = if (getDuration() == Toast.LENGTH_LONG) longDuration.toLong() else shortDuration.toLong()
                 )
             }
         }

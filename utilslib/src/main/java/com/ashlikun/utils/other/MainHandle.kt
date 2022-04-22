@@ -4,6 +4,10 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import java.lang.ref.WeakReference
 
 /**
@@ -13,27 +17,108 @@ import java.lang.ref.WeakReference
  *
  * 功能介绍：单例形式的hander,主线程
  */
+inline fun LifecycleOwner.postMain(runnable: Runnable) {
+    MainHandle.post(this, runnable)
+}
+
+inline fun LifecycleOwner.postDelayed(runnable: Runnable, delayMillis: Long) {
+    MainHandle.postDelayed(this, runnable, delayMillis)
+}
+
+inline fun LifecycleOwner.postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
+    MainHandle.postDelayed(this, runnable, token, delayMillis)
+}
 
 class MainHandle private constructor(looper: Looper) {
     var mainHandle = Handler(looper)
+    val observer = object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                //销毁
 
-    fun post(runnable: Runnable) {
-        if (isMain) {
-            runnable.run()
-        } else {
-            LogUtils.e("aaaa ${runnable::class.java.isAnonymousClass}")
-            mainHandle.post(WeakRunnable(runnable))
+            }
         }
     }
 
-    fun postDelayed(runnable: Runnable, delayMillis: Long) {
-        mainHandle.postDelayed(WeakRunnable(runnable), delayMillis)
+    /**
+     * 感知生命周期
+     */
+    private inner class MyLifecycleEventObserver(var lifecycleOwner: LifecycleOwner, runnable: Runnable) : LifecycleEventObserver {
+
+        val runnableX = Runnable {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            if (lifecycleOwner.lifecycle.currentState != Lifecycle.State.DESTROYED) {
+                runnable.run()
+            }
+        }
+
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                lifecycleOwner.lifecycle.removeObserver(this)
+                mainHandle.removeCallbacks(runnableX)
+            }
+        }
+
     }
 
-    fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
-        val message = Message.obtain(get()?.mainHandle, WeakRunnable(runnable))
-        message.obj = token
-        get().mainHandle.sendMessageDelayed(message, delayMillis)
+    /**
+     * 这个方法会造成Activity内存泄露
+     * 如果不是在activity相关使用就可以
+     * 可以使用带LifecycleOwner的方法
+     */
+    fun post(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable) {
+        if (isMain) {
+            runnable.run()
+        } else {
+            if (lifecycleOwner != null) {
+                //监听生命周期
+                MyLifecycleEventObserver(lifecycleOwner, runnable).apply {
+                    lifecycleOwner.lifecycle.addObserver(this)
+                    mainHandle.post(runnableX)
+                }
+            } else {
+                mainHandle.post(runnable)
+            }
+        }
+    }
+
+    /**
+     * 这个方法会造成Activity内存泄露
+     * 如果不是在activity相关使用就可以
+     * 可以使用带LifecycleOwner的方法
+     */
+    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, delayMillis: Long) {
+        if (lifecycleOwner != null) {
+            //监听生命周期
+            MyLifecycleEventObserver(lifecycleOwner, runnable).apply {
+                lifecycleOwner.lifecycle.addObserver(this)
+                mainHandle.postDelayed(runnableX, delayMillis)
+            }
+        } else {
+            mainHandle.postDelayed(runnable, delayMillis)
+        }
+    }
+
+    /**
+     * 这个方法会造成Activity内存泄露
+     * 如果不是在activity相关使用就可以
+     * 可以使用带LifecycleOwner的方法
+     */
+    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, token: Any, delayMillis: Long) {
+        if (lifecycleOwner != null) {
+            //监听生命周期
+            MyLifecycleEventObserver(lifecycleOwner, runnable).apply {
+                lifecycleOwner.lifecycle.addObserver(this)
+                val message = Message.obtain(get()?.mainHandle, runnableX)
+                message.obj = token
+                get().mainHandle.sendMessageDelayed(message, delayMillis)
+            }
+        } else {
+            val message = Message.obtain(get()?.mainHandle, runnable)
+            message.obj = token
+            get().mainHandle.sendMessageDelayed(message, delayMillis)
+        }
+
     }
 
     fun sendMessageDelayed(msg: Message, delayMillis: Long): Boolean {
@@ -44,31 +129,39 @@ class MainHandle private constructor(looper: Looper) {
         mainHandle.removeCallbacks(runable)
     }
 
-    /**
-     * 解决回调内存泄露
-     */
-    class WeakRunnable(var runnable: Runnable) : Runnable {
-        //Kotlin 的回调会有莫名其妙问题
-//        var runnable: WeakReference<Runnable?>? = WeakReference(runnable)
-        override fun run() {
-            runnable.run()
-        }
-    }
-
     companion object {
         private val instance by lazy { MainHandle(Looper.getMainLooper()) }
         fun get(): MainHandle = instance
 
-        fun post(runnable: Runnable) {
-            get().post(runnable)
+        /**
+         * 这个方法会造成Activity内存泄露
+         * 如果不是在activity相关使用就可以
+         * 可以使用带LifecycleOwner的方法
+         */
+        fun post(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable) {
+            get().post(lifecycleOwner, runnable)
         }
 
-        fun postDelayed(runnable: Runnable, delayMillis: Long) {
-            get().postDelayed(runnable, delayMillis)
+        /**
+         * 这个方法会造成Activity内存泄露
+         * 如果不是在activity相关使用就可以
+         * 可以使用带LifecycleOwner的方法
+         */
+        fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, delayMillis: Long) {
+            get().postDelayed(lifecycleOwner, runnable, delayMillis)
         }
 
-        fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
-            val message = Message.obtain(get().mainHandle, WeakRunnable(runnable))
+        /**
+         * 这个方法会造成Activity内存泄露
+         * 如果不是在activity相关使用就可以
+         * 可以使用带LifecycleOwner的方法
+         */
+        fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, token: Any, delayMillis: Long) {
+            get().postDelayed(lifecycleOwner, runnable, token, delayMillis)
+        }
+
+        fun sendMessageDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
+            val message = Message.obtain(get().mainHandle, runnable)
             message.obj = token
             get().sendMessageDelayed(message, delayMillis)
         }
