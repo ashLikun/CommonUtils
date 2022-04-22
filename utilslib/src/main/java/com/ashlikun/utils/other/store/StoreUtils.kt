@@ -14,25 +14,28 @@ import java.util.*
  * 功能介绍：轻量级存储的工具类
  */
 /**
- * put的时候this是value
+ * put的时候this是key
  */
-inline fun String.putStore(key: String, name: String = StoreUtils.DEFAULT) =
-    StoreUtils.putString(key, this, name)
+inline fun String.putStore(value: String, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putString(this, value, name)
 
-inline fun Int.putStore(key: String, name: String = StoreUtils.DEFAULT) =
-    StoreUtils.putInt(key, this, name)
+inline fun String.putStore(value: Int, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putInt(this, value, name)
 
-inline fun Boolean.putStore(key: String, name: String = StoreUtils.DEFAULT) =
-    StoreUtils.putBoolean(key, this, name)
+inline fun String.putStore(value: Boolean, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putBoolean(this, value, name)
 
-inline fun Float.putStore(key: String, name: String = StoreUtils.DEFAULT) =
-    StoreUtils.putFloat(key, this, name)
+inline fun String.putStore(value: Float, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putFloat(this, value, name)
 
-inline fun Long.putStore(key: String, name: String = StoreUtils.DEFAULT) =
-    StoreUtils.putLong(key, this, name)
+inline fun String.putStore(value: Long, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putLong(this, value, name)
 
-inline fun Set<String>.putStore(key: String, name: String = StoreUtils.DEFAULT) =
-    StoreUtils.putSet(key, this, name)
+inline fun String.putStore(value: Set<String>, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putSet(this, value, name)
+
+inline fun String.putStore(value: Parcelable, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.putParcelable(this, value, name)
 
 /**
  * get的时候this是key
@@ -55,9 +58,11 @@ inline fun String.getLongStore(defaultValue: Long = 0, name: String = StoreUtils
 inline fun String.getFloatStore(defaultValue: Float = 0f, name: String = StoreUtils.DEFAULT) =
     StoreUtils.getFloat(this, defaultValue, name)
 
-inline fun String.getSetStore(
-    defaultValue: Set<String> = setOf(), name: String = StoreUtils.DEFAULT
-) = StoreUtils.getSet(this, defaultValue, name)
+inline fun String.getSetStore(defaultValue: Set<String> = setOf(), name: String = StoreUtils.DEFAULT) =
+    StoreUtils.getSet(this, defaultValue, name)
+
+inline fun <reified T : Parcelable> String.getParcelableStore(defaultValue: T? = null, name: String = StoreUtils.DEFAULT) =
+    StoreUtils.getParcelable(this, defaultValue, name)
 
 object StoreUtils {
     const val DEFAULT = "default"
