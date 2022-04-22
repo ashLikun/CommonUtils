@@ -1,17 +1,13 @@
 package com.ashlikun.utils.ui.modal.toast
 
 import android.os.Build
-import android.provider.Settings
-import android.widget.Toast
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.other.MainHandle
-import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.modal.toast.config.IToast
-import com.ashlikun.utils.ui.modal.toast.config.IToastStrategy
-import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
-import com.ashlikun.utils.ui.modal.toast.strategy.*
-import java.lang.ref.WeakReference
+import com.ashlikun.utils.ui.modal.toast.strategy.CustomToast
+import com.ashlikun.utils.ui.modal.toast.strategy.NotificationToast
+import com.ashlikun.utils.ui.modal.toast.strategy.SafeToast
+import com.ashlikun.utils.ui.modal.toast.strategy.SystemToast
 
 
 /**

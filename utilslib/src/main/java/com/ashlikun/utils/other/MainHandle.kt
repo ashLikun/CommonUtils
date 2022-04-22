@@ -58,11 +58,11 @@ class MainHandle private constructor(looper: Looper) {
         fun get(): MainHandle = instance
 
         fun post(runnable: Runnable) {
-            get().post(SoftRunnable(runnable))
+            get().post(runnable)
         }
 
         fun postDelayed(runnable: Runnable, delayMillis: Long) {
-            get().postDelayed(SoftRunnable(runnable), delayMillis)
+            get().postDelayed(runnable, delayMillis)
         }
 
         fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
