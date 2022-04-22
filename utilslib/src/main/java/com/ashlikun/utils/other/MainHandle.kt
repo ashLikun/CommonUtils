@@ -21,16 +21,16 @@ class MainHandle private constructor(looper: Looper) {
         if (isMain) {
             runnable.run()
         } else {
-            mainHandle.post(SoftRunnable(runnable))
+            mainHandle.post(WeakRunnable(runnable))
         }
     }
 
     fun postDelayed(runnable: Runnable, delayMillis: Long) {
-        mainHandle.postDelayed(SoftRunnable(runnable), delayMillis)
+        mainHandle.postDelayed(WeakRunnable(runnable), delayMillis)
     }
 
     fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
-        val message = Message.obtain(get()?.mainHandle, SoftRunnable(runnable))
+        val message = Message.obtain(get()?.mainHandle, WeakRunnable(runnable))
         message.obj = token
         get().mainHandle.sendMessageDelayed(message, delayMillis)
     }
@@ -46,7 +46,7 @@ class MainHandle private constructor(looper: Looper) {
     /**
      * 解决回调内存泄露
      */
-    class SoftRunnable(runnable: Runnable) : Runnable {
+    class WeakRunnable(runnable: Runnable) : Runnable {
         var runnable: WeakReference<Runnable?>? = WeakReference(runnable)
         override fun run() {
             runnable?.get()?.run()
@@ -66,7 +66,7 @@ class MainHandle private constructor(looper: Looper) {
         }
 
         fun postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
-            val message = Message.obtain(get().mainHandle, SoftRunnable(runnable))
+            val message = Message.obtain(get().mainHandle, WeakRunnable(runnable))
             message.obj = token
             get().sendMessageDelayed(message, delayMillis)
         }
