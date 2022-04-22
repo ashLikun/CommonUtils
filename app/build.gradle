@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.tencent:mmkv:1.2.11'
     //kotlin 协程
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation "com.github.ashLikun:LiveDataVBus:2.1.4"
 }
 repositories {
     mavenCentral()

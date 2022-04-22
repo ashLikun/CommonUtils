@@ -21,6 +21,7 @@ class MainHandle private constructor(looper: Looper) {
         if (isMain) {
             runnable.run()
         } else {
+            LogUtils.e("aaaa ${runnable::class.java.isAnonymousClass}")
             mainHandle.post(WeakRunnable(runnable))
         }
     }
@@ -46,10 +47,11 @@ class MainHandle private constructor(looper: Looper) {
     /**
      * 解决回调内存泄露
      */
-    class WeakRunnable(runnable: Runnable) : Runnable {
-        var runnable: WeakReference<Runnable?>? = WeakReference(runnable)
+    class WeakRunnable(var runnable: Runnable) : Runnable {
+        //Kotlin 的回调会有莫名其妙问题
+//        var runnable: WeakReference<Runnable?>? = WeakReference(runnable)
         override fun run() {
-            runnable?.get()?.run()
+            runnable.run()
         }
     }
 

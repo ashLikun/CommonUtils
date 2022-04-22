@@ -14,11 +14,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.ashlikun.livedatabus.busForever
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.taskAsync
+import com.ashlikun.utils.other.coroutines.taskLaunch
 import com.ashlikun.utils.other.coroutines.taskLaunchMain
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
@@ -152,6 +154,17 @@ class MainActivity : AppCompatActivity() {
         val aa: TestParcelable? = StoreUtils.getParcelable("testParcelable")
         aa?.logge()
         Md5Utils.getMD5("147777").logge()
+        taskLaunch {
+            MainHandle.post {
+                LogUtils.e("wwwwwwwwwwwwwwwwwww")
+                stop()
+            }
+        }
+    }
+
+    @Synchronized
+    private fun stop() {
+        LogUtils.e("stopstopstopstop")
     }
 
     fun onView1Click(view: View) {
