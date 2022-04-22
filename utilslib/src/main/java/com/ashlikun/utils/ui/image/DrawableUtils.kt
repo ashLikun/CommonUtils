@@ -28,11 +28,13 @@ inline fun TextView.setColorStateList(
     @ColorRes pressedId: Int? = null,
     @ColorRes enableId: Int? = null,
     @ColorRes focusedId: Int? = null,
+    @ColorRes checkedId: Int? = null,
     @ColorInt normal: Int? = null,
     @ColorInt select: Int? = null,
     @ColorInt pressed: Int? = null,
     @ColorInt enable: Int? = null,
-    @ColorInt focused: Int? = null
+    @ColorInt focused: Int? = null,
+    @ColorInt checked: Int? = null
 ) {
     setTextColor(
         DrawableUtils.createColorStateList(
@@ -41,11 +43,13 @@ inline fun TextView.setColorStateList(
             pressed = pressed,
             enable = enable,
             focused = focused,
+            checked = checked,
             normalId = normalId,
             selectId = selectId,
             pressedId = pressedId,
             enableId = enableId,
-            focusedId = focusedId
+            focusedId = focusedId,
+            checkedId = checkedId
         )
     )
 }
@@ -85,10 +89,11 @@ inline fun View.setStateListDrawable(
     pressed: Drawable? = null,
     enabled: Drawable? = null,
     focused: Drawable? = null,
+    checked: Drawable? = null,
 ) {
     val bg = DrawableUtils.getStateListDrawable(
         normal = normal, select = select,
-        pressed = pressed, enabled = enabled, focused = focused
+        pressed = pressed, enabled = enabled, focused = focused, checked = checked
     )
     if (this is ImageView) setImageDrawable(bg)
     else background = bg
@@ -100,12 +105,13 @@ inline fun View.setStateListDrawable(
     @DrawableRes selectId: Int? = null,
     @DrawableRes pressedId: Int? = null,
     @DrawableRes enabledId: Int? = null,
-    @DrawableRes focusedId: Int? = null
+    @DrawableRes focusedId: Int? = null,
+    @DrawableRes checkedId: Int? = null
 ) {
     val bg = DrawableUtils.getStateListDrawable(
         normalId = normalId, selectId = selectId,
         pressedId = pressedId, enabledId = enabledId,
-        focusedId = focusedId,
+        focusedId = focusedId, checkedId = checkedId,
     )
     if (this is ImageView) setImageDrawable(bg)
     else background = bg
@@ -121,11 +127,13 @@ object DrawableUtils {
         @ColorRes pressedId: Int? = null,
         @ColorRes enableId: Int? = null,
         @ColorRes focusedId: Int? = null,
+        @ColorRes checkedId: Int? = null,
         @ColorInt normal: Int? = null,
         @ColorInt select: Int? = null,
         @ColorInt pressed: Int? = null,
         @ColorInt enable: Int? = null,
-        @ColorInt focused: Int? = null
+        @ColorInt focused: Int? = null,
+        @ColorInt checked: Int? = null
     ): ColorStateList {
         val colors = mutableListOf<Int>()
         val states = arrayListOf<IntArray>()
@@ -144,6 +152,10 @@ object DrawableUtils {
         if (focused != null || focusedId != null) {
             states.add(intArrayOf(R.attr.state_focused))
             colors.add(focused ?: focusedId?.resColor!!)
+        }
+        if (checked != null || checkedId != null) {
+            states.add(intArrayOf(R.attr.state_checked))
+            colors.add(checked ?: checkedId?.resColor!!)
         }
         //默认的
         states.add(intArrayOf())
@@ -212,17 +224,20 @@ object DrawableUtils {
      * @param pressed 按下的资源
      * @param enabled 不可用的资源
      */
+
     fun getStateListDrawable(
         normal: Drawable,
         select: Drawable? = null,
         pressed: Drawable? = null,
         enabled: Drawable? = null,
-        focused: Drawable? = null
+        focused: Drawable? = null,
+        checked: Drawable? = null
     ) = StateListDrawable().apply {
         addState(intArrayOf(R.attr.state_pressed, R.attr.state_enabled), pressed)
         addState(intArrayOf(R.attr.state_selected), select)
         addState(intArrayOf(-R.attr.state_enabled), enabled)
         addState(intArrayOf(R.attr.state_focused), focused)
+        addState(intArrayOf(R.attr.state_checked), checked)
         addState(intArrayOf(), normal)
     }
 
@@ -239,13 +254,15 @@ object DrawableUtils {
         @DrawableRes selectId: Int? = null,
         @DrawableRes pressedId: Int? = null,
         @DrawableRes enabledId: Int? = null,
-        @DrawableRes focusedId: Int? = null
+        @DrawableRes focusedId: Int? = null,
+        @DrawableRes checkedId: Int? = null
     ) = getStateListDrawable(
         normal = normalId.resDrawable,
         select = selectId?.resDrawable,
         pressed = pressedId?.resDrawable,
         enabled = enabledId?.resDrawable,
-        focused = focusedId?.resDrawable
+        focused = focusedId?.resDrawable,
+        checked = checkedId?.resDrawable
     )
 
     /**
@@ -265,6 +282,8 @@ object DrawableUtils {
         @ColorRes select: Int? = null,
         @ColorRes pressed: Int? = null,
         @ColorRes enabled: Int? = null,
+        @ColorRes focusedId: Int? = null,
+        @ColorRes checkedId: Int? = null,
         @ColorRes strokeColorId: Int,
         radiusPx: Int = 0,
         strokeSizePx: Int = 0,
@@ -304,11 +323,29 @@ object DrawableUtils {
             radius = radius,
             strokeSize = strokeSize
         )
+        val focused = if (focusedId == null) null else getGradientDrawable(
+            normalId = focusedId,
+            strokeColorId = strokeColorId,
+            radiusPx = radiusPx,
+            strokeSizePx = strokeSizePx,
+            radius = radius,
+            strokeSize = strokeSize
+        )
+        val checked = if (checkedId == null) null else getGradientDrawable(
+            normalId = checkedId,
+            strokeColorId = strokeColorId,
+            radiusPx = radiusPx,
+            strokeSizePx = strokeSizePx,
+            radius = radius,
+            strokeSize = strokeSize
+        )
         return getStateListDrawable(
             normal = normal,
             select = select,
             pressed = pressed,
-            enabled = enabled
+            enabled = enabled,
+            focused = focused,
+            checked = checked
         )
     }
 
