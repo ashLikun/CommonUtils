@@ -1,13 +1,9 @@
 package com.ashlikun.utils.ui.modal.toast.strategy
 
-import android.app.Activity
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.MainHandle
-import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.modal.toast.ToastImpl
-import com.ashlikun.utils.ui.modal.toast.ToastStrategy
 import com.ashlikun.utils.ui.modal.toast.config.OnCallback
-import java.lang.ref.WeakReference
 
 /**
  * @author　　: 李坤
