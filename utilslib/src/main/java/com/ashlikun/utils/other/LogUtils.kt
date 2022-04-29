@@ -2,6 +2,7 @@ package com.ashlikun.utils.other
 
 import android.util.Log
 import com.ashlikun.utils.AppUtils
+import kotlin.NullPointerException
 
 /**
  * @author　　: 李坤
@@ -10,21 +11,26 @@ import com.ashlikun.utils.AppUtils
  *
  * 功能介绍：项目的Log工具
  */
-inline fun log(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
-inline fun loge(content: Any, tr: Throwable? = null) = LogUtils.e(content, tr)
-inline fun logw(content: Any, tr: Throwable? = null) = LogUtils.w(content, tr)
-inline fun logi(content: Any, tr: Throwable? = null) = LogUtils.i(content, tr)
-inline fun logd(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
-inline fun logv(content: Any, tr: Throwable? = null) = LogUtils.v(content, tr)
-inline fun logwtf(content: Any, tr: Throwable? = null) = LogUtils.wtf(content, tr)
+/**
+ * inline 方法打印的行数会有问题
+ */
+fun log(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
+fun loge(content: Any, tr: Throwable? = null) = LogUtils.e(content, tr)
+fun logw(content: Any, tr: Throwable? = null) = LogUtils.w(content, tr)
+fun logi(content: Any, tr: Throwable? = null) = LogUtils.i(content, tr)
+fun logd(content: Any, tr: Throwable? = null) = LogUtils.d(content, tr)
+fun logv(content: Any, tr: Throwable? = null) = LogUtils.v(content, tr)
+fun logwtf(content: Any, tr: Throwable? = null) = LogUtils.wtf(content, tr)
 
-inline fun Any.logg(tr: Throwable? = null) = LogUtils.d(this, tr)
-inline fun Any.logge(tr: Throwable? = null) = LogUtils.e(this, tr)
-inline fun Any.loggw(tr: Throwable? = null) = LogUtils.w(this, tr)
-inline fun Any.loggi(tr: Throwable? = null) = LogUtils.i(this, tr)
-inline fun Any.loggd(tr: Throwable? = null) = LogUtils.d(this, tr)
-inline fun Any.loggv(tr: Throwable? = null) = LogUtils.v(this, tr)
-inline fun Any.loggwtf(tr: Throwable? = null) = LogUtils.wtf(this, tr)
+fun Any.logg(tr: Throwable? = null) = LogUtils.d(this, tr)
+
+fun Any.logge(tr: Throwable? = null) = LogUtils.e(this, tr)
+
+fun Any.loggw(tr: Throwable? = null) = LogUtils.w(this, tr)
+fun Any.loggi(tr: Throwable? = null) = LogUtils.i(this, tr)
+fun Any.loggd(tr: Throwable? = null) = LogUtils.d(this, tr)
+fun Any.loggv(tr: Throwable? = null) = LogUtils.v(this, tr)
+fun Any.loggwtf(tr: Throwable? = null) = LogUtils.wtf(this, tr)
 
 object LogUtils {
     val I = "I"
@@ -53,11 +59,17 @@ object LogUtils {
      * 得到标签,log标签+类名+方法名+第几行
      */
     private fun generateTag(): String {
-        val caller = Throwable().stackTrace[2]
+        val callers = Throwable().stackTrace
         var tag = "%s.%s(L:%d)"
-        var callerClazzName = caller.className
-        callerClazzName = callerClazzName.substring(callerClazzName.lastIndexOf(".") + 1)
-        tag = String.format(tag, callerClazzName, caller.methodName, caller.lineNumber)
+        //去除应用包名
+        val caller = callers.find { !it.className.contains(LogUtils::class.java.simpleName) }
+        var callerClazzName = caller?.className?.replace(AppUtils.packageName + ".", "") ?: "LogUtils"
+        if (callerClazzName.contains(LogUtils::class.java.simpleName)) {
+            //这种情况说明代码是异步执行，找不到调用的地方
+            tag = "LogUtils"
+        } else {
+            tag = String.format(tag, callerClazzName, caller?.methodName.orEmpty(), caller?.lineNumber ?: 0)
+        }
         return tag
     }
 

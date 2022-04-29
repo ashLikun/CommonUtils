@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.ashlikun.livedatabus.busForever
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
@@ -91,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             .append("点击事件").setForegroundColorRes(R.color.black)
             .setClickSpan(object : XClickableSpan(ResUtils.getColor(R.color.colorPrimary)) {
                 override fun onClick(widget: View) {
-                    LogUtils.e("11111111111点击事件11")
+                    "11111111111点击事件11".logge()
                 }
 
             })
@@ -114,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                     override fun run() {
                         super.run()
                         Thread.sleep(2000)
-                        Log.e("aaaa", "第一个执行完")
+                        LogUtils.e("第一个执行完")
                         it.onOk()
                     }
                 }.start()
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     override fun run() {
                         super.run()
                         Thread.sleep(3000)
-                        Log.e("aaaa", "第二个执行完")
+                        LogUtils.e("第二个执行完")
                         it.onOk()
                     }
                 }.start()
