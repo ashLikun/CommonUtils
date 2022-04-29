@@ -27,12 +27,21 @@ inline fun Any.loggv(tr: Throwable? = null) = LogUtils.v(this, tr)
 inline fun Any.loggwtf(tr: Throwable? = null) = LogUtils.wtf(this, tr)
 
 object LogUtils {
+    val I = "I"
+    val E = "E"
+    val W = "W"
+    val D = "D"
+    val V = "V"
 
+    /**
+     * 调用日志的回调
+     * @param type 日志类型
+     * @param content 日志内容
+     */
+    var call: ((type: String, tag: String, content: String) -> Unit)? = null
 
     /**
      * 设置log日志的前缀
-     *
-     * @param customTagPrefix
      */
     fun setCustomTagPrefix(customTagPrefix: String?) {
         var customTagPrefix = customTagPrefix
@@ -41,8 +50,6 @@ object LogUtils {
 
     /**
      * 得到标签,log标签+类名+方法名+第几行
-     *
-     * @return
      */
     private fun generateTag(): String {
         val caller = Throwable().stackTrace[2]
@@ -55,25 +62,24 @@ object LogUtils {
 
     /**
      * Log.d的输出颜色是蓝色的，仅输出debug调试的意思，但他会输出上层的信息，过滤起来可以通过DDMS的Logcat标签来选择.
-     *
-     * @param content
      */
     fun d(content: Any?, tr: Throwable? = null) {
-        if (!AppUtils.isDebug) return
         if (content == null) return
+        if (call != null)
+            call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.d(tag, content.toString()) else Log.d(tag, content.toString(), tr)
     }
 
     /**
      * Log.e为红色，可以想到error错误，这里仅显示红色的错误信息，这些错误就需要我们认真的分析，查看栈的信息了。
-     *
-     * @param content
      */
-
     fun e(content: Any?, tr: Throwable? = null) {
-        if (!AppUtils.isDebug) return
         if (content == null) return
+        if (call != null)
+            call?.invoke(E, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.e(tag, content.toString()) else Log.e(tag, content.toString(), tr)
     }
@@ -81,50 +87,49 @@ object LogUtils {
 
     /**
      * Log.i的输出为绿色，一般提示性的消息information，它不会输出Log.v和Log.d的信息，但会显示i、w和e的信息
-     *
-     * @param content
      */
-
     fun i(content: Any?, tr: Throwable? = null) {
-        if (!AppUtils.isDebug) return
         if (content == null) return
+        if (call != null)
+            call?.invoke(I, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.i(tag, content.toString()) else Log.i(tag, content.toString(), tr)
     }
 
     /**
      * Log.v 的调试颜色为黑色的，任何消息都会输出，这里的v代表verbose啰嗦的意思，平时使用就是Log.v("","");
-     *
-     * @param content
      */
     fun v(content: Any?, tr: Throwable? = null) {
-        if (!AppUtils.isDebug) return
         if (content == null) return
+        if (call != null)
+            call?.invoke(V, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.v(tag, content.toString()) else Log.v(tag, content.toString(), tr)
     }
 
     /**
      * Log.w的意思为橙色，可以看作为warning警告，一般需要我们注意优化Android代码，同时选择它后还会输出Log.e的信息。
-     *
-     * @param content
      */
-
     fun w(content: Any?, tr: Throwable? = null) {
-        if (!AppUtils.isDebug) return
         if (content == null) return
+        if (call != null)
+            call?.invoke(W, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.w(tag, content.toString()) else Log.w(tag, content.toString(), tr)
     }
 
     fun w(tr: Throwable) = w("", tr)
-
     fun wtf(content: Any?, tr: Throwable? = null) {
-        if (!AppUtils.isDebug) return
         if (content == null) return
+        if (call != null)
+            call?.invoke(W, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.wtf(tag, content.toString()) else Log.wtf(tag, content.toString(), tr)
     }
 
-    fun wtf(tr: Throwable) = LogUtils.wtf("", tr)
+    fun wtf(tr: Throwable) = wtf("", tr)
 }
