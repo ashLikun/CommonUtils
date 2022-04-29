@@ -37,8 +37,9 @@ object LogUtils {
      * 调用日志的回调
      * @param type 日志类型
      * @param content 日志内容
+     * @param 是否允许打印日志，true：打印，false：不打印
      */
-    var call: ((type: String, tag: String, content: String) -> Unit)? = null
+    var call: ((type: String, tag: String, content: String) -> Boolean)? = null
 
     /**
      * 设置log日志的前缀
@@ -65,8 +66,8 @@ object LogUtils {
      */
     fun d(content: Any?, tr: Throwable? = null) {
         if (content == null) return
-        if (call != null)
-            call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}") == false) return
+
         if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.d(tag, content.toString()) else Log.d(tag, content.toString(), tr)
@@ -77,8 +78,7 @@ object LogUtils {
      */
     fun e(content: Any?, tr: Throwable? = null) {
         if (content == null) return
-        if (call != null)
-            call?.invoke(E, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.e(tag, content.toString()) else Log.e(tag, content.toString(), tr)
@@ -90,8 +90,7 @@ object LogUtils {
      */
     fun i(content: Any?, tr: Throwable? = null) {
         if (content == null) return
-        if (call != null)
-            call?.invoke(I, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.i(tag, content.toString()) else Log.i(tag, content.toString(), tr)
@@ -102,8 +101,7 @@ object LogUtils {
      */
     fun v(content: Any?, tr: Throwable? = null) {
         if (content == null) return
-        if (call != null)
-            call?.invoke(V, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.v(tag, content.toString()) else Log.v(tag, content.toString(), tr)
@@ -114,8 +112,7 @@ object LogUtils {
      */
     fun w(content: Any?, tr: Throwable? = null) {
         if (content == null) return
-        if (call != null)
-            call?.invoke(W, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.w(tag, content.toString()) else Log.w(tag, content.toString(), tr)
@@ -124,8 +121,7 @@ object LogUtils {
     fun w(tr: Throwable) = w("", tr)
     fun wtf(content: Any?, tr: Throwable? = null) {
         if (content == null) return
-        if (call != null)
-            call?.invoke(W, generateTag(), "$content,${tr?.message.orEmpty()}")
+        if (call?.invoke(D, generateTag(), "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
         val tag = generateTag()
         if (tr == null) Log.wtf(tag, content.toString()) else Log.wtf(tag, content.toString(), tr)
