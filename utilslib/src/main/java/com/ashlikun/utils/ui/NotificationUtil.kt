@@ -156,8 +156,8 @@ object NotificationUtil {
             .setSmallIcon(icon)
             //大图标
             .setLargeIcon(largeIcon)
-            //设置通知的优先级：最大
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            //设置通知的优先级
+            .setPriority(importance - 3)
             //上部标题
             .setContentTitle(title)
             //中部通知内容
