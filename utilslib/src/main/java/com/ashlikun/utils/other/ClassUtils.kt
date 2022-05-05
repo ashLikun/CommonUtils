@@ -85,6 +85,7 @@ object ClassUtils {
         if (fieldName.isEmpty()) {
             return null
         }
+        var ee: Exception? = null
         while (claxx != null && claxx != Any::class.java) {
             try {
                 val f = claxx.getDeclaredField(fieldName)
@@ -92,10 +93,11 @@ object ClassUtils {
                     return f
                 }
             } catch (e: NoSuchFieldException) {
-                e.printStackTrace()
+                ee = e
             }
             claxx = claxx.superclass
         }
+        ee?.printStackTrace()
         return null
     }
 
@@ -110,7 +112,7 @@ object ClassUtils {
         if (fieldName.isEmpty()) {
             return null
         }
-        var ee: IllegalAccessException? = null
+        var ee: Exception? = null
         try {
             val field = getField(obj.javaClass, fieldName)
             if (field != null) {
@@ -135,7 +137,7 @@ object ClassUtils {
         if (fieldName.isEmpty()) {
             return null
         }
-        var ee: IllegalAccessException? = null
+        var ee: Exception? = null
         try {
             val field = getField(obj.javaClass, fieldName)
             if (field != null) {
@@ -177,7 +179,7 @@ object ClassUtils {
         if (methodName.isEmpty()) {
             return null
         }
-        var ee: IllegalAccessException? = null
+        var ee: Exception? = null
         while (claxx != null && claxx != Any::class.java) {
             try {
                 val f = claxx.getDeclaredMethod(methodName, *parameterTypes)
