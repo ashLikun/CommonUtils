@@ -1,5 +1,6 @@
 package com.ashlikun.utils.ui.image
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
@@ -8,15 +9,20 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.provider.MediaStore
 import android.view.View
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.encryption.Base64Utils.decode
 import com.ashlikun.utils.encryption.Base64Utils.encodeToStr
+import com.ashlikun.utils.other.MediaFile
 import com.ashlikun.utils.other.file.FileIOUtils
 import com.ashlikun.utils.ui.ScreenUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 /**
  * @author　　: 李坤
@@ -25,6 +31,16 @@ import java.io.File
  *
  * 功能介绍：Bitmap操作的一些工具
  */
+inline fun Bitmap?.recycle() = BitmapUtil.recycle(this)
+inline fun String.base64Bitmap() = BitmapUtil.base64Bitmap(this)
+inline fun Bitmap?.bitmap2Base64() = BitmapUtil.bitmap2Base64(this)
+inline fun Bitmap?.scaleImageTo(newWidth: Int, newHeight: Int) = BitmapUtil.scaleImageTo(this, newWidth, newHeight)
+inline fun Bitmap?.scaleImage(scaleWidth: Float, scaleHeight: Float) = BitmapUtil.scaleImage(this, scaleWidth, scaleHeight)
+inline fun Bitmap?.toCircle() = BitmapUtil.toCircle(this)
+inline fun Bitmap?.saveBitmap(file: File, quality: Int = 100) = BitmapUtil.saveBitmap(this, file, quality)
+inline fun File.updatePhotoMedia() = BitmapUtil.updatePhotoMedia(this)
+inline fun Bitmap.saveImageToGallery(file: File, value: ContentValues = BitmapUtil.getImageContentValues(file), quality: Int = 100) =
+    BitmapUtil.saveImageToGallery(this, file, value, quality)
 
 object BitmapUtil {
     /**
@@ -54,13 +70,7 @@ object BitmapUtil {
     /**
      * 裁剪图片
      */
-    fun cropBitmap(
-        bitmap: Bitmap?,
-        width: Int = ScreenUtils.width(),
-        height: Int = ScreenUtils.height(),
-        x: Int = 0,
-        y: Int = 0
-    ): Bitmap? {
+    fun cropBitmap(bitmap: Bitmap?, width: Int = ScreenUtils.width(), height: Int = ScreenUtils.height(), x: Int = 0, y: Int = 0): Bitmap? {
         if (bitmap == null) return null
         // 得到图片的宽，高
         val w = bitmap.width
@@ -103,17 +113,13 @@ object BitmapUtil {
      */
     fun scaleImage(org: Bitmap?, scaleWidth: Float, scaleHeight: Float): Bitmap? {
         if (org == null) return null
-        return Bitmap.createBitmap(
-            org, 0, 0, org.width, org.height,
-            Matrix().apply { postScale(scaleWidth, scaleHeight) },
-            true
-        )
+        return Bitmap.createBitmap(org, 0, 0, org.width, org.height, Matrix().apply { postScale(scaleWidth, scaleHeight) }, true)
     }
 
     /**
      * 获取圆形图片
      */
-    fun toRoundCorner(bitmap: Bitmap?): Bitmap? {
+    fun toCircle(bitmap: Bitmap?): Bitmap? {
         if (bitmap == null) return null
         val height = bitmap.height
         val width = bitmap.height
@@ -124,12 +130,7 @@ object BitmapUtil {
         paint.isAntiAlias = true
         canvas.drawARGB(0, 0, 0, 0)
         paint.color = Color.TRANSPARENT
-        canvas.drawCircle(
-            (width / 2).toFloat(),
-            (height / 2).toFloat(),
-            (width / 2).toFloat(),
-            paint
-        )
+        canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), (width / 2).toFloat(), paint)
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, rect, rect, paint)
         return output
@@ -152,12 +153,8 @@ object BitmapUtil {
         if (bm == null) return null
         if (degree % 360 == 0) return bm
         // 根据旋转角度，生成旋转矩阵
-
         // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
-        val new = Bitmap.createBitmap(
-            bm, 0, 0, bm.width,
-            bm.height, Matrix().apply { setRotate(degree.toFloat()) }, true
-        )
+        val new = Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, Matrix().apply { setRotate(degree.toFloat()) }, true)
         recycle(bm)
         return new
     }
@@ -170,19 +167,11 @@ object BitmapUtil {
         return if (drawable is BitmapDrawable) drawable.bitmap
         else {
             //获得drawable的基本信息
-            val bitmap = Bitmap
-                .createBitmap(
-                    drawable.intrinsicWidth,
-                    drawable.intrinsicHeight,
-                    Bitmap.Config.ARGB_8888
-                )
+            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
             //建立对应的画布
             val canvas = Canvas(bitmap)
             //设置大小
-            drawable.setBounds(
-                0, 0, drawable.intrinsicWidth,
-                drawable.intrinsicHeight
-            )
+            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
             //把drawable内容画到画布中
             drawable.draw(canvas)
             bitmap
@@ -195,10 +184,7 @@ object BitmapUtil {
      * @param width  希望的宽度
      * @param height 希望的高度
      */
-    fun decodeResource(
-        resourseId: Int,
-        width: Int, height: Int
-    ): Bitmap? {
+    fun decodeResource(resourseId: Int, width: Int, height: Int): Bitmap? {
         // 获取资源图片
         var opts: Options? = null
         if (width > 0 && height > 0) {
@@ -233,10 +219,7 @@ object BitmapUtil {
                 opts = Options()
                 opts.inJustDecodeBounds = true
                 BitmapFactory.decodeFile(dst.path, opts)
-                opts.inSampleSize = computeSampleSize(
-                    opts,
-                    width, height
-                )
+                opts.inSampleSize = computeSampleSize(opts, width, height)
                 opts.inJustDecodeBounds = false
                 opts.inInputShareable = true
                 opts.inPurgeable = true
@@ -264,10 +247,7 @@ object BitmapUtil {
                 opts.inJustDecodeBounds = true
                 BitmapFactory.decodeByteArray(dst, 0, dst.size, opts)
                 // 计算图片缩放比例
-                opts.inSampleSize = computeSampleSize(
-                    opts,
-                    width, height
-                )
+                opts.inSampleSize = computeSampleSize(opts, width, height)
                 opts.inJustDecodeBounds = false
                 opts.inInputShareable = true
                 opts.inPurgeable = true
@@ -287,23 +267,15 @@ object BitmapUtil {
      * @param reqWidth 希望的宽度
      * @param reqWidth 希望的高度
      */
-    fun computeSampleSize(
-        options: Options,
-        reqWidth: Int, reqHeight: Int
-    ): Int {
-        val initialSize = computeInitialSampleSize(
-            options, reqWidth,
-            reqHeight
-        )
+    fun computeSampleSize(options: Options, reqWidth: Int, reqHeight: Int): Int {
+        val initialSize = computeInitialSampleSize(options, reqWidth, reqHeight)
         var roundedSize: Int
         if (initialSize <= 8) {
             roundedSize = 1
             while (roundedSize < initialSize) {
                 roundedSize = roundedSize shl 1
             }
-        } else {
-            roundedSize = (initialSize + 7) / 8 * 8
-        }
+        } else roundedSize = (initialSize + 7) / 8 * 8
         return roundedSize
     }
 
@@ -315,31 +287,15 @@ object BitmapUtil {
      * @param reqHeight
      * @return
      */
-    private fun computeInitialSampleSize(
-        options: Options,
-        reqWidth: Int, reqHeight: Int
-    ): Int {
+    private fun computeInitialSampleSize(options: Options, reqWidth: Int, reqHeight: Int): Int {
         val w = options.outWidth.toDouble()
         val h = options.outHeight.toDouble()
         val maxNumOfPixels = reqWidth * reqHeight
         val minLength = Math.min(reqWidth, reqHeight)
-        val lowerBound = if (maxNumOfPixels == -1) 1 else Math.ceil(
-            Math
-                .sqrt(w * h / maxNumOfPixels)
-        ).toInt()
-        val upperBound = if (minLength == -1) 128 else Math.min(
-            Math.floor(w / minLength), Math.floor(h / minLength)
-        ).toInt()
-        if (upperBound < lowerBound) {
-            return lowerBound
-        }
-        return if (maxNumOfPixels == -1 && minLength == -1) {
-            1
-        } else if (minLength == -1) {
-            lowerBound
-        } else {
-            upperBound
-        }
+        val lowerBound = if (maxNumOfPixels == -1) 1 else ceil(sqrt(w * h / maxNumOfPixels)).toInt()
+        val upperBound = if (minLength == -1) 128 else floor(w / minLength).coerceAtMost(floor(h / minLength)).toInt()
+        if (upperBound < lowerBound) return lowerBound
+        return if (maxNumOfPixels == -1 && minLength == -1) 1 else if (minLength == -1) lowerBound else upperBound
     }
 
     /**
@@ -379,25 +335,14 @@ object BitmapUtil {
      */
     fun getViewBitmap(view: View, scale: Float = 1f): Bitmap {
         if (view.measuredWidth == 0 || view.measuredHeight == 0) {
-            view.measure(
-                View.MeasureSpec.makeMeasureSpec(
-                    ScreenUtils.width,
-                    View.MeasureSpec.AT_MOST
-                ),
-                View.MeasureSpec.makeMeasureSpec(
-                    ScreenUtils.width * 10,
-                    View.MeasureSpec.AT_MOST
-                )
-            )
+            view.measure(View.MeasureSpec.makeMeasureSpec(ScreenUtils.width, View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(ScreenUtils.height * 100, View.MeasureSpec.AT_MOST))
         }
         if (view.width == 0 || view.height == 0) {
             view.layout(0, 0, view.measuredWidth, view.measuredHeight)
         }
         // 创建相应大小的bitmap
-        val bitmap = createBitmapSafely(
-            (view.width * scale).toInt(),
-            (view.height * scale).toInt(), Bitmap.Config.ARGB_8888, 1
-        )
+        val bitmap = createBitmapSafely((view.width * scale).toInt(), (view.height * scale).toInt(), Bitmap.Config.ARGB_8888, 1)
         val canvas = Canvas(bitmap!!)
         canvas.save()
         canvas.scale(scale, scale)
@@ -413,28 +358,61 @@ object BitmapUtil {
      *
      * @return true 成功，false:失败
      */
-    fun saveImageToGallery(context: Context, bmp: Bitmap?, file: File): Boolean {
-        return if (saveBitmap(bmp, file)) updatePhotoMedia(context, file) else false
+    fun saveImageToGallery(bmp: Bitmap?, file: File, value: ContentValues = getImageContentValues(file), quality: Int = 100): Boolean {
+        return if (saveBitmap(bmp, file, quality)) updatePhotoMedia(file, value) else false
     }
 
     /**
      * 刷新相册
-     *  建议使用MediaStore ，这里自动刷新
+     * 建议使用MediaStore ，这里自动刷新
      * @return true 成功，false:失败
      */
-    fun updatePhotoMedia(context: Context, file: File): Boolean {
+    fun updatePhotoMediaOld(file: File): Boolean {
         //保存图片后发送广播通知更新数据库
         if (file.exists()) {
-            try {
-                context.sendBroadcast(
-                    Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file))
-                )
+            runCatching {
+                app.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
                 return true
-            } catch (e: Exception) {
             }
         }
         return false
     }
+
+    /**
+     * 刷新相册 MediaStore
+     * @return true 成功，false:失败
+     */
+    fun updatePhotoMedia(file: File, value: ContentValues = getImageContentValues(file)): Boolean {
+        //保存图片后发送广播通知更新数据库
+        if (file.exists()) {
+            runCatching {
+                app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * 获取 图片 ContentValue
+     */
+    fun getImageContentValues(file: File,
+        mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
+        desc: String = "App Save Image",
+        currentTime: Long = System.currentTimeMillis()) =
+        ContentValues().apply {
+            put(MediaStore.Images.Media.TITLE, file.name)
+            put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
+            put(MediaStore.Images.Media.DATE_ADDED, currentTime)
+            put(MediaStore.Images.Media.DATE_MODIFIED, currentTime)
+            put(MediaStore.Images.Media.DATE_TAKEN, currentTime)
+            put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+            put(MediaStore.Images.Media.DESCRIPTION, desc)
+            put(MediaStore.Images.Media.ORIENTATION, 0)
+            put(MediaStore.Images.Media.DATA, file.absolutePath)
+            put(MediaStore.Images.Media.SIZE, file.length())
+        }
+
 
     /**
      * 添加水印

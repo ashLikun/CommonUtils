@@ -22,6 +22,7 @@ import kotlin.math.max
  *
  * 功能介绍：Drawable 常用的工具
  */
+inline fun Drawable.toBitmap() = BitmapUtil.drawableToBitmap(this)
 inline fun TextView.setColorStateList(
     @ColorRes normalId: Int? = null,
     @ColorRes selectId: Int? = null,
@@ -36,22 +37,20 @@ inline fun TextView.setColorStateList(
     @ColorInt focused: Int? = null,
     @ColorInt checked: Int? = null
 ) {
-    setTextColor(
-        DrawableUtils.createColorStateList(
-            normal = normal,
-            select = select,
-            pressed = pressed,
-            enable = enable,
-            focused = focused,
-            checked = checked,
-            normalId = normalId,
-            selectId = selectId,
-            pressedId = pressedId,
-            enableId = enableId,
-            focusedId = focusedId,
-            checkedId = checkedId
-        )
-    )
+    setTextColor(DrawableUtils.createColorStateList(
+        normal = normal,
+        select = select,
+        pressed = pressed,
+        enable = enable,
+        focused = focused,
+        checked = checked,
+        normalId = normalId,
+        selectId = selectId,
+        pressedId = pressedId,
+        enableId = enableId,
+        focusedId = focusedId,
+        checkedId = checkedId
+    ))
 }
 
 
