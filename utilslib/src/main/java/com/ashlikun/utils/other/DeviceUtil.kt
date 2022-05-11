@@ -292,7 +292,7 @@ class DeviceUtil private constructor() {
          */
         val deviceId: String
             get() = Secure
-                .getString(app.contentResolver, Secure.ANDROID_ID) ?: ""
+                .getString(app.contentResolver, Secure.ANDROID_ID).orEmpty()
 
         /**
          * 根据内容调用手机通讯录
@@ -344,7 +344,7 @@ class DeviceUtil private constructor() {
          * @return 返回当前系统语言。例如：当前设置的是“中文-中国”，则返回“zh-CN”
          */
         val systemLanguage: String
-            get() = Locale.getDefault().language
+            get() = Locale.getDefault().language.orEmpty()
 
         /**
          * 获取当前系统上的语言列表(Locale列表)
@@ -360,7 +360,7 @@ class DeviceUtil private constructor() {
          * @return 系统版本号
          */
         val systemVersion: String
-            get() = Build.VERSION.RELEASE
+            get() = Build.VERSION.RELEASE.orEmpty()
 
         /**
          * 获取手机型号
@@ -368,7 +368,7 @@ class DeviceUtil private constructor() {
          * @return 手机型号
          */
         val systemModel: String
-            get() = Build.MODEL
+            get() = Build.MODEL.orEmpty()
 
         /**
          * 生产/硬件的制造商。
@@ -377,7 +377,7 @@ class DeviceUtil private constructor() {
          */
         @JvmStatic
         val manufacturer: String
-            get() = Build.MANUFACTURER
+            get() = Build.MANUFACTURER.orEmpty()
 
         /**
          * 获取手机厂商
@@ -386,7 +386,7 @@ class DeviceUtil private constructor() {
          */
         @JvmStatic
         val deviceBrand: String
-            get() = Build.BRAND
+            get() = Build.BRAND.orEmpty()
     }
 
 

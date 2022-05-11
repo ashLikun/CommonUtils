@@ -19,7 +19,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.RomUtils.isEssentialPhone
-import com.ashlikun.utils.other.RomUtils.isFlyme
+import com.ashlikun.utils.other.RomUtils.isMeizu
 import com.ashlikun.utils.other.RomUtils.isHuawei
 import com.ashlikun.utils.other.RomUtils.isXiaomi
 import com.ashlikun.utils.other.RomUtils.isZTKC2016
@@ -87,7 +87,7 @@ class StatusBarCompat(
             miuiSetStatusBarLightMode(window, drak)
         }
         //魅族
-        if (isFlyme) {
+        if (isMeizu) {
             flymeSetStatusBarLightMode(window, drak)
         }
     }
@@ -402,7 +402,7 @@ class StatusBarCompat(
         val isSetStatusTextColor: Boolean
             // Essential Phone 在 Android 8 之前沉浸式做得不全，系统不从状态栏顶部开始布局却会下发 WindowInsets
             get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                    (isHuawei || isFlyme ||
+                    (isHuawei || isMeizu ||
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !(isZUKZ1 || isZTKC2016))
 
         /**

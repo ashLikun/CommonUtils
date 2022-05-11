@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import android.provider.Settings
 import androidx.fragment.app.Fragment
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
 import com.ashlikun.utils.ui.ActivityManager
+import com.ashlikun.utils.ui.fActivity
 import java.io.File
 import java.io.IOException
 
@@ -17,61 +20,61 @@ import java.io.IOException
  *
  * 功能介绍：系统一些意图的工具类
  */
+inline fun Intent.jump() = IntentUtils.jump(this)
+
 object IntentUtils {
-    fun jump(intent: Intent) {
-        val activity = ActivityManager.foregroundActivity
-        if (activity != null) {
-            activity.startActivity(intent)
+    fun jump(intent: Intent) = runCatching {
+        if (fActivity != null) {
+            fActivity?.startActivity(intent)
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             app.startActivity(intent)
         }
-    }
+    }.onFailure { it.printStackTrace() }.isSuccess
 
     /**
      * 根据手机号发送短信
      *
      * @param phone
      */
-    fun sendSmsByPhone(phone: String) {
+    fun sendSmsByPhone(phone: String): Boolean {
         if (phone.isEmpty()) {
-            return
+            return false
         }
         val uri = Uri.parse("smsto:$phone")
         val intent = Intent(Intent.ACTION_SENDTO, uri)
         // intent.putExtra("sms_body", "");
-        jump(intent)
+        return jump(intent)
     }
 
     /**
      * 调用系统分享
      */
-    fun shareToOtherApp(title: String, content: String, dialogTitle: String) {
+    fun shareToOtherApp(title: String, content: String, dialogTitle: String): Boolean {
         val intentItem = Intent(Intent.ACTION_SEND)
         intentItem.type = "text/plain"
         intentItem.putExtra(Intent.EXTRA_SUBJECT, title)
         intentItem.putExtra(Intent.EXTRA_TEXT, content)
-        jump(Intent.createChooser(intentItem, dialogTitle))
+        return jump(Intent.createChooser(intentItem, dialogTitle))
     }
 
     /**
      * 回到桌面
      */
-    fun startHomeActivity() {
+    fun startHomeActivity(): Boolean {
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)
-        jump(intent)
+        return jump(intent)
     }
 
     /**
      * 根据手机好拨打电话
      */
-    fun callPhone(phone: String) {
+    fun callPhone(phone: String): Boolean {
         if (phone.isEmpty()) {
-            return
+            return false
         }
-        val intent = Intent("android.intent.action.CALL", Uri.parse("tel:$phone"))
-        jump(intent)
+        return jump(Intent("android.intent.action.CALL", Uri.parse("tel:$phone")))
     }
 
     /**
@@ -128,4 +131,16 @@ object IntentUtils {
         intent.putExtra("return-data", true)
         context.startActivityForResult(intent, requestCode)
     }
+
+    /**
+     * 应用详细页
+     */
+    fun startMyAppSetting() = jump(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", AppUtils.packageName, null)
+    })
+
+    /**
+     * 系统设置界面
+     */
+    fun startSysSetting() = jump(Intent(Settings.ACTION_SETTINGS))
 }

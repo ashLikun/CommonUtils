@@ -1,6 +1,7 @@
 package com.ashlikun.utils.simple
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -223,6 +224,19 @@ class MainActivity : AppCompatActivity() {
         LogUtils.e("aaaaaaaa    " + aaaa)
 
         ToastUtils.show("1111111111")
+//        IntentUtils.startMyAppSetting()
+        "${PermisstionSettingPage.start()} ssss".logge()
+//        toPermisstionSetting()
+    }
+
+    //com.android.packageinstaller/.permission.ui.ManagePermissionsActivity
+    fun toPermisstionSetting() {
+        val intent = Intent()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.action = "android.intent.action.MANAGE_APP_PERMISSIONS"
+        val comp = ComponentName("com.android.packageinstaller", "com.android.packageinstaller.permission.ui.ManagePermissionsActivity")
+        intent.component = comp
+        startActivity(intent)
     }
 
     var builder: NotificationCompat.Builder? = null
