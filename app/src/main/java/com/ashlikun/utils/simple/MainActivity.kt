@@ -229,15 +229,6 @@ class MainActivity : AppCompatActivity() {
 //        toPermisstionSetting()
     }
 
-    //com.android.packageinstaller/.permission.ui.ManagePermissionsActivity
-    fun toPermisstionSetting() {
-        val intent = Intent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.action = "android.intent.action.MANAGE_APP_PERMISSIONS"
-        val comp = ComponentName("com.android.packageinstaller", "com.android.packageinstaller.permission.ui.ManagePermissionsActivity")
-        intent.component = comp
-        startActivity(intent)
-    }
 
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {
