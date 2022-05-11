@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
 import com.ashlikun.utils.main.ActivityUtils
 import com.ashlikun.utils.ui.status.StatusBarCompat
 
@@ -15,6 +16,8 @@ import com.ashlikun.utils.ui.status.StatusBarCompat
  * 功能介绍：Activity的一些扩展方法
  */
 fun Activity?.getRootView() = this?.findViewById<View>(android.R.id.content)
+fun Context.toLifecycle() = getActivity() as LifecycleOwner
+fun Context.toLifecycleOrNull() = getActivity() as? LifecycleOwner
 
 fun Activity?.getDecorView() = this?.window?.decorView
 

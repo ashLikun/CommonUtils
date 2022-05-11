@@ -25,6 +25,7 @@ import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
+import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.ScreenUtils
 import com.ashlikun.utils.ui.extend.dp
@@ -159,6 +160,7 @@ class MainActivity : AppCompatActivity() {
                 stop()
             }
         }
+        LogUtils.e("wddddddddddddddddddd${ActivityManager.fCActivity}")
     }
 
     @Synchronized

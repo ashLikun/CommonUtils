@@ -1,6 +1,7 @@
 package com.ashlikun.utils.ui
 
 import android.app.Activity
+import androidx.activity.ComponentActivity
 import com.ashlikun.utils.ui.extend.lastElementOrNull
 import com.ashlikun.utils.ui.extend.popOrNull
 import java.util.*
@@ -24,6 +25,18 @@ class ActivityManager private constructor() {
          */
         val foregroundActivity: Activity?
             get() = get().currentActivity()
+
+        /**
+         * 获取前台 Activity
+         */
+        val fActivity: Activity?
+            get() = get().currentActivity()
+
+        /**
+         * 获取前台 Activity
+         */
+        val fCActivity: ComponentActivity?
+            get() = get().getTagActivity(ComponentActivity::class.java)
     }
 
     /**
@@ -31,10 +44,10 @@ class ActivityManager private constructor() {
      */
     fun <T : Activity> getTagActivity(activity: Class<out Activity>?): T? {
         if (activity == null) return null
-        var returnAct = activityStack.findLast { it.javaClass == activity }
+        var returnAct = activityStack.findLast { activity.isAssignableFrom(it.javaClass) }
         if (returnAct != null && returnAct.isFinishing) {
             activityStack.remove(returnAct)
-            return getTagActivity<T>(activity)
+            return getTagActivity(activity)
         }
         return returnAct as T?
     }
@@ -61,7 +74,7 @@ class ActivityManager private constructor() {
     fun exitActivity(activity: Activity?) {
         if (activity == null) return
         // 在从自定义集合中取出当前Activity时，也进行了Activity的关闭操作
-        if(activityStack.remove(activity)) {
+        if (activityStack.remove(activity)) {
             if (!activity.isFinishing) {
                 activity.finish()
             }
@@ -126,6 +139,7 @@ class ActivityManager private constructor() {
         }
         return activity
     }
+
 
     /**
      * 当前栈顶是不是这个activity
