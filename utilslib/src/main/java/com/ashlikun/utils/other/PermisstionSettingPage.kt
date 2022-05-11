@@ -2,6 +2,10 @@ package com.ashlikun.utils.other
 
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager.NameNotFoundException
+import android.content.pm.ResolveInfo
+import android.util.Log
 import com.ashlikun.utils.AppUtils
 
 
@@ -54,4 +58,35 @@ object PermisstionSettingPage {
         component = ComponentName("com.coloros.securitypermission",
             "com.coloros.securitypermission.permission.PermissionAppAllPermissionActivity") //R11t 7.1.1 os-v3.2
     }.jump()
+
+    fun doStartApplicationWithPackageName(packagename: String) = runCatching {
+        // 通过包名获取此APP详细信息，包括Activities、services、versioncode、name等等
+        var packageinfo = AppUtils.app.packageManager.getPackageInfo(packagename, 0)
+        // 创建一个类别为CATEGORY_LAUNCHER的该包名的Intent
+        val resolveIntent = Intent(Intent.ACTION_MAIN, null)
+        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        resolveIntent.setPackage(packageinfo.packageName)
+        // 通过getPackageManager()的queryIntentActivities方法遍历
+        val resolveinfoList: List<ResolveInfo> = AppUtils.app.packageManager
+            .queryIntentActivities(resolveIntent, 0)
+        LogUtils.e("PermissionPageManager    resolveinfoList" + resolveinfoList.size)
+        for (i in resolveinfoList.indices) {
+            LogUtils.e("PermissionPageManager" + resolveinfoList[i].activityInfo.packageName + resolveinfoList[i].activityInfo.name)
+        }
+        val resolveinfo = resolveinfoList.iterator().next()
+        if (resolveinfo != null) {
+            // packageName参数2 = 参数 packname
+            val packageName = resolveinfo.activityInfo.packageName
+            // 这个就是我们要找的该APP的LAUNCHER的Activity[组织形式：packageName参数2.mainActivityname]
+            val className = resolveinfo.activityInfo.name
+            // LAUNCHER Intent
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_LAUNCHER)
+            // 设置ComponentName参数1:packageName参数2:MainActivity路径
+            intent.component = ComponentName(packageName, className)
+            if (!intent.jump()) {
+                throw RuntimeException(" jump false")
+            }
+        }
+    }.isSuccess
 }

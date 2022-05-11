@@ -18,6 +18,7 @@ object RomUtils {
     const val ROM_FLYME = "FLYME"
     const val ROM_MEIZU = "MEIZU"
     const val ROM_OPPO = "OPPO"
+    const val ROM_OnePlus = "OnePlus"
 
     //锤子
     const val ROM_SMARTISAN = "SMARTISAN"
@@ -47,6 +48,8 @@ object RomUtils {
         get() = check(ROM_OPPO)
     val isMeizu: Boolean
         get() = check(ROM_FLYME) || check(ROM_MEIZU)
+    val isOnePlus: Boolean
+        get() = check(ROM_OnePlus)
 
     fun is360(): Boolean {
         return check(ROM_QIKU) || check(ROM_360)
