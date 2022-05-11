@@ -13,6 +13,17 @@ import java.util.*
  *
  * 功能介绍：存放Activity的栈
  */
+/**
+ * 获取前台 Activity
+ */
+val fActivity: Activity?
+    get() = ActivityManager.get().currentActivity()
+
+/**
+ * 获取前台 Activity
+ */
+val fCActivity: ComponentActivity?
+    get() = ActivityManager.get().getTagActivity(ComponentActivity::class.java)
 
 class ActivityManager private constructor() {
     companion object {
