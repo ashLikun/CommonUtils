@@ -1,7 +1,6 @@
 package com.ashlikun.utils.simple
 
 import android.Manifest
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -225,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 
         ToastUtils.show("1111111111")
 //        IntentUtils.startMyAppSetting()
-        "${PermisstionSettingPage.start()} ssss".logge()
+        "${PermisstionSettingUtils.start()} ssss".logge()
 //        toPermisstionSetting()
     }
 

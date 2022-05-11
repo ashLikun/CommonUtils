@@ -13,7 +13,7 @@ import com.ashlikun.utils.AppUtils
  *
  * 功能介绍：系统权限设置的页面
  */
-object PermisstionSettingPage {
+object PermisstionSettingUtils {
     fun start() {
         if (!IntentUtils.startMyAppSetting()) {
             when {
