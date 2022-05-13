@@ -27,6 +27,7 @@ import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.extend.dp
+import com.ashlikun.utils.ui.modal.toast.ToastStrategy
 import com.ashlikun.utils.ui.modal.toast.ToastSystemStrategy
 import com.ashlikun.utils.ui.modal.toast.config.IToastStrategy
 import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
@@ -393,14 +394,14 @@ class SuperToast private constructor(builder: Builder) {
             CHANG_GRAVITY = INIT_GRAVITY
         }
 
-        private fun initToast(builder: Builder): ToastSystemStrategy {
-            var toastS = mToast?.get() as? ToastSystemStrategy?
+        private fun initToast(builder: Builder): IToastStrategy {
+            var toastS = mToast?.get()
             if (builder.cancelBefore()) {
                 toastS?.cancel()
             }
             if (toastS == null) {
                 toastS = ToastSystemStrategy()
-                mToast = WeakReference(ToastSystemStrategy())
+                mToast = WeakReference(toastS)
             }
             return toastS!!
         }

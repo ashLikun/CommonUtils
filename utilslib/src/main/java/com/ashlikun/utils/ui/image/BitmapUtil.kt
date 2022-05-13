@@ -387,7 +387,11 @@ object BitmapUtil {
         if (file.exists()) {
             runCatching {
                 app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)
-                return true
+                //防止不更新
+                return updatePhotoMediaOld(file)
+            }.onFailure {
+                //防止不更新
+                return updatePhotoMediaOld(file)
             }
         }
         return false

@@ -45,9 +45,11 @@ class WorkFlow private constructor(var flowNodes: SparseArray<Node>) {
      */
     private fun findAndExecuteNextNodeIfExist(startIndex: Int) {
         val nextIndex = startIndex + 1
-        val nextNode = flowNodes.valueAt(nextIndex)
-        nextNode?.onWork {
-            findAndExecuteNextNodeIfExist(nextIndex)
+        if (flowNodes.size() > nextIndex) {
+            val nextNode = flowNodes.valueAt(nextIndex)
+            nextNode?.onWork {
+                findAndExecuteNextNodeIfExist(nextIndex)
+            }
         }
     }
 

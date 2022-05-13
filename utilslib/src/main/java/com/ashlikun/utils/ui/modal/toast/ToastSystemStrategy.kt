@@ -21,6 +21,10 @@ import com.ashlikun.utils.ui.modal.toast.strategy.SystemToast
 open class ToastSystemStrategy : ToastStrategy() {
 
     override fun create(): IToast {
+        //targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
+        if (AppUtils.app.applicationInfo.targetSdkVersion >= Build.VERSION_CODES.R) {
+            return super.create()
+        }
         val toast = when {
             // 处理 Android 7.1 上 Toast 在主线程被阻塞后会导致报错的问题
             Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1 -> SafeToast(AppUtils.app)
