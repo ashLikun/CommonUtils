@@ -22,7 +22,7 @@ open class ToastSystemStrategy : ToastStrategy() {
 
     override fun create(): IToast {
         //targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
-        if (AppUtils.app.applicationInfo.targetSdkVersion >= Build.VERSION_CODES.R) {
+        if (AppUtils.app.applicationInfo.targetSdkVersion >= Build.VERSION_CODES.R && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return super.create()
         }
         val toast = when {
