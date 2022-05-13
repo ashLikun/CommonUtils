@@ -20,9 +20,7 @@ import java.lang.ref.WeakReference
  * 参考https://github.com/getActivity/ToastUtils
  * 功能介绍：自定义 Toast 实现类
  */
-internal class ToastImpl(
-    var context: Context,
-    //当前的吐司对象
+internal class ToastImpl( //当前的吐司对象
     private val mToast: CustomToast
 ) {
     /**
@@ -32,8 +30,13 @@ internal class ToastImpl(
 
     /**
      * WindowManager 辅助类
+     * 懒加载是为了显示toast的时候在新的activity显示
+     * 如 A跳转B，然后显示toast，或者先显示toast，然后跳转
+     * 如 B返回A，然后显示toast，或者先显示toast，然后跳转
      */
-    private var mWindowLifecycle = WindowLifecycle(WeakReference(context))
+    private val mWindowLifecycle by lazy {
+        WindowLifecycle(WeakReference(AppUtils.context))
+    }
 
 
     /**

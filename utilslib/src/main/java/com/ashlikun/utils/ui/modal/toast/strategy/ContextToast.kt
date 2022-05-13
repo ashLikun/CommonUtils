@@ -25,7 +25,7 @@ open class ContextToast : CustomToast() {
 
     /** Toast 实现类  */
     private val mToastImpl by lazy {
-        ToastImpl(AppUtils.context, this)
+        ToastImpl(this)
     }
 
     override fun show() {
