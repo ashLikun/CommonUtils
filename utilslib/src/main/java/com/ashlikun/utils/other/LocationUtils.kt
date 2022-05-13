@@ -20,7 +20,7 @@ import java.util.*
  *
  * 功能介绍：安卓原生定位工具
  */
-object AndroidLocationUtils {
+object LocationUtils {
     private const val TWO_MINUTES = 1000 * 60 * 2
     private var mListener: OnLocationChangeListener? = null
     private var myLocationListener: MyLocationListener? = null

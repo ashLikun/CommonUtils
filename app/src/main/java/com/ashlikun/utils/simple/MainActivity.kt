@@ -223,7 +223,11 @@ class MainActivity : AppCompatActivity() {
         LogUtils.e("aaaaaaaa    " + aaaa)
 
         ToastUtils.show("1111111111")
+//        IntentUtils.startMyAppSetting()
+        "${PermisstionSettingUtils.start()} ssss".logge()
+//        toPermisstionSetting()
     }
+
 
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {

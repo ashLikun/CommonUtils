@@ -44,41 +44,23 @@ object AppUtils {
     /**
      * 取版本code
      */
-    var versionCode = -10088
-        get() {
-            if (field < 0) {
-                field = packageInfo.versionCode
-            }
-            return field
-        }
-        private set
+    val versionCode by lazy {
+        packageInfo.versionCode
+    }
 
     /**
      * 版本名称
      */
-    var versionName: String = ""
-        get() {
-            if (TextUtils.isEmpty(field)) {
-                field = packageInfo.versionName
-            }
-            if (field == null) {
-                field = ""
-            }
-            return field
-        }
-        private set
+    val versionName by lazy {
+        packageInfo.versionName.orEmpty()
+    }
 
     /**
      * 包名
      */
-    var packageName: String = ""
-        get() {
-            if (TextUtils.isEmpty(field)) {
-                field = packageInfo.packageName
-            }
-            return field
-        }
-        private set
+    val packageName by lazy {
+        app.packageName.orEmpty()
+    }
 
     var activityLifecycleCallbacks = ApplicationListener()
 

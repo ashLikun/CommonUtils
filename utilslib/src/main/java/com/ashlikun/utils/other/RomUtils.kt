@@ -16,7 +16,9 @@ object RomUtils {
     const val ROM_XIAOMI = "XIAOMI"
     const val ROM_HUAWEI = "HUAWEI"
     const val ROM_FLYME = "FLYME"
+    const val ROM_MEIZU = "MEIZU"
     const val ROM_OPPO = "OPPO"
+    const val ROM_OnePlus = "OnePlus"
 
     //锤子
     const val ROM_SMARTISAN = "SMARTISAN"
@@ -44,8 +46,10 @@ object RomUtils {
         get() = check(ROM_VIVO)
     val isOppo: Boolean
         get() = check(ROM_OPPO)
-    val isFlyme: Boolean
-        get() = check(ROM_FLYME)
+    val isMeizu: Boolean
+        get() = check(ROM_FLYME) || check(ROM_MEIZU)
+    val isOnePlus: Boolean
+        get() = check(ROM_OnePlus)
 
     fun is360(): Boolean {
         return check(ROM_QIKU) || check(ROM_360)
@@ -64,11 +68,8 @@ object RomUtils {
         get() = deviceBrand.contains("essential")
 
     private fun check(rom: String): Boolean {
-        val brand = deviceBrand
-        val manufacturer = manufacturer
-        if (rom == brand.uppercase()) {
-            return true
-        }
-        return manufacturer != null && rom == manufacturer.uppercase()
+        if (rom.uppercase() == deviceBrand.uppercase()) return true
+        if (rom.uppercase() == manufacturer.uppercase()) return true
+        return false
     }
 }
