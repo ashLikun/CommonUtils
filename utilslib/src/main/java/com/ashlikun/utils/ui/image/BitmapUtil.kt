@@ -1,5 +1,6 @@
 package com.ashlikun.utils.ui.image
 
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.view.View
 import com.ashlikun.utils.AppUtils
@@ -20,9 +22,12 @@ import com.ashlikun.utils.other.file.FileIOUtils
 import com.ashlikun.utils.ui.ScreenUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.sqrt
+
 
 /**
  * @author　　: 李坤
@@ -355,11 +360,11 @@ object BitmapUtil {
 
     /**
      * 保存文件到相册
-     *
+     * @param file 这里为了兼容android11 的分区存储 一定得用/storage/emulated/0/Android/data/包名/xxx
      * @return true 成功，false:失败
      */
-    fun saveImageToGallery(bmp: Bitmap?, file: File, value: ContentValues = getImageContentValues(file), quality: Int = 100): Boolean {
-        return if (saveBitmap(bmp, file, quality)) updatePhotoMedia(file, value) else false
+    fun saveImageToGallery(bmp: Bitmap?, file: File, value: ContentValues = getImageContentValues(file), quality: Int = 100): Uri? {
+        return if (saveBitmap(bmp, file, quality)) updatePhotoMedia(file, value) else null
     }
 
     /**
@@ -367,11 +372,12 @@ object BitmapUtil {
      * 建议使用MediaStore ，这里自动刷新
      * @return true 成功，false:失败
      */
-    fun updatePhotoMediaOld(file: File): Boolean {
+    fun updatePhotoMediaOld(file: File) = updatePhotoMediaOld(Uri.fromFile(file))
+    fun updatePhotoMediaOld(uri: Uri?): Boolean {
         //保存图片后发送广播通知更新数据库
-        if (file.exists()) {
+        if (uri != null) {
             runCatching {
-                app.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
+                app.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
                 return true
             }
         }
@@ -382,19 +388,38 @@ object BitmapUtil {
      * 刷新相册 MediaStore
      * @return true 成功，false:失败
      */
-    fun updatePhotoMedia(file: File, value: ContentValues = getImageContentValues(file)): Boolean {
+    fun updatePhotoMedia(file: File, value: ContentValues = getImageContentValues(file)): Uri? {
         //保存图片后发送广播通知更新数据库
         if (file.exists()) {
             runCatching {
-                app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)
+                val uri = app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)
+                if (uri != null)
+                    copyFileAfterQ(file, uri)
                 //防止不更新
-                return updatePhotoMediaOld(file)
+                if (updatePhotoMediaOld(uri)) uri else null
             }.onFailure {
                 //防止不更新
-                return updatePhotoMediaOld(file)
+                val uri = Uri.fromFile(file)
+                return if (updatePhotoMediaOld(uri)) uri else null
             }
         }
-        return false
+        return null
+    }
+
+    /**
+     * 拷贝文件到相册的uri,android11及以上得这么干，否则不会显示。可以参考ScreenMediaRecorder的save方法
+     */
+    fun copyFileAfterQ(file: File, uri: Uri) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && app.applicationInfo.targetSdkVersion >= Build.VERSION_CODES.Q) {
+            //拷贝文件到相册的uri,android11及以上得这么干，否则不会显示。可以参考ScreenMediaRecorder的save方法
+            runCatching {
+                val os = app.contentResolver.openOutputStream(uri, "w")
+//                FileIOUtils.copyFile(file, os)
+                Files.copy(file.toPath(), os)
+                os?.close()
+                file.deleteOnExit()
+            }
+        }
     }
 
     /**

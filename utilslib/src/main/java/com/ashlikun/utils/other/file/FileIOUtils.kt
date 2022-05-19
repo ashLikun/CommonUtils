@@ -179,6 +179,36 @@ object FileIOUtils {
     }
 
     /**
+     * 复制文件，可以选择是否删除源文件
+     */
+    fun copyFile(
+        srcFile: File, outputStream: OutputStream?,
+        deleteSrc: Boolean = false
+    ): Boolean {
+        if (!srcFile.exists() || !srcFile.isFile) return false
+        var ins: InputStream? = null
+        var out: OutputStream = outputStream ?: return false
+        try {
+            ins = FileInputStream(srcFile)
+            val buffer = ByteArray(1024)
+            var i = -1
+            while (ins.read(buffer).also { i = it } > 0) {
+                out.write(buffer, 0, i)
+                out.flush()
+            }
+            if (deleteSrc) {
+                srcFile.delete()
+            }
+        } catch (e: Exception) {
+            return false
+        } finally {
+            close(out)
+            close(ins)
+        }
+        return true
+    }
+
+    /**
      * 把字符串键值对的map写入文件
      */
     fun writeMap(

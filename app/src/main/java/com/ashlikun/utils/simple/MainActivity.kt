@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.location.*
 import android.os.Bundle
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
@@ -28,10 +30,12 @@ import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.ScreenUtils
+import com.ashlikun.utils.ui.extend.bitmap
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.windowBrightness
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
+import com.ashlikun.utils.ui.image.saveImageToGallery
 import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
 import com.ashlikun.utils.ui.resources.ResUtils
@@ -40,6 +44,7 @@ import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 import com.ashlikun.utils.ui.text.SpannableUtils
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.delay
+import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -228,27 +233,48 @@ class MainActivity : AppCompatActivity() {
 //        toPermisstionSetting()
     }
 
+    /**
+     * 获取一个新的图片文件
+     * 需要外部文件权限
+     */
+    fun newImage(): File {
+        // 首先保存图片
+        val appDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).path)
+//        val appDir = AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DCIM)!!
+        if (!appDir.exists()) {
+            appDir.mkdirs()
+        }
+        val fileName = System.currentTimeMillis().toString() + ".jpg"
+        val file = File(appDir, fileName)
+        file.createNewFile()
+        return File(appDir, fileName)
+    }
 
     var builder: NotificationCompat.Builder? = null
     fun onView5Click(view: View) {
-        LogUtils.e(NotificationUtil.isNotificationEnabled())
-        builder = NotificationUtil.createBuilder(
-            R.mipmap.ic_launcher,
-            "测试通知",
-            "通知内容", defaults = NotificationCompat.DEFAULT_ALL
-        )
-        NotificationUtil.show(10, builder!!)
-
-        taskLaunchMain {
-
-            LogUtils.e(Thread.currentThread().name)
-            val aa = taskAsync {
-                delay(3000)
-                LogUtils.e(Thread.currentThread().name)
-                1
-            }
-            LogUtils.e(aa.await())
+        taskLaunch {
+            val image = newImage()
+            binding.rootView.bitmap().saveImageToGallery(image)
+            LogUtils.e("dddd ${image.path}${image.exists()}")
         }
+//        LogUtils.e(NotificationUtil.isNotificationEnabled())
+//        builder = NotificationUtil.createBuilder(
+//            R.mipmap.ic_launcher,
+//            "测试通知",
+//            "通知内容", defaults = NotificationCompat.DEFAULT_ALL
+//        )
+//        NotificationUtil.show(10, builder!!)
+//
+//        taskLaunchMain {
+//
+//            LogUtils.e(Thread.currentThread().name)
+//            val aa = taskAsync {
+//                delay(3000)
+//                LogUtils.e(Thread.currentThread().name)
+//                1
+//            }
+//            LogUtils.e(aa.await())
+//        }
 //        var bb = "{\"nickname\":\"\\u5b59\\u8d5b-Simon\",\"mobile\":\"13285112318\"}"
 //        var aa =
 //            "8xxxSRkzLfjuzFkhbP4YYrijDYm5v5ZTgve79+C7ozXhE/d70RGlfyxI6PRBStX7XexXcbD/QlEerr5clbbDzQ=="
