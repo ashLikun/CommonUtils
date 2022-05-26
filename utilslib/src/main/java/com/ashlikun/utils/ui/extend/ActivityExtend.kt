@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.ashlikun.utils.main.ActivityUtils
 import com.ashlikun.utils.ui.status.StatusBarCompat
 
@@ -19,6 +20,7 @@ import com.ashlikun.utils.ui.status.StatusBarCompat
 fun Activity?.getRootView() = this?.findViewById<View>(android.R.id.content)
 fun Context.toLifecycle() = getActivity() as LifecycleOwner
 fun Context.toLifecycleOrNull() = getActivity() as? LifecycleOwner
+fun View.toLifecycleOrNull() = findViewTreeLifecycleOwner()
 fun Context.toCActivity() = getActivity() as ComponentActivity
 fun Context.toCActivityOrNull() = getActivity() as? ComponentActivity
 
