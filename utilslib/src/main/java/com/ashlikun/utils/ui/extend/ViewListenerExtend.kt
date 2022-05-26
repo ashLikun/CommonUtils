@@ -65,7 +65,7 @@ inline fun View?.addOnPreDrawListener(crossinline listener: () -> Boolean, isOne
  * @param onDraw 监听回调
  * @param isOneToRemove 是否只监听一次
  */
-inline fun View?.addOnGlobalLayoutListener(crossinline listener: () -> Unit, isOneToRemove: Boolean = true) {
+inline fun View?.addOnGlobalLayoutListener(isOneToRemove: Boolean = true, crossinline listener: () -> Unit) {
     this?.run {
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -77,6 +77,31 @@ inline fun View?.addOnGlobalLayoutListener(crossinline listener: () -> Unit, isO
         })
     }
 }
+
+/**
+ * onViewAttachedToWindow 回调
+ *
+ * @param onDraw 监听回调
+ * @param isOneToRemove 是否只监听一次
+ */
+fun View?.addOnAttach(isOneToRemove: Boolean = true, detached: (() -> Unit)? = null, attached: (() -> Unit)? = null) {
+    this?.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+        override fun onViewAttachedToWindow(v: View) {
+            if (isOneToRemove) {
+                removeOnAttachStateChangeListener(this)
+            }
+            attached?.invoke()
+        }
+
+        override fun onViewDetachedFromWindow(v: View) {
+            if (isOneToRemove) {
+                removeOnAttachStateChangeListener(this)
+            }
+            detached?.invoke()
+        }
+    })
+}
+
 
 /**
  * view树 窗口获取焦点的回调
@@ -170,9 +195,9 @@ inline fun View?.clickLong(crossinline onClick: (view: View) -> Boolean) {
  * 文本改变事件
  */
 fun TextView?.textChang(
-        before: ((s: CharSequence, start: Int, count: Int, after: Int) -> Unit)? = null,
-        after: ((s: Editable) -> Unit)? = null,
-        chang: (s: CharSequence, start: Int, before: Int, count: Int) -> Unit
+    before: ((s: CharSequence, start: Int, count: Int, after: Int) -> Unit)? = null,
+    after: ((s: Editable) -> Unit)? = null,
+    chang: (s: CharSequence, start: Int, before: Int, count: Int) -> Unit
 ) {
     this?.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
