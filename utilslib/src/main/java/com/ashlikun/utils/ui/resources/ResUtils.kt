@@ -19,6 +19,11 @@ import com.ashlikun.utils.AppUtils.app
  */
 object ResUtils {
     /**
+     * 获取String的时候回调
+     */
+    var callString: ((resId: Int, value: String) -> String)? = null
+
+    /**
      * 是否有这个id
      */
     fun havRes(@ColorRes resId: Int): Boolean {
@@ -58,12 +63,14 @@ object ResUtils {
         return AppUtils.resources.getDimension(dimen)
     }
 
-    fun getString(context: Context, @StringRes str: Int): String {
-        return context.resources.getString(str)
+    fun getString(context: Context, @StringRes id: Int): String {
+        val value = context.resources.getString(id)
+        return callString?.invoke(id, value) ?: value
     }
 
-    fun getString(@StringRes str: Int): String {
-        return AppUtils.resources.getString(str)
+    fun getString(@StringRes id: Int): String {
+        val value = AppUtils.resources.getString(id)
+        return callString?.invoke(id, value) ?: value
     }
 
     fun getDimensionPixelOffset(context: Context, @DimenRes resId: Int): Int {
