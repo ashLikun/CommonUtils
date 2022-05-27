@@ -116,11 +116,10 @@ object AppUtils {
         }
 
     /**
-     * 为了适配使用Activity的resources,不是一股脑调用Application的
-     * 当后台调用的时候可能不是调用者的Activity
+     *
      */
     val resources: Resources
-        get() = (ActivityManager.foregroundActivity ?: app).resources
+        get() = app.resources
 
     /**
      * 为了适配使用Activity的,不是一股脑调用Application的
