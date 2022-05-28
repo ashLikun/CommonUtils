@@ -65,63 +65,38 @@ object ActivityUtils {
     val isForeground: Boolean
         get() = AppUtils.activityLifecycleCallbacks.isForeground
 
-    /**
-     * 获取app运行状态
-     *
-     * @return 0：前台 1:处于后台  2：未启动或者被回收
-     */
-    fun appRunStatus(): Int {
-        return if (!isForeground) {
-            //处于后台
-            //获取ActivityManager
-            val mAm =
-                AppUtils.app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            //获得当前运行的task
-            val taskList = mAm.getRunningTasks(100)
-            if (taskList != null && taskList.size > 0) {
-                if (taskList[0].topActivity!!.packageName == AppUtils.app.packageName) {
-                    return 1
-                }
-            }
-            //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
-            //未启动
-            2
-        } else {
-            0
-        }
-    }
 
     /**
+     * 获取app运行状态
      * 把栈顶activity切换到前台，如果应用未启动就打开应
      * <uses-permission android:name="android.permission.GET_TASKS"></uses-permission>
      * //后台移动到前台需要
      * <uses-permission android:name="android.permission.REORDER_TASKS"></uses-permission>
-     *
+     * @param ismoveTaskToFront 是否把任务栈移动到顶部
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
-    fun appBackgoundToForeground(): Int {
+    fun appRunStatus(ismoveTaskToFront: Boolean = true): Int {
         return if (!isForeground) {
             //处于后台
+            var isHoutTai = false
             //获取ActivityManager
-            val mAm =
+            val am =
                 AppUtils.app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            //获得当前运行的task
-            val taskList = mAm.getRunningTasks(100)
-            if (taskList != null && taskList.size > 0) {
-                for (rti in taskList) {
-                    //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
-                    if (rti.topActivity!!.packageName == AppUtils.app.packageName) {
-                        mAm.moveTaskToFront(rti.id, 0)
-                        //后台
-                        return 1
+            //获得当前运行的task,反转是为了对应app的任务栈顺序
+            am.getRunningTasks(100)?.reversed()?.forEach {
+                //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
+                if (it.topActivity!!.packageName == AppUtils.app.packageName) {
+                    //这里移动全部的任务栈
+                    if (ismoveTaskToFront) {
+                        am.moveTaskToFront(it.id, 0)
                     }
+                    //后台
+                    isHoutTai = true
                 }
             }
             //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
             //未启动
-            2
-        } else {
-            0
-        }
+            if (isHoutTai) 1 else 2
+        } else 0
     }
 }
