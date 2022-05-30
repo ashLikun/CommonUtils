@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.view.ContextThemeWrapper
 import com.ashlikun.utils.AppUtils
 
@@ -19,16 +20,24 @@ import com.ashlikun.utils.AppUtils
 
 object ActivityUtils {
     /**
+     * 获取全部ActivityInfo
+     */
+    fun activitys() = AppUtils.app.packageManager.getPackageInfo(AppUtils.app.packageName, PackageManager.GET_ACTIVITIES)?.activities ?: emptyArray()
+
+    /**
+     * 获取指定的ActivityInfo
+     */
+    fun activity(className: String) =
+        AppUtils.app.packageManager.getPackageInfo(AppUtils.app.packageName, PackageManager.GET_ACTIVITIES).activities?.find { it.name == className }
+
+    /**
      * 是否存在这个activity
      *
      * @param pkg 包名
      * @param cls class名
      * @return `true`: 存在<br></br>`false`: 不存在
      */
-    fun isActivityExists(
-        pkg: String,
-        cls: String
-    ): Boolean {
+    fun isActivityExists(pkg: String, cls: String): Boolean {
         val intent = Intent()
         intent.setClassName(pkg, cls)
         return !(AppUtils.app.packageManager.resolveActivity(
@@ -75,23 +84,29 @@ object ActivityUtils {
      * @param ismoveTaskToFront 是否把任务栈移动到顶部
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
-    fun appRunStatus(ismoveTaskToFront: Boolean = true): Int {
+    fun appRunStatus(ismoveTaskToFront: Boolean = true, ignoreTaskAffinitys: Array<String> = emptyArray()): Int {
         return if (!isForeground) {
             //处于后台
             var isHoutTai = false
             //获取ActivityManager
             val am =
                 AppUtils.app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val activities = AppUtils.app.packageManager.getPackageInfo(AppUtils.app.packageName, PackageManager.GET_ACTIVITIES).activities
             //获得当前运行的task,反转是为了对应app的任务栈顺序
             am.getRunningTasks(100)?.reversed()?.forEach {
+
                 //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
-                if (it.topActivity!!.packageName == AppUtils.app.packageName) {
+                it.describeContents()
+                if (it.topActivity?.packageName == AppUtils.app.packageName) {
                     //这里移动全部的任务栈
                     if (ismoveTaskToFront) {
                         am.moveTaskToFront(it.id, 0)
                     }
                     //后台
-                    isHoutTai = true
+                    val actInfo = activities.find { itt -> itt.name == it.topActivity?.className }
+                    if (actInfo?.taskAffinity != "jpush.custom" && ignoreTaskAffinitys.find { actInfo?.taskAffinity == it } == null) {
+                        isHoutTai = true
+                    }
                 }
             }
             //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
