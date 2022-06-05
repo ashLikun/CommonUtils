@@ -2,12 +2,10 @@ package com.ashlikun.utils.ui.resources
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.TypedValue
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import com.ashlikun.utils.AppUtils
-import com.ashlikun.utils.AppUtils.app
 
 /**
  * 作者　　: 李坤
@@ -28,7 +26,7 @@ object ResUtils {
      */
     fun havRes(@ColorRes resId: Int): Boolean {
         val typedValue = TypedValue()
-        AppUtils.resources.getValue(resId, typedValue, true)
+        AppUtils.appResources.getValue(resId, typedValue, true)
         if (typedValue.type >= TypedValue.TYPE_FIRST_INT
             && typedValue.type <= TypedValue.TYPE_LAST_INT
         ) {
@@ -60,7 +58,7 @@ object ResUtils {
     }
 
     fun getDimension(@DimenRes dimen: Int): Float {
-        return AppUtils.resources.getDimension(dimen)
+        return AppUtils.appResources.getDimension(dimen)
     }
 
     fun getString(context: Context, @StringRes id: Int): String {
@@ -69,7 +67,7 @@ object ResUtils {
     }
 
     fun getString(@StringRes id: Int): String {
-        val value = AppUtils.resources.getString(id)
+        val value = AppUtils.appResources.getString(id)
         return callString?.invoke(id, value) ?: value
     }
 
@@ -78,7 +76,7 @@ object ResUtils {
     }
 
     fun getDimensionPixelOffset(@DimenRes resId: Int): Int {
-        return AppUtils.resources.getDimensionPixelOffset(resId)
+        return AppUtils.appResources.getDimensionPixelOffset(resId)
     }
 
     fun getDimensionPixelSize(context: Context, @DimenRes resId: Int): Int {
@@ -86,7 +84,7 @@ object ResUtils {
     }
 
     fun getDimensionPixelSize(@DimenRes resId: Int): Int {
-        return AppUtils.resources.getDimensionPixelSize(resId)
+        return AppUtils.appResources.getDimensionPixelSize(resId)
     }
 
     /**
@@ -98,7 +96,7 @@ object ResUtils {
      */
     fun getValue(@AnyRes id: Int): Float {
         val typedValue = TypedValue()
-        AppUtils.resources.getValue(id, typedValue, true)
+        AppUtils.appResources.getValue(id, typedValue, true)
         return TypedValue.complexToFloat(typedValue.data)
     }
 }

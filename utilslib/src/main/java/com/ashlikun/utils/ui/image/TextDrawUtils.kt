@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.ui.extend.resDrawable
 import kotlin.math.max
 

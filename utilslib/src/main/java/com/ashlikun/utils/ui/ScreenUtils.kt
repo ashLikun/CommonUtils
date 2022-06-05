@@ -51,7 +51,7 @@ object ScreenUtils {
      * @return
      */
     fun width(subDp: Int = 0, subPx: Int = 0): Int {
-        val displayMetrics = AppUtils.resources.displayMetrics
+        val displayMetrics = AppUtils.appResources.displayMetrics
         return displayMetrics.widthPixels - max(subPx, subDp.dp)
     }
 
@@ -74,7 +74,7 @@ object ScreenUtils {
      */
     val statusBarHeight: Int
         get() {
-            val resourceId = AppUtils.resources.getIdentifier("status_bar_height", "dimen", "android")
+            val resourceId = AppUtils.appResources.getIdentifier("status_bar_height", "dimen", "android")
             if (resourceId > 0) {
                 return getDimensionPixelSize(resourceId)
             }

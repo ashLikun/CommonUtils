@@ -462,7 +462,7 @@ public class NotchHelper {
     }
 
     public static int getNotchWidthInXiaomi() {
-        int resourceId = AppUtils.INSTANCE.getResources().getIdentifier("notch_width", "dimen", "android");
+        int resourceId = AppUtils.INSTANCE.getAppResources().getIdentifier("notch_width", "dimen", "android");
         if (resourceId > 0) {
             return ResUtils.INSTANCE.getDimensionPixelSize(resourceId);
         }
@@ -470,7 +470,7 @@ public class NotchHelper {
     }
 
     public static int getNotchHeightInXiaomi() {
-        int resourceId = AppUtils.INSTANCE.getResources().getIdentifier("notch_height", "dimen", "android");
+        int resourceId = AppUtils.INSTANCE.getAppResources().getIdentifier("notch_height", "dimen", "android");
         if (resourceId > 0) {
             return ResUtils.INSTANCE.getDimensionPixelSize(resourceId);
         }

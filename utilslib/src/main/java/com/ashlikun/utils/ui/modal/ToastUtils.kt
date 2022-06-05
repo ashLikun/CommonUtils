@@ -4,6 +4,7 @@ import android.content.res.Resources.NotFoundException
 import android.view.LayoutInflater
 import android.view.View
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.ui.extend.resString
 import com.ashlikun.utils.ui.modal.toast.ToastLogInterceptor
 import com.ashlikun.utils.ui.modal.toast.ToastStrategy
 import com.ashlikun.utils.ui.modal.toast.ToastSystemStrategy
@@ -65,7 +66,7 @@ object ToastUtils {
     fun show(id: Int) {
         try {
             // 如果这是一个资源 id
-            show(AppUtils.resources.getText(id))
+            show(id.resString)
         } catch (ignored: NotFoundException) {
             // 如果这是一个 int 整数
             show(id.toString())

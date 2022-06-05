@@ -8,8 +8,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +25,6 @@ import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.ui.extend.dp
-import com.ashlikun.utils.ui.modal.toast.ToastStrategy
 import com.ashlikun.utils.ui.modal.toast.ToastSystemStrategy
 import com.ashlikun.utils.ui.modal.toast.config.IToastStrategy
 import com.ashlikun.utils.ui.modal.toast.config.IToastStyle
@@ -304,7 +301,7 @@ class SuperToast private constructor(builder: Builder) {
             }
             if (INIT_OFFSET_Y == 0) {
                 val resourceId: Int =
-                    AppUtils.resources.getIdentifier("toast_y_offset", "dimen", "android")
+                    AppUtils.appResources.getIdentifier("toast_y_offset", "dimen", "android")
                 if (resourceId > 0) {
                     INIT_OFFSET_Y = getDimensionPixelSize(resourceId)
                 }

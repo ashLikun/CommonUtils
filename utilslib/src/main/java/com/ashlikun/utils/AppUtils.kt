@@ -116,9 +116,9 @@ object AppUtils {
         }
 
     /**
-     *
+     * Appication 的 resources
      */
-    val resources: Resources
+    val appResources: Resources
         get() = app.resources
 
     /**

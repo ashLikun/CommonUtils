@@ -1,6 +1,8 @@
 package com.ashlikun.utils.ui.extend
 
 import android.content.Context
+import android.view.ContextThemeWrapper
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.ui.ScreenUtils
 import com.ashlikun.utils.ui.modal.SuperToast
@@ -98,8 +100,19 @@ inline fun Context.resColor(resId: Int) = ResUtils.getColor(this, resId)
 inline val Int.resDrawable
     get() = ResUtils.getDrawable(this)
 
-inline fun Int.resDrawable(context: Context) = ResUtils.getDrawable(context, this)
 inline fun Context.resDrawable(resId: Int) = ResUtils.getDrawable(this, resId)
+inline fun Int.resDrawable(context: Context) = ResUtils.getDrawable(context, this)
+inline fun Int.resDrawable(themeId: Int) = ResUtils.getDrawable(themeId.resContextTheme, this)
+
+
+inline val Int.resTheme
+    get() = resContextTheme.theme
+inline val Int.resContextTheme
+    get() = AppUtils.context.newContextTheme(this)
+
+inline fun Context.newContextTheme(themeId: Int) = ContextThemeWrapper(this, themeId)
+inline fun Context.newTheme(themeId: Int) = ContextThemeWrapper(this, themeId).theme
+
 
 inline val Int.resString
     get() = ResUtils.getString(this)

@@ -354,9 +354,9 @@ class StatusBarCompat(
         fun getNavigationHeight(): Int {
             var result = 0
             val resourceId =
-                AppUtils.resources.getIdentifier("navigation_bar_height", "dimen", "android")
+                AppUtils.appResources.getIdentifier("navigation_bar_height", "dimen", "android")
             if (resourceId > 0) {
-                result = AppUtils.resources.getDimensionPixelSize(resourceId)
+                result = AppUtils.appResources.getDimensionPixelSize(resourceId)
             }
             return result
         }
