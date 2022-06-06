@@ -51,6 +51,11 @@ class ActivityManager private constructor() {
     }
 
     /**
+     * 获取当前全部Activity
+     */
+    fun getActivitys() = activityStack.toList()
+
+    /**
      * 获取指定的运行中的activity,只取最新的
      */
     fun <T : Activity> getTagActivity(activity: Class<out Activity>?): T? {
@@ -69,7 +74,7 @@ class ActivityManager private constructor() {
     fun <T : Activity> getTagActivitys(activity: Class<out Activity>?): List<T> {
         if (activity == null) return listOf()
         val returnAct = activityStack.filter {
-            it.javaClass == activity
+            activity.isAssignableFrom(it.javaClass)
         }.toMutableList().filter {
             if (it.isFinishing) {
                 activityStack.remove(it)
