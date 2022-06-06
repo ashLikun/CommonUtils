@@ -2,11 +2,13 @@ package com.ashlikun.utils.ui.extend
 
 import android.content.Context
 import android.view.ContextThemeWrapper
+import androidx.annotation.FloatRange
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.ui.ScreenUtils
 import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
+import com.ashlikun.utils.ui.resources.ColorUtils
 import com.ashlikun.utils.ui.resources.ResUtils
 
 /**
@@ -95,6 +97,7 @@ inline val Int.resColor
 
 inline fun Int.resColor(context: Context) = ResUtils.getColor(context, this)
 inline fun Context.resColor(resId: Int) = ResUtils.getColor(this, resId)
+inline fun Int.resColorAlpha(@FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f) = ColorUtils.setColorAlpha(resColor, alpha)
 
 
 inline val Int.resDrawable

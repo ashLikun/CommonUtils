@@ -16,6 +16,8 @@
 package com.ashlikun.utils.ui.resources
 
 import android.graphics.Color
+import androidx.annotation.FloatRange
+import com.ashlikun.utils.ui.extend.resColor
 
 /**
  * @author　　: 李坤
@@ -25,11 +27,21 @@ import android.graphics.Color
  * 功能介绍：颜色工具类
  */
 
-object ColorUtils {
-    fun setColorAlpha(color: Int, alpha: Float): Int {
-        return setColorAlpha(color, alpha, true)
-    }
+/**
+ * 设置颜色透明的
+ */
+inline fun Int.colorAlpha(@FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f) = ColorUtils.setColorAlpha(this, alpha)
 
+inline fun Int.toComputeColor(toColor: Int, @FloatRange(from = 0.0, to = 1.0) fraction: Float) = ColorUtils.computeColor(this, toColor, fraction)
+
+inline val Int.colorToString
+    get() = ColorUtils.colorToString(this)
+
+inline val Int.isColorDrak
+    get() = ColorUtils.isColorDrak(this)
+
+
+object ColorUtils {
     /**
      * 设置颜色的alpha值
      *
@@ -38,7 +50,7 @@ object ColorUtils {
      * @param override 覆盖原本的 alpha
      * @return 返回改变了 alpha 值的颜色值
      */
-    fun setColorAlpha(color: Int, alpha: Float, override: Boolean): Int {
+    fun setColorAlpha(color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float, override: Boolean = true): Int {
         val origin = if (override) 0xff else color shr 24 and 0xff
         return color and 0x00ffffff or (alpha * origin).toInt() shl 24
     }
