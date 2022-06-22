@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui
 
 import android.app.Activity
 import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import com.ashlikun.utils.ui.extend.lastElementOrNull
 import com.ashlikun.utils.ui.extend.popOrNull
 import java.util.*
@@ -24,6 +25,13 @@ val fActivity: Activity?
  */
 val fCActivity: ComponentActivity?
     get() = ActivityManager.get().getTagActivity(ComponentActivity::class.java)
+
+val fFActivity: FragmentActivity?
+    get() = ActivityManager.get().getTagActivity(FragmentActivity::class.java)
+
+inline fun <reified T : Activity> fTagActivity(): T? {
+    return ActivityManager.get().getTagActivity(T::class.java)
+}
 
 class ActivityManager private constructor() {
     companion object {
@@ -48,6 +56,10 @@ class ActivityManager private constructor() {
          */
         val fCActivity: ComponentActivity?
             get() = get().getTagActivity(ComponentActivity::class.java)
+
+        val fFActivity: FragmentActivity?
+            get() = get().getTagActivity(FragmentActivity::class.java)
+
     }
 
     /**

@@ -21,16 +21,12 @@ fun Activity?.getRootView() = this?.findViewById<View>(android.R.id.content)
 fun Context.toLifecycle() = getActivity() as LifecycleOwner
 fun Context.toLifecycleOrNull() = getActivity() as? LifecycleOwner
 fun View.toLifecycle() = findViewTreeLifecycleOwner()!!
-fun View.lifecycle(attached: ((LifecycleOwner) -> Unit)) = addOnAttach {
-    attached(toLifecycle())
-}
+fun View.lifecycle(attached: ((LifecycleOwner) -> Unit)) = addOnAttach { attached(toLifecycle()) }
 
 fun View.toLifecycleOrNull() = findViewTreeLifecycleOwner()
 fun Context.toCActivity() = getActivity() as ComponentActivity
 fun Context.toCActivityOrNull() = getActivity() as? ComponentActivity
-
 fun Activity?.getDecorView() = this?.window?.decorView
-
 fun Context?.toActivity() = ActivityUtils.getActivity(this)
 
 var Activity.windowBrightness
@@ -80,3 +76,4 @@ fun Context?.getActivity(): Activity? {
 fun Activity?.setViewSaturation(sat: Float = 0f) {
     getDecorView()?.setViewSaturation(sat)
 }
+
