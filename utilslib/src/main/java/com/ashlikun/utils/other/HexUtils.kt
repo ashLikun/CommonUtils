@@ -13,9 +13,14 @@ inline val String.hexToBytes
     get() = HexUtils.hexStr2Bytes(this)
 
 /**
- * 0xffff 为4个字节和2个字节的分界线
+ * 可以是1，2，3，4字节
  */
 inline fun Int.toByteArray(isReversed: Boolean = true) = HexUtils.intToBytes(this, isReversed)
+
+/**
+ * 0xffff 为4个字节和2个字节的分界线
+ */
+inline fun Int.toByteArray2Or4(isReversed: Boolean = true) = HexUtils.intToBytes2Or4(this, isReversed)
 
 /**
  * ByteArray -> 16进制字符串
@@ -117,6 +122,23 @@ object HexUtils {
             targets[2] = (res shr 16 and 0xff).toByte() // 次高位
         }
         if (size >= 4) {
+            targets[3] = (res ushr 24).toByte() // 最高位,无符号右移。
+        }
+        if (!isReversed) {
+            targets.reverse()
+        }
+        return targets
+    }
+
+    /**
+     * int 转 ByteArray  4字节和2字节
+     */
+    fun intToBytes2Or4(res: Int, isReversed: Boolean = true): ByteArray {
+        val targets = ByteArray(if (res.toUInt() > 0xFFFFU) 4 else 2)
+        targets[0] = (res and 0xff).toByte() // 最低位
+        targets[1] = (res shr 8 and 0xff).toByte() // 次低位
+        if (targets.size > 2) {
+            targets[2] = (res shr 16 and 0xff).toByte() // 次高位
             targets[3] = (res ushr 24).toByte() // 最高位,无符号右移。
         }
         if (!isReversed) {
