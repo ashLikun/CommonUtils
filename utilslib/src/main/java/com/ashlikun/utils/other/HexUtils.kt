@@ -102,11 +102,21 @@ object HexUtils {
      * @return 对应的byte[]
      */
     fun intToBytes(res: Int, isReversed: Boolean = true): ByteArray {
-        val targets = ByteArray(if (res.toUInt() > 0xFFFFU) 4 else 2)
-        targets[0] = (res and 0xff).toByte() // 最低位
-        targets[1] = (res shr 8 and 0xff).toByte() // 次低位
-        if (targets.size > 2) {
+        val size = if (res.toUInt() > 0xFFFFFFU) 4
+        else if (res.toUInt() > 0xFFFFU) 3
+        else if (res.toUInt() > 0xFFU) 2
+        else 1
+        val targets = ByteArray(size)
+        if (size >= 1) {
+            targets[0] = (res and 0xff).toByte() // 最低位
+        }
+        if (size >= 2) {
+            targets[1] = (res shr 8 and 0xff).toByte() // 次低位
+        }
+        if (size >= 3) {
             targets[2] = (res shr 16 and 0xff).toByte() // 次高位
+        }
+        if (size >= 4) {
             targets[3] = (res ushr 24).toByte() // 最高位,无符号右移。
         }
         if (!isReversed) {
