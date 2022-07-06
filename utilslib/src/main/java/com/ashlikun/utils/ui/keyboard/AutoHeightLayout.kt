@@ -6,6 +6,14 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import com.ashlikun.utils.ui.extend.getActivity
 
+/**
+ * 作者　　: 李坤
+ * 创建时间: 2022/7/6　16:03
+ * 邮箱　　：496546144@qq.com
+ *
+ * 功能介绍：
+ */
+
 typealias  OnMaxParentHeightChange = (height: Int) -> Unit
 
 /**
@@ -15,7 +23,7 @@ typealias  OnMaxParentHeightChange = (height: Int) -> Unit
  *
  * 功能介绍：自动适应软键盘高度的布局
  */
-class AutoHeightLayout @JvmOverloads constructor(
+open class AutoHeightLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -93,7 +101,7 @@ class AutoHeightLayout @JvmOverloads constructor(
     /**
      * 键盘高度改变了
      */
-    fun onSoftKeyboardHeightChanged(height: Int) {}
+    open fun onSoftKeyboardHeightChanged(height: Int) {}
 
 
 }
