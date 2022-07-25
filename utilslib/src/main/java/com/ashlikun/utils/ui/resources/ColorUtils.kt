@@ -52,7 +52,7 @@ object ColorUtils {
      */
     fun setColorAlpha(color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float, override: Boolean = true): Int {
         val origin = if (override) 0xff else color shr 24 and 0xff
-        return color and 0x00ffffff or (alpha * origin).toInt() shl 24
+        return (color and 0x00ffffff) or ((alpha * origin).toInt() shl 24)
     }
 
     /**
