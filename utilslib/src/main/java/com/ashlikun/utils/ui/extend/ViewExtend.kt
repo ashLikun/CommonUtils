@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.view.ViewCompat
 import com.ashlikun.utils.R
@@ -231,8 +232,51 @@ inline fun View.setVisibility(visibility: Boolean) {
  */
 inline fun View.isGone() = this?.visibility == View.GONE
 
-inline fun View.isVisible() = this?.visibility == View.VISIBLE
 inline fun View.isInvisible() = this?.visibility == View.INVISIBLE
+
+/**
+ * 相同不刷新
+ */
+inline var View.isVisibleX: Boolean
+    get() = visibility == View.VISIBLE
+    set(value) {
+        val result = if (value) View.VISIBLE else View.GONE
+        if (result != visibility)
+            visibility = result
+    }
+
+/**
+ * 相同不刷新
+ */
+inline var TextView.textX: CharSequence
+    get() = text
+    set(value) {
+        if (text != value) {
+            text = value
+        }
+    }
+
+/**
+ * 相同不刷新
+ */
+inline var View.isSelectedX: Boolean
+    get() = isSelected
+    set(value) {
+        if (isSelected != value) {
+            isSelected = value
+        }
+    }
+
+/**
+ * 相同不刷新
+ */
+inline var View.isEnabledX: Boolean
+    get() = isEnabled
+    set(value) {
+        if (isEnabled != value) {
+            isEnabled = value
+        }
+    }
 
 /**
  * 截取viewGroup内容，生成图片
