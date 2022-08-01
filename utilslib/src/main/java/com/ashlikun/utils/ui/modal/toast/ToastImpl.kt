@@ -1,6 +1,5 @@
 package com.ashlikun.utils.ui.modal.toast
 
-import android.content.Context
 import android.graphics.PixelFormat
 import android.os.Build
 import android.view.WindowManager
@@ -8,7 +7,6 @@ import android.view.WindowManager.BadTokenException
 import android.widget.Toast
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.MainHandle
-import com.ashlikun.utils.ui.extend.click
 import com.ashlikun.utils.ui.modal.toast.config.OnCallback
 import com.ashlikun.utils.ui.modal.toast.strategy.CustomToast
 import java.lang.ref.WeakReference
@@ -35,7 +33,7 @@ internal class ToastImpl( //当前的吐司对象
      * 如 B返回A，然后显示toast，或者先显示toast，然后跳转
      */
     private val mWindowLifecycle by lazy {
-        WindowLifecycle(WeakReference(AppUtils.context))
+        WindowLifecycle(WeakReference(AppUtils.defaultContext))
     }
 
 

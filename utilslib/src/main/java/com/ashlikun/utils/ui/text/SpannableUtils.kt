@@ -17,9 +17,12 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
-import com.ashlikun.utils.AppUtils.app
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.DimensUtils.dip2px
-import com.ashlikun.utils.other.spannable.*
+import com.ashlikun.utils.other.spannable.BlockSpaceSpan
+import com.ashlikun.utils.other.spannable.CentreImageSpan
+import com.ashlikun.utils.other.spannable.CustomAlignSpan
+import com.ashlikun.utils.other.spannable.XBulletSpan
 import com.ashlikun.utils.ui.resources.ResUtils
 
 /**
@@ -34,7 +37,7 @@ object SpannableUtils {
     /**
      * 获取建造者
      */
-    fun getBuilder(text: CharSequence, context: Context = app): Builder {
+    fun getBuilder(text: CharSequence, context: Context = AppUtils.defaultContext): Builder {
         return Builder(context, text)
     }
 

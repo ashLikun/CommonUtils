@@ -26,7 +26,7 @@ object ResUtils {
      */
     fun havRes(@ColorRes resId: Int): Boolean {
         val typedValue = TypedValue()
-        AppUtils.appResources.getValue(resId, typedValue, true)
+        AppUtils.defaultResources.getValue(resId, typedValue, true)
         if (typedValue.type >= TypedValue.TYPE_FIRST_INT
             && typedValue.type <= TypedValue.TYPE_LAST_INT
         ) {
@@ -42,7 +42,7 @@ object ResUtils {
     }
 
     fun getColor(@ColorRes color: Int): Int {
-        return ContextCompat.getColor(AppUtils.context, color)
+        return ContextCompat.getColor(AppUtils.defaultContext, color)
     }
 
     fun getDrawable(context: Context, @DrawableRes drawable: Int): Drawable {
@@ -50,7 +50,7 @@ object ResUtils {
     }
 
     fun getDrawable(@DrawableRes drawable: Int): Drawable {
-        return getDrawable(AppUtils.context, drawable)
+        return getDrawable(AppUtils.defaultContext, drawable)
     }
 
     fun getDimension(context: Context, @DimenRes dimen: Int): Float {
@@ -58,7 +58,7 @@ object ResUtils {
     }
 
     fun getDimension(@DimenRes dimen: Int): Float {
-        return AppUtils.appResources.getDimension(dimen)
+        return AppUtils.defaultResources.getDimension(dimen)
     }
 
     fun getString(context: Context, @StringRes id: Int): String {
@@ -67,7 +67,7 @@ object ResUtils {
     }
 
     fun getString(@StringRes id: Int): String {
-        val value = AppUtils.appResources.getString(id)
+        val value = AppUtils.defaultResources.getString(id)
         return callString?.invoke(id, value) ?: value
     }
 
@@ -76,7 +76,7 @@ object ResUtils {
     }
 
     fun getDimensionPixelOffset(@DimenRes resId: Int): Int {
-        return AppUtils.appResources.getDimensionPixelOffset(resId)
+        return AppUtils.defaultResources.getDimensionPixelOffset(resId)
     }
 
     fun getDimensionPixelSize(context: Context, @DimenRes resId: Int): Int {
@@ -84,7 +84,7 @@ object ResUtils {
     }
 
     fun getDimensionPixelSize(@DimenRes resId: Int): Int {
-        return AppUtils.appResources.getDimensionPixelSize(resId)
+        return AppUtils.defaultResources.getDimensionPixelSize(resId)
     }
 
     /**
@@ -96,7 +96,7 @@ object ResUtils {
      */
     fun getValue(@AnyRes id: Int): Float {
         val typedValue = TypedValue()
-        AppUtils.appResources.getValue(id, typedValue, true)
+        AppUtils.defaultResources.getValue(id, typedValue, true)
         return TypedValue.complexToFloat(typedValue.data)
     }
 }

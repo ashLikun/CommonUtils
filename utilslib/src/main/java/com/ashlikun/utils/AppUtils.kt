@@ -6,10 +6,8 @@ import android.content.pm.PackageInfo
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
-import android.text.TextUtils
 import androidx.core.content.FileProvider
 import com.ashlikun.utils.bug.BugUtils
-import com.ashlikun.utils.other.store.MMKVUtils
 import com.ashlikun.utils.provider.BaseContentProvider
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.resources.ResUtils
@@ -27,6 +25,17 @@ object AppUtils {
     var isDebug = false
     lateinit var app: Application
         private set
+
+    /**
+     * 默认的Context
+     * 为了适配使用Activity的,不是一股脑调用Application的
+     * 当后台调用的时候可能不是调用者的Activity
+     * 注意内存泄露
+     */
+    var defaultContextCall: () -> Context = {
+//        (ActivityManager.foregroundActivity ?: app)
+        app
+    }
 
     /**
      * 一定要在Application里面调用
@@ -115,17 +124,15 @@ object AppUtils {
             null
         }
 
+
     /**
      * Appication 的 resources
      */
     val appResources: Resources
         get() = app.resources
 
-    /**
-     * 为了适配使用Activity的,不是一股脑调用Application的
-     * 当后台调用的时候可能不是调用者的Activity
-     * 注意内存泄露
-     */
-    val context: Context
-        get() = (ActivityManager.foregroundActivity ?: app)
+    val defaultContext: Context
+        get() = defaultContextCall()
+    val defaultResources: Resources
+        get() = defaultContext.resources
 }

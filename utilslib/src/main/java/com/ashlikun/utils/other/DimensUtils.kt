@@ -12,6 +12,8 @@ import com.ashlikun.utils.AppUtils
  */
 
 object DimensUtils {
+
+
     /**
      * 将px值转换为dip或dp值，保证尺寸大小不变
      */
@@ -48,7 +50,7 @@ object DimensUtils {
      * 将px值转换为dip或dp值，保证尺寸大小不变
      */
     fun px2dip(pxValue: Float): Int {
-        val scale = AppUtils.appResources.displayMetrics.density
+        val scale = AppUtils.defaultContext.resources.displayMetrics.density
         return (pxValue / scale + 0.5f).toInt()
     }
 
@@ -56,7 +58,7 @@ object DimensUtils {
      * 将dip或dp值转换为px值，保证尺寸大小不变
      */
     fun dip2px(dipValue: Float): Int {
-        val scale = AppUtils.appResources.displayMetrics.density
+        val scale = AppUtils.defaultContext.resources.displayMetrics.density
         return (dipValue * scale + 0.5f).toInt()
     }
 
@@ -65,7 +67,7 @@ object DimensUtils {
      */
     fun px2sp(pxValue: Float): Int {
         val fontScale =
-            AppUtils.appResources.displayMetrics.scaledDensity
+            AppUtils.defaultContext.resources.displayMetrics.scaledDensity
         return (pxValue / fontScale + 0.5f).toInt()
     }
 
@@ -74,7 +76,7 @@ object DimensUtils {
      */
     fun sp2px(spValue: Float): Int {
         val fontScale =
-            AppUtils.appResources.displayMetrics.scaledDensity
+            AppUtils.defaultContext.resources.displayMetrics.scaledDensity
         return (spValue * fontScale + 0.5f).toInt()
     }
 }
