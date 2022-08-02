@@ -111,7 +111,7 @@ inline fun Int.resDrawable(themeId: Int) = ResUtils.getDrawable(themeId.resConte
 inline val Int.resTheme
     get() = resContextTheme.theme
 inline val Int.resContextTheme
-    get() = AppUtils.defaultContext.newContextTheme(this)
+    get() = AppUtils.fContext.newContextTheme(this)
 
 inline fun Context.newContextTheme(themeId: Int) = ContextThemeWrapper(this, themeId)
 inline fun Context.newTheme(themeId: Int) = ContextThemeWrapper(this, themeId).theme

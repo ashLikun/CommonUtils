@@ -10,6 +10,8 @@ import androidx.core.content.FileProvider
 import com.ashlikun.utils.bug.BugUtils
 import com.ashlikun.utils.provider.BaseContentProvider
 import com.ashlikun.utils.ui.ActivityManager
+import com.ashlikun.utils.ui.fActivity
+import com.ashlikun.utils.ui.fCActivity
 import com.ashlikun.utils.ui.resources.ResUtils
 import java.io.File
 
@@ -135,4 +137,11 @@ object AppUtils {
         get() = defaultContextCall()
     val defaultResources: Resources
         get() = defaultContext.resources
+
+    /**
+     * 栈顶的Activity
+     */
+    val fContext: Context
+        get() = fActivity ?: app
+
 }

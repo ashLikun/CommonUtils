@@ -33,7 +33,7 @@ internal class ToastImpl( //当前的吐司对象
      * 如 B返回A，然后显示toast，或者先显示toast，然后跳转
      */
     private val mWindowLifecycle by lazy {
-        WindowLifecycle(WeakReference(AppUtils.defaultContext))
+        WindowLifecycle(WeakReference(AppUtils.fContext))
     }
 
 
