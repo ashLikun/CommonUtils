@@ -164,28 +164,13 @@ object FileUtils {
      * 转换文件大小,指定转换的类型
      */
     fun formetFileSize(fileS: Long, sizeType: Int = SIZETYPE_B): Double {
-        val df = DecimalFormat("0.00")
+        val df = DecimalFormat("#.##")
         var fileSizeLong = 0.0
         when (sizeType) {
-            SIZETYPE_B -> fileSizeLong = java.lang.Double.valueOf(
-                df.format(
-                    fileS.toDouble()
-                )
-            )
-            SIZETYPE_KB -> fileSizeLong = java.lang.Double.valueOf(
-                df.format(
-                    fileS.toDouble() / 1024
-                )
-            )
-            SIZETYPE_MB -> fileSizeLong = java.lang.Double.valueOf(
-                df.format(
-                    fileS.toDouble() / 1048576
-                )
-            )
-            SIZETYPE_GB -> fileSizeLong = java.lang.Double.valueOf(
-                df
-                    .format(fileS.toDouble() / 1073741824)
-            )
+            SIZETYPE_B -> fileSizeLong = df.format(fileS.toDouble()).toDoubleOrNull() ?: fileSizeLong
+            SIZETYPE_KB -> fileSizeLong = df.format(fileS.toDouble() / 1024).toDoubleOrNull() ?: fileSizeLong
+            SIZETYPE_MB -> fileSizeLong = df.format(fileS.toDouble() / 1048576).toDoubleOrNull() ?: fileSizeLong
+            SIZETYPE_GB -> fileSizeLong = df.format(fileS.toDouble() / 1073741824).toDoubleOrNull() ?: fileSizeLong
             else -> {}
         }
         return fileSizeLong
@@ -199,7 +184,7 @@ object FileUtils {
      */
     fun autoFormetFileSize(size: Double): String {
         //# 一个数字，不包括 0 , 0 一个数字
-        val df = DecimalFormat("0.#")
+        val df = DecimalFormat("#.##")
         val kiloByte = size / 1024
         if (kiloByte < 1) {
             return df.format(size) + "Byte"

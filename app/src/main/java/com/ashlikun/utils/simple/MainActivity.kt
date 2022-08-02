@@ -23,6 +23,7 @@ import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.taskAsync
 import com.ashlikun.utils.other.coroutines.taskLaunch
 import com.ashlikun.utils.other.coroutines.taskLaunchMain
+import com.ashlikun.utils.other.file.FileUtils
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
 import com.ashlikun.utils.other.worker.WorkFlow
@@ -162,10 +163,12 @@ class MainActivity : AppCompatActivity() {
         taskLaunch {
             MainHandle.post {
                 LogUtils.e("wwwwwwwwwwwwwwwwwww")
+
                 stop()
             }
         }
         LogUtils.e("wddddddddddddddddddd${ActivityManager.fCActivity}")
+
     }
 
     @Synchronized
@@ -209,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
 
     fun onView4Click(view: View) {
+        FileUtils.formetFileSize(14457260, FileUtils.SIZETYPE_MB)
         Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
         ThreadUtils.execute {
 //            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
