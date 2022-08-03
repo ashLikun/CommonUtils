@@ -11,6 +11,8 @@ import android.text.TextPaint
 import android.text.TextUtils
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import kotlin.experimental.and
 import kotlin.math.min
 
@@ -217,7 +219,7 @@ object StringUtils {
         for (i in 0 until precision) {
             pattern.append("0")
         }
-        return DecimalFormat(pattern.toString()).format(value)
+        return DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH)).format(value)
     }
 
     /**
@@ -227,14 +229,14 @@ object StringUtils {
      */
     fun numberFormat3(value: Double, precision: Int): String {
         if (precision == 0) {
-            return DecimalFormat("0,###").format(value)
+            return DecimalFormat("0,###", DecimalFormatSymbols(Locale.ENGLISH)).format(value)
         }
         // #,##0.0000:金钱数字保留4位(不足补一位0)小数且三位三位的隔开
         val pattern = StringBuilder("#,##0.")
         for (i in 0 until precision) {
             pattern.append("0")
         }
-        return DecimalFormat(pattern.toString()).format(value)
+        return DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH)).format(value)
     }
 
     /**

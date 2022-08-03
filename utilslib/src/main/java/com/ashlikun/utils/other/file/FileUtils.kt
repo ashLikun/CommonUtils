@@ -9,6 +9,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 /**
  * @author　　: 李坤
@@ -164,7 +166,7 @@ object FileUtils {
      * 转换文件大小,指定转换的类型
      */
     fun formetFileSize(fileS: Long, sizeType: Int = SIZETYPE_B): Double {
-        val df = DecimalFormat("#.##")
+        val df = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
         var fileSizeLong = 0.0
         when (sizeType) {
             SIZETYPE_B -> fileSizeLong = df.format(fileS.toDouble()).toDoubleOrNull() ?: fileSizeLong
@@ -184,7 +186,7 @@ object FileUtils {
      */
     fun autoFormetFileSize(size: Double): String {
         //# 一个数字，不包括 0 , 0 一个数字
-        val df = DecimalFormat("#.##")
+        val df = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
         val kiloByte = size / 1024
         if (kiloByte < 1) {
             return df.format(size) + "Byte"

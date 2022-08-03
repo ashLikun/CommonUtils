@@ -3,6 +3,8 @@ package com.ashlikun.utils.ui.extend
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 /**
  * 作者　　: 李坤
@@ -22,7 +24,7 @@ fun String.moneyFormat3(precision: Int): String {
             return this
         }
         if (precision <= 0) {
-            val ff = DecimalFormat("#,##0")
+            val ff = DecimalFormat("#,##0", DecimalFormatSymbols(Locale.ENGLISH))
             ff.roundingMode = RoundingMode.DOWN
             return ff.format(this.toDouble())
         }
@@ -31,7 +33,7 @@ fun String.moneyFormat3(precision: Int): String {
         for (i in 0 until precision) {
             pattern.append("0")
         }
-        val ff = DecimalFormat(pattern.toString())
+        val ff = DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH))
         ff.roundingMode = RoundingMode.DOWN
         return ff.format(this.toDouble())
     } catch (e: Exception) {
