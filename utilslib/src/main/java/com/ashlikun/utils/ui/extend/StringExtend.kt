@@ -24,7 +24,7 @@ fun String.moneyFormat3(precision: Int): String {
             return this
         }
         if (precision <= 0) {
-            val ff = DecimalFormat("#,##0", DecimalFormatSymbols(Locale.ENGLISH))
+            val ff = DecimalFormat("#,##0", DecimalFormatSymbols(Locale.CHINA))
             ff.roundingMode = RoundingMode.DOWN
             return ff.format(this.toDouble())
         }
@@ -33,7 +33,7 @@ fun String.moneyFormat3(precision: Int): String {
         for (i in 0 until precision) {
             pattern.append("0")
         }
-        val ff = DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH))
+        val ff = DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.CHINA))
         ff.roundingMode = RoundingMode.DOWN
         return ff.format(this.toDouble())
     } catch (e: Exception) {

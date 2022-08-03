@@ -219,7 +219,7 @@ object StringUtils {
         for (i in 0 until precision) {
             pattern.append("0")
         }
-        return DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH)).format(value)
+        return DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.CHINA)).format(value)
     }
 
     /**
@@ -229,14 +229,14 @@ object StringUtils {
      */
     fun numberFormat3(value: Double, precision: Int): String {
         if (precision == 0) {
-            return DecimalFormat("0,###", DecimalFormatSymbols(Locale.ENGLISH)).format(value)
+            return DecimalFormat("0,###", DecimalFormatSymbols(Locale.CHINA)).format(value)
         }
         // #,##0.0000:金钱数字保留4位(不足补一位0)小数且三位三位的隔开
         val pattern = StringBuilder("#,##0.")
         for (i in 0 until precision) {
             pattern.append("0")
         }
-        return DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.ENGLISH)).format(value)
+        return DecimalFormat(pattern.toString(), DecimalFormatSymbols(Locale.CHINA)).format(value)
     }
 
     /**
