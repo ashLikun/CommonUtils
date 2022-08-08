@@ -83,7 +83,7 @@ internal class SharedPreUtils : IStore {
         } else {
             //其他进程，使用ContentProvider
             try {
-                return ImpSpProvider.removeToProvider(AppUtils.app, name, key)
+                return ImpSpProvider.removeToProvider(AppUtils.base, name, key)
             } catch (e: Exception) {
                 e.printStackTrace()
                 false
@@ -98,7 +98,7 @@ internal class SharedPreUtils : IStore {
         } else {
             //其他进程，使用ContentProvider
             try {
-                return ImpSpProvider.clearToProvider(AppUtils.app, name)
+                return ImpSpProvider.clearToProvider(AppUtils.base, name)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -169,7 +169,7 @@ internal class SharedPreUtils : IStore {
     }
 
     fun getSP(name: String) =
-        AppUtils.app.getSharedPreferences(name, Context.MODE_PRIVATE)
+        AppUtils.base.getSharedPreferences(name, Context.MODE_PRIVATE)
 
 
 }

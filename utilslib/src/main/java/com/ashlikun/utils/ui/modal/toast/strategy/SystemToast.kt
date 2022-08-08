@@ -1,6 +1,7 @@
 package com.ashlikun.utils.ui.modal.toast.strategy
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import android.view.View
@@ -20,9 +21,9 @@ import kotlinx.coroutines.Runnable
  * 功能介绍：系统 Toast
  */
 
-open class SystemToast(application: Application) : IToast {
+open class SystemToast(context: Context) : IToast {
     val toast by lazy {
-        Toast.makeText(application, "", Toast.LENGTH_SHORT)
+        Toast.makeText(context, "", Toast.LENGTH_SHORT)
     }
     override var callback: OnCallback? = null
 

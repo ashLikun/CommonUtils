@@ -21,7 +21,7 @@ internal class MMKVUtils : IStore {
         }
 
         fun init() {
-            MMKV.initialize(AppUtils.app)
+            MMKV.initialize(AppUtils.base)
         }
     }
 

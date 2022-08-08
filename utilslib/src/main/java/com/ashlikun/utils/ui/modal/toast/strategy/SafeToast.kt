@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui.modal.toast.strategy
 
 import android.annotation.TargetApi
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Message
@@ -16,7 +17,7 @@ import android.widget.Toast
  * 功能介绍：Toast 显示安全处理
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-class SafeToast(application: Application) : NotificationToast(application) {
+class SafeToast(context: Context) : NotificationToast(context) {
     /**
      * 是否已经 Hook 了一次 TN 内部类
      */

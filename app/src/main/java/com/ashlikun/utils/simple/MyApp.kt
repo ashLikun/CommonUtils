@@ -1,6 +1,7 @@
 package com.ashlikun.utils.simple
 
 import android.app.Application
+import android.content.Context
 import com.ashlikun.utils.AppUtils
 
 /**
@@ -11,6 +12,11 @@ import com.ashlikun.utils.AppUtils
  * 功能介绍：
  */
 class MyApp : Application() {
+    override fun attachBaseContext(base: Context?) {
+        AppUtils.attachBaseContext(base)
+        super.attachBaseContext(base)
+    }
+
     override fun onCreate() {
         super.onCreate()
         AppUtils.init(this)

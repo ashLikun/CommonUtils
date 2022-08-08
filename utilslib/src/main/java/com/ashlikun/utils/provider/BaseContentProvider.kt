@@ -4,6 +4,7 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import com.ashlikun.utils.AppUtils
 
 /**
  * @author　　: 李坤
@@ -25,7 +26,9 @@ class BaseContentProvider : ContentProvider() {
         const val CONTENT = "content://"
         var AUTHORITY = ""
         const val SEPARATOR = "/"
-        val CONTENT_URI = CONTENT + AUTHORITY
+        val CONTENT_URI by lazy {
+            CONTENT + AUTHORITY.ifBlank { AppUtils.base.applicationInfo.packageName + "ContentProvider" }
+        }
 
         /**
          * sp处理

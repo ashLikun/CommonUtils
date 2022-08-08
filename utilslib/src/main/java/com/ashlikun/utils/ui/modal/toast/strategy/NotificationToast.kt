@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui.modal.toast.strategy
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.widget.Toast
 import com.ashlikun.utils.ui.modal.toast.config.OnCallback
 import java.lang.reflect.InvocationHandler
@@ -15,8 +16,8 @@ import java.lang.reflect.Proxy
  * 参考https://github.com/getActivity/ToastUtils
  * 功能介绍：处理 Toast 关闭通知栏权限之后无法弹出的问题
  */
-open class NotificationToast(application: Application) :
-    SystemToast(application) {
+open class NotificationToast(context: Context) :
+    SystemToast(context) {
     override fun show() {
         hookNotificationService()
         super.show()

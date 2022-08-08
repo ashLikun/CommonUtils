@@ -27,6 +27,8 @@ object AppUtils {
     var isDebug = false
     lateinit var app: Application
         private set
+    lateinit var base: Context
+        private set
 
     /**
      * 默认的Context
@@ -39,15 +41,19 @@ object AppUtils {
         app
     }
 
+    fun attachBaseContext(context: Context?) {
+        if (context != null)
+            base = context
+    }
+
     /**
      * 一定要在Application里面调用
      * 在全部库的最前面调用
      */
     fun init(myApp: Application) {
         app = myApp
+        base = myApp
         myApp.registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
-        //设置内容提供者的名字
-        BaseContentProvider.AUTHORITY = myApp.applicationInfo.packageName + "ContentProvider"
         //解决一些疑难杂症
         BugUtils.init()
     }
