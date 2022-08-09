@@ -22,14 +22,7 @@ import java.io.File
  * 功能介绍：文件路径一些工具
  */
 inline val File.toUri
-    get() = PathUtils.getUri(this)
-
-inline val File.toImageUri
-    get() = PathUtils.getImageContentUri(this)
-inline val File.toVideoUri
-    get() = PathUtils.getVideoContentUri(this)
-inline val File.toAudioUri
-    get() = PathUtils.getAudioContentUri(this)
+    get() = AppUtils.getUri(this)
 
 object PathUtils {
     /**
