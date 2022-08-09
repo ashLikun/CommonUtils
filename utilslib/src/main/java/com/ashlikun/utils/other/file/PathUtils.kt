@@ -448,6 +448,10 @@ object PathUtils {
      * 文件-->uri
      */
     fun getFileContentUri(file: File): Uri? {
+        // 低版本直接用 Uri.fromFile
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return Uri.fromFile(file);
+        }
         val volumeName = "external"
         val filePath = file.absolutePath
         var uri: Uri? = null
@@ -469,6 +473,9 @@ object PathUtils {
      */
     fun getUri(file: File): Uri? {
         if (!file.exists()) return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return Uri.fromFile(file);
+        }
         val filePath = file.absolutePath
         if (MediaFile.isImageFileType(filePath)) {
             return getImageContentUri(file)
@@ -485,6 +492,9 @@ object PathUtils {
      */
     fun getImageContentUri(file: File): Uri? {
         if (!file.exists()) return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return Uri.fromFile(file);
+        }
         val filePath = file.absolutePath
         val cursor = AppUtils.app.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.Media._ID), MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null)
@@ -506,6 +516,9 @@ object PathUtils {
      */
     fun getVideoContentUri(file: File): Uri? {
         if (!file.exists()) return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return Uri.fromFile(file);
+        }
         var uri: Uri? = null
         val filePath = file.absolutePath
         val cursor = AppUtils.app.contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
