@@ -134,18 +134,15 @@ object MediaFile {
      * 是否是音频文件
      */
     fun isAudioFileType(fileType: Int): Boolean {
-        return fileType >= FIRST_AUDIO_FILE_TYPE &&
-                fileType <= LAST_AUDIO_FILE_TYPE ||
-                fileType >= FIRST_MIDI_FILE_TYPE &&
-                fileType <= LAST_MIDI_FILE_TYPE
+        return fileType in FIRST_AUDIO_FILE_TYPE..LAST_AUDIO_FILE_TYPE ||
+                fileType in FIRST_MIDI_FILE_TYPE..LAST_MIDI_FILE_TYPE
     }
 
     /**
      * 是否是视频文件
      */
     fun isVideoFileType(fileType: Int): Boolean {
-        return fileType >= FIRST_VIDEO_FILE_TYPE &&
-                fileType <= LAST_VIDEO_FILE_TYPE
+        return fileType in FIRST_VIDEO_FILE_TYPE..LAST_VIDEO_FILE_TYPE
     }
 
     /**
@@ -172,8 +169,7 @@ object MediaFile {
      * 是否是图片文件
      */
     fun isImageFileType(fileType: Int): Boolean {
-        return fileType >= FIRST_IMAGE_FILE_TYPE &&
-                fileType <= LAST_IMAGE_FILE_TYPE
+        return fileType in FIRST_IMAGE_FILE_TYPE..LAST_IMAGE_FILE_TYPE
     }
 
     /**
@@ -215,7 +211,7 @@ object MediaFile {
      */
     fun getFileType(path: String): MediaFileType? {
         val lastDot = path.lastIndexOf(".")
-        return if (lastDot < 0) null else sFileTypeMap[path.substring(lastDot + 1).toUpperCase()]
+        return if (lastDot < 0) null else sFileTypeMap[path.substring(lastDot + 1).uppercase()]
     }
 
     /**

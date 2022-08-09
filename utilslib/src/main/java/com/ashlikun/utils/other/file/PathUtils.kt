@@ -1,7 +1,7 @@
 package com.ashlikun.utils.other.file
 
-import android.annotation.SuppressLint
 import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -10,8 +10,8 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.other.MediaFile
 import java.io.File
 
 /**
@@ -21,16 +21,24 @@ import java.io.File
  *
  * 功能介绍：文件路径一些工具
  */
+inline val File.toUri
+    get() = PathUtils.getUri(this)
+
+inline val File.toImageUri
+    get() = PathUtils.getImageContentUri(this)
+inline val File.toVideoUri
+    get() = PathUtils.getVideoContentUri(this)
+inline val File.toAudioUri
+    get() = PathUtils.getAudioContentUri(this)
 
 object PathUtils {
-
     /**
      * 获取照片选择的文件路径
      */
     fun getFileSelectPath(data: Intent): String? {
         return if (data.data == null) {
             null
-        } else getPath(AppUtils.app, data.data!!)
+        } else getPath(data.data!!)
     }
 
     /**
@@ -325,14 +333,13 @@ object PathUtils {
      * @param uri
      * @return 文件路径
      */
-    @SuppressLint("NewApi")
-    fun getPath(context: Context, uri: Uri): String {
+    fun getPath(uri: Uri): String {
         if (uri == null) {
             return ""
         }
         // DocumentProvider
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-            && DocumentsContract.isDocumentUri(context, uri)
+            && DocumentsContract.isDocumentUri(AppUtils.app, uri)
         ) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
@@ -349,7 +356,7 @@ object PathUtils {
                     Uri.parse("content://downloads/public_downloads"),
                     java.lang.Long.valueOf(id)
                 )
-                return getDataColumn(context, contentUri)
+                return getDataColumn(AppUtils.app, contentUri)
             } else if (isMediaDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":").toTypedArray()
@@ -365,22 +372,178 @@ object PathUtils {
                     return ""
                 }
                 return getDataColumn(
-                    context, contentUri, selection,
+                    AppUtils.app, contentUri, selection,
                     selectionArgs
                 )
             }
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
-            Log.e("ssssss", "content")
             // Return the remote address
-            return if (isGooglePhotosUri(uri)) uri.lastPathSegment ?: "" else getDataColumn(
-                context,
-                uri
-            )
+            return if (isGooglePhotosUri(uri)) uri.lastPathSegment ?: "" else getDataColumn(AppUtils.app, uri)
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
-            Log.e("ssssss", "file")
             return uri.path ?: ""
         }
         return ""
+    }
+
+
+    /**
+     * 获取 图片 ContentValue
+     */
+    fun getImageContentValues(file: File,
+                              mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
+                              desc: String = "App Save Image",
+                              currentTime: Long = System.currentTimeMillis()) =
+        ContentValues().apply {
+            put(MediaStore.Images.Media.TITLE, file.name)
+            put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
+            put(MediaStore.Images.Media.DATE_ADDED, currentTime)
+            put(MediaStore.Images.Media.DATE_MODIFIED, currentTime)
+            put(MediaStore.Images.Media.DATE_TAKEN, currentTime)
+            put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+            put(MediaStore.Images.Media.DESCRIPTION, desc)
+            put(MediaStore.Images.Media.ORIENTATION, 0)
+            put(MediaStore.Images.Media.DATA, file.absolutePath)
+            put(MediaStore.Images.Media.SIZE, file.length())
+        }
+
+    /**
+     * 获取 视频 ContentValue
+     */
+    fun getVideoContentValues(file: File,
+                              mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
+                              desc: String = "App Save Video",
+                              currentTime: Long = System.currentTimeMillis()) =
+        ContentValues().apply {
+            put(MediaStore.Video.Media.TITLE, file.name)
+            put(MediaStore.Video.Media.DISPLAY_NAME, file.name)
+            put(MediaStore.Video.Media.DATE_ADDED, currentTime)
+            put(MediaStore.Video.Media.DATE_MODIFIED, currentTime)
+            put(MediaStore.Video.Media.DATE_TAKEN, currentTime)
+            put(MediaStore.Video.Media.MIME_TYPE, mimeType)
+            put(MediaStore.Video.Media.DESCRIPTION, desc)
+            put(MediaStore.Video.Media.ORIENTATION, 0)
+            put(MediaStore.Video.Media.DATA, file.absolutePath)
+            put(MediaStore.Video.Media.SIZE, file.length())
+        }
+
+    /**
+     * 获取 音频 ContentValue
+     */
+    fun getAudioContentValues(file: File,
+                              mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "audio/*",
+                              currentTime: Long = System.currentTimeMillis()) =
+        ContentValues().apply {
+            put(MediaStore.Audio.Media.TITLE, file.name)
+            put(MediaStore.Audio.Media.DISPLAY_NAME, file.name)
+            put(MediaStore.Audio.Media.DATE_ADDED, currentTime)
+            put(MediaStore.Audio.Media.DATE_MODIFIED, currentTime)
+            put(MediaStore.Audio.Media.DATE_TAKEN, currentTime)
+            put(MediaStore.Audio.Media.MIME_TYPE, mimeType)
+            put(MediaStore.Audio.Media.ORIENTATION, 0)
+            put(MediaStore.Audio.Media.DATA, file.absolutePath)
+            put(MediaStore.Audio.Media.SIZE, file.length())
+        }
+
+    /**
+     * 文件-->uri
+     */
+    fun getFileContentUri(file: File): Uri? {
+        val volumeName = "external"
+        val filePath = file.absolutePath
+        var uri: Uri? = null
+        val cursor = AppUtils.app.contentResolver.query(MediaStore.Files.getContentUri(volumeName), arrayOf(MediaStore.Files.FileColumns._ID),
+            MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
+                val id: Int = cursor.getInt(idIndex)
+                uri = MediaStore.Files.getContentUri(volumeName, id.toLong())
+            }
+            cursor.close()
+        }
+        return uri
+    }
+
+    /**
+     * File 自动转换成URI
+     */
+    fun getUri(file: File): Uri? {
+        if (!file.exists()) return null
+        val filePath = file.absolutePath
+        if (MediaFile.isImageFileType(filePath)) {
+            return getImageContentUri(file)
+        } else if (MediaFile.isVideoFileType(filePath)) {
+            return getVideoContentUri(file)
+        } else if (MediaFile.isAudioFileType(filePath)) {
+            return getAudioContentUri(file)
+        }
+        return getFileContentUri(file)
+    }
+
+    /**
+     * 图片文件-->Url
+     */
+    fun getImageContentUri(file: File): Uri? {
+        if (!file.exists()) return null
+        val filePath = file.absolutePath
+        val cursor = AppUtils.app.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Images.Media._ID), MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null)
+        var uri: Uri? = null
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
+                val id: Int = cursor.getInt(idIndex)
+                val baseUri = Uri.parse("content://media/external/images/media")
+                uri = Uri.withAppendedPath(baseUri, "" + id)
+            }
+            cursor.close()
+        }
+        return uri ?: AppUtils.app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, getImageContentValues(file))
+    }
+
+    /**
+     * 视频文件---》Url
+     */
+    fun getVideoContentUri(file: File): Uri? {
+        if (!file.exists()) return null
+        var uri: Uri? = null
+        val filePath = file.absolutePath
+        val cursor = AppUtils.app.contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Video.Media._ID),
+            MediaStore.Video.Media.DATA + "=? ",
+            arrayOf(filePath),
+            null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
+                val id: Int = cursor.getInt(idIndex)
+                val baseUri = Uri.parse("content://media/external/video/media")
+                uri = Uri.withAppendedPath(baseUri, "" + id)
+            }
+            cursor.close()
+        }
+        return uri ?: AppUtils.app.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, getVideoContentValues(file))
+    }
+
+    /**
+     * 音频文件到URL
+     */
+    fun getAudioContentUri(file: File): Uri? {
+        if (!file.exists()) return null
+        var uri: Uri? = null
+        val filePath = file.absolutePath
+        val cursor = AppUtils.app.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Audio.Media._ID), MediaStore.Audio.Media.DATA + "=? ", arrayOf(filePath), null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
+                val id: Int = cursor.getInt(idIndex)
+                val baseUri = Uri.parse("content://media/external/audio/media")
+                uri = Uri.withAppendedPath(baseUri, "" + id)
+            }
+            cursor.close()
+        }
+        return uri ?: AppUtils.app.contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getAudioContentValues(file))
     }
 
     fun getDataColumn(
