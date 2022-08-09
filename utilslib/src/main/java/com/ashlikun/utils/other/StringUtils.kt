@@ -63,7 +63,7 @@ inline fun Number.numberFormat3(precision: Int = 2) =
 /**
  * 最大值裁剪字符串
  */
-inline fun String.substring(maxLenght: Int) = this.substring(0, min(this.length - 1, maxLenght))
+inline fun String.substringMax(maxLenght: Int) = this.substring(0, min(this.length - 1, maxLenght))
 
 object StringUtils {
     /**
