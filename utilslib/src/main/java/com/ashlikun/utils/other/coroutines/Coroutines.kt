@@ -107,7 +107,7 @@ inline fun <T> taskAsync(
     context: CoroutineContext = EmptyCoroutineContext,
     delayTime: Long = 0,
     noinline job: suspend () -> T
-): Deferred<T> = GlobalScope.async(CoroutineExceptionHandler(context)) {
+): Deferred<T> = DefaultScope().async(CoroutineExceptionHandler(context)) {
     delay(delayTime)
     job()
 }
@@ -120,7 +120,7 @@ inline fun taskLaunch(
     context: CoroutineContext = EmptyCoroutineContext,
     delayTime: Long = 0,
     noinline job: suspend () -> Unit
-) = GlobalScope.launch(CoroutineExceptionHandler(context)) {
+) = DefaultScope().launch(CoroutineExceptionHandler(context)) {
     delay(delayTime)
     job()
 }
