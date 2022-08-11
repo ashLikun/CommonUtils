@@ -1,9 +1,13 @@
 package com.ashlikun.utils.ui.keyboard
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.view.View
+import android.view.animation.LinearInterpolator
+import com.ashlikun.utils.R
 import com.ashlikun.utils.ui.extend.getActivity
 
 /**
@@ -23,13 +27,15 @@ typealias  OnMaxParentHeightChange = (height: Int) -> Unit
  *
  * 功能介绍：自动适应软键盘高度的布局
  */
-open class AutoHeightLayout @JvmOverloads constructor(
+open class SoftKeyHeightLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : SoftKeyboardSizeWatchLayout(
     context, attrs, defStyleAttr
 ) {
+    var isPaddingBottom = false
+    var bottomDuration = 200
     var maxParentHeightChange: OnMaxParentHeightChange? = null
 
     var maxParentHeight = 0
@@ -44,6 +50,10 @@ open class AutoHeightLayout @JvmOverloads constructor(
         onSoftClose.add {
             onSoftClose()
         }
+        val a = context.obtainStyledAttributes(attrs, R.styleable.SoftKeyHeightLayout)
+        isPaddingBottom = a.getBoolean(R.styleable.SoftKeyHeightLayout_skh_is_padding_bottom, isPaddingBottom)
+        bottomDuration = a.getInt(R.styleable.SoftKeyHeightLayout_skh_bottom_duration, bottomDuration)
+        a.recycle()
     }
 
     override fun onFinishInflate() {
@@ -88,15 +98,44 @@ open class AutoHeightLayout @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
+    val bottomView by lazy {
+        View(context)
+    }
+
     open fun onSoftPop(height: Int) {
         if (softKeyboardHeight != height) {
             softKeyboardHeight = height
             KeyboardUtils.setDefKeyboardHeight(context, softKeyboardHeight)
             onSoftKeyboardHeightChanged(softKeyboardHeight)
         }
+        if (isPaddingBottom) {
+            ValueAnimator.ofInt(0, height).apply {
+                addUpdateListener {
+                    val w = it.animatedValue as Int
+                    setPadding(paddingLeft, paddingTop, paddingRight, w)
+                }
+            }.apply {
+                duration = bottomDuration.toLong()
+                interpolator = LinearInterpolator()
+                start()
+            }
+        }
     }
 
-    open fun onSoftClose() {}
+    open fun onSoftClose() {
+        if (isPaddingBottom) {
+            ValueAnimator.ofInt(paddingBottom, 0).apply {
+                addUpdateListener {
+                    val w = it.animatedValue as Int
+                    setPadding(paddingLeft, paddingTop, paddingRight, w)
+                }
+            }.apply {
+                duration = bottomDuration.toLong()
+                interpolator = LinearInterpolator()
+                start()
+            }
+        }
+    }
 
     /**
      * 键盘高度改变了

@@ -26,7 +26,6 @@ class Main2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        DrawableUtils.getStateListDrawable(R.mipmap.aaaaaa.resDrawable)
         binding.ceshi.setOnClickListener {
 //            AnimUtils.updateTextSize(binding.textView, 30f, 50f).apply { start() }
 //            ToastUtils.show("dddddddd")

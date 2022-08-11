@@ -11,9 +11,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="colorPrimaryVariant">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">#eeeeee</item>
         <!--<item name="android:buttonStyle">?android:attr/selectableItemBackground</item>-->
         <!--<item name="android:requiresFadingEdge">vertical</item>-->
         <!--<item name="android:requiresFadingEdge">vertical</item>-->

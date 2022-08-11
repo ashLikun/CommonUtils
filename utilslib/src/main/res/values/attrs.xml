@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SoftKeyHeightLayout">
+        <!--底部是否预留键盘空间-->
+        <attr name="skh_is_padding_bottom" format="boolean"></attr>
+        <!--键盘出来底部弹出的动画时间-->
+        <attr name="skh_bottom_duration" format="integer"></attr>
+    </declare-styleable>
+</resources>
