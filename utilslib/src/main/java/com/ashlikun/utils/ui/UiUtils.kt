@@ -1,6 +1,10 @@
 package com.ashlikun.utils.ui
 
 import android.R
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.TimeInterpolator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,11 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.setPadding
 import com.ashlikun.utils.other.DimensUtils.dip2px
 import com.ashlikun.utils.ui.extend.getInflaterView
+import com.ashlikun.utils.ui.extend.padding
+import com.ashlikun.utils.ui.extend.setViewSize
 import com.google.android.material.tabs.TabLayout
 
 typealias OnSizeListener = (width: Int, height: Int) -> Unit
@@ -162,38 +170,148 @@ object UiUtils {
      * @param width
      */
     fun setViewSize(view: View, width: Int, height: Int) {
-        var params = view.layoutParams
-        if (params == null) {
-            params = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
-        params.width = width
-        params.height = height
-        view.layoutParams = params
+        view.setViewSize(width, height)
     }
 
     /**
      * 设置view   Margin
-     *
-     * @param view
+     * @param duration 动画执行时间 > 0 就启用动画
+     * @param interpolator 动画的插值
      */
-    fun setViewMargin(
-        view: View,
-        leftMargin: Int,
-        topMargin: Int,
-        rightMargin: Int,
-        bottomMargin: Int
-    ) {
+    fun setViewMargin(view: View,
+                      leftMargin: Int? = null,
+                      topMargin: Int? = null,
+                      rightMargin: Int? = null,
+                      bottomMargin: Int? = null,
+                      duration: Long = 0,
+                      interpolator: TimeInterpolator? = null) {
         val params = view.layoutParams
         if (params != null && params is MarginLayoutParams) {
-            params.leftMargin = leftMargin
-            params.topMargin = topMargin
-            params.rightMargin = rightMargin
-            params.bottomMargin = bottomMargin
-            view.layoutParams = params
+            if (duration > 0) {
+                val animSet = AnimatorSet()
+                val animList = mutableListOf<Animator>()
+                if (leftMargin != null) {
+                    animList.add(ValueAnimator.ofInt(params.leftMargin, leftMargin).apply {
+                        addUpdateListener {
+                            val w = it.animatedValue as Int
+                            params.leftMargin = w
+                            view.layoutParams = params
+                        }
+                    })
+                }
+                if (topMargin != null) {
+                    animList.add(ValueAnimator.ofInt(params.topMargin, topMargin).apply {
+                        addUpdateListener {
+                            val w = it.animatedValue as Int
+                            params.topMargin = w
+                            view.layoutParams = params
+                        }
+                    })
+                }
+                if (rightMargin != null) {
+                    animList.add(ValueAnimator.ofInt(params.rightMargin, rightMargin).apply {
+                        addUpdateListener {
+                            val w = it.animatedValue as Int
+                            params.rightMargin = w
+                            view.layoutParams = params
+                        }
+                    })
+                }
+                if (bottomMargin != null) {
+                    animList.add(ValueAnimator.ofInt(params.bottomMargin, bottomMargin).apply {
+                        addUpdateListener {
+                            val w = it.animatedValue as Int
+                            params.bottomMargin = w
+                            view.layoutParams = params
+                        }
+                    })
+                }
+                animSet.playTogether(animList)
+                animSet.duration = duration
+                animSet.interpolator = interpolator ?: LinearInterpolator()
+                animSet.start()
+            } else {
+                if (leftMargin != null)
+                    params.leftMargin = leftMargin
+                if (topMargin != null)
+                    params.topMargin = topMargin
+                if (rightMargin != null)
+                    params.rightMargin = rightMargin
+                if (bottomMargin != null)
+                    params.bottomMargin = bottomMargin
+                view.layoutParams = params
+            }
+
         }
+    }
+
+    /**
+     * 设置view   Padding
+     * @param duration 动画执行时间 > 0 就启用动画
+     * @param interpolator 动画的插值
+     */
+    fun setPaddings(view: View,
+                    padding: Int? = null,
+                    leftPadding: Int? = null,
+                    topPadding: Int? = null,
+                    rightPadding: Int? = null,
+                    bottomPadding: Int? = null,
+                    duration: Long = 0,
+                    interpolator: TimeInterpolator? = null) {
+        if (duration > 0) {
+            val animSet = AnimatorSet()
+            val animList = mutableListOf<Animator>()
+            if (padding != null) {
+                animList.add(ValueAnimator.ofInt(view.padding(), padding).apply {
+                    addUpdateListener {
+                        view.setPadding(padding)
+                    }
+                })
+            } else {
+                if (leftPadding != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingLeft, leftPadding).apply {
+                        addUpdateListener {
+                            view.setPadding(leftPadding, view.paddingTop, view.paddingRight, view.paddingBottom)
+                        }
+                    })
+                }
+                if (topPadding != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingTop, topPadding).apply {
+                        addUpdateListener {
+                            view.setPadding(view.paddingLeft, topPadding, view.paddingRight, view.paddingBottom)
+                        }
+                    })
+                }
+                if (rightPadding != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingRight, rightPadding).apply {
+                        addUpdateListener {
+                            view.setPadding(view.paddingLeft, view.paddingTop, rightPadding, view.paddingBottom)
+                        }
+                    })
+                }
+                if (bottomPadding != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingBottom, bottomPadding).apply {
+                        addUpdateListener {
+                            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, bottomPadding)
+                        }
+                    })
+                }
+            }
+            animSet.playTogether(animList)
+            animSet.duration = duration
+            animSet.interpolator = interpolator ?: LinearInterpolator()
+            animSet.start()
+        } else {
+            if (padding != null) {
+                view.setPadding(padding)
+            } else {
+                view.setPadding(leftPadding ?: view.paddingLeft,
+                    topPadding ?: view.paddingTop,
+                    rightPadding ?: view.paddingRight,
+                    bottomPadding ?: view.paddingBottom)
+            }
+        }
+
     }
 
     /**
