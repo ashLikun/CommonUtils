@@ -78,6 +78,7 @@ object LogUtils {
      */
     fun d(content: Any?, tr: Throwable? = null) {
         if (content == null) return
+        if (!AppUtils.isDebug && call == null) return
         val tag = generateTag()
         if (call?.invoke(D, tag, "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
@@ -89,6 +90,7 @@ object LogUtils {
      */
     fun e(content: Any?, tr: Throwable? = null) {
         if (content == null) return
+        if (!AppUtils.isDebug && call == null) return
         val tag = generateTag()
         if (call?.invoke(E, tag, "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
@@ -101,6 +103,7 @@ object LogUtils {
      */
     fun i(content: Any?, tr: Throwable? = null) {
         if (content == null) return
+        if (!AppUtils.isDebug && call == null) return
         val tag = generateTag()
         if (call?.invoke(I, tag, "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
@@ -112,6 +115,7 @@ object LogUtils {
      */
     fun v(content: Any?, tr: Throwable? = null) {
         if (content == null) return
+        if (!AppUtils.isDebug && call == null) return
         val tag = generateTag()
         if (call?.invoke(V, tag, "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
@@ -123,6 +127,7 @@ object LogUtils {
      */
     fun w(content: Any?, tr: Throwable? = null) {
         if (content == null) return
+        if (!AppUtils.isDebug && call == null) return
         val tag = generateTag()
         if (call?.invoke(W, tag, "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
@@ -132,6 +137,7 @@ object LogUtils {
     fun w(tr: Throwable) = w("", tr)
     fun wtf(content: Any?, tr: Throwable? = null) {
         if (content == null) return
+        if (!AppUtils.isDebug && call == null) return
         val tag = generateTag()
         if (call?.invoke(W, tag, "$content,${tr?.message.orEmpty()}") == false) return
         if (!AppUtils.isDebug) return
