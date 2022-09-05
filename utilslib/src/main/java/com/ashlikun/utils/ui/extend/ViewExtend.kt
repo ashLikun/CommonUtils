@@ -8,6 +8,7 @@ import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
@@ -317,6 +318,19 @@ inline var View.isSelectedX: Boolean
             isSelected = value
         }
     }
+
+/**
+ * 相同不刷新
+ */
+inline var ImageView.imageResourceX: Int
+    get() = (getTag("imageResourceX".hashCode()) as? Int) ?: 0
+    set(value) {
+        if (getTag("imageResourceX".hashCode()) != value) {
+            setTag("imageResourceX".hashCode(), value)
+            setImageResource(value)
+        }
+    }
+
 
 /**
  * 相同不刷新
