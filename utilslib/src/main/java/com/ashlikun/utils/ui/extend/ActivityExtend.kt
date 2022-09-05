@@ -21,7 +21,12 @@ fun Activity?.getRootView() = this?.findViewById<View>(android.R.id.content)
 fun Context.toLifecycle() = getActivity() as LifecycleOwner
 fun Context.toLifecycleOrNull() = getActivity() as? LifecycleOwner
 fun View.toLifecycle() = findViewTreeLifecycleOwner()!!
-fun View.lifecycle(attached: ((LifecycleOwner) -> Unit)) = addOnAttach { attached(toLifecycle()) }
+fun View.lifecycle(attached: ((LifecycleOwner) -> Unit)) {
+    toLifecycleOrNull().also {
+        if (it != null) attached(toLifecycle())
+        else addOnAttach { attached(toLifecycle()) }
+    }
+}
 
 fun View.toLifecycleOrNull() = findViewTreeLifecycleOwner()
 fun Context.toCActivity() = getActivity() as ComponentActivity
