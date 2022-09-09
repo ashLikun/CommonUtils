@@ -40,6 +40,7 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly rootProject.ext.designVersion
     compileOnly "androidx.core:core-ktx:1.7.0"
+    compileOnly "androidx.activity:activity-ktx:1.4.0"
     compileOnly "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     //MMKV
     compileOnly 'com.tencent:mmkv:1.2.11'
