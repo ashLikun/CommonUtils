@@ -31,9 +31,7 @@ import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.ScreenUtils
-import com.ashlikun.utils.ui.extend.bitmap
-import com.ashlikun.utils.ui.extend.dp
-import com.ashlikun.utils.ui.extend.windowBrightness
+import com.ashlikun.utils.ui.extend.*
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
 import com.ashlikun.utils.ui.image.saveImageToGallery
@@ -255,12 +253,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     var builder: NotificationCompat.Builder? = null
+    var textVis = true
     fun onView5Click(view: View) {
-        taskLaunch {
-            val image = newImage()
-            binding.rootView.bitmap().saveImageToGallery(image)
-            LogUtils.e("dddd ${image.path}${image.exists()}")
-        }
+//        taskLaunch {
+//            val image = newImage()
+//            binding.rootView.bitmap().saveImageToGallery(image)
+//            LogUtils.e("dddd ${image.path}${image.exists()}")
+//        }
+        binding.button3.setViewSize(width = if (!textVis) 200 else 1200, duration = 3000)
+        textVis = !textVis
 //        LogUtils.e(NotificationUtil.isNotificationEnabled())
 //        builder = NotificationUtil.createBuilder(
 //            R.mipmap.ic_launcher,

@@ -1,9 +1,6 @@
 package com.ashlikun.utils.ui.extend
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.TimeInterpolator
-import android.animation.ValueAnimator
+import android.animation.*
 import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -14,6 +11,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.core.animation.addListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.ashlikun.utils.R
@@ -81,6 +79,7 @@ inline fun View?.setViewSize(width: Int? = null, height: Int? = null, duration: 
                 animSet.duration = duration
                 animSet.interpolator = interpolator ?: LinearInterpolator()
                 animSet.start()
+
             } else {
                 if (height != null) {
                     params.height = height
@@ -262,18 +261,29 @@ inline fun View?.shadowNoHardware(
  */
 inline fun View.setVisibility(visibility: Boolean, duration: Long = 0, interpolator: TimeInterpolator? = null) {
     if (duration > 0) {
-        if (isVisible && visibility) return
-        if (!isVisible && !visibility) return
-        ValueAnimator.ofFloat(0f, 1f).apply {
-            addUpdateListener {
-                alpha = it.animatedValue as Float
+        clearAnimation()
+        animate().alpha(if (visibility) 1f else 0f)
+            .apply {
+                setDuration(duration)
+                setInterpolator(interpolator)
+                setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator?) {
+                        super.onAnimationStart(animation)
+                        isVisible = true
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        super.onAnimationEnd(animation)
+                        isVisible = visibility
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                        super.onAnimationCancel(animation)
+                        isVisible = visibility
+                    }
+                })
             }
-        }.apply {
-            this.duration = duration
-            this.interpolator = interpolator ?: LinearInterpolator()
-            start()
-            isVisible = true
-        }
+            .start()
     } else {
         this.visibility = if (visibility) View.VISIBLE else View.GONE
     }
