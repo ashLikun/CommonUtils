@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
+import com.ashlikun.utils.ui.OnSizeListener
 import com.ashlikun.utils.ui.UiUtils
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.resources.ResUtils
@@ -31,7 +32,6 @@ import com.google.android.material.internal.ViewUtils
  *
  * 功能介绍：view的一些扩展方法
  */
-typealias OnSizeListener = (width: Int, height: Int) -> Unit
 
 val View.layoutInflater
     get() = LayoutInflater.from(context)
@@ -99,24 +99,10 @@ inline fun View?.setViewSize(width: Int? = null, height: Int? = null, duration: 
  *
  * @param onSizeListener 监听回调
  */
-inline fun View?.getViewSize(crossinline onSizeListener: OnSizeListener) {
+inline fun View?.getViewSize(noinline onSizeListener: OnSizeListener) {
     this?.run {
-        if (measuredWidth > 0 || measuredHeight > 0) {
-            onSizeListener.invoke(measuredWidth, measuredHeight)
-            return
-        }
-        val observer = viewTreeObserver
-        observer.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                if (measuredHeight <= 0 && measuredWidth <= 0) {
-                    return
-                }
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-                onSizeListener.invoke(width, height)
-            }
-        })
+        UiUtils.getViewSize(this, onSizeListener)
     }
-
 }
 
 /**

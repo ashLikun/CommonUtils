@@ -69,6 +69,7 @@ inline fun View?.addOnGlobalLayoutListener(isOneToRemove: Boolean = true, crossi
     this?.run {
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
+                if (width <= 0 && height <= 0) return
                 if (isOneToRemove) {
                     viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }

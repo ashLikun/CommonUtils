@@ -102,7 +102,7 @@ class AndroidBug5497Workaround private constructor(window: Window) {
         mChildOfContent.viewTreeObserver.addOnGlobalLayoutListener {
             if (isfirst) {
                 //兼容华为等机型
-                contentHeight = mChildOfContent.height
+                contentHeight = mChildOfContent.measuredHeight
                 isfirst = false
             }
             possiblyResizeChildOfContent()

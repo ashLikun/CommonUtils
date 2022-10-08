@@ -209,6 +209,10 @@ class MainActivity : AppCompatActivity() {
     val ss =
         "{\"name\":\"\\u674e\\u6b23\\u6d0b\",\"paperstype\":\"1\",\"papersnumber\":\"222426199407031415\",\"mobile\":\"18506181482\"}"
 
+    fun onView6Click(view: View) {
+        recreate()
+    }
+
     fun onView4Click(view: View) {
         FileUtils.formetFileSize(14457260, FileUtils.SIZETYPE_MB)
         Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
@@ -255,13 +259,16 @@ class MainActivity : AppCompatActivity() {
     var builder: NotificationCompat.Builder? = null
     var textVis = true
     fun onView5Click(view: View) {
+        binding.button4.getViewSize { width, height ->
+            LogUtils.e("1111   ${width} ${height}")
+        }
 //        taskLaunch {
 //            val image = newImage()
 //            binding.rootView.bitmap().saveImageToGallery(image)
 //            LogUtils.e("dddd ${image.path}${image.exists()}")
 //        }
-        binding.button3.setViewSize(width = if (!textVis) 200 else 1200, duration = 3000)
-        textVis = !textVis
+//        binding.button3.setViewSize(width = if (!textVis) 200 else 1200, duration = 3000)
+//        textVis = !textVis
 //        LogUtils.e(NotificationUtil.isNotificationEnabled())
 //        builder = NotificationUtil.createBuilder(
 //            R.mipmap.ic_launcher,

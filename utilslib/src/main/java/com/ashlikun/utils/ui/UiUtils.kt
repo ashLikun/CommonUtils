@@ -340,19 +340,20 @@ object UiUtils {
     /**
      * 获取view大小
      */
-    fun getViewSize(view: View, onSizeListener: OnSizeListener? = null) {
-        if (view.measuredWidth > 0 || view.measuredHeight > 0) {
-            onSizeListener?.invoke(view.measuredWidth, view.measuredHeight)
+    fun getViewSize(view: View, onSizeListener: OnSizeListener) {
+        if (view.width > 0 || view.height > 0) {
+            onSizeListener(view.width, view.height)
             return
         }
-        val observer = view.viewTreeObserver
-        observer.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        if (view.measuredWidth > 0 || view.measuredHeight > 0) {
+            onSizeListener(view.measuredWidth, view.measuredHeight)
+            return
+        }
+        view.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                if (view.measuredHeight <= 0 && view.measuredWidth <= 0) {
-                    return
-                }
+                if (view.width <= 0 && view.height <= 0) return
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                onSizeListener?.invoke(view.measuredWidth, view.measuredHeight)
+                onSizeListener(view.width, view.height)
             }
         })
     }

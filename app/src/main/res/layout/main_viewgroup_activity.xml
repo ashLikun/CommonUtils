@@ -61,4 +61,13 @@
         android:onClick="onView5Click"
         android:padding="10dp"
         android:text="测试通知" />
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffaaffaa"
+        android:gravity="center"
+        android:onClick="onView6Click"
+        android:padding="10dp"
+        android:text="reCreate" />
 </LinearLayout>
