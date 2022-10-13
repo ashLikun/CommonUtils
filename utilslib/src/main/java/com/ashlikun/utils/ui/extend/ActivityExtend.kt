@@ -21,14 +21,17 @@ fun Activity?.getRootView() = this?.findViewById<View>(android.R.id.content)
 fun Context.toLifecycle() = getActivity() as LifecycleOwner
 fun Context.toLifecycleOrNull() = getActivity() as? LifecycleOwner
 fun View.toLifecycle() = findViewTreeLifecycleOwner()!!
+fun View.toLifecycleOrNull() = findViewTreeLifecycleOwner()
+
 fun View.lifecycle(attached: ((LifecycleOwner) -> Unit)) {
     toLifecycleOrNull().also {
         if (it != null) attached(toLifecycle())
-        else addOnAttach { attached(toLifecycle()) }
+        else if (!isInEditMode) {
+            addOnAttach { attached(toLifecycle()) }
+        }
     }
 }
 
-fun View.toLifecycleOrNull() = findViewTreeLifecycleOwner()
 fun Context.toCActivity() = getActivity() as ComponentActivity
 fun Context.toCActivityOrNull() = getActivity() as? ComponentActivity
 fun Activity?.getDecorView() = this?.window?.decorView
@@ -46,13 +49,10 @@ var Activity.windowBrightness
 
 fun Activity.setStatusBarVisible(show: Boolean, statusBar: StatusBarCompat? = null) {
     if (show) {
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     } else {
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        window.decorView.systemUiVisibility =
+            (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
     statusBar?.setStatusDarkColor()
 }

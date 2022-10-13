@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
+import android.view.View
 import androidx.core.content.FileProvider
 import com.ashlikun.utils.bug.BugUtils
 import com.ashlikun.utils.provider.BaseContentProvider
@@ -22,6 +23,14 @@ import java.io.File
  *
  * 功能介绍：App 工具类
  */
+/**
+ * 作者　　: 李坤
+ * 创建时间: 2022/10/13　10:35
+ * 邮箱　　：496546144@qq.com
+ *
+ * 功能介绍：自定义view预览的问题
+ */
+
 
 object AppUtils {
     var isDebug = false
@@ -29,6 +38,20 @@ object AppUtils {
         private set
     lateinit var base: Context
         private set
+
+    /**
+     * 编辑模式的Context
+     */
+    var editModeContext: Context? = null
+    fun View.initAppEditMode() {
+        if (isInEditMode) {
+            AppUtils.base = context
+            AppUtils.editModeContext = context
+            AppUtils.defaultContextCall = {
+                context
+            }
+        }
+    }
 
     /**
      * 默认的Context
@@ -42,8 +65,7 @@ object AppUtils {
     }
 
     fun attachBaseContext(context: Context?) {
-        if (context != null)
-            base = context
+        if (context != null) base = context
     }
 
     /**
@@ -125,19 +147,20 @@ object AppUtils {
     /**
      * 获取其他App包 信息版本号
      */
-    fun getPackageInfo(packageName: String = app.packageName, flag: Int = 0) =
-        try {
-            app.packageManager.getPackageInfo(packageName, flag)
-        } catch (e: Exception) {
-            null
-        }
+    fun getPackageInfo(packageName: String = app.packageName, flag: Int = 0) = try {
+        app.packageManager.getPackageInfo(packageName, flag)
+    } catch (e: Exception) {
+        null
+    }
 
 
     /**
      * Appication 的 resources
      */
     val appResources: Resources
-        get() = app.resources
+        get() = runCatching {
+            app.resources
+        }.getOrNull() ?: editModeContext?.resources!!
 
     val defaultContext: Context
         get() = defaultContextCall()
@@ -148,6 +171,8 @@ object AppUtils {
      * 栈顶的Activity
      */
     val fContext: Context
-        get() = fActivity ?: app
+        get() = runCatching {
+            fActivity ?: app
+        }.getOrNull() ?: editModeContext!!
 
 }
