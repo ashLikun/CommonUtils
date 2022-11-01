@@ -54,6 +54,10 @@ private fun <I, O> ComponentActivity.registerForActivityResultX(
  * @param result 结果
  */
 fun ComponentActivity.ignoreBattery(isToList: Boolean = false, hook: ((run: () -> Unit) -> Unit)? = null, result: ((Boolean) -> Unit)? = null) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        result?.invoke(false)
+        return
+    }
     runCatching {
         if (isIgnoringBatteryOptimizations()) result?.invoke(true)
         else {
