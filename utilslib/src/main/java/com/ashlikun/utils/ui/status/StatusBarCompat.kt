@@ -17,6 +17,8 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.RomUtils.isEssentialPhone
 import com.ashlikun.utils.other.RomUtils.isMeizu
@@ -25,6 +27,9 @@ import com.ashlikun.utils.other.RomUtils.isXiaomi
 import com.ashlikun.utils.other.RomUtils.isZTKC2016
 import com.ashlikun.utils.other.RomUtils.isZUKZ1
 import com.ashlikun.utils.ui.ScreenUtils
+import com.ashlikun.utils.ui.extend.hideStatusBar
+import com.ashlikun.utils.ui.extend.setLightStatusBars
+import com.ashlikun.utils.ui.extend.showStatusBar
 import com.ashlikun.utils.ui.resources.ColorUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
@@ -41,6 +46,9 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 class StatusBarCompat(
     var activity: Activity
 ) {
+    //是否适配刘海屏
+    //在非全屏模式下，这个方法（LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES）在部分10.0手机会导致水波纹卡顿，所以不用
+    var isNotch = StatusBarCompat.isNotchFullscreen
     var window = activity.window
 
 
@@ -62,25 +70,7 @@ class StatusBarCompat(
         if (!isSetStatusTextColor) {
             return
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //判断当前是不是6.0以上的系统
-            if (window != null) {
-                val view = window.decorView
-                if (view != null) {
-                    if (drak) {
-                        //黑色
-                        view.systemUiVisibility =
-                            view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                    } else {
-                        //白色,就是去除View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        if (view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR != 0) {
-                            view.systemUiVisibility =
-                                view.systemUiVisibility xor View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        }
-                    }
-                }
-            }
-        }
+        window.setLightStatusBars(drak)
 
         //小米
         if (isXiaomi) {
@@ -131,7 +121,9 @@ class StatusBarCompat(
         if (!isSetStatusColor) {
             return
         }
-        notch()
+        if (isNotch) {
+            notch()
+        }
         if (!isSetStatusTextColor) {
             //不能设置状态栏字体颜色时候
             if (!ColorUtils.isColorDrak(statusColor)) {
@@ -142,7 +134,7 @@ class StatusBarCompat(
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = statusColor
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+        window.showStatusBar()
         window.decorView.fitsSystemWindows = false
         window.decorView.requestApplyInsets()
         autoStatueTextColor(statusColor)
@@ -197,7 +189,7 @@ class StatusBarCompat(
         } else {
             window.statusBarColor = Color.TRANSPARENT
         }
-        //隐藏状态栏和全屏
+        //透明全屏
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         window.decorView.fitsSystemWindows = false
@@ -286,6 +278,10 @@ class StatusBarCompat(
     }
 
     companion object {
+        //是否适配刘海屏
+        //在非全屏模式下，这个方法（LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES）在部分10.0手机会导致水波纹卡顿，所以不用
+        var isNotchFullscreen = false
+
         /**
          * 半透明颜色值
          */
@@ -298,7 +294,7 @@ class StatusBarCompat(
          * 只有当设置状态栏透明的时候用到,因为此时跟布局会顶到状态栏里面
          */
         fun setEmptyHeight(view: View?, isNeedAndroidMHalf: Boolean = false) {
-            if(view == null) return
+            if (view == null) return
             if (isSetStatusColor) {
                 val h = ScreenUtils.statusBarHeight
                 if (isNeedAndroidMHalf && isSetHaleColor) {
@@ -514,8 +510,8 @@ class StatusBarCompat(
             ) {
                 val params = window.attributes
                 //该窗口始终允许延伸到屏幕短边上的DisplayCutout区域
-                params.layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                //在非全屏模式下，这个方法（LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES）在部分10.0手机会导致水波纹卡顿，所以不用
+                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                 window.attributes = params
             }
         }

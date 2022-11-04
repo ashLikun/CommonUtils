@@ -15,14 +15,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
-import com.ashlikun.utils.other.coroutines.taskAsync
 import com.ashlikun.utils.other.coroutines.taskLaunch
-import com.ashlikun.utils.other.coroutines.taskLaunchMain
 import com.ashlikun.utils.other.file.FileUtils
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
@@ -31,10 +28,11 @@ import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.ScreenUtils
-import com.ashlikun.utils.ui.extend.*
+import com.ashlikun.utils.ui.extend.dp
+import com.ashlikun.utils.ui.extend.getViewSize
+import com.ashlikun.utils.ui.extend.windowBrightness
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
-import com.ashlikun.utils.ui.image.saveImageToGallery
 import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
 import com.ashlikun.utils.ui.resources.ResUtils
@@ -42,7 +40,6 @@ import com.ashlikun.utils.ui.status.StatusBarCompat
 import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 import com.ashlikun.utils.ui.text.SpannableUtils
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.delay
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -61,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         statusBarCompat = StatusBarCompat(this)
-        statusBarCompat.setStatusBarColor(-0x1)
+//        statusBarCompat.setStatusBarColor(0xffffffff.toInt())
+        statusBarCompat.translucentStatusBar()
         binding.buttonJump.setOnClickListener {
             ToastUtils.show("22222222")
             val intent = Intent(this, Main2Activity::class.java)
