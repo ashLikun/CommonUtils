@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.ashlikun.utils.simple"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion 30
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         multiDexEnabled = true

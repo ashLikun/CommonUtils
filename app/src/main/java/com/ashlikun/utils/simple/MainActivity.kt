@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.ashlikun.utils.assist.WakeLock
 import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
@@ -53,6 +54,9 @@ class MainActivity : AppCompatActivity() {
 
     var currentProgress = 0
     internal var statusColor = -0x10000
+    val wakeLock by lazy {
+        WakeLock()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
+        wakeLock.on()
         val drawable = GradientDrawable()
         val size = DimensUtils.dip2px(this, 4f)
         drawable.setBounds(0, 0, size, size)
@@ -108,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.textRoot.setOnLongClickListener {
             LogUtils.e("4444444444点击事件")
+            wakeLock.release()
             true
         }
         WorkFlow.Builder()

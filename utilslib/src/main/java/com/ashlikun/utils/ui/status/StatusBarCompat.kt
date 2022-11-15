@@ -27,7 +27,6 @@ import com.ashlikun.utils.other.RomUtils.isXiaomi
 import com.ashlikun.utils.other.RomUtils.isZTKC2016
 import com.ashlikun.utils.other.RomUtils.isZUKZ1
 import com.ashlikun.utils.ui.ScreenUtils
-import com.ashlikun.utils.ui.extend.hideStatusBar
 import com.ashlikun.utils.ui.extend.setLightStatusBars
 import com.ashlikun.utils.ui.extend.showStatusBar
 import com.ashlikun.utils.ui.resources.ColorUtils
