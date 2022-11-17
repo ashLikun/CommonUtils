@@ -206,6 +206,33 @@ object FileUtils {
     }
 
     /**
+     * 自动格式化单位
+     *
+     * @param size size
+     * @return size
+     */
+    fun autoFormetFileSizeDouble(size: Double): Double {
+        //# 一个数字，不包括 0 , 0 一个数字
+        val df = DecimalFormat("#.##", DecimalFormatSymbols(Locale.CHINA))
+        val kiloByte = size / 1024
+        if (kiloByte < 1) {
+            return df.format(size).toDoubleOrNull() ?: 0.0
+        }
+        val megaByte = kiloByte / 1024
+        if (megaByte < 1) {
+            return df.format(kiloByte).toDoubleOrNull() ?: 0.0
+        }
+        val gigaByte = megaByte / 1024
+        if (gigaByte < 1) {
+            return df.format(megaByte).toDoubleOrNull() ?: 0.0
+        }
+        val teraBytes = gigaByte / 1024
+        return if (teraBytes < 1) {
+            df.format(gigaByte).toDoubleOrNull() ?: 0.0
+        } else df.format(teraBytes).toDoubleOrNull() ?: 0.0
+    }
+
+    /**
      * 删除文件或者目录
      */
     fun deleteFile(file: File) {

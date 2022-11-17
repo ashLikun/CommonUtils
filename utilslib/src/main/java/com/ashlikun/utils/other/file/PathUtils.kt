@@ -10,6 +10,10 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.webkit.MimeTypeMap
+import androidx.core.database.getIntOrNull
+import androidx.core.database.getStringOrNull
+import androidx.core.net.toFile
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.MediaFile
 import java.io.File
@@ -23,6 +27,11 @@ import java.io.File
  */
 inline val File.toUri
     get() = AppUtils.getUri(this)
+inline val Uri.toFileData
+    get() = PathUtils.getFileData(this)
+
+inline val File.toFileData
+    get() = FileData(name, length(), path, MediaFile.getFileType(path)?.mimeType.orEmpty(), uri = toUri)
 
 object PathUtils {
     /**
@@ -321,53 +330,71 @@ object PathUtils {
         private get() = Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()
 
     /**
+     * Uri 转成FileData
+     */
+    fun getFileData(uri: Uri): FileData? {
+        val result = runCatching { uri.toFile().let { it.toFileData } }.getOrNull()
+        if (result != null) return result
+        runCatching {
+            val data = AppUtils.app.contentResolver.query(uri, null, null, null, null)
+            if (data != null && data.moveToNext()) {
+                val displayNameIndex = data.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)
+                val fileSizeIndex = data.getColumnIndex(MediaStore.MediaColumns.SIZE)
+                val dataIndex = data.getColumnIndex(MediaStore.MediaColumns.DATA)
+                val mimeIndex = data.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE)
+
+                val fileName = data.getStringOrNull(displayNameIndex)
+                val fileSize = data.getIntOrNull(fileSizeIndex)
+                val mimeType = data.getStringOrNull(mimeIndex)
+                val filePath = data.getStringOrNull(dataIndex)
+                data.close()
+                return FileData(fileName.orEmpty(), fileSize?.toLong() ?: 0L, filePath, mimeType = mimeType.orEmpty(), uri = uri)
+            } else {
+                null
+            }
+        }
+        return null
+    }
+
+    /**
      * 获取本地url的文件路径
-     *
-     * @param uri
      * @return 文件路径
      */
     fun getPath(uri: Uri): String {
-        if (uri == null) {
-            return ""
-        }
         // DocumentProvider
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
             && DocumentsContract.isDocumentUri(AppUtils.app, uri)
         ) {
             // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":").toTypedArray()
-                val type = split[0]
-                if ("primary".equals(type, ignoreCase = true)) {
-                    return (Environment.getExternalStorageDirectory().toString() + "/"
-                            + split[1])
+            runCatching {
+                if (isExternalStorageDocument(uri)) {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":").toTypedArray()
+                    val type = split[0]
+                    if ("primary".equals(type, ignoreCase = true)) {
+                        return (Environment.getExternalStorageDirectory().toString() + "/" + split[1])
+                    }
+                } else if (isDownloadsDocument(uri)) {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":").toTypedArray()
+                    val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), split[1].toLong())
+                    return getDataColumn(AppUtils.app, contentUri)
+                } else if (isMediaDocument(uri)) {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":").toTypedArray()
+                    var contentUri = when (split[0]) {
+                        "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                        "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                        else -> null
+                    }
+                    val selection = "_id=?"
+                    val selectionArgs = arrayOf(split[1])
+                    if (contentUri == null) {
+                        return ""
+                    }
+                    return getDataColumn(AppUtils.app, contentUri, selection, selectionArgs)
                 }
-            } else if (isDownloadsDocument(uri)) {
-                val id = DocumentsContract.getDocumentId(uri)
-                val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"),
-                    java.lang.Long.valueOf(id)
-                )
-                return getDataColumn(AppUtils.app, contentUri)
-            } else if (isMediaDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":").toTypedArray()
-                var contentUri = when (split[0]) {
-                    "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                    "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                    else -> null
-                }
-                val selection = "_id=?"
-                val selectionArgs = arrayOf(split[1])
-                if (contentUri == null) {
-                    return ""
-                }
-                return getDataColumn(
-                    AppUtils.app, contentUri, selection,
-                    selectionArgs
-                )
             }
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
             // Return the remote address
@@ -382,10 +409,12 @@ object PathUtils {
     /**
      * 获取 图片 ContentValue
      */
-    fun getImageContentValues(file: File,
-                              mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
-                              desc: String = "App Save Image",
-                              currentTime: Long = System.currentTimeMillis()) =
+    fun getImageContentValues(
+        file: File,
+        mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
+        desc: String = "App Save Image",
+        currentTime: Long = System.currentTimeMillis()
+    ) =
         ContentValues().apply {
             put(MediaStore.Images.Media.TITLE, file.name)
             put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
@@ -402,10 +431,12 @@ object PathUtils {
     /**
      * 获取 视频 ContentValue
      */
-    fun getVideoContentValues(file: File,
-                              mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
-                              desc: String = "App Save Video",
-                              currentTime: Long = System.currentTimeMillis()) =
+    fun getVideoContentValues(
+        file: File,
+        mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
+        desc: String = "App Save Video",
+        currentTime: Long = System.currentTimeMillis()
+    ) =
         ContentValues().apply {
             put(MediaStore.Video.Media.TITLE, file.name)
             put(MediaStore.Video.Media.DISPLAY_NAME, file.name)
@@ -422,9 +453,11 @@ object PathUtils {
     /**
      * 获取 音频 ContentValue
      */
-    fun getAudioContentValues(file: File,
-                              mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "audio/*",
-                              currentTime: Long = System.currentTimeMillis()) =
+    fun getAudioContentValues(
+        file: File,
+        mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "audio/*",
+        currentTime: Long = System.currentTimeMillis()
+    ) =
         ContentValues().apply {
             put(MediaStore.Audio.Media.TITLE, file.name)
             put(MediaStore.Audio.Media.DISPLAY_NAME, file.name)
@@ -448,8 +481,10 @@ object PathUtils {
         val volumeName = "external"
         val filePath = file.absolutePath
         var uri: Uri? = null
-        val cursor = AppUtils.app.contentResolver.query(MediaStore.Files.getContentUri(volumeName), arrayOf(MediaStore.Files.FileColumns._ID),
-            MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null)
+        val cursor = AppUtils.app.contentResolver.query(
+            MediaStore.Files.getContentUri(volumeName), arrayOf(MediaStore.Files.FileColumns._ID),
+            MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null
+        )
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
@@ -489,8 +524,10 @@ object PathUtils {
             return Uri.fromFile(file);
         }
         val filePath = file.absolutePath
-        val cursor = AppUtils.app.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.Media._ID), MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null)
+        val cursor = AppUtils.app.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Images.Media._ID), MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null
+        )
         var uri: Uri? = null
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -514,11 +551,13 @@ object PathUtils {
         }
         var uri: Uri? = null
         val filePath = file.absolutePath
-        val cursor = AppUtils.app.contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+        val cursor = AppUtils.app.contentResolver.query(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Video.Media._ID),
             MediaStore.Video.Media.DATA + "=? ",
             arrayOf(filePath),
-            null)
+            null
+        )
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
@@ -538,8 +577,10 @@ object PathUtils {
         if (!file.exists()) return null
         var uri: Uri? = null
         val filePath = file.absolutePath
-        val cursor = AppUtils.app.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Audio.Media._ID), MediaStore.Audio.Media.DATA + "=? ", arrayOf(filePath), null)
+        val cursor = AppUtils.app.contentResolver.query(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Audio.Media._ID), MediaStore.Audio.Media.DATA + "=? ", arrayOf(filePath), null
+        )
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 val idIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
@@ -557,13 +598,10 @@ object PathUtils {
         selection: String = "", selectionArgs: Array<String> = emptyArray()
     ): String {
         var cursor: Cursor? = null
-        val column = "_data"
+        val column = MediaStore.MediaColumns.DATA
         val projection = arrayOf(column)
         try {
-            cursor = context.contentResolver.query(
-                uri, projection,
-                selection, selectionArgs, null
-            )
+            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(index) ?: ""

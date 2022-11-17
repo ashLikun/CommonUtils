@@ -34,6 +34,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.designVersion
     implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.0"
     implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     implementation project(':utilslib')

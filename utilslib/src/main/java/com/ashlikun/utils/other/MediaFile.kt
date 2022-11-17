@@ -104,7 +104,7 @@ object MediaFile {
         addFileType("M3U", FILE_TYPE_M3U, "audio/x-mpegurl")
         addFileType("PLS", FILE_TYPE_PLS, "audio/x-scpls")
         addFileType("WPL", FILE_TYPE_WPL, "application/vnd.ms-wpl")
-        addFileType("ZIP", FILE_TYPE_ZIP, "application/x-zip")
+        addFileType("ZIP", FILE_TYPE_ZIP, "application/zip")
         addFileType("WPS", FILE_TYPE_WPS, "application/vnd.ms-works")
         addFileType("TXT", FILE_TYPE_TXT, "text/plain")
         addFileType("TAR", FILE_TYPE_TAR, "application/x-tar")

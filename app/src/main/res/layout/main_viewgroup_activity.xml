@@ -53,6 +53,16 @@
         android:text="加水印" />
 
     <Button
+        android:id="@+id/buttonSelectFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffff00"
+        android:gravity="center"
+        android:onClick="onView7Click"
+        android:padding="10dp"
+        android:text="选择文件" />
+
+    <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

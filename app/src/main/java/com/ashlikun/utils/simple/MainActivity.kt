@@ -12,8 +12,12 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ComponentActivity
 import androidx.core.app.NotificationCompat
 import com.ashlikun.utils.assist.WakeLock
 import com.ashlikun.utils.encryption.AESUtils
@@ -22,6 +26,7 @@ import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.taskLaunch
 import com.ashlikun.utils.other.file.FileUtils
+import com.ashlikun.utils.other.file.toFileData
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
 import com.ashlikun.utils.other.worker.WorkFlow
@@ -54,6 +59,10 @@ class MainActivity : AppCompatActivity() {
 
     var currentProgress = 0
     internal var statusColor = -0x10000
+    val getContentLaunch = registerForActivityResult(ActivityResultContracts.GetContent()) {
+       Log.e("1111","1111 ${ it?.toFileData}")
+    }
+
     val wakeLock by lazy {
         WakeLock()
     }
@@ -110,6 +119,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         binding.textRoot.setOnClickListener {
             LogUtils.e("333333333333333点击事件")
+
         }
         binding.textRoot.setOnLongClickListener {
             LogUtils.e("4444444444点击事件")
@@ -181,6 +191,16 @@ class MainActivity : AppCompatActivity() {
     fun onView1Click(view: View) {
         SuperToast.get("aaaaaaa").info();
 
+    }
+
+    fun onView7Click(view: View) {
+        SuperToast.get("aaaaaaa").info();
+        runCatching {
+            getContentLaunch.launch("application/zip")
+        }.onFailure { t ->
+            t.printStackTrace()
+            runCatching { getContentLaunch.launch("*/*") }
+        }
     }
 
     private inner class MyClickableSpan : XClickableSpan() {
@@ -404,4 +424,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
     }
+
+
 }
