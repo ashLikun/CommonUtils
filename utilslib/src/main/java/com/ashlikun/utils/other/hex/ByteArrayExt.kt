@@ -1,10 +1,22 @@
 package com.ashlikun.utils.other
 
 import android.annotation.SuppressLint
-import com.vinka.ebike.ble.utils.extend.reversalEvery2Charts
 import java.text.SimpleDateFormat
 
+fun String.reversalEvery2Charts(hasSpace: Boolean = false): String {
+    val hex = this.addSpaceEvery2Charts()
+    return hex.split(" ").reversed().joinToString(if (hasSpace) " " else "")
+}
 
+fun String.addSpaceEvery2Charts(): String {
+    val hex = this.replace(" ", "")
+    val sb = StringBuilder()
+    for (i in 0 until hex.length / 2) {
+        sb.append(hex.substring(i * 2, i * 2 + 2))
+        sb.append(" ")
+    }
+    return sb.toString().trim()
+}
 /**
  * ByteArray->String
  */
