@@ -1,5 +1,6 @@
-package com.ashlikun.utils.other
+package com.ashlikun.utils.other.hex
 
+import com.ashlikun.utils.other.hex.CrcUtils
 import kotlin.experimental.and
 
 /**
@@ -9,6 +10,42 @@ import kotlin.experimental.and
  *
  * 功能介绍：16进制工具
  */
+/**
+ * crc16
+ */
+inline val ByteArray.CRC16_CCITT_FALSE
+    get() = CrcUtils.CRC16.CRC16_CCITT_FALSE(this, 0)
+
+/**
+ * crc32
+ */
+inline val ByteArray.CRC32
+    get() = CrcUtils.CRC32.CRC32(this, 0, this.size)
+
+/**
+ * crc32
+ */
+inline val ByteArray.CRC32_B
+    get() = CrcUtils.CRC32.CRC32_B(this, 0, this.size)
+
+/**
+ * crc32
+ */
+inline val ByteArray.CRC32_C
+    get() = CrcUtils.CRC32.CRC32_C(this, 0, this.size)
+
+/**
+ * crc32
+ */
+inline val ByteArray.CRC32_D
+    get() = CrcUtils.CRC32.CRC32_D(this, 0, this.size)
+
+/**
+ * crc32
+ */
+inline val ByteArray.CRC32_POSIX
+    get() = CrcUtils.CRC32.CRC32_POSIX(this, 0, this.size)
+
 inline val String.hexToBytes
     get() = HexUtils.hexStr2Bytes(this)
 
@@ -27,6 +64,8 @@ inline fun Int.toByteArray2Or4(isReversed: Boolean = true) = HexUtils.intToBytes
  */
 inline val ByteArray.toHexStr
     get() = HexUtils.bytesToHexString(this)
+inline val Int.toHexStr
+    get() = toByteArray2Or4(false).toHexStr
 
 /**
  * ByteArray -> Int
@@ -48,6 +87,22 @@ inline val ByteArray.byteToIntLE
 inline val ByteArray.hexToLowHight
     get() = HexUtils.hexToLowHight(this)
 
+/**
+ * ByteArray -> Long
+ * 不翻转
+ */
+inline val ByteArray.byteToUIntLE
+    get() = HexUtils.byteToUInt(this, false)
+
+/**
+ * ByteArray -> ASCII字符串
+ *
+ */
+inline val ByteArray.byteToASCIIStr
+    get() = HexUtils.byteToASCIIStr(this, false, false)
+
+inline val ByteArray.byteToASCIIStrSub00
+    get() = HexUtils.byteToASCIIStr(this, false, true)
 
 object HexUtils {
 
@@ -85,7 +140,7 @@ object HexUtils {
         }
         val b = StringBuilder()
         for (i in src.indices) {
-            b.append(String.format("%02x", src[i] and 0xFF.toByte()))
+            b.append(String.format("%02X", src[i] and 0xFF.toByte()))
         }
         return b.toString()
     }
@@ -162,5 +217,35 @@ object HexUtils {
                 ((res.getOrNull(3)?.toInt() ?: 0) shl 24)
     }
 
+    /**
+     * 将byte[]转化成uint
+     *
+     * @param res 要转化的byte[]
+     * @return 对应的整数
+     */
+    fun byteToUInt(res: ByteArray, reversed: Boolean = true): Long {
+        //翻转一波，保证一样的输出
+        val res = if (reversed) res.reversedArray() else res
+        return (((res.getOrElse(0) { 0 }).toInt()) and 0xff).toLong() or
+                (((res.getOrElse(1) { 0 }).toInt() and 0xff).toLong() shl 8) or
+                (((res.getOrElse(2) { 0 }).toInt() and 0xff).toLong() shl 16) or
+                (((res.getOrElse(3) { 0 }).toInt() and 0xff).toLong() shl 24)
+    }
 
+    /**
+     * 将byte[]转化成ASCII字符串
+     *
+     * @param res 要转化的byte[]
+     * @param isSub00 是否遇到00就去除之后的byte
+     * @return 对应的字符串
+     */
+    fun byteToASCIIStr(res: ByteArray, reversed: Boolean = true, isSub00: Boolean = false): String {
+        //翻转一波，保证一样的输出
+        val res = if (reversed) res.reversedArray() else res
+        var is00 = false
+        return res.map {
+            if (isSub00 && !is00) is00 = it.toInt() == 0
+            if (is00) null else it.toInt().toChar()
+        }.filterNotNull().joinToString("")
+    }
 }
