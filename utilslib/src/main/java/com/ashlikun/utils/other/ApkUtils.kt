@@ -12,6 +12,7 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.other.hex.toHexStr
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream

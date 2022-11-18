@@ -7,10 +7,8 @@ package com.ashlikun.utils.encryption
 
 import android.annotation.SuppressLint
 import androidx.annotation.IntDef
-import com.ashlikun.utils.other.HexUtils
-import com.ashlikun.utils.other.StringUtils
-import com.ashlikun.utils.other.hexToBytes
-import com.ashlikun.utils.other.toHexStr
+import com.ashlikun.utils.other.hex.hexToBytes
+import com.ashlikun.utils.other.hex.toHexStr
 import java.io.UnsupportedEncodingException
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy

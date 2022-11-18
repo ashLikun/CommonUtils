@@ -1,8 +1,8 @@
 package com.ashlikun.utils.encryption
 
 import androidx.annotation.IntDef
-import com.ashlikun.utils.other.hexToBytes
-import com.ashlikun.utils.other.toHexStr
+import com.ashlikun.utils.other.hex.hexToBytes
+import com.ashlikun.utils.other.hex.toHexStr
 import java.io.UnsupportedEncodingException
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
@@ -10,7 +10,6 @@ import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
 import javax.crypto.*
 import javax.crypto.spec.SecretKeySpec
-import kotlin.experimental.and
 
 /**
  * 作者　　: 李坤

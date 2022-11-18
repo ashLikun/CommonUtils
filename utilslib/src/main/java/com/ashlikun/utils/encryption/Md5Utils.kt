@@ -1,14 +1,13 @@
 package com.ashlikun.utils.encryption
 
 import android.text.TextUtils
-import com.ashlikun.utils.other.toHexStr
+import com.ashlikun.utils.other.hex.toHexStr
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import kotlin.experimental.and
 
 /**
  * @author　　: 李坤
