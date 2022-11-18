@@ -16,6 +16,7 @@ import androidx.core.database.getStringOrNull
 import androidx.core.net.toFile
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.MediaFile
+import com.ashlikun.utils.other.getMediaFile
 import java.io.File
 
 /**
@@ -23,7 +24,7 @@ import java.io.File
  * 创建时间: 2021/12/12 16:15
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：文件路径一些工具
+ * 功能介绍：文件路径一些工具,uri一些工具
  */
 inline val File.toUri
     get() = AppUtils.getUri(this)
@@ -343,11 +344,29 @@ object PathUtils {
                 val dataIndex = data.getColumnIndex(MediaStore.MediaColumns.DATA)
                 val mimeIndex = data.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE)
 
-                val fileName = data.getStringOrNull(displayNameIndex)
-                val fileSize = data.getIntOrNull(fileSizeIndex)
-                val mimeType = data.getStringOrNull(mimeIndex)
-                val filePath = data.getStringOrNull(dataIndex)
+                var fileName = data.getStringOrNull(displayNameIndex)
+                var fileSize = data.getIntOrNull(fileSizeIndex)
+                var mimeType = data.getStringOrNull(mimeIndex)
+                var filePath = data.getStringOrNull(dataIndex)
                 data.close()
+                if (filePath.isNullOrEmpty()) {
+                    filePath = getPath(uri)
+                }
+                if (!filePath.isNullOrEmpty()) {
+                    runCatching {
+                        val file = File(filePath)
+                        if (fileName.isNullOrEmpty()) {
+                            fileName = file.name
+                        }
+                        if (fileSize == null) {
+                            fileSize = file.length()?.toInt()
+                        }
+                        if (mimeType.isNullOrEmpty()) {
+                            mimeType = file.getMediaFile?.mimeType
+                        }
+                    }
+                }
+
                 return FileData(fileName.orEmpty(), fileSize?.toLong() ?: 0L, filePath, mimeType = mimeType.orEmpty(), uri = uri)
             } else {
                 null
@@ -360,13 +379,12 @@ object PathUtils {
      * 获取本地url的文件路径
      * @return 文件路径
      */
-    fun getPath(uri: Uri): String {
+    fun getPath(uri: Uri): String? {
         // DocumentProvider
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-            && DocumentsContract.isDocumentUri(AppUtils.app, uri)
-        ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(AppUtils.app, uri)) {
             // ExternalStorageProvider
             runCatching {
+                //来之扩展存储卡（应用）选择的
                 if (isExternalStorageDocument(uri)) {
                     val docId = DocumentsContract.getDocumentId(uri)
                     val split = docId.split(":").toTypedArray()
@@ -374,12 +392,22 @@ object PathUtils {
                     if ("primary".equals(type, ignoreCase = true)) {
                         return (Environment.getExternalStorageDirectory().toString() + "/" + split[1])
                     }
-                } else if (isDownloadsDocument(uri)) {
+                }
+                //来之下载（应用）选择的
+                else if (isDownloadsDocument(uri)) {
+                    runCatching {
+                        val path = getDataColumnString(AppUtils.app, uri)
+                        if (!path.isNullOrEmpty()) {
+                            return path
+                        }
+                    }
                     val docId = DocumentsContract.getDocumentId(uri)
                     val split = docId.split(":").toTypedArray()
                     val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), split[1].toLong())
-                    return getDataColumn(AppUtils.app, contentUri)
-                } else if (isMediaDocument(uri)) {
+                    return getDataColumnString(AppUtils.app, contentUri)
+                }
+                //来之媒体应用选择的
+                else if (isMediaDocument(uri)) {
                     val docId = DocumentsContract.getDocumentId(uri)
                     val split = docId.split(":").toTypedArray()
                     var contentUri = when (split[0]) {
@@ -391,18 +419,18 @@ object PathUtils {
                     val selection = "_id=?"
                     val selectionArgs = arrayOf(split[1])
                     if (contentUri == null) {
-                        return ""
+                        return null
                     }
-                    return getDataColumn(AppUtils.app, contentUri, selection, selectionArgs)
+                    return getDataColumnString(AppUtils.app, contentUri, selection, selectionArgs)
                 }
             }
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
             // Return the remote address
-            return if (isGooglePhotosUri(uri)) uri.lastPathSegment ?: "" else getDataColumn(AppUtils.app, uri)
+            return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumnString(AppUtils.app, uri)
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
-            return uri.path ?: ""
+            return uri.path
         }
-        return ""
+        return null
     }
 
 
@@ -482,8 +510,11 @@ object PathUtils {
         val filePath = file.absolutePath
         var uri: Uri? = null
         val cursor = AppUtils.app.contentResolver.query(
-            MediaStore.Files.getContentUri(volumeName), arrayOf(MediaStore.Files.FileColumns._ID),
-            MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null
+            MediaStore.Files.getContentUri(volumeName),
+            arrayOf(MediaStore.Files.FileColumns._ID),
+            MediaStore.Images.Media.DATA + "=? ",
+            arrayOf(filePath),
+            null
         )
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -593,10 +624,7 @@ object PathUtils {
         return uri ?: AppUtils.app.contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, getAudioContentValues(file))
     }
 
-    fun getDataColumn(
-        context: Context, uri: Uri,
-        selection: String = "", selectionArgs: Array<String> = emptyArray()
-    ): String {
+    fun getDataColumnString(context: Context, uri: Uri, selection: String = "", selectionArgs: Array<String> = emptyArray()): String? {
         var cursor: Cursor? = null
         val column = MediaStore.MediaColumns.DATA
         val projection = arrayOf(column)
@@ -604,12 +632,12 @@ object PathUtils {
             cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
-                return cursor.getString(index) ?: ""
+                return cursor.getStringOrNull(index)
             }
         } finally {
             cursor?.close()
         }
-        return ""
+        return null
     }
 
     fun isExternalStorageDocument(uri: Uri) = "com.android.externalstorage.documents" == uri

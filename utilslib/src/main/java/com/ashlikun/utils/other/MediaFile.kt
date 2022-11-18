@@ -1,5 +1,7 @@
 package com.ashlikun.utils.other
 
+import com.ashlikun.utils.other.file.FileData
+import com.ashlikun.utils.other.file.toUri
 import java.io.File
 import java.util.*
 
@@ -10,6 +12,12 @@ import java.util.*
  *
  * 功能介绍：判断文件类型
  */
+inline val File.getMediaFile
+    get() = MediaFile.getFileType(path)
+
+inline val String.getMediaFile
+    get() = MediaFile.getFileType(this)
+
 //静态内部类
 class MediaFileType(var fileType: Int, var mimeType: String)
 object MediaFile {
