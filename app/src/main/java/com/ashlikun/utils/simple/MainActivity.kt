@@ -26,6 +26,7 @@ import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.taskLaunch
 import com.ashlikun.utils.other.file.FileUtils
+import com.ashlikun.utils.other.file.PathUtils
 import com.ashlikun.utils.other.file.toFileData
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
@@ -39,6 +40,7 @@ import com.ashlikun.utils.ui.extend.getViewSize
 import com.ashlikun.utils.ui.extend.windowBrightness
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
+import com.ashlikun.utils.ui.image.saveImageToGallery
 import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
 import com.ashlikun.utils.ui.resources.ResUtils
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     var currentProgress = 0
     internal var statusColor = -0x10000
     val getContentLaunch = registerForActivityResult(ActivityResultContracts.GetContent()) {
-       Log.e("1111","1111 ${ it?.toFileData}")
+        Log.e("1111", "1111 ${it?.toFileData}")
     }
 
     val wakeLock by lazy {
@@ -239,28 +241,20 @@ class MainActivity : AppCompatActivity() {
 
     fun onView4Click(view: View) {
         FileUtils.formetFileSize(14457260, FileUtils.SIZETYPE_MB)
-        Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
-        ThreadUtils.execute {
-//            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
-            LogUtils.e("aaaaaaaaaaaaaaaaaa    ")
-        }
-        val logo = BitmapUtil.decodeResource(R.mipmap.ic_launcher_round, 50.dp, 50.dp)
-        //        imageView.setDrawingCacheEnabled(true);
-        //        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
-        //        imageView.setDrawingCacheEnabled(false);
+//        Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
+//        ThreadUtils.execute {
+////            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
+//            LogUtils.e("aaaaaaaaaaaaaaaaaa    ")
+//        }
+//        val logo = BitmapUtil.decodeResource(R.mipmap.ic_launcher_round, 50.dp, 50.dp)
+//        //        imageView.setDrawingCacheEnabled(true);
+//        //        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+//        //        imageView.setDrawingCacheEnabled(false);
         val bitmap =
             BitmapUtil.decodeResource(R.mipmap.timg, ScreenUtils.width, ScreenUtils.height)
-        binding.imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo))
+        LogUtils.e("aaaaaaaaaa${bitmap!!.saveImageToGallery(newImage())}")
+//        binding.imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo))
 
-        val aaa = AesAAUtil.encrypt(ss, "NeYHTiTLQp8J" + "\u0000\u0000\u0000\u0000")
-        val aaaa = AESUtils.encrypt(ss, "NeYHTiTLQp8J")
-        LogUtils.e("aaaa " + aaa ?: "")
-        LogUtils.e("aaaaaaaa    " + aaaa)
-
-        ToastUtils.show("1111111111")
-//        IntentUtils.startMyAppSetting()
-        "${PermisstionSettingUtils.start()} ssss".logge()
-//        toPermisstionSetting()
     }
 
     /**
@@ -269,7 +263,7 @@ class MainActivity : AppCompatActivity() {
      */
     fun newImage(): File {
         // 首先保存图片
-        val appDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).path)
+        val appDir = File(appSDDcimPath)
 //        val appDir = AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DCIM)!!
         if (!appDir.exists()) {
             appDir.mkdirs()
@@ -277,8 +271,12 @@ class MainActivity : AppCompatActivity() {
         val fileName = System.currentTimeMillis().toString() + ".jpg"
         val file = File(appDir, fileName)
         file.createNewFile()
-        return File(appDir, fileName)
+        return file
     }
+
+    //appsd卡DCIM路径(Android/data/pageName/files/DCIM)删除应用会删除这个目录，不用动态申请权限
+    val appSDDcimPath: String
+        get() = PathUtils.externalAppDcim
 
     var builder: NotificationCompat.Builder? = null
     var textVis = true

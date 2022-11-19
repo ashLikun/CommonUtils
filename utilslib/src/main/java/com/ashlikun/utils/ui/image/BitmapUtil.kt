@@ -17,6 +17,7 @@ import com.ashlikun.utils.encryption.Base64Utils.decode
 import com.ashlikun.utils.encryption.Base64Utils.encodeToStr
 import com.ashlikun.utils.other.MediaFile
 import com.ashlikun.utils.other.file.FileIOUtils
+import com.ashlikun.utils.other.file.toUri
 import com.ashlikun.utils.ui.ScreenUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -337,8 +338,10 @@ object BitmapUtil {
      */
     fun getViewBitmap(view: View, scale: Float = 1f): Bitmap {
         if (view.measuredWidth == 0 || view.measuredHeight == 0) {
-            view.measure(View.MeasureSpec.makeMeasureSpec(ScreenUtils.width, View.MeasureSpec.AT_MOST),
-                View.MeasureSpec.makeMeasureSpec(ScreenUtils.height * 100, View.MeasureSpec.AT_MOST))
+            view.measure(
+                View.MeasureSpec.makeMeasureSpec(ScreenUtils.width, View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(ScreenUtils.height * 100, View.MeasureSpec.AT_MOST)
+            )
         }
         if (view.width == 0 || view.height == 0) {
             view.layout(0, 0, view.measuredWidth, view.measuredHeight)
@@ -376,7 +379,7 @@ object BitmapUtil {
             runCatching {
                 app.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
                 return true
-            }
+            }.onFailure { it.printStackTrace() }
         }
         return false
     }
@@ -389,15 +392,15 @@ object BitmapUtil {
         //保存图片后发送广播通知更新数据库
         if (file.exists()) {
             runCatching {
-                val uri = app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)
+                var uri = app.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, value)
                 if (uri != null)
                     copyFileAfterQ(file, uri)
+                uri = uri ?: Uri.fromFile(file)
                 //防止不更新
-                if (updatePhotoMediaOld(uri)) uri else null
-            }.onFailure {
-                //防止不更新
-                val uri = Uri.fromFile(file)
                 return if (updatePhotoMediaOld(uri)) uri else null
+            }.onFailure {
+                it.printStackTrace()
+                return null
             }
         }
         return null
@@ -407,8 +410,8 @@ object BitmapUtil {
      * 拷贝文件到相册的uri,android11及以上得这么干，否则不会显示。可以参考ScreenMediaRecorder的save方法
      */
     fun copyFileAfterQ(file: File, uri: Uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && app.applicationInfo.targetSdkVersion >= Build.VERSION_CODES.Q) {
-            //拷贝文件到相册的uri,android11及以上得这么干，否则不会显示。可以参考ScreenMediaRecorder的save方法
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //拷贝文件到相册的uri,android10及以上得这么干，否则不会显示。可以参考ScreenMediaRecorder的save方法
             runCatching {
                 val os = app.contentResolver.openOutputStream(uri, "w")
 //                FileIOUtils.copyFile(file, os)
@@ -422,10 +425,12 @@ object BitmapUtil {
     /**
      * 获取 图片 ContentValue
      */
-    fun getImageContentValues(file: File,
+    fun getImageContentValues(
+        file: File,
         mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
         desc: String = "App Save Image",
-        currentTime: Long = System.currentTimeMillis()) =
+        currentTime: Long = System.currentTimeMillis()
+    ) =
         ContentValues().apply {
             put(MediaStore.Images.Media.TITLE, file.name)
             put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
