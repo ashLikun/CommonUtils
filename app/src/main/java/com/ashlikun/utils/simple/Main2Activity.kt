@@ -39,9 +39,9 @@ class Main2Activity : AppCompatActivity() {
     }
 
     fun aa(): Unit {
-        MainHandle.postDelayed(this, {
+        MainHandle.postDelayed(this, 5000) {
             LogUtils.e("aaaaaaa")
-        }, 5000)
+        }
     }
 
 }

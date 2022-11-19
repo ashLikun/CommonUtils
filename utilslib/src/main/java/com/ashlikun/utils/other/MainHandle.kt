@@ -3,12 +3,9 @@ package com.ashlikun.utils.other
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.os.SystemClock
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import java.lang.ref.WeakReference
 
 /**
  * @author　　: 李坤
@@ -21,12 +18,12 @@ inline fun LifecycleOwner.postMain(runnable: Runnable) {
     MainHandle.post(this, runnable)
 }
 
-inline fun LifecycleOwner.postDelayed(runnable: Runnable, delayMillis: Long) {
-    MainHandle.postDelayed(this, runnable, delayMillis)
+inline fun LifecycleOwner.postDelayed(delayMillis: Long, runnable: Runnable) {
+    MainHandle.postDelayed(this, delayMillis, runnable)
 }
 
-inline fun LifecycleOwner.postDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
-    MainHandle.postDelayed(this, runnable, token, delayMillis)
+inline fun LifecycleOwner.postDelayed(token: Any, delayMillis: Long, runnable: Runnable) {
+    MainHandle.postDelayed(this, token, delayMillis, runnable)
 }
 
 class MainHandle private constructor(looper: Looper) {
@@ -87,7 +84,7 @@ class MainHandle private constructor(looper: Looper) {
      * 如果不是在activity相关使用就可以
      * 可以使用带LifecycleOwner的方法
      */
-    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, delayMillis: Long) {
+    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, delayMillis: Long, runnable: Runnable) {
         if (lifecycleOwner != null) {
             //监听生命周期
             MyLifecycleEventObserver(lifecycleOwner, runnable).apply {
@@ -99,16 +96,13 @@ class MainHandle private constructor(looper: Looper) {
         }
     }
 
-    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, delayMillis: Long, runnable: Runnable) {
-        postDelayed(lifecycleOwner, runnable, delayMillis)
-    }
 
     /**
      * 这个方法会造成Activity内存泄露
      * 如果不是在activity相关使用就可以
      * 可以使用带LifecycleOwner的方法
      */
-    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, token: Any, delayMillis: Long) {
+    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, token: Any, delayMillis: Long, runnable: Runnable) {
         if (lifecycleOwner != null) {
             //监听生命周期
             MyLifecycleEventObserver(lifecycleOwner, runnable).apply {
@@ -125,9 +119,6 @@ class MainHandle private constructor(looper: Looper) {
 
     }
 
-    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, token: Any, delayMillis: Long, runnable: Runnable) {
-        postDelayed(lifecycleOwner, runnable, token, delayMillis)
-    }
 
     fun sendMessageDelayed(msg: Message, delayMillis: Long): Boolean {
         return mainHandle.sendMessageAtTime(msg, delayMillis)
@@ -178,13 +169,10 @@ class MainHandle private constructor(looper: Looper) {
          * 如果不是在activity相关使用就可以
          * 可以使用带LifecycleOwner的方法
          */
-        fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, delayMillis: Long) {
-            get().postDelayed(lifecycleOwner, runnable, delayMillis)
-        }
-
         fun postDelayed(lifecycleOwner: LifecycleOwner? = null, delayMillis: Long, runnable: Runnable) {
             get().postDelayed(lifecycleOwner, delayMillis, runnable)
         }
+
 
         /**
          * 同步主线程返回
@@ -214,13 +202,10 @@ class MainHandle private constructor(looper: Looper) {
          * 如果不是在activity相关使用就可以
          * 可以使用带LifecycleOwner的方法
          */
-        fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, token: Any, delayMillis: Long) {
-            get().postDelayed(lifecycleOwner, runnable, token, delayMillis)
-        }
-
         fun postDelayed(lifecycleOwner: LifecycleOwner? = null, token: Any, delayMillis: Long, runnable: Runnable) {
             get().postDelayed(lifecycleOwner, token, delayMillis, runnable)
         }
+
 
         fun sendMessageDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
             val message = Message.obtain(get().mainHandle, runnable)
