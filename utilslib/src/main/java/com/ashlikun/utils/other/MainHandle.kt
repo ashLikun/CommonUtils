@@ -99,6 +99,10 @@ class MainHandle private constructor(looper: Looper) {
         }
     }
 
+    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, delayMillis: Long, runnable: Runnable) {
+        postDelayed(lifecycleOwner, runnable, delayMillis)
+    }
+
     /**
      * 这个方法会造成Activity内存泄露
      * 如果不是在activity相关使用就可以
@@ -119,6 +123,10 @@ class MainHandle private constructor(looper: Looper) {
             get().mainHandle.sendMessageDelayed(message, delayMillis)
         }
 
+    }
+
+    fun postDelayed(lifecycleOwner: LifecycleOwner? = null, token: Any, delayMillis: Long, runnable: Runnable) {
+        postDelayed(lifecycleOwner, runnable, token, delayMillis)
     }
 
     fun sendMessageDelayed(msg: Message, delayMillis: Long): Boolean {
@@ -143,12 +151,62 @@ class MainHandle private constructor(looper: Looper) {
         }
 
         /**
+         * 同步主线程返回
+         */
+        fun <T> postSync(lifecycleOwner: LifecycleOwner? = null, runnable: () -> T): T {
+            if (isMain) {
+                return runnable()
+            } else {
+                //主线程处理数据，然后同步返回
+                val lock = Object()
+                var hasVal = false
+                var res: T? = null
+                post(lifecycleOwner) {
+                    res = runnable()
+                    hasVal = true
+                    synchronized(lock) {
+                        lock.notifyAll()
+                    }
+                }
+                synchronized(lock) { if (!hasVal) lock.wait() }
+                return res as T
+            }
+        }
+
+        /**
          * 这个方法会造成Activity内存泄露
          * 如果不是在activity相关使用就可以
          * 可以使用带LifecycleOwner的方法
          */
         fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, delayMillis: Long) {
             get().postDelayed(lifecycleOwner, runnable, delayMillis)
+        }
+
+        fun postDelayed(lifecycleOwner: LifecycleOwner? = null, delayMillis: Long, runnable: Runnable) {
+            get().postDelayed(lifecycleOwner, delayMillis, runnable)
+        }
+
+        /**
+         * 同步主线程返回
+         */
+        fun <T> postDelayedSync(lifecycleOwner: LifecycleOwner? = null, delayMillis: Long, runnable: () -> T): T {
+            if (isMain) {
+                return runnable()
+            } else {
+                //主线程处理数据，然后同步返回
+                val lock = Object()
+                var hasVal = false
+                var res: T? = null
+                postDelayed(lifecycleOwner, delayMillis) {
+                    res = runnable()
+                    hasVal = true
+                    synchronized(lock) {
+                        lock.notifyAll()
+                    }
+                }
+                synchronized(lock) { if (!hasVal) lock.wait() }
+                return res as T
+            }
         }
 
         /**
@@ -158,6 +216,10 @@ class MainHandle private constructor(looper: Looper) {
          */
         fun postDelayed(lifecycleOwner: LifecycleOwner? = null, runnable: Runnable, token: Any, delayMillis: Long) {
             get().postDelayed(lifecycleOwner, runnable, token, delayMillis)
+        }
+
+        fun postDelayed(lifecycleOwner: LifecycleOwner? = null, token: Any, delayMillis: Long, runnable: Runnable) {
+            get().postDelayed(lifecycleOwner, token, delayMillis, runnable)
         }
 
         fun sendMessageDelayed(runnable: Runnable, token: Any, delayMillis: Long) {
