@@ -6,6 +6,8 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.text.StaticLayout
+import android.util.TypedValue
 import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
@@ -379,3 +381,29 @@ inline fun View.setStatusPadding() =
  */
 inline fun View.setStatusMargin() =
     StatusBarCompat.setTransparentViewMargin(this)
+
+
+/**
+ * 设置文字大小 Px
+ */
+inline var TextView.textSizePx: Float
+    get() = textSize
+    set(value) {
+        setTextSize(TypedValue.COMPLEX_UNIT_DIP, value.dp.toFloat())
+    }
+
+/**
+ * 设置文字大小 Dp
+ */
+inline var TextView.textSizeDp: Float
+    get() = textSize.px2dip.toFloat()
+    set(value) {
+        setTextSize(TypedValue.COMPLEX_UNIT_DIP, value)
+    }
+
+/**
+ * 动态计算StaticLayout 高度，准确值
+ */
+inline val StaticLayout.heightX: Int
+    get() = if (lineCount > 0) lineCount * getLineTop(1) else 0
+
