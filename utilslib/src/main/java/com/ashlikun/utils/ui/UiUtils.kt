@@ -178,13 +178,15 @@ object UiUtils {
      * @param duration 动画执行时间 > 0 就启用动画
      * @param interpolator 动画的插值
      */
-    fun setViewMargin(view: View,
-                      leftMargin: Int? = null,
-                      topMargin: Int? = null,
-                      rightMargin: Int? = null,
-                      bottomMargin: Int? = null,
-                      duration: Long = 0,
-                      interpolator: TimeInterpolator? = null) {
+    fun setViewMargin(
+        view: View,
+        leftMargin: Int? = null,
+        topMargin: Int? = null,
+        rightMargin: Int? = null,
+        bottomMargin: Int? = null,
+        duration: Long = 0,
+        interpolator: TimeInterpolator? = null
+    ) {
         val params = view.layoutParams
         if (params != null && params is MarginLayoutParams) {
             if (duration > 0) {
@@ -250,14 +252,16 @@ object UiUtils {
      * @param duration 动画执行时间 > 0 就启用动画
      * @param interpolator 动画的插值
      */
-    fun setPaddings(view: View,
-                    padding: Int? = null,
-                    leftPadding: Int? = null,
-                    topPadding: Int? = null,
-                    rightPadding: Int? = null,
-                    bottomPadding: Int? = null,
-                    duration: Long = 0,
-                    interpolator: TimeInterpolator? = null) {
+    fun setPaddings(
+        view: View,
+        padding: Int? = null,
+        left: Int? = null,
+        top: Int? = null,
+        right: Int? = null,
+        bottom: Int? = null,
+        duration: Long = 0,
+        interpolator: TimeInterpolator? = null
+    ) {
         if (duration > 0) {
             val animSet = AnimatorSet()
             val animList = mutableListOf<Animator>()
@@ -268,31 +272,31 @@ object UiUtils {
                     }
                 })
             } else {
-                if (leftPadding != null) {
-                    animList.add(ValueAnimator.ofInt(view.paddingLeft, leftPadding).apply {
+                if (left != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingLeft, left).apply {
                         addUpdateListener {
-                            view.setPadding(leftPadding, view.paddingTop, view.paddingRight, view.paddingBottom)
+                            view.setPadding(left, view.paddingTop, view.paddingRight, view.paddingBottom)
                         }
                     })
                 }
-                if (topPadding != null) {
-                    animList.add(ValueAnimator.ofInt(view.paddingTop, topPadding).apply {
+                if (top != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingTop, top).apply {
                         addUpdateListener {
-                            view.setPadding(view.paddingLeft, topPadding, view.paddingRight, view.paddingBottom)
+                            view.setPadding(view.paddingLeft, top, view.paddingRight, view.paddingBottom)
                         }
                     })
                 }
-                if (rightPadding != null) {
-                    animList.add(ValueAnimator.ofInt(view.paddingRight, rightPadding).apply {
+                if (right != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingRight, right).apply {
                         addUpdateListener {
-                            view.setPadding(view.paddingLeft, view.paddingTop, rightPadding, view.paddingBottom)
+                            view.setPadding(view.paddingLeft, view.paddingTop, right, view.paddingBottom)
                         }
                     })
                 }
-                if (bottomPadding != null) {
-                    animList.add(ValueAnimator.ofInt(view.paddingBottom, bottomPadding).apply {
+                if (bottom != null) {
+                    animList.add(ValueAnimator.ofInt(view.paddingBottom, bottom).apply {
                         addUpdateListener {
-                            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, bottomPadding)
+                            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, bottom)
                         }
                     })
                 }
@@ -305,10 +309,12 @@ object UiUtils {
             if (padding != null) {
                 view.setPadding(padding)
             } else {
-                view.setPadding(leftPadding ?: view.paddingLeft,
-                    topPadding ?: view.paddingTop,
-                    rightPadding ?: view.paddingRight,
-                    bottomPadding ?: view.paddingBottom)
+                view.setPadding(
+                    left ?: view.paddingLeft,
+                    top ?: view.paddingTop,
+                    right ?: view.paddingRight,
+                    bottom ?: view.paddingBottom
+                )
             }
         }
 

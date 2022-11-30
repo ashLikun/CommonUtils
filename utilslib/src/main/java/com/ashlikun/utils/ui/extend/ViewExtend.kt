@@ -5,27 +5,33 @@ import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
 import android.util.TypedValue
 import android.view.*
+import android.view.ViewGroup.LayoutParams
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.*
-import androidx.core.widget.TextViewCompat
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.ui.OnSizeListener
 import com.ashlikun.utils.ui.UiUtils
 import com.ashlikun.utils.ui.image.BitmapUtil
+import com.ashlikun.utils.ui.image.createDrawable
 import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.shadow.CanShadowDrawable
 import com.ashlikun.utils.ui.shadow.RoundShadowDrawable
 import com.ashlikun.utils.ui.status.StatusBarCompat
+import kotlin.math.max
 
 /**
  * 作者　　: 李坤
@@ -168,11 +174,11 @@ inline fun View.getMarginBottom() =
  * @param interpolator 动画的插值
  */
 inline fun View?.setPaddings(
-    padding: Int? = null, leftPadding: Int? = null, topPadding: Int? = null,
-    rightPadding: Int? = null, bottomPadding: Int? = null, duration: Long = 0, interpolator: TimeInterpolator? = null
+    padding: Int? = null, left: Int? = null, top: Int? = null,
+    right: Int? = null, bottom: Int? = null, duration: Long = 0, interpolator: TimeInterpolator? = null
 ) {
     this?.run {
-        UiUtils.setPaddings(this, padding, leftPadding, topPadding, rightPadding, bottomPadding, duration, interpolator)
+        UiUtils.setPaddings(this, padding, left, top, right, bottom, duration, interpolator)
     }
 }
 
@@ -182,9 +188,27 @@ inline fun View?.setPaddings(
  * @param interpolator 动画的插值
  */
 inline fun View.setMargin(
-    leftMargin: Int? = null, topMargin: Int? = null,
-    rightMargin: Int? = null, bottomMargin: Int? = null, duration: Long = 0, interpolator: TimeInterpolator? = null
-) = UiUtils.setViewMargin(this, leftMargin, topMargin, rightMargin, bottomMargin, duration, interpolator)
+    left: Int? = null, top: Int? = null,
+    right: Int? = null, bottom: Int? = null, duration: Long = 0, interpolator: TimeInterpolator? = null
+) = UiUtils.setViewMargin(this, left, top, right, bottom, duration, interpolator)
+
+/**
+ * 设置 MarginLayoutParams 的Margin
+ */
+inline fun MarginLayoutParams.setMargin(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
+    if (left != null) {
+        leftMargin = left
+    }
+    if (top != null) {
+        topMargin = top
+    }
+    if (right != null) {
+        rightMargin = right
+    }
+    if (bottom != null) {
+        bottomMargin = bottom
+    }
+}
 
 /**
  * 获取最大的Padding
@@ -448,3 +472,29 @@ inline val View.paddingAndMarginX: Int
 inline val View.paddingAndMarginY: Int
     get() = paddingTop + paddingBottom + marginTop + marginBottom
 
+/**
+ * 设置TextView 的上下左右drawable
+ * @param isClean 是否清除其他的
+ */
+inline fun TextView?.setCompoundDrawablesX(
+    left: Drawable? = null,
+    top: Drawable? = null,
+    right: Drawable? = null,
+    bottom: Drawable? = null,
+    //宽度高度px, 取最大值
+    size: Int? = null,
+    width: Int = 0,
+    height: Int = 0,
+    @ColorInt tintColor: Int? = null,
+    isClean: Boolean = true
+) {
+    this?.run {
+        val yiyou = if (isClean) arrayOf<Drawable?>(null, null, null, null) else compoundDrawables
+        setCompoundDrawables(
+            left?.createDrawable(size, width, height, tintColor) ?: yiyou[0],
+            top?.createDrawable(size, width, height, tintColor) ?: yiyou[1],
+            right?.createDrawable(size, width, height, tintColor) ?: yiyou[2],
+            bottom?.createDrawable(size, width, height, tintColor) ?: yiyou[3]
+        )
+    }
+}

@@ -13,6 +13,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.resColor
 import com.ashlikun.utils.ui.extend.resDrawable
+import com.ashlikun.utils.ui.extend.setCompoundDrawablesX
 import kotlin.math.max
 
 /**
@@ -122,6 +123,45 @@ inline fun View.setStateListDrawable(
     )
     if (!mustBackground && this is ImageView) setImageDrawable(bg)
     else background = bg
+}
+
+/**
+ * 创建一个drawable，按照参数
+ */
+inline fun Drawable.createDrawable(
+    //宽度高度px, 取最大值
+    size: Int? = null,
+    width: Int = 0,
+    height: Int = 0,
+    @ColorInt tintColor: Int? = null,
+): Drawable {
+    var drawable = this
+    var width = max(width, size ?: 0)
+    var height = max(height, size ?: 0)
+    //是否改变宽高
+    var isChang = true
+    val drawWidth = minimumWidth.toFloat()
+    val drawHeight = minimumHeight.toFloat()
+    if (width == 0 && height == 0) {
+        width = drawWidth.toInt()
+        height = drawHeight.toInt()
+        isChang = false
+    } else if (width == 0) {
+        //高度被设置了，那么久按照比例设置宽度
+        width = (height / drawHeight * drawWidth).toInt()
+    } else if (height == 0) {
+        //高度被设置了，那么久按照比例设置宽度
+        height = (width / drawWidth * drawHeight).toInt()
+    }
+    //如果使用tint，必须使用DrawableCompat.wrap
+    if (isChang || tintColor != null) {
+        drawable = DrawableCompat.wrap(drawable).mutate()
+        if (tintColor != null) {
+            DrawableCompat.setTint(drawable, tintColor!!)
+        }
+    }
+    drawable.setBounds(0, 0, width, height)
+    return drawable
 }
 
 object DrawableUtils {
@@ -403,7 +443,15 @@ object DrawableUtils {
         height: Int = 0,
         @ColorInt tintColor: Int? = null,
         drawable: Drawable? = null,
-    ) = TextDrawUtils(textView, drawableId, location, size, width, height, tintColor, drawable)
+    ) {
+        val mDrawable = (drawable ?: drawableId?.resDrawable)!!.createDrawable(size, width, height, tintColor)
+        when (location) {
+            1 -> textView.setCompoundDrawablesX(left = mDrawable, isClean = false)
+            2 -> textView.setCompoundDrawablesX(top = mDrawable, isClean = false)
+            3 -> textView.setCompoundDrawablesX(right = mDrawable, isClean = false)
+            4 -> textView.setCompoundDrawablesX(bottom = mDrawable, isClean = false)
+        }
+    }
 
     fun createGradientDrawable(color: Int): BuilderGradient {
         return BuilderGradient(color)
