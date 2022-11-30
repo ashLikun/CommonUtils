@@ -37,20 +37,22 @@ inline fun TextView.setColorStateList(
     @ColorInt focused: Int? = null,
     @ColorInt checked: Int? = null
 ) {
-    setTextColor(DrawableUtils.createColorStateList(
-        normal = normal,
-        select = select,
-        pressed = pressed,
-        enable = enable,
-        focused = focused,
-        checked = checked,
-        normalId = normalId,
-        selectId = selectId,
-        pressedId = pressedId,
-        enableId = enableId,
-        focusedId = focusedId,
-        checkedId = checkedId
-    ))
+    setTextColor(
+        DrawableUtils.createColorStateList(
+            normal = normal,
+            select = select,
+            pressed = pressed,
+            enable = enable,
+            focused = focused,
+            checked = checked,
+            normalId = normalId,
+            selectId = selectId,
+            pressedId = pressedId,
+            enableId = enableId,
+            focusedId = focusedId,
+            checkedId = checkedId
+        )
+    )
 }
 
 
@@ -65,6 +67,8 @@ inline fun View.setGradientDrawable(
     radiusPx: Int = 0,
     radiusArr: FloatArray? = null,
     radiusArrPx: IntArray? = null,
+    //是否必须background
+    mustBackground: Boolean = true
 ) {
     val bg = DrawableUtils.getGradientDrawable(
         normal = normal,
@@ -78,7 +82,7 @@ inline fun View.setGradientDrawable(
         radiusArr = radiusArr,
         radiusArrPx = radiusArrPx,
     )
-    if (this is ImageView) setImageDrawable(bg)
+    if (!mustBackground && this is ImageView) setImageDrawable(bg)
     else background = bg
 }
 
@@ -89,12 +93,14 @@ inline fun View.setStateListDrawable(
     enabled: Drawable? = null,
     focused: Drawable? = null,
     checked: Drawable? = null,
+    //是否必须background
+    mustBackground: Boolean = true
 ) {
     val bg = DrawableUtils.getStateListDrawable(
         normal = normal, select = select,
         pressed = pressed, enabled = enabled, focused = focused, checked = checked
     )
-    if (this is ImageView) setImageDrawable(bg)
+    if (!mustBackground && this is ImageView) setImageDrawable(bg)
     else background = bg
 
 }
@@ -105,14 +111,16 @@ inline fun View.setStateListDrawable(
     @DrawableRes pressedId: Int? = null,
     @DrawableRes enabledId: Int? = null,
     @DrawableRes focusedId: Int? = null,
-    @DrawableRes checkedId: Int? = null
+    @DrawableRes checkedId: Int? = null,
+    //是否必须background
+    mustBackground: Boolean = true
 ) {
     val bg = DrawableUtils.getStateListDrawable(
         normalId = normalId, selectId = selectId,
         pressedId = pressedId, enabledId = enabledId,
         focusedId = focusedId, checkedId = checkedId,
     )
-    if (this is ImageView) setImageDrawable(bg)
+    if (!mustBackground && this is ImageView) setImageDrawable(bg)
     else background = bg
 }
 

@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable
 import android.location.*
 import android.os.Bundle
 import android.os.Environment
+import android.text.StaticLayout
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -35,9 +36,7 @@ import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.ScreenUtils
-import com.ashlikun.utils.ui.extend.dp
-import com.ashlikun.utils.ui.extend.getViewSize
-import com.ashlikun.utils.ui.extend.windowBrightness
+import com.ashlikun.utils.ui.extend.*
 import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
 import com.ashlikun.utils.ui.image.saveImageToGallery
@@ -128,6 +127,16 @@ class MainActivity : AppCompatActivity() {
             wakeLock.release()
             true
         }
+        val text =
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        binding.text.text = text
+        binding.text.getViewSize { width, height ->
+            LogUtils.e("aaaadddddd2 height =  ${height}")
+        }
+        val build = binding.text.createStaticLayout(width = 1.0.sw - binding.text.paddingAndMarginX)
+        LogUtils.e(
+            "aaaadddddd lineCount =  ${build.lineCount} getLineTop(1) =  ${build.getLineTop(1)} height =  ${build.height} "
+        )
         WorkFlow.Builder()
             .addWork {
                 object : Thread() {

@@ -5,7 +5,8 @@ import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
-import android.graphics.drawable.Drawable
+import android.os.Build
+import android.text.Layout
 import android.text.StaticLayout
 import android.util.TypedValue
 import android.view.*
@@ -13,9 +14,9 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
-import androidx.core.animation.addListener
-import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
+import androidx.annotation.RequiresApi
+import androidx.core.view.*
+import androidx.core.widget.TextViewCompat
 import com.ashlikun.utils.R
 import com.ashlikun.utils.other.DimensUtils
 import com.ashlikun.utils.ui.OnSizeListener
@@ -25,7 +26,6 @@ import com.ashlikun.utils.ui.resources.ResUtils
 import com.ashlikun.utils.ui.shadow.CanShadowDrawable
 import com.ashlikun.utils.ui.shadow.RoundShadowDrawable
 import com.ashlikun.utils.ui.status.StatusBarCompat
-import com.google.android.material.internal.ViewUtils
 
 /**
  * 作者　　: 李坤
@@ -402,8 +402,49 @@ inline var TextView.textSizeDp: Float
     }
 
 /**
- * 动态计算StaticLayout 高度，准确值
+ * 创建 StaticLayout
  */
-inline val StaticLayout.heightX: Int
-    get() = if (lineCount > 0) lineCount * getLineTop(1) else 0
+inline fun TextView.createStaticLayout(text: CharSequence = textX, width: Int): StaticLayout {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return createStaticLayoutBuild(text, width).build()
+    } else {
+        return StaticLayout(text, paint, width, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, includeFontPadding)
+    }
+}
+
+/**
+ * 创建 StaticLayout.Builder
+ */
+@RequiresApi(Build.VERSION_CODES.M)
+inline fun TextView.createStaticLayoutBuild(text: CharSequence = textX, width: Int): StaticLayout.Builder {
+    return StaticLayout.Builder.obtain(text, 0, text.length, paint, width).also {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            it.setTextDirection(textDirectionHeuristic)
+        }
+        it.setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
+        it.setIncludePad(includeFontPadding)
+        it.setBreakStrategy(breakStrategy)
+        it.setHyphenationFrequency(hyphenationFrequency)
+        it.setMaxLines(if (maxLines == -1) Int.MAX_VALUE else maxLines)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            it.setJustificationMode(justificationMode)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            it.setUseLineSpacingFromFallbacks(isFallbackLineSpacing)
+        }
+    }
+}
+
+
+/**
+ * 水平的padding+Margin
+ */
+inline val View.paddingAndMarginX: Int
+    get() = paddingLeft + paddingRight + marginLeft + marginRight
+
+/**
+ * 垂直的padding+Margin
+ */
+inline val View.paddingAndMarginY: Int
+    get() = paddingTop + paddingBottom + marginTop + marginBottom
 
