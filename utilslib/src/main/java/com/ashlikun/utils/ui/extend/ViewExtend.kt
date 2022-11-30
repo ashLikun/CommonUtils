@@ -481,6 +481,10 @@ inline fun TextView?.setCompoundDrawablesX(
     top: Drawable? = null,
     right: Drawable? = null,
     bottom: Drawable? = null,
+    leftId: Int? = null,
+    topId: Int? = null,
+    rightId: Int? = null,
+    bottomId: Int? = null,
     //宽度高度px, 取最大值
     size: Int? = null,
     width: Int = 0,
@@ -491,10 +495,10 @@ inline fun TextView?.setCompoundDrawablesX(
     this?.run {
         val yiyou = if (isClean) arrayOf<Drawable?>(null, null, null, null) else compoundDrawables
         setCompoundDrawables(
-            left?.createDrawable(size, width, height, tintColor) ?: yiyou[0],
-            top?.createDrawable(size, width, height, tintColor) ?: yiyou[1],
-            right?.createDrawable(size, width, height, tintColor) ?: yiyou[2],
-            bottom?.createDrawable(size, width, height, tintColor) ?: yiyou[3]
+            (left ?: leftId?.resDrawable(context))?.createDrawable(size, width, height, tintColor) ?: yiyou[0],
+            (top ?: topId?.resDrawable(context))?.createDrawable(size, width, height, tintColor) ?: yiyou[1],
+            (right ?: rightId?.resDrawable(context))?.createDrawable(size, width, height, tintColor) ?: yiyou[2],
+            (bottom ?: bottomId?.resDrawable(context))?.createDrawable(size, width, height, tintColor) ?: yiyou[3]
         )
     }
 }
