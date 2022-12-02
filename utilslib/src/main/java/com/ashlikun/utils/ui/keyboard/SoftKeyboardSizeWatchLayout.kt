@@ -9,10 +9,12 @@ import android.widget.RelativeLayout
  * 软键盘弹起
  */
 typealias  OnSoftPop = (height: Int) -> Unit
+
 /**
  * 软键盘关闭
  */
 typealias  OnSoftClose = () -> Unit
+typealias  OnSoftPopOrClose = (isShow: Boolean, height: Int) -> Unit
 
 /**
  * use XhsEmotionsKeyboard(https://github.com/w446108264/XhsEmoticonsKeyboard)

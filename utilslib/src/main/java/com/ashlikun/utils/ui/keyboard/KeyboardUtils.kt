@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.DimensUtils.dip2px
 import com.ashlikun.utils.other.store.StoreUtils
+import com.ashlikun.utils.ui.extend.addOnGlobalLayoutListener
 import kotlin.math.abs
 
 /**
@@ -23,6 +24,15 @@ import kotlin.math.abs
  *
  * 功能介绍：软键盘工具
  */
+
+inline fun View.exitInput() = KeyboardUtils.exitInput(this)
+inline fun Activity.exitInput() = KeyboardUtils.exitInput(this)
+inline fun View.showInput() = KeyboardUtils.showInput(this)
+inline fun View.setOnKeyboardChang(noinline call: OnSoftPopOrClose): KeyboardOnGlobalLayoutListener? =
+    KeyboardUtils.setOnInputChang(this, call = call)
+
+inline fun Activity.setOnKeyboardChang(noinline call: OnSoftPopOrClose): KeyboardOnGlobalLayoutListener? =
+    KeyboardUtils.setOnInputChang(this, call = call)
 
 object KeyboardUtils {
     private const val EXTRA_DEF_KEYBOARDHEIGHT = "DEF_KEYBOARDHEIGHT"
@@ -122,44 +132,40 @@ object KeyboardUtils {
 
     fun setOnInputChang(
         activity: Activity?, onSoftPop: OnSoftPop? = null,
-        onSoftClose: OnSoftClose? = null
-    ) {
-        if (activity == null) return
+        onSoftClose: OnSoftClose? = null, call: OnSoftPopOrClose? = null
+    ): KeyboardOnGlobalLayoutListener? {
+        if (activity == null) return null
         val content = activity.findViewById<FrameLayout>(R.id.content)
-        setOnInputChang(content.getChildAt(0), onSoftPop, onSoftClose)
+        return setOnInputChang(content.getChildAt(0), onSoftPop, onSoftClose, call)
     }
 
     fun setOnInputChang(
-        window: Window?,
-        onSoftPop: OnSoftPop? = null,
-        onSoftClose: OnSoftClose? = null
-    ) {
-        if (window == null) return
-        setOnInputChang(window.decorView, onSoftPop, onSoftClose)
+        window: Window?, onSoftPop: OnSoftPop? = null,
+        onSoftClose: OnSoftClose? = null, call: OnSoftPopOrClose? = null
+    ): KeyboardOnGlobalLayoutListener? {
+        if (window == null) return null
+        return setOnInputChang(window.decorView, onSoftPop, onSoftClose, call)
     }
 
     fun setOnInputChang(
         view: View?, onSoftPop: OnSoftPop? = null,
-        onSoftClose: OnSoftClose? = null
-    ) {
-        if (view == null) return
+        onSoftClose: OnSoftClose? = null, call: OnSoftPopOrClose? = null
+    ): KeyboardOnGlobalLayoutListener? {
+        if (view == null) return null
+        val lis = KeyboardOnGlobalLayoutListener(view, onSoftPop, onSoftClose, call)
         //界面出现变动都会调用这个监听事件
-        view.viewTreeObserver.addOnGlobalLayoutListener(
-            KeyboardOnGlobalLayoutListener(
-                view,
-                onSoftPop, onSoftClose
-            )
-        )
+        view.viewTreeObserver.addOnGlobalLayoutListener(lis)
+        view.setTag(0x99886633.toInt(), lis)
+        return lis
     }
-
 }
 
 class KeyboardOnGlobalLayoutListener(
     var view: View,
     var onSoftPop: OnSoftPop? = null,
-    var onSoftClose: OnSoftClose? = null
-) :
-    OnGlobalLayoutListener {
+    var onSoftClose: OnSoftClose? = null,
+    var onSoftChange: OnSoftPopOrClose? = null
+) : OnGlobalLayoutListener {
     var mNowh = 0
     var mOldh = 0
     var mScreenHeight = 0
@@ -176,8 +182,10 @@ class KeyboardOnGlobalLayoutListener(
         if (mOldh != -1 && mNowh != mOldh) {
             if (mNowh > 0) {
                 onSoftPop?.invoke(mNowh)
+                onSoftChange?.invoke(true, mNowh)
             } else {
                 onSoftClose?.invoke()
+                onSoftChange?.invoke(false, mNowh)
             }
         }
         mOldh = mNowh
