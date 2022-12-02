@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.FrameLayout
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.DimensUtils.dip2px
@@ -87,6 +88,9 @@ object KeyboardUtils {
      */
     fun exitInput(view: View?) {
         if (view == null) return
+        if (view is EditText) {
+            view.clearFocus()
+        }
         exitOrShowInput(view.windowToken, null)
     }
 
