@@ -155,12 +155,15 @@ inline fun Drawable.createDrawable(
     }
     //如果使用tint，必须使用DrawableCompat.wrap
     if (isChang || tintColor != null) {
-        drawable = DrawableCompat.wrap(drawable).mutate()
+        if (isChang) {
+            drawable = DrawableCompat.wrap(drawable).mutate()
+            drawable.setBounds(0, 0, width, height)
+        }
         if (tintColor != null) {
             DrawableCompat.setTint(drawable, tintColor!!)
         }
     }
-    drawable.setBounds(0, 0, width, height)
+
     return drawable
 }
 
@@ -446,10 +449,10 @@ object DrawableUtils {
     ) {
         val mDrawable = (drawable ?: drawableId?.resDrawable)!!.createDrawable(size, width, height, tintColor)
         when (location) {
-            1 -> textView.setCompoundDrawablesX(left = mDrawable, isClean = false)
-            2 -> textView.setCompoundDrawablesX(top = mDrawable, isClean = false)
-            3 -> textView.setCompoundDrawablesX(right = mDrawable, isClean = false)
-            4 -> textView.setCompoundDrawablesX(bottom = mDrawable, isClean = false)
+            1 -> textView.setCompoundDrawablesX(left = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
+            2 -> textView.setCompoundDrawablesX(top = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
+            3 -> textView.setCompoundDrawablesX(right = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
+            4 -> textView.setCompoundDrawablesX(bottom = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
         }
     }
 
