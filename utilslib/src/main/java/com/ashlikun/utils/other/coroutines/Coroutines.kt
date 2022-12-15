@@ -59,15 +59,13 @@ inline fun CoroutineExceptionHandler(
     isAddDefault: Boolean = true,
     noinline exception: ((Throwable) -> Unit)? = null,
     noinline exception2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline exception3: (() -> Unit)? = null
 ): CoroutineContext {
     var ct = context
-    if (exception != null) ct = context + CException(exception)
-    if (exception2 != null) ct = context + CException(exception2)
-    if (exception3 != null) ct = context + CException(exception3)
-    if (isAddDefault && context[CoroutineExceptionHandler.Key] == null) {
+    if (exception != null) ct += CException(exception)
+    if (exception2 != null) ct += CException(exception2)
+    if (isAddDefault && ct[CoroutineExceptionHandler.Key] == null) {
         if (defaultCoroutineExceptionHandler != null) {
-            ct = context + defaultCoroutineExceptionHandler
+            ct += defaultCoroutineExceptionHandler
         }
     }
     return ct
@@ -125,10 +123,9 @@ inline fun <T> taskBlock(
     context: CoroutineContext = EmptyCoroutineContext,
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline cache3: (() -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> T
-): T = runBlocking(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2, exception3 = cache3)) {
+): T = runBlocking(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
@@ -142,10 +139,9 @@ inline fun <T> taskAsync(
     context: CoroutineContext = EmptyCoroutineContext,
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline cache3: (() -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> T
-): Deferred<T> = DefaultScope().async(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2, exception3 = cache3)) {
+): Deferred<T> = DefaultScope().async(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
@@ -158,10 +154,9 @@ inline fun taskLaunch(
     context: CoroutineContext = EmptyCoroutineContext,
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline cache3: (() -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> Unit
-) = DefaultScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2, exception3 = cache3)) {
+) = DefaultScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
@@ -175,10 +170,9 @@ inline fun taskLaunchMain(
     context: CoroutineContext = EmptyCoroutineContext,
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline cache3: (() -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> Unit
-) = MainScopeX().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2, exception3 = cache3)) {
+) = MainScopeX().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
@@ -192,10 +186,9 @@ inline fun taskLaunchIO(
     context: CoroutineContext = EmptyCoroutineContext,
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline cache3: (() -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> Unit
-) = IoScope().launch(CoroutineExceptionHandler(context, isAddDefault = false, exception = cache, exception2 = cache2, exception3 = cache3)) {
+) = IoScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
@@ -208,10 +201,9 @@ inline fun taskLaunchThreadPoll(
     context: CoroutineContext = EmptyCoroutineContext,
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    noinline cache3: (() -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> Unit
-) = ThreadPoolScope().launch(CoroutineExceptionHandler(context, isAddDefault = false, exception = cache, exception2 = cache2, exception3 = cache3)) {
+) = ThreadPoolScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
