@@ -172,13 +172,10 @@ object NotificationUtil {
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent)
         } else if (intent != null) {
-            builder.setContentIntent(
-                PendingIntent.getActivity(
-                    AppUtils.app, 0, intent,
-                    //允许更新
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            )
+            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                PendingIntent.getActivity(AppUtils.app, 0, intent, PendingIntent.FLAG_MUTABLE)
+            else PendingIntent.getActivity(AppUtils.app, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            builder.setContentIntent(pendingIntent)
         }
         return builder
     }
