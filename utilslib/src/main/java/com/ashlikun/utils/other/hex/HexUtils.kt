@@ -52,7 +52,7 @@ inline val String.hexToBytes
 /**
  * @param size 可以是1，2，3，4字节,-1:自动
  */
-inline fun Int.toByteArray(size: Int = -1,isReversed: Boolean = true) = HexUtils.intToBytes(this, isReversed)
+inline fun Int.toByteArray(size: Int = -1, isReversed: Boolean = true) = HexUtils.intToBytes(this, size, isReversed)
 
 /**
  * 0xffff 为4个字节和2个字节的分界线
@@ -161,11 +161,14 @@ object HexUtils {
      * @param res 要转化的整数
      * @return 对应的byte[]
      */
-    fun intToBytes(res: Int, isReversed: Boolean = true): ByteArray {
-        val size = if (res.toUInt() > 0xFFFFFFU) 4
-        else if (res.toUInt() > 0xFFFFU) 3
-        else if (res.toUInt() > 0xFFU) 2
-        else 1
+    fun intToBytes(res: Int, size: Int = -1, isReversed: Boolean = true): ByteArray {
+        var size = size
+        if (size <= 0 || size > 4) {
+            size = if (res.toUInt() > 0xFFFFFFU) 4
+            else if (res.toUInt() > 0xFFFFU) 3
+            else if (res.toUInt() > 0xFFU) 2
+            else 1
+        } else size
         val targets = ByteArray(size)
         if (size >= 1) {
             targets[0] = (res and 0xff).toByte() // 最低位
@@ -184,24 +187,6 @@ object HexUtils {
         }
         return targets
     }
-
-
-    /**
-     * int 转 ByteArray
-     * @param size 1-4个字节
-     */
-    fun intToBytes4(res: Int, size: Int, isReversed: Boolean = true): ByteArray {
-        val targets = ByteArray(4)
-        targets[0] = (res and 0xff).toByte() // 最低位
-        targets[1] = (res shr 8 and 0xff).toByte() // 次低位
-        targets[2] = (res shr 16 and 0xff).toByte() // 次高位
-        targets[3] = (res ushr 24).toByte() // 最高位,无符号右移。
-        if (!isReversed) {
-            targets.reverse()
-        }
-        return targets
-    }
-
 
     /**
      * int 转 ByteArray  4字节和2字节
