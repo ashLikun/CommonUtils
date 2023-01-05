@@ -50,9 +50,9 @@ inline val String.hexToBytes
     get() = HexUtils.hexStr2Bytes(this)
 
 /**
- * 可以是1，2，3，4字节
+ * @param size 可以是1，2，3，4字节,-1:自动
  */
-inline fun Int.toByteArray(isReversed: Boolean = true) = HexUtils.intToBytes(this, isReversed)
+inline fun Int.toByteArray(size: Int = -1,isReversed: Boolean = true) = HexUtils.intToBytes(this, isReversed)
 
 /**
  * 0xffff 为4个字节和2个字节的分界线
@@ -184,6 +184,24 @@ object HexUtils {
         }
         return targets
     }
+
+
+    /**
+     * int 转 ByteArray
+     * @param size 1-4个字节
+     */
+    fun intToBytes4(res: Int, size: Int, isReversed: Boolean = true): ByteArray {
+        val targets = ByteArray(4)
+        targets[0] = (res and 0xff).toByte() // 最低位
+        targets[1] = (res shr 8 and 0xff).toByte() // 次低位
+        targets[2] = (res shr 16 and 0xff).toByte() // 次高位
+        targets[3] = (res ushr 24).toByte() // 最高位,无符号右移。
+        if (!isReversed) {
+            targets.reverse()
+        }
+        return targets
+    }
+
 
     /**
      * int 转 ByteArray  4字节和2字节
