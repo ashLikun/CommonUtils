@@ -2,7 +2,8 @@
     package="com.ashlikun.utils">
 
 
-    <uses-permission android:name="android.permission.REORDER_TASKS" /><application>
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <application>
         <!--7.0 url的获取-->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -13,6 +14,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/files_paths" />
         </provider>
+        <activity
+            android:name="com.ashlikun.utils.ui.notify.NotifyActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/UtilsNotifyActivityTheme">
+            <intent-filter>
+                <action android:name="com.ashlikun.utils.ui.notify.NotifyActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

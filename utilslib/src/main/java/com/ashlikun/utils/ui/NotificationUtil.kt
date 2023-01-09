@@ -15,6 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.IntentUtils
 import java.util.*
+import com.ashlikun.utils.ui.notify.NotifyActivity
 
 /**
  * @author　　: 李坤
@@ -63,7 +64,7 @@ object NotificationUtil {
     }
 
     /**
-     * @param activityClass 点击通知后进入的Activity
+     * @param activityClass 点击通知后进入的Activity 请使用[NotifyActivity]
      * @param bundle        intent参数
      * @param id            通知id
      * @param icon          图标
@@ -91,7 +92,7 @@ object NotificationUtil {
     }
 
     /**
-     * @param intent         点击通知后进入的Activity,可以为null
+     * @param intent         点击通知后进入的Activity,可以为null 请使用[NotifyActivity]
      * @param notificationId 通知id
      * @param icon           图标
      * @param title          标题
@@ -118,7 +119,7 @@ object NotificationUtil {
     /**
      * 创建一个 NotificationCompat.Builder
      *
-     * @param intent     点击通知后进入的Activity,可以为null
+     * @param intent     点击通知后进入的Activity,可以为null  请使用[NotifyActivity]
      * @param pendingIntent     点击通知后进入的Activity,可以为null（PendingIntent）
      * @param icon       图标
      * @param title      标题
@@ -152,6 +153,7 @@ object NotificationUtil {
             defaults = defaults
         )
         val builder = NotificationCompat.Builder(AppUtils.app, channelName)
+            .setWhen(System.currentTimeMillis())//设置事件发生的时间。面板中的通知是按这个时间排序。
             //左部图标
             .setSmallIcon(icon)
             //大图标
