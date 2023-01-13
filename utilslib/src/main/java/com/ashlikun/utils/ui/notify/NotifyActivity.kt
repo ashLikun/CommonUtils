@@ -31,10 +31,10 @@ open class NotifyActivity : Activity() {
         }
     }
 
-    override fun onNewIntent(var1: Intent?) {
+    override fun onNewIntent(intent: Intent?) {
         runCatching {
-            super.onNewIntent(var1)
-            handleIntent(var1)
+            super.onNewIntent(intent)
+            handleIntent(intent)
         }.onFailure {
             finish()
         }
