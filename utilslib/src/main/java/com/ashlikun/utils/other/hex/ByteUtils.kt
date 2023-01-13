@@ -32,7 +32,7 @@ fun Int.toBit(offset: Int = 0): Boolean {
 fun Byte.readByteRange(start: Int = 0, end: Int = 0): Int {
     val start = min(start, end)
     val model = ((0xff shl (7 - (end - start))).toUByte().toInt() shr (7 - end)).toUByte().toInt()
-    return (this.toUByte().toInt() and model)
+    return (this.toUByte().toInt() and model) shr start
 }
 
 /**
