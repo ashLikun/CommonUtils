@@ -3,7 +3,9 @@ package com.ashlikun.utils.ui.extend
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Build
 import android.view.View
+import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -82,3 +84,47 @@ fun Activity?.setViewSaturation(sat: Float = 0f) {
     getDecorView()?.setViewSaturation(sat)
 }
 
+/**
+ * 取出最大的那一个刷新率Fps，直接设置给window
+ */
+fun Window.setMaxFps() {
+    runCatching {
+        //地图模式默认关闭了高刷
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // 获取系统window支持的模式
+            val modes = this.windowManager.defaultDisplay.supportedModes
+            // 对获取的模式，基于刷新率的大小进行排序，从小到大排序
+            modes.sortBy { it.refreshRate }
+            this.let {
+                val lp = it.attributes
+                // 取出最大的那一个刷新率Fps，直接设置给window
+                lp.preferredDisplayModeId = modes.last().modeId
+                it.attributes = lp
+            }
+        }
+    }
+}
+
+fun Window.getMaxFps(): Float? {
+    runCatching {
+        //地图模式默认关闭了高刷
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // 获取系统window支持的模式
+            val modes = this.windowManager.defaultDisplay.supportedModes
+            // 对获取的模式，基于刷新率的大小进行排序，从小到大排序
+            modes.sortBy { it.refreshRate }
+            return modes.last().refreshRate
+        }
+    }
+    return null
+}
+
+fun Window.getFps(): Float? {
+    runCatching {
+        //地图模式默认关闭了高刷
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return this.windowManager.defaultDisplay.refreshRate
+        }
+    }
+    return null
+}

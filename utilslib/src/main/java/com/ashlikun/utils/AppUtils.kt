@@ -72,12 +72,17 @@ object AppUtils {
      * 一定要在Application里面调用
      * 在全部库的最前面调用
      */
-    fun init(myApp: Application) {
+    fun init(myApp: Application, isDebug: Boolean = false) {
+        this.isDebug = isDebug
         app = myApp
         base = myApp
         myApp.registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
         //解决一些疑难杂症
         BugUtils.init()
+        //监听FPS
+        if (isDebug) {
+            FPSFrameCallback.init()
+        }
     }
 
     /**
