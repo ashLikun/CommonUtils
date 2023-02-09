@@ -107,8 +107,7 @@ internal class ToastImpl( //当前的吐司对象
             // 添加一个移除吐司的任务
             MainHandle.get().postDelayed(
                 runnable = { cancel() },
-                delayMillis = if (mToast.getDuration() == Toast.LENGTH_LONG) mToast.longDuration
-                    .toLong() else mToast.shortDuration.toLong()
+                delayMillis = mToast.getCalculateDuration()
             )
             // 注册生命周期管控
             mWindowLifecycle.register(this@ToastImpl)

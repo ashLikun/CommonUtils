@@ -65,6 +65,7 @@ class SuperToast private constructor(builder: Builder) {
     //要在主线程
     private fun cretae(builder: Builder) {
         val toast = initToast(builder)
+        toast.duration = builder.duration
         toast.bindStyle(builder.getStyle())
         startAnim(builder)
         toast.addCallback(true) {
@@ -119,7 +120,14 @@ class SuperToast private constructor(builder: Builder) {
          * 如果设置那么内部就不会设置其他背景
          */
         var backGroundDrawable: Drawable? = null
-        var duration = Toast.LENGTH_SHORT
+
+        /**
+         * 显示时间
+         * [Toast.LENGTH_SHORT]
+         * [Toast.LENGTH_LONG]
+         * 或者自定义时间 HM
+         */
+        var duration: Int? = null
         var gravity = CHANG_GRAVITY
         var offsetX = 0
         var offsetY = 0

@@ -49,4 +49,9 @@ interface IToastStrategy {
      * Toast显示时候的回调
      */
     fun onShow()
+
+    /**
+     * 显示时间
+     */
+    var duration: Int?
 }

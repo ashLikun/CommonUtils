@@ -8,6 +8,8 @@ package com.ashlikun.utils.ui.modal.toast.config
  * 功能介绍：toast显示的回调
  */
 abstract class ICallToastStrategy : IToastStrategy {
+    override var duration: Int? = null
+
     data class Wap(var status: Boolean, val isOne: Boolean, var callback: OnCallback)
 
     protected val callback: OnCallback = {

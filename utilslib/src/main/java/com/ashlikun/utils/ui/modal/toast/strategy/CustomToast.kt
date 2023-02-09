@@ -3,6 +3,7 @@ package com.ashlikun.utils.ui.modal.toast.strategy
 import android.R
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import com.ashlikun.utils.ui.modal.toast.config.IToast
 
 /**
@@ -113,5 +114,13 @@ abstract class CustomToast : IToast {
         return mVerticalMargin
     }
 
+    fun getCalculateDuration(): Long {
+        if (mDuration == Toast.LENGTH_LONG) {
+            return longDuration.toLong()
+        } else if (mDuration == Toast.LENGTH_SHORT) {
+            return shortDuration.toLong()
+        }
+        return mDuration.toLong()
+    }
 
 }

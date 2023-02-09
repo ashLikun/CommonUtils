@@ -45,7 +45,15 @@ open class SystemToast(context: Context) : IToast {
     override fun getView() = toast.view
 
     override fun setDuration(duration: Int) {
-        toast.duration = duration
+        if (duration == Toast.LENGTH_LONG) {
+            toast.duration = duration
+        } else if (duration == Toast.LENGTH_SHORT) {
+            toast.duration = duration
+        } else if (duration > shortDuration) {
+            toast.duration = Toast.LENGTH_LONG
+        } else {
+            toast.duration = Toast.LENGTH_SHORT
+        }
     }
 
     override fun getDuration() = toast.duration

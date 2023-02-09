@@ -49,6 +49,8 @@ open class ToastStrategy : ICallToastStrategy() {
             //附属于Activity,,,,如果有悬浮窗权限，就开启全局的 Toast
             ActivityManager.foregroundActivity != null || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     Settings.canDrawOverlays(AppUtils.app)) -> ContextToast()
+            //自定义时间也是使用自定义Toast
+            duration != null && duration != Toast.LENGTH_LONG && duration != Toast.LENGTH_SHORT -> ContextToast()
             // 处理 Android 7.1 上 Toast 在主线程被阻塞后会导致报错的问题
             Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1 -> SafeToast(AppUtils.app)
             // 处理 Toast 关闭通知栏权限之后无法弹出的问题
@@ -107,8 +109,10 @@ open class ToastStrategy : ICallToastStrategy() {
     /**
      * 获取 Toast 显示时长
      */
-    protected fun getToastDuration(text: CharSequence): Int {
-        return if (text.length > 20) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+    protected fun getToastDuration(): Int {
+        if (duration != null) return duration!!
+        //自动判断
+        return if (mLatestText.length > 20) Toast.LENGTH_LONG else if (mLatestText.length > 100) 5000 else Toast.LENGTH_SHORT
     }
 
     /**
@@ -122,7 +126,7 @@ open class ToastStrategy : ICallToastStrategy() {
         // 为什么用 WeakReference，而不用 SoftReference ？
         // https://github.com/getActivity/ToastUtils/issues/79
         mToastReference = WeakReference(toast)
-        toast.setDuration(getToastDuration(mLatestText))
+        toast.setDuration(getToastDuration())
         toast.setText(mLatestText)
         toast.show()
     }

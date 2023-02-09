@@ -32,6 +32,7 @@ class Main2Activity : AppCompatActivity() {
 //            finish()
 
             SuperToast["12121"].apply {
+                setDuration(10000)
                 setFinish(this@Main2Activity)
             }.show()
         }
