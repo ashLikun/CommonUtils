@@ -39,6 +39,8 @@ object LogUtils {
     const val D = "D"
     const val V = "V"
     private var customTagPrefix: String? = null
+    //小括号导致其他库正则匹配不到
+    const val tag = "%s.%s[L:%d]"
 
     /**
      * 调用日志的回调
@@ -60,7 +62,7 @@ object LogUtils {
      */
     private fun generateTag(): String {
         val callers = Throwable().stackTrace
-        var tag = "%s.%s(L:%d)"
+        var tag = tag
         //去除应用包名,和一些无关的
         val caller = callers.find { !it.className.contains(LogUtils::class.java.simpleName) }
         var callerClazzName = caller?.className?.split(".")?.lastOrNull()?.split("$")?.firstOrNull() ?: "LogUtils"
