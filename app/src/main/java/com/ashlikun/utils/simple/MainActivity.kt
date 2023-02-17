@@ -25,6 +25,8 @@ import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
+import com.ashlikun.utils.other.coroutines.DefaultDispatcher
+import com.ashlikun.utils.other.coroutines.taskAsync
 import com.ashlikun.utils.other.coroutines.taskLaunch
 import com.ashlikun.utils.other.file.FileUtils
 import com.ashlikun.utils.other.file.PathUtils
@@ -47,8 +49,10 @@ import com.ashlikun.utils.ui.status.StatusBarCompat
 import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 import com.ashlikun.utils.ui.text.SpannableUtils
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
+import java.lang.Runnable
 import java.util.*
 
 
@@ -201,6 +205,40 @@ class MainActivity : AppCompatActivity() {
 
     fun onView1Click(view: View) {
         SuperToast.get("aaaaaaa").info();
+
+    }
+
+    fun onViewJobClick(view: View) {
+        taskLaunch(cache = {
+            LogUtils.i("aaaaaaaaaaa")
+            it.printStackTrace()
+        }) {
+
+            async(CoroutineExceptionHandler { _, t ->
+                LogUtils.i("bbbbbbbb222222")
+                t.printStackTrace()
+            }) {
+                LogUtils.i("22222222222222222")
+                throw RuntimeException("aaaaaaaaaaa")
+                LogUtils.i("111111111111111")
+                false
+            }
+            taskAsync(cache = {
+                LogUtils.i("bbbbbbb")
+                it.printStackTrace()
+            }) {
+                LogUtils.i("22222222222222222ddddddddd")
+                throw RuntimeException("aaaaaaaaaaadd")
+                LogUtils.i("111111111111111ddddddd")
+                false
+            }
+        }
+        CoroutineScope(DefaultDispatcher).launch(CoroutineExceptionHandler { _, t ->
+            LogUtils.i("aaaaaaaaaaa")
+            t.printStackTrace()
+        }) {
+
+        }
 
     }
 

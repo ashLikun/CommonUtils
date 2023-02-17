@@ -1,5 +1,6 @@
 package com.ashlikun.utils.other.coroutines
 
+import com.ashlikun.utils.other.LogUtils
 import com.ashlikun.utils.other.ThreadPoolManage
 import kotlinx.coroutines.*
 import kotlin.coroutines.AbstractCoroutineContextElement
@@ -46,8 +47,9 @@ val ThreadPoolDispatcher = ThreadPoolManage.get().asCoroutineDispatcher()
 /**
  * 本框架协成默认错误的处理,如果调用者处理了，那么这里不会调用
  */
-val defaultCoroutineExceptionHandler: CoroutineExceptionHandler =
+var defaultCoroutineExceptionHandler: CoroutineExceptionHandler =
     CoroutineExceptionHandler { _, t ->
+        LogUtils.e("协程默认异常")
         t.printStackTrace()
     }
 
@@ -124,7 +126,7 @@ inline fun <T> taskBlock(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
+    noinline job: suspend CoroutineScope.() -> T
 ): T = runBlocking(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
@@ -140,10 +142,18 @@ inline fun <T> taskAsync(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
-): Deferred<T> = DefaultScope().async(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
-    delay(delayTime)
-    job()
+    noinline job: suspend CoroutineScope.() -> T
+): Deferred<T> {
+    val handleContext = CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)
+    return DefaultScope().async(handleContext) {
+        delay(delayTime)
+        //自己实现异常，防止根异常无法捕获
+        runCatching {
+            job()
+        }.onFailure {
+            if (handleContext is CoroutineExceptionHandler) handleContext.handleException(coroutineContext, it)
+        }.getOrNull()!!
+    }
 }
 
 /**
@@ -155,7 +165,7 @@ inline fun taskLaunch(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
+    noinline job: suspend CoroutineScope.() -> Unit
 ) = DefaultScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
@@ -171,7 +181,7 @@ inline fun taskLaunchMain(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
+    noinline job: suspend CoroutineScope.() -> Unit
 ) = MainScopeX().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
@@ -187,7 +197,7 @@ inline fun taskLaunchIO(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
+    noinline job: suspend CoroutineScope.() -> Unit
 ) = IoScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
@@ -202,7 +212,7 @@ inline fun taskLaunchThreadPoll(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
+    noinline job: suspend CoroutineScope.() -> Unit
 ) = ThreadPoolScope().launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
