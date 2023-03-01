@@ -214,15 +214,15 @@ class MainActivity : AppCompatActivity() {
             it.printStackTrace()
         }) {
 
-            async(CoroutineExceptionHandler { _, t ->
-                LogUtils.i("bbbbbbbb222222")
-                t.printStackTrace()
-            }) {
-                LogUtils.i("22222222222222222")
-                throw RuntimeException("aaaaaaaaaaa")
-                LogUtils.i("111111111111111")
-                false
-            }
+//            async(CoroutineExceptionHandler { _, t ->
+//                LogUtils.i("bbbbbbbb222222")
+//                t.printStackTrace()
+//            }) {
+//                LogUtils.i("22222222222222222")
+//                throw RuntimeException("aaaaaaaaaaa")
+//                LogUtils.i("111111111111111")
+//                false
+//            }
             taskAsync(cache = {
                 LogUtils.i("bbbbbbb")
                 it.printStackTrace()

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ashlikun.utils.other.LogUtils
 import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.simple.databinding.MainActivity2Binding
+import com.ashlikun.utils.ui.extend.dp
 import com.ashlikun.utils.ui.extend.resDrawable
 import com.ashlikun.utils.ui.image.DrawableUtils
 import com.ashlikun.utils.ui.modal.SuperToast
@@ -26,6 +27,7 @@ class Main2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        DrawableUtils.createTextDraw(binding.textView, size = 24.dp, drawableId = R.drawable.main_ic_ebike_button_laba_def)
         binding.ceshi.setOnClickListener {
 //            AnimUtils.updateTextSize(binding.textView, 30f, 50f).apply { start() }
 //            ToastUtils.show("dddddddd")

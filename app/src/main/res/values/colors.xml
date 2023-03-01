@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="color2">#FFFF0000</color>
+    <color name="gray_92">#ff929292</color>
+    <color name="icon_def_color_fan">#ffff92ff</color>
 </resources>

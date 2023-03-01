@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     app:skh_bottom_duration="200"
     app:skh_is_padding_bottom="true">
 
@@ -34,11 +35,16 @@
                 android:layout_height="wrap_content"
                 android:text="测试按钮"></Button>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/main_ic_ebike_button_laba_def" />
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我是测试文字"></TextView>
+                android:text="我是测试文字aaa"></TextView>
 
             <TextView
                 android:layout_width="match_parent"
@@ -142,7 +148,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="我是测试文字"
+            android:text="我是测试文字2222"
             app:layout_constraintBottom_toTopOf="@id/softKeyView"></TextView>
 
         <View

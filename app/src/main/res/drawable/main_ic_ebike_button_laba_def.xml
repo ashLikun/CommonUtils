@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--android 6.0 这里svg图片只能引用文件，不能以代码形式，不然失效-->
+    <item android:drawable="@drawable/main_ic_ebike_button_laba_def_item1" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_add" />
+</selector>

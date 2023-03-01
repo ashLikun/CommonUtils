@@ -447,7 +447,7 @@ object DrawableUtils {
         @ColorInt tintColor: Int? = null,
         drawable: Drawable? = null,
     ) {
-        val mDrawable = (drawable ?: drawableId?.resDrawable)!!.createDrawable(size, width, height, tintColor)
+        val mDrawable = (drawable ?: drawableId?.resDrawable)
         when (location) {
             1 -> textView.setCompoundDrawablesX(left = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
             2 -> textView.setCompoundDrawablesX(top = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
