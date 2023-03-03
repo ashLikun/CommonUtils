@@ -81,6 +81,15 @@ inline fun Number.numberFormat3(precision: Int = 2) =
  */
 inline fun String.substringMax(maxLenght: Int) = this.substring(0, min(this.length - 1, maxLenght))
 
+/**
+ * 将String转化成ASCII byte[]
+ *
+ * @param res 要转化的String
+ * @return 对应的字符串
+ */
+fun String.strToASCII(): ByteArray {
+    return this.toCharArray().joinToString(separator = "").toByteArray()
+}
 
 object StringUtils {
     /**
