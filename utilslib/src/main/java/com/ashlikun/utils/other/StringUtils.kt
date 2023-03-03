@@ -10,6 +10,7 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -28,6 +29,21 @@ import kotlin.math.min
  */
 inline fun String.isSpace() = StringUtils.isSpace(this)
 inline fun String.trimx() = StringUtils.trim(this)
+
+/**
+ * 不为“”就执行
+ */
+inline fun String.ifNoEmptyInvok(invok: (String) -> Unit): String {
+    if (isNotEmpty()) invok(this)
+    return this
+}
+
+inline fun String.ifNoEmpty(defaultValue: (String) -> String): String =
+    if (isNotEmpty()) defaultValue(this) else this
+
+inline fun String.ifEmpty(defaultValue: String = ""): String =
+    if (isEmpty()) defaultValue else this
+
 
 /**
  * 小数 四舍五入 19.0->19.0    返回Double
@@ -64,6 +80,7 @@ inline fun Number.numberFormat3(precision: Int = 2) =
  * 最大值裁剪字符串
  */
 inline fun String.substringMax(maxLenght: Int) = this.substring(0, min(this.length - 1, maxLenght))
+
 
 object StringUtils {
     /**

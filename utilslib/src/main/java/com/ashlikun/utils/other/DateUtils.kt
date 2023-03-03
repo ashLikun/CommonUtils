@@ -81,6 +81,13 @@ inline fun Calendar.compareIgnoreSecond(calendar: Calendar) =
 inline fun String.formatCalendar(format: String = DateUtils.YMD_HMS) =
     DateUtils.getFormatCalendar(this, format)
 
+/**
+ * 秒变成 HH:MM:SS
+ */
+fun Int.formatHHmmss(format: String = "%02d:%02d:%02d") = format.format(this / 3600, ((this % 3600) / 60), ((this % 3600) % 60))
+fun Int.formatHHmm(format: String = "%02d:%02d") = format.format(this / 3600, ((this % 3600) / 60))
+fun Int.format02() = "%02d".format(this)
+
 object DateUtils {
     const val YMD_HMS = "yyyy-MM-dd HH:mm:ss"
     const val YMD = "yyyy-MM-dd"
