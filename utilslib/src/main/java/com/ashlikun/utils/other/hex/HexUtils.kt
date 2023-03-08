@@ -101,8 +101,23 @@ inline val ByteArray.byteToUIntLE
 inline val ByteArray.byteToASCIIStr
     get() = HexUtils.byteToASCIIStr(this, false, false)
 
+/**
+ * 删除00和后续
+ */
 inline val ByteArray.byteToASCIIStrSub00
     get() = HexUtils.byteToASCIIStr(this, false, true)
+
+/**
+ * 删除控制字符和 00和后续
+ */
+inline val ByteArray.byteToASCIIStrDelCtrlOr00
+    get() = HexUtils.byteToASCIIStr(this, false, true, true)
+
+/**
+ * 移除控制字符
+ */
+inline val ByteArray.byteToASCIIStrDelCtrl
+    get() = HexUtils.byteToASCIIStr(this, false, false, true)
 
 object HexUtils {
 
@@ -240,15 +255,20 @@ object HexUtils {
      *
      * @param res 要转化的byte[]
      * @param isSub00 是否遇到00就去除之后的byte
+     * @param isRemoveControl 是否去除控制符
      * @return 对应的字符串
      */
-    fun byteToASCIIStr(res: ByteArray, reversed: Boolean = true, isSub00: Boolean = false): String {
+    fun byteToASCIIStr(res: ByteArray, reversed: Boolean = true, isSub00: Boolean = false, isRemoveControl: Boolean = false): String {
+        var res = res
         //翻转一波，保证一样的输出
-        val res = if (reversed) res.reversedArray() else res
-        var is00 = false
-        return res.map {
-            if (isSub00 && !is00) is00 = it.toInt() == 0
-            if (is00) null else it.toInt().toChar()
-        }.filterNotNull().joinToString("")
+        res = if (reversed) res.reversedArray() else res
+        var result = ""
+        for (it in res) {
+            if (isSub00 && it.toInt() == 0) break
+            if (isRemoveControl && it < 32) continue
+            result += it.toInt().toChar()
+        }
+        return result
     }
+
 }

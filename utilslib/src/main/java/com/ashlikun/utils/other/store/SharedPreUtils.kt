@@ -76,6 +76,21 @@ internal class SharedPreUtils : IStore {
     override fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, cls: Class<T>, name: String) =
         throw RuntimeException("SharedPre no Parcelable")
 
+    override fun contains(key: String, name: String): Boolean {
+        return if (isMainProcess) {
+            getSP(name).contains(key)
+            true
+        } else {
+            //其他进程，使用ContentProvider
+            try {
+                return ImpSpProvider.containsToProvider(AppUtils.base, name, key)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        }
+    }
+
     override fun remove(key: String, name: String): Boolean {
         return if (isMainProcess) {
             getSP(name).edit().remove(key).apply()

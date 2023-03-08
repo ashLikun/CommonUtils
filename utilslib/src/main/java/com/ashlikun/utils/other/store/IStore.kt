@@ -70,6 +70,11 @@ interface IStore {
 
     fun <T : Parcelable> getParcelable(key: String, defaultValue: T?, cls: Class<T>, name: String): T?
 
+    /**
+     * 是否包含这个key
+     */
+    fun contains(key: String, name: String = StoreUtils.DEFAULT): Boolean
+
     fun remove(key: String, name: String = StoreUtils.DEFAULT): Boolean
 
     fun clear(name: String = StoreUtils.DEFAULT): Boolean

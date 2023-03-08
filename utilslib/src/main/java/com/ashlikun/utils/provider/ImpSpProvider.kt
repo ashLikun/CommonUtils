@@ -1,5 +1,6 @@
 package com.ashlikun.utils.provider
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -23,9 +24,9 @@ class ImpSpProvider : IContentProvider {
     fun getSP(name: String = StoreUtils.DEFAULT) =
         AppUtils.app.getSharedPreferences(name, Context.MODE_PRIVATE)
 
-    fun contains(name: String): Boolean {
-        val sp = getSP()
-        return sp != null && sp.contains(name)
+    fun contains(name: String, key: String): Boolean {
+        val sp = getSP(name)
+        return sp != null && sp.contains(key)
     }
 
     fun remove(name: String, key: String): Boolean {
@@ -99,6 +100,9 @@ class ImpSpProvider : IContentProvider {
         val mode = SpMode(uri)
         if (!mode.isException && mode.type == TYPE_CLEAN) {
             return if (clear(mode.name)) 1 else 0
+        }
+        if (!mode.isException && mode.type == TYPE_CONTAINS) {
+            return if (contains(mode.name, mode.key)) 1 else 0
         }
         return if (remove(mode.name, mode.key)) 1 else 0
     }
@@ -180,6 +184,7 @@ class ImpSpProvider : IContentProvider {
          * sp操作类型
          */
         const val TYPE_CLEAN = "clean"
+        const val TYPE_CONTAINS = "contains"
 
         /**
          * 设置Provider内容
@@ -266,6 +271,18 @@ class ImpSpProvider : IContentProvider {
                 return false
             }
             val uri = SpMode(name, key, TYPE_CLEAN).uri
+            if (uri != null) {
+                val cr = context.contentResolver
+                return cr.delete(uri, null, null) > 0
+            }
+            return false
+        }
+
+        fun containsToProvider(context: Context?, name: String?, key: String?): Boolean {
+            if (context == null || name == null || key == null) {
+                return false
+            }
+            val uri = SpMode(name, key, TYPE_CONTAINS).uri
             if (uri != null) {
                 val cr = context.contentResolver
                 return cr.delete(uri, null, null) > 0

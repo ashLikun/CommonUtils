@@ -68,13 +68,13 @@ class SpMode {
      */
     constructor(name: String, key: String, type: KClass<*>) {
         var typeStr = "Object"
-        when {
-            type == String::class -> typeStr = ImpSpProvider.TYPE_STRING
-            type == Int::class -> typeStr = ImpSpProvider.TYPE_INT
-            type == Boolean::class -> typeStr = ImpSpProvider.TYPE_BOOLEAN
-            type == Float::class -> typeStr = ImpSpProvider.TYPE_FLOAT
-            type == Long::class -> typeStr = ImpSpProvider.TYPE_LONG
-            type == MutableSet::class -> typeStr = ImpSpProvider.TYPE_STRING_SET
+        when (type) {
+            String::class -> typeStr = ImpSpProvider.TYPE_STRING
+            Int::class -> typeStr = ImpSpProvider.TYPE_INT
+            Boolean::class -> typeStr = ImpSpProvider.TYPE_BOOLEAN
+            Float::class -> typeStr = ImpSpProvider.TYPE_FLOAT
+            Long::class -> typeStr = ImpSpProvider.TYPE_LONG
+            MutableSet::class -> typeStr = ImpSpProvider.TYPE_STRING_SET
         }
         createUrl(name, key, typeStr)
     }
