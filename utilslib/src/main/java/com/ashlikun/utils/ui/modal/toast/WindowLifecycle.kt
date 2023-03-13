@@ -19,7 +19,8 @@ import java.lang.ref.WeakReference
  */
 internal class WindowLifecycle(
     /**
-     * 当前 Activity 或者 Application 对象
+     * 当前 Activity
+     * 不能是Application addView 时候会报错
      */
     private var context: WeakReference<Context>
 ) : ActivityLifecycleCallbacks {

@@ -5,10 +5,7 @@ import android.widget.Toast
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.ui.NotificationUtil
 import com.ashlikun.utils.ui.modal.toast.config.IToast
-import com.ashlikun.utils.ui.modal.toast.strategy.CustomToast
-import com.ashlikun.utils.ui.modal.toast.strategy.NotificationToast
-import com.ashlikun.utils.ui.modal.toast.strategy.SafeToast
-import com.ashlikun.utils.ui.modal.toast.strategy.SystemToast
+import com.ashlikun.utils.ui.modal.toast.strategy.*
 
 
 /**
@@ -17,7 +14,7 @@ import com.ashlikun.utils.ui.modal.toast.strategy.SystemToast
  * 邮箱　　：496546144@qq.com
  * 参考https://github.com/getActivity/ToastUtils
  * 功能介绍：系统Toast 默认处理器
- * 优先级是：[SafeToast]->[NotificationToast]->[SystemToast]
+ * 优先级是：[ContextToast]->[SafeToast]->[NotificationToast]->[SystemToast]
  */
 open class ToastSystemStrategy : ToastStrategy() {
 

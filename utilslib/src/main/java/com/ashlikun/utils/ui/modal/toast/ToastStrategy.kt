@@ -46,7 +46,7 @@ open class ToastStrategy : ICallToastStrategy() {
 
     override fun create(): IToast {
         val toast = when {
-            //附属于Activity,,,,如果有悬浮窗权限，就开启全局的 Toast
+            //附属于Activity,如果有悬浮窗权限，就开启全局的 Toast
             ActivityManager.foregroundActivity != null || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     Settings.canDrawOverlays(AppUtils.app)) -> ContextToast()
             //自定义时间也是使用自定义Toast

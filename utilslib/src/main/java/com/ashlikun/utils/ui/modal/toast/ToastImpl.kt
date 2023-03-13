@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui.modal.toast
 
 import android.graphics.PixelFormat
 import android.os.Build
+import android.provider.Settings
 import android.view.WindowManager
 import android.view.WindowManager.BadTokenException
 import android.widget.Toast
@@ -44,8 +45,9 @@ internal class ToastImpl( //当前的吐司对象
 
     /**
      * 当前是否全局显示 Application
+     * 前提是有悬浮框权限 android.permission.SYSTEM_ALERT_WINDOW
      */
-    var mGlobalShow = false
+    var mGlobalShow = true
 
 
     /***
@@ -97,7 +99,9 @@ internal class ToastImpl( //当前的吐司对象
         // 如果是全局显示
         if (mGlobalShow) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                if (Settings.canDrawOverlays(AppUtils.app)) {
+                    params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                }
             } else {
                 params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
             }
