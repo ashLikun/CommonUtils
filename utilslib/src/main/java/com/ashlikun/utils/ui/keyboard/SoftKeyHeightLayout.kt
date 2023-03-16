@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
+import com.ashlikun.utils.AppUtils.initAppEditMode
 import com.ashlikun.utils.R
 import com.ashlikun.utils.ui.extend.getActivity
 
@@ -39,11 +40,17 @@ open class SoftKeyHeightLayout @JvmOverloads constructor(
     var maxParentHeightChange: OnMaxParentHeightChange? = null
 
     var maxParentHeight = 0
-    var softKeyboardHeight = KeyboardUtils.getDefKeyboardHeight()
+    var softKeyboardHeight = 0
     var configurationChangedFlag = false
 
 
     init {
+        initAppEditMode()
+        if (isInEditMode) {
+            softKeyboardHeight = 200
+        } else {
+            softKeyboardHeight = KeyboardUtils.getDefKeyboardHeight()
+        }
         onSoftPops.add {
             onSoftPop(it)
         }
