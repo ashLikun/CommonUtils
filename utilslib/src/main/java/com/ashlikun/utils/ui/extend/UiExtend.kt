@@ -123,6 +123,9 @@ inline val Int.resString
 inline fun Int.resString(context: Context) = ResUtils.getString(context, this)
 inline fun Context.resString(resId: Int) = ResUtils.getString(this, resId)
 
+inline fun Int.resText(context: Context) = ResUtils.getText(context, this)
+inline fun Context.resText(resId: Int) = ResUtils.getText(this, resId)
+
 
 inline val Int.resDimension
     get() = ResUtils.getDimension(this)

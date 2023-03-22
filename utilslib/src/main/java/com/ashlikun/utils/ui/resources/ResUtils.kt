@@ -19,7 +19,7 @@ object ResUtils {
     /**
      * 获取String的时候回调
      */
-    var callString: ((resId: Int, value: String) -> String)? = null
+    var callString: ((resId: Int, value: CharSequence) -> CharSequence)? = null
 
     /**
      * 是否有这个id
@@ -27,9 +27,7 @@ object ResUtils {
     fun havRes(@ColorRes resId: Int): Boolean {
         val typedValue = TypedValue()
         AppUtils.defaultResources.getValue(resId, typedValue, true)
-        if (typedValue.type >= TypedValue.TYPE_FIRST_INT
-            && typedValue.type <= TypedValue.TYPE_LAST_INT
-        ) {
+        if (typedValue.type >= TypedValue.TYPE_FIRST_INT && typedValue.type <= TypedValue.TYPE_LAST_INT) {
             return true
         } else if (typedValue.type != TypedValue.TYPE_STRING) {
             return false
@@ -63,11 +61,21 @@ object ResUtils {
 
     fun getString(context: Context, @StringRes id: Int): String {
         val value = context.resources.getString(id)
-        return callString?.invoke(id, value) ?: value
+        return callString?.invoke(id, value)?.toString() ?: value
     }
 
     fun getString(@StringRes id: Int): String {
         val value = AppUtils.defaultResources.getString(id)
+        return callString?.invoke(id, value)?.toString() ?: value
+    }
+
+    fun getText(context: Context, @StringRes id: Int): CharSequence {
+        val value = context.resources.getText(id)
+        return callString?.invoke(id, value) ?: value
+    }
+
+    fun getText(@StringRes id: Int): CharSequence {
+        val value = AppUtils.defaultResources.getText(id)
         return callString?.invoke(id, value) ?: value
     }
 

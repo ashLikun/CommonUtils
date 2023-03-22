@@ -7,6 +7,11 @@ import android.os.Build
 import android.view.View
 import android.view.Window
 import androidx.activity.ComponentActivity
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.RestrictTo
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.ashlikun.utils.main.ActivityUtils

@@ -11,6 +11,8 @@ import android.text.TextPaint
 import android.text.TextUtils
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.net.URLDecoder
+import java.net.URLEncoder
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -38,43 +40,35 @@ inline fun String.ifNoEmptyInvok(invok: (String) -> Unit): String {
     return this
 }
 
-inline fun String.ifNoEmpty(defaultValue: (String) -> String): String =
-    if (isNotEmpty()) defaultValue(this) else this
+inline fun String.ifNoEmpty(defaultValue: (String) -> String): String = if (isNotEmpty()) defaultValue(this) else this
 
-inline fun String.ifEmpty(defaultValue: String = ""): String =
-    if (isEmpty()) defaultValue else this
+inline fun String.ifEmpty(defaultValue: String = ""): String = if (isEmpty()) defaultValue else this
 
 
 /**
  * 小数 四舍五入 19.0->19.0    返回Double
  */
-inline fun String.roundDouble(precision: Int = 2) =
-    StringUtils.roundDouble(this.toDoubleOrNull() ?: 0.0, precision)
+inline fun String.roundDouble(precision: Int = 2) = StringUtils.roundDouble(this.toDoubleOrNull() ?: 0.0, precision)
 
-inline fun Number.roundDouble(precision: Int = 2) =
-    StringUtils.roundDouble(this.toDouble(), precision)
+inline fun Number.roundDouble(precision: Int = 2) = StringUtils.roundDouble(this.toDouble(), precision)
 
 /**
  * double转String
  *
  * @param precision 保留几位小数不足位补0
  */
-inline fun String.numberFormat(precision: Int = 2) =
-    StringUtils.numberFormat(this.toDoubleOrNull() ?: 0.0, precision)
+inline fun String.numberFormat(precision: Int = 2) = StringUtils.numberFormat(this.toDoubleOrNull() ?: 0.0, precision)
 
-inline fun Number.numberFormat(precision: Int = 2) =
-    StringUtils.numberFormat(this.toDouble(), precision)
+inline fun Number.numberFormat(precision: Int = 2) = StringUtils.numberFormat(this.toDouble(), precision)
 
 /**
  * double转String,三位三位的隔开
  *
  * @param precision 保留几位小数不足位补0
  */
-inline fun String.numberFormat3(precision: Int = 2) =
-    StringUtils.numberFormat3(this.toDoubleOrNull() ?: 0.0, precision)
+inline fun String.numberFormat3(precision: Int = 2) = StringUtils.numberFormat3(this.toDoubleOrNull() ?: 0.0, precision)
 
-inline fun Number.numberFormat3(precision: Int = 2) =
-    StringUtils.numberFormat3(this.toDouble(), precision)
+inline fun Number.numberFormat3(precision: Int = 2) = StringUtils.numberFormat3(this.toDouble(), precision)
 
 /**
  * 最大值裁剪字符串
@@ -91,7 +85,35 @@ fun String.strToASCII(): ByteArray {
     return this.toCharArray().joinToString(separator = "").toByteArray()
 }
 
+/**
+ * url 编码，一般使用url参数编码就行
+ */
+fun String.urlEncoder(charset: String = Charsets.UTF_8.name()) = StringUtils.urlEncoder(this, charset)
+
+/**
+ * url 解码
+ */
+fun String.urlDecoder(charset: String = Charsets.UTF_8.name()) = StringUtils.urlDecoder(this, charset)
+
 object StringUtils {
+    /**
+     * url 编码，一般使用url参数编码就行
+     */
+    fun urlEncoder(text: String, charset: String = Charsets.UTF_8.name()): String {
+        return runCatching {
+            URLEncoder.encode(text, charset)
+        }.getOrNull() ?: ""
+    }
+
+    /**
+     * url 解码
+     */
+    fun urlDecoder(text: String, charset: String = Charsets.UTF_8.name()): String {
+        return runCatching {
+            URLDecoder.decode(text, charset)
+        }.getOrNull() ?: ""
+    }
+
     /**
      * 用于判断指定字符是否为空白字符，空白符包含：空格、tab键、换行符。
      */
@@ -121,8 +143,7 @@ object StringUtils {
      *  比较两个字符串
      */
     fun isEquals(actual: String, expected: String): Boolean {
-        return (actual === expected
-                || if (actual == null) expected == null else actual == expected)
+        return (actual === expected || if (actual == null) expected == null else actual == expected)
     }
 
     /**
@@ -186,11 +207,9 @@ object StringUtils {
                         val bd = BigDecimal(source.toString().toDouble())
                         if (filter != null && filter is Int) {
                             return if (filter == 0) {
-                                return bd.setScale(0, BigDecimal.ROUND_HALF_EVEN)
-                                    .toInt().toString()
+                                return bd.setScale(0, BigDecimal.ROUND_HALF_EVEN).toInt().toString()
                             } else {
-                                bd.setScale(Math.abs(filter), BigDecimal.ROUND_HALF_EVEN).toDouble()
-                                    .toString()
+                                bd.setScale(Math.abs(filter), BigDecimal.ROUND_HALF_EVEN).toDouble().toString()
                             }
                         }
                         bd.setScale(2, BigDecimal.ROUND_HALF_EVEN).toDouble().toString()
@@ -213,23 +232,20 @@ object StringUtils {
     /**
      * 小数 四舍五入 19.0->19.0    返回Double
      */
-    fun roundDouble(value: Double, precision: Int = 2) =
-        BigDecimal(value).setScale(precision, BigDecimal.ROUND_HALF_EVEN).toDouble()
+    fun roundDouble(value: Double, precision: Int = 2) = BigDecimal(value).setScale(precision, BigDecimal.ROUND_HALF_EVEN).toDouble()
 
     /**
      * double转String,保留小数点后两位
      * 使用0.00不足位补0，#.##     # 一个数字，不包括 0 , 0 一个数字
      */
-    fun roundDoubleToFormat(value: Double, precision: Int) =
-        numberFormat(roundDouble(value, precision), precision)
+    fun roundDoubleToFormat(value: Double, precision: Int) = numberFormat(roundDouble(value, precision), precision)
 
     /**
      * double转String,保留小数点后两位,三位三位的隔开
      * 使用0.00不足位补0，#.##     # 一个数字，不包括 0 , 0 一个数字
      * @param precision 保留几位小数不足位补0
      */
-    fun roundDoubleToFormat3(value: Double, precision: Int) =
-        numberFormat3(roundDouble(value, precision), precision)
+    fun roundDoubleToFormat3(value: Double, precision: Int) = numberFormat3(roundDouble(value, precision), precision)
 
     /**
      * double转String
@@ -312,34 +328,20 @@ object StringUtils {
      * 按照指定的行数截取字符串,末尾。。。
      */
     fun ellipsize(
-        paint: TextPaint,
-        textSize: Float,
-        layoutWidth: Int,
-        content: CharSequence,
-        maxLine: Int
+        paint: TextPaint, textSize: Float, layoutWidth: Int, content: CharSequence, maxLine: Int
     ): CharSequence {
         var content = content
         return if (layoutWidth != 0 && !TextUtils.isEmpty(content)) {
             val oldTextSize = paint.textSize
             paint.textSize = textSize
             val layout = StaticLayout(
-                content,
-                paint,
-                layoutWidth,
-                Layout.Alignment.ALIGN_NORMAL,
-                1.0f,
-                0.0f,
-                true
+                content, paint, layoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, true
             )
             val count = layout.lineCount
             if (count > maxLine) {
                 val start = layout.getLineStart(maxLine - 1)
                 content = content.subSequence(0, start).toString() + TextUtils.ellipsize(
-                    content
-                        .subSequence(start, content.length),
-                    paint,
-                    layoutWidth.toFloat(),
-                    TextUtils.TruncateAt.END
+                    content.subSequence(start, content.length), paint, layoutWidth.toFloat(), TextUtils.TruncateAt.END
                 ) as String
             }
             paint.textSize = oldTextSize
