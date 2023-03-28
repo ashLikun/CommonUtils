@@ -39,10 +39,10 @@ private fun <I, O> ComponentActivity.registerForActivityResultX(
     var launcher: ActivityResultLauncher<I>? = null
     //这种注册需要自己unregister
     launcher = activityResultRegistry.register(key + AtomicInteger().getAndIncrement(), contract) {
-        callback.invoke(it)
         //这里主动释放
         if (isUnregister)
             launcher!!.unregister()
+        callback.invoke(it)
     }
     return launcher
 }
