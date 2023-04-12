@@ -166,15 +166,15 @@ object BitmapUtil {
      * drawable转换成bitmap
      * 如果不是BitmapDrawable 那么要注意宽高
      */
-    fun drawableToBitmap(drawable: Drawable): Bitmap {
+    fun drawableToBitmap(drawable: Drawable, width: Int = drawable.intrinsicWidth, height: Int = drawable.intrinsicHeight): Bitmap {
         return if (drawable is BitmapDrawable) drawable.bitmap
         else {
             //获得drawable的基本信息
-            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             //建立对应的画布
             val canvas = Canvas(bitmap)
-            //设置大小
-            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+            //设置大小,这个四参数指的是drawable将在被绘制在canvas的哪个矩形区域内
+            drawable.setBounds(0, 0, width, height)
             //把drawable内容画到画布中
             drawable.draw(canvas)
             bitmap

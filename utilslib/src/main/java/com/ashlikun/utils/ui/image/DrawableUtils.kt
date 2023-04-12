@@ -23,7 +23,7 @@ import kotlin.math.max
  *
  * 功能介绍：Drawable 常用的工具
  */
-inline fun Drawable.toBitmap() = BitmapUtil.drawableToBitmap(this)
+inline fun Drawable.toBitmap(width: Int = this.intrinsicWidth, height: Int = this.intrinsicHeight) = BitmapUtil.drawableToBitmap(this,width,height)
 inline fun TextView.setColorStateList(
     @ColorRes normalId: Int? = null,
     @ColorRes selectId: Int? = null,
