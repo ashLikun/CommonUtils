@@ -138,14 +138,11 @@ inline fun Drawable.createDrawable(
     var drawable = this
     var width = max(width ?: 0, size ?: 0)
     var height = max(height ?: 0, size ?: 0)
-    //是否改变宽高
-    var isChang = true
     val drawWidth = intrinsicWidth.toFloat()
     val drawHeight = intrinsicHeight.toFloat()
     if (width == 0 && height == 0) {
         width = drawWidth.toInt()
         height = drawHeight.toInt()
-        isChang = false
     } else if (width == 0) {
         //高度被设置了，那么久按照比例设置宽度
         width = (height / drawHeight * drawWidth).toInt()
@@ -154,16 +151,11 @@ inline fun Drawable.createDrawable(
         height = (width / drawWidth * drawHeight).toInt()
     }
     //如果使用tint，必须使用DrawableCompat.wrap
-    if (isChang || tintColor != null) {
-        if (isChang) {
-            drawable = DrawableCompat.wrap(drawable).mutate()
-            drawable.setBounds(0, 0, width, height)
-        }
-        if (tintColor != null) {
-            DrawableCompat.setTint(drawable, tintColor!!)
-        }
+    drawable = DrawableCompat.wrap(drawable).mutate()
+    drawable.setBounds(0, 0, width, height)
+    if (tintColor != null) {
+        DrawableCompat.setTint(drawable, tintColor!!)
     }
-
     return drawable
 }
 
