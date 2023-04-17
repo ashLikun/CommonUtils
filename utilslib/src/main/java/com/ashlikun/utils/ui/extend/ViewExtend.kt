@@ -487,8 +487,8 @@ inline fun TextView?.setCompoundDrawablesX(
     bottomId: Int? = null,
     //宽度高度px, 取最大值
     size: Int? = null,
-    width: Int = 0,
-    height: Int = 0,
+    width: Int? = null,
+    height: Int? = null,
     @ColorInt tintColor: Int? = null,
     isClean: Boolean = true
 ) {

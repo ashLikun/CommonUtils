@@ -23,7 +23,7 @@ import kotlin.math.max
  *
  * 功能介绍：Drawable 常用的工具
  */
-inline fun Drawable.toBitmap(width: Int = this.intrinsicWidth, height: Int = this.intrinsicHeight) = BitmapUtil.drawableToBitmap(this,width,height)
+inline fun Drawable.toBitmap(width: Int = this.intrinsicWidth, height: Int = this.intrinsicHeight) = BitmapUtil.drawableToBitmap(this, width, height)
 inline fun TextView.setColorStateList(
     @ColorRes normalId: Int? = null,
     @ColorRes selectId: Int? = null,
@@ -131,17 +131,17 @@ inline fun View.setStateListDrawable(
 inline fun Drawable.createDrawable(
     //宽度高度px, 取最大值
     size: Int? = null,
-    width: Int = 0,
-    height: Int = 0,
+    width: Int? = null,
+    height: Int? = null,
     @ColorInt tintColor: Int? = null,
 ): Drawable {
     var drawable = this
-    var width = max(width, size ?: 0)
-    var height = max(height, size ?: 0)
+    var width = max(width ?: 0, size ?: 0)
+    var height = max(height ?: 0, size ?: 0)
     //是否改变宽高
     var isChang = true
-    val drawWidth = minimumWidth.toFloat()
-    val drawHeight = minimumHeight.toFloat()
+    val drawWidth = intrinsicWidth.toFloat()
+    val drawHeight = intrinsicHeight.toFloat()
     if (width == 0 && height == 0) {
         width = drawWidth.toInt()
         height = drawHeight.toInt()
@@ -442,8 +442,8 @@ object DrawableUtils {
         location: Int = 3,
         //宽度高度px, 取最大值
         size: Int? = null,
-        width: Int = 0,
-        height: Int = 0,
+        width: Int? = null,
+        height: Int? = null,
         @ColorInt tintColor: Int? = null,
         drawable: Drawable? = null,
     ) {
@@ -451,8 +451,22 @@ object DrawableUtils {
         when (location) {
             1 -> textView.setCompoundDrawablesX(left = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
             2 -> textView.setCompoundDrawablesX(top = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
-            3 -> textView.setCompoundDrawablesX(right = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
-            4 -> textView.setCompoundDrawablesX(bottom = mDrawable, size = size, width = width, height = height, tintColor = tintColor, isClean = false)
+            3 -> textView.setCompoundDrawablesX(
+                right = mDrawable,
+                size = size,
+                width = width,
+                height = height,
+                tintColor = tintColor,
+                isClean = false
+            )
+            4 -> textView.setCompoundDrawablesX(
+                bottom = mDrawable,
+                size = size,
+                width = width,
+                height = height,
+                tintColor = tintColor,
+                isClean = false
+            )
         }
     }
 
