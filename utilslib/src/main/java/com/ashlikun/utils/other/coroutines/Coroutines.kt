@@ -152,7 +152,7 @@ inline fun <T> taskAsync(
             job()
         }.onFailure {
             if (handleContext is CoroutineExceptionHandler) handleContext.handleException(coroutineContext, it)
-        }.getOrNull()!!
+        }.getOrNull() as T
     }
 }
 
