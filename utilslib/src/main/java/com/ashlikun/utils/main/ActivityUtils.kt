@@ -86,9 +86,9 @@ object ActivityUtils {
      * @param ismoveTaskToFront 是否把任务栈移动到顶部
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
-    fun appRunStatus(ismoveTaskToFront: Boolean = true, ignoreTaskAffinitys: Array<String> = emptyArray(), ignoreActivitys: Array<Class<Activity>> = emptyArray()): Int {
+    fun appRunStatus(ismoveTaskToFront: Boolean = true, ignoreTaskAffinitys: Array<String> = emptyArray(), ignoreActivitys: Array<Class<out Activity>> = emptyArray()): Int {
         return if (!isForeground) {
-            if (com.ashlikun.utils.ui.ActivityManager.get().currentActivity(ignoreActivitys) == null) {
+            if (com.ashlikun.utils.ui.ActivityManager.get().currentActivity(ignoreActivitys + arrayOf(NotifyActivity::class.java)) == null) {
                 //一个页面不存在就未启动
                 return 2
             }

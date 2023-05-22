@@ -159,7 +159,7 @@ class ActivityManager private constructor() {
      * 获得当前栈顶Activity
      * @param ignoreActivitys 忽略的Activity
      */
-    fun currentActivity(ignoreActivitys: Array<Class<Activity>> = emptyArray()): Activity? {
+    fun currentActivity(ignoreActivitys: Array<Class<out Activity>> = emptyArray()): Activity? {
         var activity = if (ignoreActivitys.isEmpty()) activityStack.lastElementOrNull()
         else activityStack.lastOrNull { !ignoreActivitys.contains(it.javaClass) }
         if (activity?.isFinishing == true) {
