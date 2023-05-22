@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.view.ContextThemeWrapper
 import com.ashlikun.utils.AppUtils
+import com.ashlikun.utils.ui.fActivity
+import com.ashlikun.utils.ui.notify.NotifyActivity
 
 /**
  * @author　　: 李坤
@@ -84,8 +86,12 @@ object ActivityUtils {
      * @param ismoveTaskToFront 是否把任务栈移动到顶部
      * @return 0：前台 1:处于后台  2：未启动或者被回收
      */
-    fun appRunStatus(ismoveTaskToFront: Boolean = true, ignoreTaskAffinitys: Array<String> = emptyArray()): Int {
+    fun appRunStatus(ismoveTaskToFront: Boolean = true, ignoreTaskAffinitys: Array<String> = emptyArray(), ignoreActivitys: Array<Class<Activity>> = emptyArray()): Int {
         return if (!isForeground) {
+            if (com.ashlikun.utils.ui.ActivityManager.get().currentActivity(ignoreActivitys) == null) {
+                //一个页面不存在就未启动
+                return 2
+            }
             //处于后台
             var isHoutTai = false
             //获取ActivityManager
