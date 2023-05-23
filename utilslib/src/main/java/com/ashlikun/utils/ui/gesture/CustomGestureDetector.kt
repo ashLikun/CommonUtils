@@ -155,7 +155,8 @@ open class CustomGestureDetector(
             //再处理普通的手势
             val result = gestureDetector.onTouchEvent(ev)
             if (scrollDirection == 0) {
-                view.parent.requestDisallowInterceptTouchEvent(result)
+                //请求父不要拦截事件
+                view.parent.requestDisallowInterceptTouchEvent(true)
             }
             return result
         } catch (e: IllegalArgumentException) {
