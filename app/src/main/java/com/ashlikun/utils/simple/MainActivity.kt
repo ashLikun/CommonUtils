@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setMaxFps()
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         statusBarCompat = StatusBarCompat(this)

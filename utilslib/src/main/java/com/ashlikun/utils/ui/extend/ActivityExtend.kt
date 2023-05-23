@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.ashlikun.utils.main.ActivityUtils
+import com.ashlikun.utils.other.LogUtils
 import com.ashlikun.utils.ui.status.StatusBarCompat
 
 /**
@@ -96,16 +97,24 @@ fun Window.setMaxFps() {
     runCatching {
         //地图模式默认关闭了高刷
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val display = this.windowManager.defaultDisplay
             // 获取系统window支持的模式
-            val modes = this.windowManager.defaultDisplay.supportedModes
-            // 对获取的模式，基于刷新率的大小进行排序，从小到大排序
-            modes.sortBy { it.refreshRate }
-            this.let {
-                val lp = it.attributes
-                // 取出最大的那一个刷新率Fps，直接设置给window
-                lp.preferredDisplayModeId = modes.last().modeId
-                it.attributes = lp
+            val modes = display.supportedModes
+            // 对获取的模式，大小与当前的窗口大小一致，基于刷新率的大小进行排序，从小到大排序
+            val modesList = modes.filter { it.physicalWidth == display.width && it.physicalHeight == display.height }.sortedBy { it.refreshRate }
+            modesList.forEach {
+                LogUtils.e("当前刷新模式有：$it")
             }
+            LogUtils.e("设置的刷新率是：${modesList.last()}")
+            modesList.lastOrNull()?.also { mode ->
+                this.let {
+                    val lp = it.attributes
+                    // 取出最大的那一个刷新率Fps，直接设置给window
+                    lp.preferredDisplayModeId = mode.modeId
+                    it.attributes = lp
+                }
+            }
+
         }
     }
 }
