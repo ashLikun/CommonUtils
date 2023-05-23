@@ -123,11 +123,12 @@ fun Window.getMaxFps(): Float? {
     runCatching {
         //地图模式默认关闭了高刷
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val display = this.windowManager.defaultDisplay
             // 获取系统window支持的模式
-            val modes = this.windowManager.defaultDisplay.supportedModes
-            // 对获取的模式，基于刷新率的大小进行排序，从小到大排序
-            modes.sortBy { it.refreshRate }
-            return modes.last().refreshRate
+            val modes = display.supportedModes
+            // 对获取的模式，大小与当前的窗口大小一致，基于刷新率的大小进行排序，从小到大排序
+            val modesList = modes.filter { it.physicalWidth == display.width && it.physicalHeight == display.height }.sortedBy { it.refreshRate }
+            return modesList.lastOrNull()?.refreshRate
         }
     }
     return null
