@@ -117,7 +117,9 @@ object PathUtils {
     val externalStorage: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles
-        } else Environment.getExternalStorageDirectory().path
+        } else runCatching {
+            Environment.getExternalStorageDirectory().path
+        }.getOrNull() ?: internalAppFiles
 
     /**
      * 获取 /storage/emulated/0/Music.
@@ -125,7 +127,9 @@ object PathUtils {
     val externalMusic: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_MUSIC
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_MUSIC)
 
     /**
      * 获取 /storage/emulated/0/Podcasts.
@@ -133,7 +137,9 @@ object PathUtils {
     val externalPodcasts: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_PODCASTS
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_PODCASTS)
 
     /**
      * 获取 of /storage/emulated/0/Ringtones.
@@ -141,15 +147,19 @@ object PathUtils {
     val externalRingtones: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_RINGTONES
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_RINGTONES)
 
     /**
      * 获取 of /storage/emulated/0/Alarms.
      */
     val externalAlarms: String
         get() = if (isExternalStorageDisable) {
-            internalAppFiles + File.separator + Environment.DIRECTORY_RINGTONES
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).path
+            internalAppFiles + File.separator + Environment.DIRECTORY_ALARMS
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_ALARMS)
 
     /**
      * 获取 /storage/emulated/0/Notifications.
@@ -157,7 +167,9 @@ object PathUtils {
     val externalNotifications: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_NOTIFICATIONS
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_NOTIFICATIONS)
 
     /**
      * 获取 /storage/emulated/0/Pictures.
@@ -165,7 +177,9 @@ object PathUtils {
     val externalPictures: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_PICTURES
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_PICTURES)
 
     /**
      * 获取 /storage/emulated/0/Movies.
@@ -173,7 +187,9 @@ object PathUtils {
     val externalMovies: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_MOVIES
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_MOVIES)
 
     /**
      * 获取 /storage/emulated/0/Download.
@@ -181,7 +197,9 @@ object PathUtils {
     val externalDownloads: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_DOWNLOADS
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_DOWNLOADS)
 
     /**
      * 获取 /storage/emulated/0/DCIM.
@@ -189,21 +207,20 @@ object PathUtils {
     val externalDcim: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_DCIM
-        } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).path
+        } else runCatching {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).path
+        }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_DCIM)
 
     /**
      * 获取 /storage/emulated/0/Documents.
      */
     val externalDocuments: String
         get() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                return if (isExternalStorageDisable) {
-                    internalAppFiles + File.separator + "/Documents"
-                } else Environment.getExternalStorageDirectory().path + "/Documents"
-            }
             return if (isExternalStorageDisable) {
                 internalAppFiles + File.separator + Environment.DIRECTORY_DOCUMENTS
-            } else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).path
+            } else runCatching {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).path
+            }.getOrNull() ?: (internalAppFiles + File.separator + Environment.DIRECTORY_DOCUMENTS)
         }
 
     /**
@@ -212,7 +229,7 @@ object PathUtils {
     val externalAppData: String
         get() = if (isExternalStorageDisable) {
             internalAppData
-        } else AppUtils.app.externalCacheDir!!.parentFile.path
+        } else AppUtils.app.externalCacheDir?.parentFile?.path ?: internalAppData
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/cache.
@@ -220,7 +237,7 @@ object PathUtils {
     val externalAppCache: String
         get() = if (isExternalStorageDisable) {
             internalAppCache
-        } else AppUtils.app.externalCacheDir!!.path
+        } else AppUtils.app.externalCacheDir?.path ?: internalAppCache
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files.
@@ -228,7 +245,7 @@ object PathUtils {
     val externalAppFiles: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles
-        } else AppUtils.app.getExternalFilesDir(null)!!.path
+        } else AppUtils.app.getExternalFilesDir(null)?.path ?: internalAppFiles
 
     /**
      * 获取 of /storage/emulated/0/Android/data/package/files/Music.
@@ -238,7 +255,8 @@ object PathUtils {
     val externalAppMusic: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_MUSIC
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_MUSIC)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_MUSIC)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_MUSIC)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Podcasts.
@@ -246,7 +264,8 @@ object PathUtils {
     val externalAppPodcasts: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_PODCASTS
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_PODCASTS)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_PODCASTS)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_PODCASTS)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Ringtones.
@@ -254,7 +273,8 @@ object PathUtils {
     val externalAppRingtones: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_RINGTONES
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_RINGTONES)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_RINGTONES)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_RINGTONES)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Alarms.
@@ -262,7 +282,8 @@ object PathUtils {
     val externalAppAlarms: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_ALARMS
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_ALARMS)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_ALARMS)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_ALARMS)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Notifications.
@@ -270,7 +291,8 @@ object PathUtils {
     val externalAppNotifications: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_NOTIFICATIONS
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_NOTIFICATIONS)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Pictures.
@@ -278,7 +300,8 @@ object PathUtils {
     val externalAppPictures: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_PICTURES
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_PICTURES)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Movies.
@@ -286,7 +309,8 @@ object PathUtils {
     val externalAppMovies: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_MOVIES
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_MOVIES)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_MOVIES)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Download.
@@ -294,7 +318,8 @@ object PathUtils {
     val externalAppDownload: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_DOWNLOADS
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_DOWNLOADS)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/DCIM.
@@ -302,31 +327,25 @@ object PathUtils {
     val externalAppDcim: String
         get() = if (isExternalStorageDisable) {
             internalAppFiles + File.separator + Environment.DIRECTORY_DCIM
-        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.path
+        } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DCIM)?.path
+            ?: (internalAppFiles + File.separator + Environment.DIRECTORY_DCIM)
 
     /**
      * 获取 /storage/emulated/0/Android/data/package/files/Documents.
      */
     val externalAppDocuments: String
         get() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                return if (isExternalStorageDisable) {
-                    internalAppFiles + File.separator + "Documents"
-                } else AppUtils.app
-                    .getExternalFilesDir(null)!!.path + File.separator + "Documents"
-            }
             return if (isExternalStorageDisable) {
                 internalAppFiles + File.separator + Environment.DIRECTORY_DOCUMENTS
-            } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
+            } else AppUtils.app.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.path
+                ?: (internalAppFiles + File.separator + Environment.DIRECTORY_DOCUMENTS)
         }
 
     /**
      * 获取 /storage/emulated/0/Android/obb/package.
      */
     val externalAppObb: String
-        get() = if (isExternalStorageDisable) {
-            internalAppFiles + File.separator + "obb"
-        } else AppUtils.app.obbDir.path
+        get() = AppUtils.app.obbDir.path
     private val isExternalStorageDisable: Boolean
         private get() = Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()
 
