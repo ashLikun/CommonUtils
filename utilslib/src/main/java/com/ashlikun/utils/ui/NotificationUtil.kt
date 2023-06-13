@@ -47,12 +47,14 @@ object NotificationUtil {
                 intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
                 intent.putExtra("android.provider.extra.APP_PACKAGE", AppUtils.packageName)
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
                 // android 5.0-7.0
                 intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
                 intent.putExtra("app_package", AppUtils.packageName)
                 intent.putExtra("app_uid", AppUtils.app.applicationInfo.uid)
             }
+
             else -> {
                 // 其他
                 intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
@@ -140,12 +142,14 @@ object NotificationUtil {
         intent: Intent? = null,
         pendingIntent: PendingIntent? = null,
         channelName: String = "默认通知",
+        channelId: String? = null,
         channelGroupName: String = AppUtils.appName,
         lockscreenVisibility: Boolean? = null,
         importance: Int = NotificationManager.IMPORTANCE_HIGH,
         defaults: Int = Notification.DEFAULT_ALL
     ): NotificationCompat.Builder {
         createChannel(
+            channelId = channelId,
             channelName = channelName,
             channelGroupName = channelGroupName,
             lockscreenVisibility = lockscreenVisibility,
@@ -187,6 +191,7 @@ object NotificationUtil {
      */
     fun createChannel(
         channelName: String = "默认通知",
+        channelId: String? = null,
         channelGroupName: String = AppUtils.appName,
         lockscreenVisibility: Boolean? = null,
         importance: Int = NotificationManager.IMPORTANCE_HIGH,
@@ -195,7 +200,7 @@ object NotificationUtil {
         // 此处必须兼容android O设备，否则系统版本在O以上可能不展示通知栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelName,
+                channelId ?: channelName,
                 channelName,
                 importance
             )

@@ -87,14 +87,35 @@ inline fun String.formatCalendar(format: String = DateUtils.YMD_HMS) =
 fun Int.formatHHmmss(format: String = "%02d:%02d:%02d") = format.format(this / 3600, ((this % 3600) / 60), ((this % 3600) % 60))
 fun Int.formatHHmm(format: String = "%02d:%02d") = format.format(this / 3600, ((this % 3600) / 60))
 fun Int.format02() = "%02d".format(this)
+inline fun String.toDateFormat(locale: Locale = DateUtils.locale) = SimpleDateFormat(this, locale)
+inline fun SimpleDateFormat.formatX(any: Any) = runCatching { format(any) }.getOrNull().orEmpty()
 
 object DateUtils {
+    var locale = Locale.getDefault()
+        set(value) {
+            field = value
+            FORMAT_YMD_HMS = YMD_HMS.toDateFormat()
+            FORMAT_YMD = YMD.toDateFormat()
+            FORMAT_MD = MD.toDateFormat()
+            FORMAT_YM = YM.toDateFormat()
+            FORMAT_HMS = HMS.toDateFormat()
+        }
     const val YMD_HMS = "yyyy-MM-dd HH:mm:ss"
     const val YMD = "yyyy-MM-dd"
     const val MD = "MM-dd"
     const val YM = "yyyy-MM"
     const val HMS = "HH:mm:ss"
     const val REX_10D = "\\d{10,}"
+    var FORMAT_YMD_HMS = YMD_HMS.toDateFormat()
+        private set
+    var FORMAT_YMD = YMD.toDateFormat()
+        private set
+    var FORMAT_MD = MD.toDateFormat()
+        private set
+    var FORMAT_YM = YM.toDateFormat()
+        private set
+    var FORMAT_HMS = HMS.toDateFormat()
+        private set
 
     /**
      * 按照指定格式把时间转换成字符串，格式的写法类似yyyy-MM-dd HH:mm:ss.SSS
@@ -105,8 +126,7 @@ object DateUtils {
      */
     fun getFormatTime(calendar: Calendar?, format: String = YMD_HMS) =
         try {
-            if (calendar == null) ""
-            else SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)
+            if (calendar == null) "" else format.toDateFormat().format(calendar.time)
         } catch (e: ParseException) {
             e.printStackTrace()
             ""
@@ -121,7 +141,7 @@ object DateUtils {
      */
     fun getFormatTime(calendar: Long, format: String = YMD_HMS) =
         if (calendar <= 0) "" else try {
-            SimpleDateFormat(format, Locale.getDefault()).format(calendar)
+            format.toDateFormat().format(calendar)
         } catch (e: ParseException) {
             e.printStackTrace()
             ""
@@ -133,7 +153,7 @@ object DateUtils {
      * @param format 格式
      */
     fun getFormatCalendar(time: String, format: String = YMD_HMS): Calendar? {
-        val sdf = SimpleDateFormat(format, Locale.getDefault())
+        val sdf = format.toDateFormat()
         try {
             val calendar = Calendar.getInstance()
             calendar.time = sdf.parse(time)
@@ -151,19 +171,10 @@ object DateUtils {
      * @param format       输出的格式
      * @return 时间字符串
      */
-    fun getFormatTime(
-        calendar: String,
-        originFormat: String = YMD_HMS,
-        format: String = YMD_HMS
-    ): String {
+    fun getFormatTime(calendar: String, originFormat: String = YMD_HMS, format: String = YMD_HMS): String {
         return if (calendar.isEmpty()) ""
         else try {
-            SimpleDateFormat(format, Locale.getDefault()).format(
-                SimpleDateFormat(
-                    originFormat,
-                    Locale.getDefault()
-                ).parse(calendar)
-            )
+            format.toDateFormat().format(originFormat.toDateFormat().parse(calendar))
         } catch (e: ParseException) {
             e.printStackTrace()
             ""

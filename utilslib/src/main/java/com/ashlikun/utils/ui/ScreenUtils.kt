@@ -22,12 +22,13 @@ import kotlin.math.max
  * 功能介绍：屏幕信息工具类
  */
 object ScreenUtils {
-    val metric: DisplayMetrics by lazy {
-        val m = DisplayMetrics()
-        val wm = app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        wm.defaultDisplay.getMetrics(m)
-        m
-    }
+    //这里需要每次生成新的，不然横竖屏有bug
+    val metric: DisplayMetrics
+        get() = DisplayMetrics().also {
+            val wm = app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            wm.defaultDisplay.getMetrics(it)
+        }
+
     val width: Int
         get() = metric.widthPixels
     val density: Float
