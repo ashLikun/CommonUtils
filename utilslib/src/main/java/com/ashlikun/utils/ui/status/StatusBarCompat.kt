@@ -279,7 +279,7 @@ class StatusBarCompat(
     companion object {
         //是否适配刘海屏
         //在非全屏模式下，这个方法（LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES）在部分10.0手机会导致水波纹卡顿，所以不用
-        var isNotchFullscreen = false
+        var isNotchFullscreen = true
 
         /**
          * 半透明颜色值
@@ -481,38 +481,35 @@ class StatusBarCompat(
          */
         @TargetApi(28)
         private fun handleDisplayCutoutMode(window: Window) {
-            val decorView = window.decorView
-            if (decorView != null) {
-                if (ViewCompat.isAttachedToWindow(decorView)) {
-                    realHandleDisplayCutoutMode(window, decorView)
-                } else {
-                    decorView.addOnAttachStateChangeListener(object :
-                        View.OnAttachStateChangeListener {
-                        override fun onViewAttachedToWindow(v: View) {
-                            v.removeOnAttachStateChangeListener(this)
-                            realHandleDisplayCutoutMode(window, v)
-                        }
-
-                        override fun onViewDetachedFromWindow(v: View) {}
-                    })
-                }
-            }
+//            val decorView = window.decorView
+//            if (decorView != null) {
+//                if (ViewCompat.isAttachedToWindow(decorView)) {
+//                    realHandleDisplayCutoutMode(window, decorView)
+//                } else {
+//                    decorView.addOnAttachStateChangeListener(object :
+//                        View.OnAttachStateChangeListener {
+//                        override fun onViewAttachedToWindow(v: View) {
+//                            v.removeOnAttachStateChangeListener(this)
+//                            realHandleDisplayCutoutMode(window, v)
+//                        }
+//
+//                        override fun onViewDetachedFromWindow(v: View) {}
+//                    })
+//                }
+//            }
+            realHandleDisplayCutoutMode(window)
         }
 
         /**
          * 刘海屏状态栏
          */
         @TargetApi(28)
-        private fun realHandleDisplayCutoutMode(window: Window, decorView: View) {
-            if (decorView.rootWindowInsets != null &&
-                decorView.rootWindowInsets.displayCutout != null
-            ) {
-                val params = window.attributes
-                //该窗口始终允许延伸到屏幕短边上的DisplayCutout区域
-                //在非全屏模式下，这个方法（LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES）在部分10.0手机会导致水波纹卡顿，所以不用
-                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                window.attributes = params
-            }
+        private fun realHandleDisplayCutoutMode(window: Window) {
+            val params = window.attributes
+            //该窗口始终允许延伸到屏幕短边上的DisplayCutout区域
+            //在非全屏模式下，这个方法（LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES）在部分10.0手机会导致水波纹卡顿，所以不用
+            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes = params
         }
     }
 }
