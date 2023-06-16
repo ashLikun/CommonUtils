@@ -108,17 +108,17 @@ open class CustomGestureDetector(
                     MotionEvent.ACTION_POINTER_DOWN -> {
                         // 记录手指按下的位置
                         startX = focusX
-                        startX = focusY
+                        startY = focusY
                     }
                     MotionEvent.ACTION_POINTER_UP -> {
                         // 记录手指按下的位置
                         startX = focusX
-                        startX = focusY
+                        startY = focusY
                     }
                     MotionEvent.ACTION_DOWN -> {
                         // 记录手指按下的位置
                         startX = focusX
-                        startX = focusY
+                        startY = focusY
                         isScroll = false
                         view.parent.requestDisallowInterceptTouchEvent(true)
                     }
