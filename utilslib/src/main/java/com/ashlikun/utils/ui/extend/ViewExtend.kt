@@ -14,6 +14,7 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.LinearInterpolator
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -366,6 +367,21 @@ inline var View.isEnabledX: Boolean
     }
 
 /**
+ * 让EditText 不能编辑
+ */
+inline var EditText.isEditEnabled: Boolean
+    get() = isFocusable && isFocusableInTouchMode
+    set(value) {
+        if (isFocusable != value && isFocusableInTouchMode != value) {
+            isFocusable = value
+            isFocusableInTouchMode = value
+            if (value) {
+                requestFocus()
+            }
+        }
+    }
+
+/**
  * 截取viewGroup内容，生成图片
  *
  * @param scale 缩放比例，对创建的 Bitmap 进行缩放，数值支持从 0 到 1。
@@ -413,7 +429,7 @@ inline fun View.setStatusMargin() =
 inline var TextView.textSizePx: Float
     get() = textSize
     set(value) {
-        setTextSize(TypedValue.COMPLEX_UNIT_DIP, value.dp.toFloat())
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, value)
     }
 
 /**
@@ -502,3 +518,4 @@ inline fun TextView?.setCompoundDrawablesX(
         )
     }
 }
+
