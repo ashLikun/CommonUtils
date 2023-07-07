@@ -11,41 +11,70 @@ import kotlin.experimental.and
  * 功能介绍：16进制工具
  */
 /**
+ * crc8
+ */
+inline val ByteArray.CRC8
+    get() = CrcUtils.CRC8.CRC8(this, 0, this.size)
+inline val ByteArray.CRC8_DARC
+    get() = CrcUtils.CRC8.CRC8_DARC(this, 0, this.size)
+inline val ByteArray.CRC8_ITU
+    get() = CrcUtils.CRC8.CRC8_ITU(this, 0, this.size)
+inline val ByteArray.CRC8_MAXIM
+    get() = CrcUtils.CRC8.CRC8_MAXIM(this, 0, this.size)
+inline val ByteArray.CRC8_ROHC
+    get() = CrcUtils.CRC8.CRC8_ROHC(this, 0, this.size)
+
+/**
  * crc16
  */
 inline val ByteArray.CRC16_CCITT_FALSE
     get() = CrcUtils.CRC16.CRC16_CCITT_FALSE(this, 0)
+inline val ByteArray.CRC16_CCITT
+    get() = CrcUtils.CRC16.CRC16_CCITT(this, 0, this.size)
+inline val ByteArray.CRC16_DECT_R
+    get() = CrcUtils.CRC16.CRC16_DECT_R(this, 0, this.size)
+inline val ByteArray.CRC16_DECT_X
+    get() = CrcUtils.CRC16.CRC16_DECT_X(this, 0, this.size)
+inline val ByteArray.CRC16_DNP
+    get() = CrcUtils.CRC16.CRC16_DNP(this, 0, this.size)
+inline val ByteArray.CRC16_GENIBUS
+    get() = CrcUtils.CRC16.CRC16_GENIBUS(this, 0, this.size)
+inline val ByteArray.CRC16_IBM
+    get() = CrcUtils.CRC16.CRC16_IBM(this, 0, this.size)
+inline val ByteArray.CRC16_MAXIM
+    get() = CrcUtils.CRC16.CRC16_MAXIM(this, 0, this.size)
+inline val ByteArray.CRC16_MODBUS
+    get() = CrcUtils.CRC16.CRC16_MODBUS(this, 0, this.size)
+inline val ByteArray.CRC16_USB
+    get() = CrcUtils.CRC16.CRC16_USB(this, 0, this.size)
+inline val ByteArray.CRC16_X25
+    get() = CrcUtils.CRC16.CRC16_X25(this, 0, this.size)
+inline val ByteArray.CRC16_XMODEM
+    get() = CrcUtils.CRC16.CRC16_XMODEM(this, 0, this.size)
 
 /**
  * crc32
  */
 inline val ByteArray.CRC32
     get() = CrcUtils.CRC32.CRC32(this, 0, this.size)
-
-/**
- * crc32
- */
 inline val ByteArray.CRC32_B
     get() = CrcUtils.CRC32.CRC32_B(this, 0, this.size)
 
-/**
- * crc32
- */
 inline val ByteArray.CRC32_C
     get() = CrcUtils.CRC32.CRC32_C(this, 0, this.size)
 
-/**
- * crc32
- */
 inline val ByteArray.CRC32_D
     get() = CrcUtils.CRC32.CRC32_D(this, 0, this.size)
 
-/**
- * crc32
- */
 inline val ByteArray.CRC32_POSIX
     get() = CrcUtils.CRC32.CRC32_POSIX(this, 0, this.size)
 
+inline val ByteArray.CRC32_MPEG_2
+    get() = CrcUtils.CRC32.CRC32_MPEG_2(this, 0, this.size)
+
+/**
+ * 字符串转换成字节数组
+ */
 inline val String.hexToBytes
     get() = HexUtils.hexStr2Bytes(this)
 
