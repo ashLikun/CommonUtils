@@ -82,11 +82,15 @@ inline val String.hexToBytes
  * @param size 可以是1，2，3，4字节,-1:自动
  */
 inline fun Int.toByteArray(size: Int = -1, isReversed: Boolean = true) = HexUtils.intToBytes(this, size, isReversed)
+inline fun UInt.toByteArray(size: Int = -1, isReversed: Boolean = true) = HexUtils.intToBytes(this.toInt(), size, isReversed)
+inline fun Long.toByteArray(size: Int = -1, isReversed: Boolean = true) = HexUtils.intToBytes(this.toInt(), size, isReversed)
 
 /**
  * 0xffff 为4个字节和2个字节的分界线
  */
 inline fun Int.toByteArray2Or4(isReversed: Boolean = true) = HexUtils.intToBytes2Or4(this, isReversed)
+inline fun UInt.toByteArray2Or4(isReversed: Boolean = true) = HexUtils.intToBytes2Or4(this.toInt(), isReversed)
+inline fun Long.toByteArray4Or8(isReversed: Boolean = true) = HexUtils.longToBytes4Or8(this, isReversed)
 
 /**
  * ByteArray -> 16进制字符串
@@ -95,6 +99,13 @@ inline val ByteArray.toHexStr
     get() = HexUtils.bytesToHexString(this)
 inline val Int.toHexStr
     get() = toByteArray2Or4(false).toHexStr
+inline val UInt.toHexStr
+    get() = toByteArray2Or4(false).toHexStr
+inline val Long.toHexStr
+    get() = toUInt().toByteArray2Or4(false).toHexStr
+
+inline val Long.toHexStr4Or8
+    get() = toByteArray4Or8(false).toHexStr
 
 /**
  * ByteArray -> Int
@@ -117,11 +128,18 @@ inline val ByteArray.hexToLowHight
     get() = HexUtils.hexToLowHight(this)
 
 /**
- * ByteArray -> Long
+ * ByteArray -> Uint
  * 不翻转
  */
 inline val ByteArray.byteToUIntLE
     get() = HexUtils.byteToUInt(this, false)
+
+/**
+ * ByteArray -> Uint
+ * 不翻转
+ */
+inline val ByteArray.byteToUIntBE
+    get() = HexUtils.byteToUInt(this, true)
 
 /**
  * ByteArray -> ASCII字符串
@@ -241,7 +259,28 @@ object HexUtils {
         targets[1] = (res shr 8 and 0xff).toByte() // 次低位
         if (targets.size > 2) {
             targets[2] = (res shr 16 and 0xff).toByte() // 次高位
-            targets[3] = (res ushr 24).toByte() // 最高位,无符号右移。
+            targets[3] = (res ushr 24 and 0xff).toByte() // 最高位,无符号右移。
+        }
+        if (!isReversed) {
+            targets.reverse()
+        }
+        return targets
+    }
+
+    /**
+     * long 转 ByteArray  8字节和4字节
+     */
+    fun longToBytes4Or8(res: Long, isReversed: Boolean = true): ByteArray {
+        val targets = ByteArray(if (res.toUInt() > 0xFFFFFFFFU) 8 else 4)
+        targets[0] = (res and 0xff).toByte() // 最低位
+        targets[1] = (res shr 8 and 0xff).toByte() // 次低位
+        targets[2] = (res shr 16 and 0xff).toByte() // 次高位
+        targets[3] = (res shr 24 and 0xff).toByte() // 最高位
+        if (targets.size > 4) {
+            targets[4] = (res shr 32 and 0xff).toByte() // 次高位
+            targets[5] = (res shr 40 and 0xff).toByte() // 最高位
+            targets[6] = (res shr 48 and 0xff).toByte() // 最高位
+            targets[7] = (res ushr 56 and 0xff).toByte() // 最高位
         }
         if (!isReversed) {
             targets.reverse()
@@ -270,13 +309,13 @@ object HexUtils {
      * @param res 要转化的byte[]
      * @return 对应的整数
      */
-    fun byteToUInt(res: ByteArray, reversed: Boolean = true): Long {
+    fun byteToUInt(res: ByteArray, reversed: Boolean = true): UInt {
         //翻转一波，保证一样的输出
         val res = if (reversed) res.reversedArray() else res
-        return (((res.getOrElse(0) { 0 }).toInt()) and 0xff).toLong() or
-                (((res.getOrElse(1) { 0 }).toInt() and 0xff).toLong() shl 8) or
-                (((res.getOrElse(2) { 0 }).toInt() and 0xff).toLong() shl 16) or
-                (((res.getOrElse(3) { 0 }).toInt() and 0xff).toLong() shl 24)
+        return (((res.getOrElse(0) { 0 }).toInt()) and 0xff).toUInt() or
+                (((res.getOrElse(1) { 0 }).toInt() and 0xff).toUInt() shl 8) or
+                (((res.getOrElse(2) { 0 }).toInt() and 0xff).toUInt() shl 16) or
+                (((res.getOrElse(3) { 0 }).toInt() and 0xff).toUInt() shl 24)
     }
 
     /**
