@@ -305,17 +305,18 @@ object HexUtils {
 
     /**
      * 将byte[]转化成uint
+     * long 好计算
      *
      * @param res 要转化的byte[]
      * @return 对应的整数
      */
-    fun byteToUInt(res: ByteArray, reversed: Boolean = true): UInt {
+    fun byteToUInt(res: ByteArray, reversed: Boolean = true): Long {
         //翻转一波，保证一样的输出
         val res = if (reversed) res.reversedArray() else res
-        return (((res.getOrElse(0) { 0 }).toInt()) and 0xff).toUInt() or
-                (((res.getOrElse(1) { 0 }).toInt() and 0xff).toUInt() shl 8) or
-                (((res.getOrElse(2) { 0 }).toInt() and 0xff).toUInt() shl 16) or
-                (((res.getOrElse(3) { 0 }).toInt() and 0xff).toUInt() shl 24)
+        return (((res.getOrElse(0) { 0 }).toInt()) and 0xff).toLong() or
+                (((res.getOrElse(1) { 0 }).toInt() and 0xff).toLong() shl 8) or
+                (((res.getOrElse(2) { 0 }).toInt() and 0xff).toLong() shl 16) or
+                (((res.getOrElse(3) { 0 }).toInt() and 0xff).toLong() shl 24)
     }
 
     /**
