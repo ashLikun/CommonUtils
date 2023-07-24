@@ -421,9 +421,12 @@ object PathUtils {
                         }
                     }
                     val docId = DocumentsContract.getDocumentId(uri)
-                    val split = docId.split(":").toTypedArray()
-                    val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), split[1].toLong())
-                    return getDataColumnString(AppUtils.app, contentUri)
+                    //解决有些文件id 是 raw:/storage/emulated/0/Download/WeiXin/****************
+                    if (docId.startsWith("raw:")) {
+                        return docId.replace("raw:", "")
+                    }
+                    val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), ContentUris.parseId(uri))
+                    return PathUtils.getDataColumnString(AppUtils.app, contentUri)
                 }
                 //来之媒体应用选择的
                 else if (isMediaDocument(uri)) {
