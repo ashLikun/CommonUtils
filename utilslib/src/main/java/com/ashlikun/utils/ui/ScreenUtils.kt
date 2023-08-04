@@ -2,6 +2,7 @@ package com.ashlikun.utils.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
@@ -23,11 +24,15 @@ import kotlin.math.max
  */
 object ScreenUtils {
     //这里需要每次生成新的，不然横竖屏有bug
+    /**
+     * DisplayMetrics().also {
+     *  val wm = app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+     * wm.defaultDisplay.getMetrics(it)
+     *  }
+     *  这种方式如果使用app.getSystemService(Context.WINDOW_SERVICE) 那么在横屏的时候部分手机宽高反了
+     */
     val metric: DisplayMetrics
-        get() = DisplayMetrics().also {
-            val wm = app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            wm.defaultDisplay.getMetrics(it)
-        }
+        get() = Resources.getSystem().displayMetrics
 
     val width: Int
         get() = metric.widthPixels
