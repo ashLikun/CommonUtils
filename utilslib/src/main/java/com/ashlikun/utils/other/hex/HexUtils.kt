@@ -97,13 +97,18 @@ inline fun Long.toByteArray4Or8(isReversed: Boolean = true) = HexUtils.longToByt
  */
 inline val ByteArray.toHexStr
     get() = HexUtils.bytesToHexString(this)
+
+/**
+ * ByteArray -> 16进制字符串  空格拼接
+ */
+inline val ByteArray.toHexStrSpace
+    get() = HexUtils.bytesToHexString(this, " ")
 inline val Int.toHexStr
     get() = toByteArray2Or4(false).toHexStr
 inline val UInt.toHexStr
     get() = toByteArray2Or4(false).toHexStr
 inline val Long.toHexStr
     get() = toUInt().toByteArray2Or4(false).toHexStr
-
 inline val Long.toHexStr4Or8
     get() = toByteArray4Or8(false).toHexStr
 
@@ -120,12 +125,6 @@ inline val ByteArray.byteToInt
  */
 inline val ByteArray.byteToIntLE
     get() = HexUtils.byteToInt(this, false)
-
-/**
- * 低位在左，高位在右
- */
-inline val ByteArray.hexToLowHight
-    get() = HexUtils.hexToLowHight(this)
 
 /**
  * ByteArray -> Uint
@@ -170,14 +169,13 @@ object HexUtils {
 
     /**
      * 十六进制String转换成Byte[]
-     * @param hexString the hex string
-     * *
-     * @return byte[]
      */
     fun hexStr2Bytes(str: String?): ByteArray {
         if (str.isNullOrEmpty()) {
             return ByteArray(0)
         }
+        //替换空格
+        val str = str.replace(" ", "")
         val byteArray = ByteArray(str.length / 2)
         for (i in byteArray.indices) {
             val subStr = str.substring(2 * i, 2 * i + 2)
@@ -187,7 +185,7 @@ object HexUtils {
     }
 
     /**
-     * Convert char to byte
+     * 16进制Char 转成 Byte  0-15
      */
     private fun charToByte(c: Char): Byte {
         return "0123456789ABCDEF".indexOf(c).toByte()
@@ -195,26 +193,20 @@ object HexUtils {
 
     /**
      * 将字节数组转换为16进制字符串
+     * @param joint 两位拼接的字符串，一般是空格
      */
-    fun bytesToHexString(src: ByteArray?): String {
+    fun bytesToHexString(src: ByteArray?, joint: String? = null): String {
         if (src == null || src.isEmpty()) {
             return ""
         }
         val b = StringBuilder()
         for (i in src.indices) {
             b.append(String.format("%02X", src[i] and 0xFF.toByte()))
+            if (joint != null) {
+                b.append(joint)
+            }
         }
         return b.toString()
-    }
-
-    /**
-     *  低位在左，高位在右
-     */
-    fun hexToLowHight(src: ByteArray?): ByteArray {
-        if (src == null || src.isEmpty()) {
-            return ByteArray(0)
-        }
-        return src.reversedArray()
     }
 
     /**

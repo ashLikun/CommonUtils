@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
  *
  * 功能介绍：资源的一些扩展
  */
-fun Context.themeWrapper(
+inline fun Context.themeWrapper(
     @StyleRes res: Int,
 ) = ContextThemeWrapper(this, res)
 

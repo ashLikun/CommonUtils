@@ -12,23 +12,23 @@ import java.util.*
  *
  * 功能介绍：字符串扩展函数
  */
-fun String?.isPositive() = this?.toDoubleOrNull() ?: 0.0 > 0
+inline fun String?.isPositive() = this?.toDoubleOrNull() ?: 0.0 > 0
 
 /**
  * 转换成double，错误就0
  */
-fun String?.double() = this?.toDoubleOrNull() ?: 0.0
+inline fun String?.double() = this?.toDoubleOrNull() ?: 0.0
 
 /**
  * 转换成int，错误就0
  */
-fun String?.int() = this?.toDoubleOrNull() ?: 0
+inline fun String?.int() = this?.toDoubleOrNull() ?: 0
 
 /**
  * 复制 Serializable
  * @return [T] obj
  */
-fun <T> Serializable.copy(): T {
+inline fun <T> Serializable.copy(): T {
     // 写入字节流
     val byte = CacheDiskUtils.serializable2Bytes(this)
     // 读取字节流
@@ -40,7 +40,7 @@ fun <T> Serializable.copy(): T {
  * 复制 Parcelable
  * @return [T] obj
  */
-fun <T> Parcelable.copy(creator: Parcelable.Creator<T>): T {
+inline fun <T> Parcelable.copy(creator: Parcelable.Creator<T>): T {
     // 写入字节流
     val byte = CacheDiskUtils.parcelable2Bytes(this)
     // 读取字节流
@@ -51,7 +51,7 @@ fun <T> Parcelable.copy(creator: Parcelable.Creator<T>): T {
 /**
  * 出栈
  */
-fun <T> Stack<T>.popOrNull(): T? {
+inline fun <T> Stack<T>.popOrNull(): T? {
     return try {
         this.pop()
     } catch (e: Exception) {
@@ -61,7 +61,7 @@ fun <T> Stack<T>.popOrNull(): T? {
 /**
  * 出栈
  */
-fun <T> Stack<T>.lastElementOrNull(): T? {
+inline fun <T> Stack<T>.lastElementOrNull(): T? {
     return try {
         this.lastElement()
     } catch (e: Exception) {

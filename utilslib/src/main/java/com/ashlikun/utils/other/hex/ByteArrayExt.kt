@@ -3,12 +3,12 @@ package com.ashlikun.utils.other
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 
-fun String.reversalEvery2Charts(hasSpace: Boolean = false): String {
+inline fun String.reversalEvery2Charts(hasSpace: Boolean = false): String {
     val hex = this.addSpaceEvery2Charts()
     return hex.split(" ").reversed().joinToString(if (hasSpace) " " else "")
 }
 
-fun String.addSpaceEvery2Charts(): String {
+inline fun String.addSpaceEvery2Charts(): String {
     val hex = this.replace(" ", "")
     val sb = StringBuilder()
     for (i in 0 until hex.length / 2) {
@@ -17,24 +17,25 @@ fun String.addSpaceEvery2Charts(): String {
     }
     return sb.toString().trim()
 }
+
 /**
  * ByteArray->String
  */
-fun ByteArray.toHexString(hasSpace: Boolean = true) = this.joinToString("") {
+inline fun ByteArray.toHexString(hasSpace: Boolean = true) = this.joinToString("") {
     (it.toInt() and 0xFF).toString(16).padStart(2, '0').toUpperCase() + if (hasSpace) " " else ""
 }
 
 /**
  * ByteArray -> AsciiStr
  */
-fun ByteArray.toAsciiString(hasSpace: Boolean = false) =
+inline fun ByteArray.toAsciiString(hasSpace: Boolean = false) =
     this.map { it.toInt().toChar() }.joinToString(if (hasSpace) " " else "")
 
 
 /**
  * 读取Byte8位,可能为负数
  */
-fun ByteArray.readByte8(offset: Int = 0): Int? {
+inline fun ByteArray.readByte8(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 1)) return null
     return this[offset].toInt()
 }
@@ -42,7 +43,7 @@ fun ByteArray.readByte8(offset: Int = 0): Int? {
 /**
  * 读取Byte8位,无符号
  */
-fun ByteArray.readUByte8(offset: Int = 0): Int? {
+inline fun ByteArray.readUByte8(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 1)) return null
     return this[offset].toUByte().toInt()
 }
@@ -50,7 +51,7 @@ fun ByteArray.readUByte8(offset: Int = 0): Int? {
 /**
  * 读取Byte 4位
  */
-fun ByteArray.readByte4(offset: Int = 0): Int? {
+inline fun ByteArray.readByte4(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 1)) return null
     return (this[offset].toInt() and 0x0F)
 }
@@ -58,7 +59,7 @@ fun ByteArray.readByte4(offset: Int = 0): Int? {
 /**
  * 读取Byte8位,无符号
  */
-fun ByteArray.readUByte4(offset: Int = 0): Int? {
+inline fun ByteArray.readUByte4(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 1)) return null
     return (this[offset].toUInt().toInt() and 0x0F)
 }
@@ -66,7 +67,7 @@ fun ByteArray.readUByte4(offset: Int = 0): Int? {
 /**
  * 读取Byte 某些位
  */
-fun ByteArray.readByteRange(offset: Int = 0, start: Int = 0, end: Int = 0): Int? {
+inline fun ByteArray.readByteRange(offset: Int = 0, start: Int = 0, end: Int = 0): Int? {
     if (throwOffestError(this, offset, 1)) return null
     return this[offset].readByteRange(start, end)
 }
@@ -74,29 +75,29 @@ fun ByteArray.readByteRange(offset: Int = 0, start: Int = 0, end: Int = 0): Int?
 /**
  * 读取8位
  */
-fun ByteArray.readInt8(offset: Int = 0): Int? {
+inline fun ByteArray.readInt8(offset: Int = 0): Int? {
     return readByte8(offset)
 }
 
 /**
  * 读取int 4位
  */
-fun ByteArray.readInt4(offset: Int = 0): Int? {
+inline fun ByteArray.readInt4(offset: Int = 0): Int? {
     return readByte4(offset)
 }
 
 
-fun ByteArray.readUInt8(offset: Int = 0): Int? {
+inline fun ByteArray.readUInt8(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 1)) return null
     return this[offset].toInt() and 0xFF
 }
 
-fun ByteArray.readInt16BE(offset: Int = 0): Int? {
+inline fun ByteArray.readInt16BE(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 2)) return null
     return (this[offset].toInt() shl 8) + (this[offset + 1].toInt() and 0xFF)
 }
 
-fun ByteArray.readUInt16BE(offset: Int = 0): Int? {
+inline fun ByteArray.readUInt16BE(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 2)) return null
     // 方式一
     return ((this[offset].toInt() and 0xFF) shl 8) or (this[offset + 1].toInt() and 0xFF)
@@ -105,18 +106,18 @@ fun ByteArray.readUInt16BE(offset: Int = 0): Int? {
 }
 
 
-fun ByteArray.readInt16LE(offset: Int = 0): Int? {
+inline fun ByteArray.readInt16LE(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 2)) return null
     return (this[offset + 1].toInt() shl 8) + (this[offset].toInt() and 0xFF)
 }
 
-fun ByteArray.readUInt16LE(offset: Int = 0): Int? {
+inline fun ByteArray.readUInt16LE(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 2)) return null
     return ((this[offset + 1].toInt() and 0xFF) shl 8) or (this[offset].toInt() and 0xFF)
 //    return readUnsigned(this, 2, offset, true).toInt()
 }
 
-fun ByteArray.readInt32BE(offset: Int = 0): Int? {
+inline fun ByteArray.readInt32BE(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 4)) return null
     return (this[offset].toInt()) shl 24 or
             ((this[offset + 1].toInt() and 0xFF) shl 16) or
@@ -125,7 +126,7 @@ fun ByteArray.readInt32BE(offset: Int = 0): Int? {
 //    return (this[offset].toInt() shl 24) + (this[offset + 1].toUByte().toInt() shl 16) + (this[offset + 2].toUByte().toInt() shl 8) + this[offset + 3].toUByte().toInt()
 }
 
-fun ByteArray.readUInt32BE(offset: Int = 0): Long? {
+inline fun ByteArray.readUInt32BE(offset: Int = 0): Long? {
     if (throwOffestError(this, offset, 4)) return null
     return (((this[offset].toInt() and 0xFF).toLong() shl 24) or
             ((this[offset + 1].toInt() and 0xFF).toLong() shl 16) or
@@ -134,7 +135,7 @@ fun ByteArray.readUInt32BE(offset: Int = 0): Long? {
 //    return readUnsigned(this, 4, offset, false)
 }
 
-fun ByteArray.readInt32LE(offset: Int = 0): Int? {
+inline fun ByteArray.readInt32LE(offset: Int = 0): Int? {
     if (throwOffestError(this, offset, 4)) return null
     return (this[offset + 3].toInt()) shl 24 or
             ((this[offset + 2].toInt() and 0xFF) shl 16) or
@@ -143,7 +144,7 @@ fun ByteArray.readInt32LE(offset: Int = 0): Int? {
 //    return (this[offset + 3].toInt() shl 24) + (this[offset + 2].toUByte().toInt() shl 16) + (this[offset + 1].toUByte().toInt() shl 8) + this[offset].toUByte().toInt()
 }
 
-fun ByteArray.readUInt32LE(offset: Int = 0): Long? {
+inline fun ByteArray.readUInt32LE(offset: Int = 0): Long? {
     if (throwOffestError(this, offset, 4)) return null
     return (((this[offset + 3].toInt() and 0xFF).toLong() shl 24) or
             ((this[offset + 2].toInt() and 0xFF).toLong() shl 16) or
@@ -153,34 +154,34 @@ fun ByteArray.readUInt32LE(offset: Int = 0): Long? {
 }
 
 // 四字节 float
-fun ByteArray.readFloatBE(offset: Int = 0) = this.readInt32BE(offset)?.let { java.lang.Float.intBitsToFloat(it) }
+inline fun ByteArray.readFloatBE(offset: Int = 0) = this.readInt32BE(offset)?.let { java.lang.Float.intBitsToFloat(it) }
 
 // 四字节 float
-fun ByteArray.readFloatLE(offset: Int = 0) = this.readInt32LE(offset)?.let { java.lang.Float.intBitsToFloat(it) }
+inline fun ByteArray.readFloatLE(offset: Int = 0) = this.readInt32LE(offset)?.let { java.lang.Float.intBitsToFloat(it) }
 
 //
 //// 四字节 时间
 @SuppressLint("SimpleDateFormat")
-fun ByteArray.readTimeBE(offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss") =
+inline fun ByteArray.readTimeBE(offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss") =
     SimpleDateFormat(pattern).format((this.readUInt32BE(offset) ?: 0) * 1000)
 
 @SuppressLint("SimpleDateFormat")
-fun ByteArray.readTimeLE(offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss") =
+inline fun ByteArray.readTimeLE(offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss") =
     SimpleDateFormat(pattern).format((this.readUInt32LE(offset) ?: 0) * 1000)
 
 // 读取ByteArray
-fun ByteArray.readByteArrayBE(offset: Int, byteLength: Int): ByteArray {
+inline fun ByteArray.readByteArrayBE(offset: Int, byteLength: Int): ByteArray {
     if (throwOffestError(this, offset)) return ByteArray(0)
     return this.copyOfRange(offset, if ((offset + byteLength) > this.size) this.size else offset + byteLength)
 }
 
-fun ByteArray.readByteArrayLE(offset: Int, byteLength: Int): ByteArray {
+inline fun ByteArray.readByteArrayLE(offset: Int, byteLength: Int): ByteArray {
     if (throwOffestError(this, offset)) return ByteArray(0)
     return this.readByteArrayBE(offset, byteLength).reversedArray()
 }
 
 // 读取指定范围输出字符串
-fun ByteArray.readStringBE(
+inline fun ByteArray.readStringBE(
     offset: Int, byteLength: Int, encoding: String = "hex", hasSpace: Boolean = encoding.toLowerCase() == "hex"
 ): String {
     return when (encoding.toLowerCase()) {
@@ -190,7 +191,7 @@ fun ByteArray.readStringBE(
     }
 }
 
-fun ByteArray.readStringLE(
+inline fun ByteArray.readStringLE(
     offset: Int,
     byteLength: Int,
     encoding: String = "hex",
@@ -208,7 +209,7 @@ fun ByteArray.readStringLE(
  * 写Byte 低 4位
  * @param bitOffset 0-7,位的偏移量
  */
-fun ByteArray.writeBit(value: Boolean, offset: Int = 0, bitOffset: Int = 0): Boolean {
+inline fun ByteArray.writeBit(value: Boolean, offset: Int = 0, bitOffset: Int = 0): Boolean {
     if (throwOffestError(this, offset)) return false
     this[offset] = this[offset].writeBool(value, bitOffset)
     return true
@@ -217,7 +218,7 @@ fun ByteArray.writeBit(value: Boolean, offset: Int = 0, bitOffset: Int = 0): Boo
 /**
  * 写Byte 低 4位
  */
-fun ByteArray.writeByte4(value: Int, offset: Int = 0): Boolean {
+inline fun ByteArray.writeByte4(value: Int, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset)) return false
     this[offset] = this[offset].writeLow4(value)
     return true
@@ -226,20 +227,20 @@ fun ByteArray.writeByte4(value: Int, offset: Int = 0): Boolean {
 /**
  * 写Byte 高 4位
  */
-fun ByteArray.writeByteHigh4(value: Byte, offset: Int = 0): Boolean {
+inline fun ByteArray.writeByteHigh4(value: Byte, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset)) return false
     this[offset] = this[offset].writeHigh4(value)
     return true
 }
 
-fun ByteArray.writeInt8(value: Int, offset: Int = 0): Boolean {
+inline fun ByteArray.writeInt8(value: Int, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset)) return false
     // 无符号Int 执行写入
     this[offset] = value.toByte()
     return true
 }
 
-fun ByteArray.writeInt16BE(value: Int, offset: Int = 0): Boolean {
+inline fun ByteArray.writeInt16BE(value: Int, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset, 2)) return false
     // 执行写入
     this[offset] = (value and 0xff00 ushr 8).toByte()
@@ -247,7 +248,7 @@ fun ByteArray.writeInt16BE(value: Int, offset: Int = 0): Boolean {
     return true
 }
 
-fun ByteArray.writeInt16LE(value: Int, offset: Int = 0): Boolean {
+inline fun ByteArray.writeInt16LE(value: Int, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset, 2)) return false
     // 无符号Int 执行写入
     this[offset] = (value and 0xff).toByte()
@@ -255,7 +256,7 @@ fun ByteArray.writeInt16LE(value: Int, offset: Int = 0): Boolean {
     return true
 }
 
-fun ByteArray.writeInt32BE(value: Long, offset: Int = 0): Boolean {
+inline fun ByteArray.writeInt32BE(value: Long, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset, 4)) return false
     // 无符号Int 执行写入
     this[offset + 3] = (value and 0xff).toByte()
@@ -265,7 +266,7 @@ fun ByteArray.writeInt32BE(value: Long, offset: Int = 0): Boolean {
     return true
 }
 
-fun ByteArray.writeInt32LE(value: Long, offset: Int = 0): Boolean {
+inline fun ByteArray.writeInt32LE(value: Long, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset, 4)) return false
     // 无符号Int 执行写入
     this[offset] = (value and 0xff).toByte()
@@ -276,38 +277,38 @@ fun ByteArray.writeInt32LE(value: Long, offset: Int = 0): Boolean {
 }
 
 // 写入Float类型
-fun ByteArray.writeFloatBE(value: Float, offset: Int = 0): Boolean {
+inline fun ByteArray.writeFloatBE(value: Float, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset, 4)) return false
     this.writeInt32BE(java.lang.Float.floatToIntBits(value).toLong(), offset)
     return true
 }
 
-fun ByteArray.writeFloatLE(value: Float, offset: Int = 0): Boolean {
+inline fun ByteArray.writeFloatLE(value: Float, offset: Int = 0): Boolean {
     if (throwOffestError(this, offset, 4)) return false
     this.writeInt32LE(java.lang.Float.floatToIntBits(value).toLong(), offset)
     return true
 }
 
 // 写入时间
-fun ByteArray.writeTimeBE(time: String, offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss"): Boolean {
+inline fun ByteArray.writeTimeBE(time: String, offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss"): Boolean {
     return this.writeInt32BE(SimpleDateFormat(pattern).parse(time).time / 1000, offset)
 }
 
-fun ByteArray.writeTimeLE(time: String, offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss"): Boolean {
+inline fun ByteArray.writeTimeLE(time: String, offset: Int = 0, pattern: String = "yyyy-MM-dd HH:mm:ss"): Boolean {
     return this.writeInt32LE(SimpleDateFormat(pattern).parse(time).time / 1000, offset)
 }
 
 // 指定位置写入ByteArray
-fun ByteArray.writeByteArrayBE(byteArray: ByteArray, offset: Int = 0, length: Int = byteArray.size): Boolean {
+inline fun ByteArray.writeByteArrayBE(byteArray: ByteArray, offset: Int = 0, length: Int = byteArray.size): Boolean {
     return this.writeStringBE(byteArray.toHexString(), offset, length)
 }
 
-fun ByteArray.writeByteArrayLE(byteArray: ByteArray, offset: Int = 0, length: Int = byteArray.size): Boolean {
+inline fun ByteArray.writeByteArrayLE(byteArray: ByteArray, offset: Int = 0, length: Int = byteArray.size): Boolean {
     return this.writeStringLE(byteArray.toHexString(), offset, length)
 }
 
 // 指定位置插入ByteArray
-fun ByteArray.insertByteArrayBE(
+inline fun ByteArray.insertByteArrayBE(
     insertArray: ByteArray, origrinalIndex: Int = 0, insertArrayOffset: Int = 0, insertArrayLength: Int = insertArray.size - insertArrayOffset
 ): ByteArray {
     val byteArrayPre = this.copyOfRange(0, origrinalIndex)
@@ -316,7 +317,7 @@ fun ByteArray.insertByteArrayBE(
     return byteArrayPre.plus(insertFinalArray).plus(byteArrayLast)
 }
 
-fun ByteArray.insertByteArrayLE(
+inline fun ByteArray.insertByteArrayLE(
     insertArray: ByteArray,
     origrinalIndex: Int = 0,
     insertArrayOffset: Int = 0,
@@ -345,6 +346,7 @@ fun ByteArray.writeStringBE(str: String, offset: Int = 0, encoding: String = "he
                 }
             }
         }
+
         "ascii" -> {
             val hex = str.toCharArray().map { it.toInt() }.map { it.toString(16) }.joinToString("")
             this.writeStringBE(hex, offset, "hex")
@@ -360,6 +362,7 @@ fun ByteArray.writeStringLE(str: String, offset: Int = 0, encoding: String = "he
             val hex = str.reversalEvery2Charts()
             this.writeStringBE(hex, offset, encoding)
         }
+
         "ascii" -> {
             val hex = str.toCharArray().map { it.toInt() }.map { it.toString(16) }.joinToString("")
             this.writeStringLE(hex, offset, "hex")
@@ -375,6 +378,7 @@ fun ByteArray.writeStringBE(str: String, offset: Int, length: Int, encoding: Str
             val hex = str.replace(" ", "").padStart(length * 2, '0').substring(0, length * 2)
             this.writeStringBE(hex, offset)
         }
+
         "ascii" -> {
             val hex = str.toCharArray().map { it.toInt() }.map { it.toString(16) }.joinToString("")
             this.writeStringBE(hex, offset, length, "hex")
@@ -389,6 +393,7 @@ fun ByteArray.writeStringLE(str: String, offset: Int, length: Int, encoding: Str
             val hex = str.reversalEvery2Charts().padEnd(length * 2, '0').substring(0, length * 2)
             this.writeStringBE(hex, offset, length, encoding)
         }
+
         "ascii" -> {
             val hex = str.toCharArray().map { it.toInt() }.map { it.toString(16) }.joinToString("")
             this.writeStringLE(hex, offset, length, "hex")
@@ -408,4 +413,4 @@ private fun readUnsigned(byteArray: ByteArray, len: Int, offset: Int, littleEndi
 }
 
 
-private fun throwOffestError(byteArray: ByteArray, offset: Int, length: Int = 1, byteLength: Int = 0) = offset > byteArray.size - length - byteLength
+inline fun throwOffestError(byteArray: ByteArray, offset: Int, length: Int = 1, byteLength: Int = 0) = offset > byteArray.size - length - byteLength
