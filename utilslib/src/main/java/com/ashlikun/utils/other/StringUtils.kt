@@ -35,15 +35,20 @@ inline fun String.trimx() = StringUtils.trim(this)
 /**
  * 不为“”就执行
  */
-inline fun String.ifNoEmptyInvok(invok: (String) -> Unit): String {
+inline fun String.ifNoEmptyInvok(invok: (String) -> Unit) {
     if (isNotEmpty()) invok(this)
-    return this
 }
 
 inline fun String.ifNoEmpty(defaultValue: (String) -> String): String = if (isNotEmpty()) defaultValue(this) else this
+inline fun String.ifNoEmptyDef(defaultValue: String = ""): String = if (isNotEmpty()) defaultValue else this
 
-inline fun String.ifEmpty(defaultValue: String = ""): String = if (isEmpty()) defaultValue else this
+inline fun String.ifEmptyDef(defaultValue: String = ""): String = ifEmpty { defaultValue }
 
+inline fun String?.ifNoNullEmpty(defaultValue: (String?) -> String?): String? = if (!isNullOrEmpty()) defaultValue(this) else this
+inline fun String?.ifNoNullEmptyDef(defaultValue: String? = ""): String? = if (!isNullOrEmpty()) defaultValue else this
+
+inline fun String?.ifNullEmpty(defaultValue: (String?) -> String?): String? = if (isNullOrEmpty()) defaultValue(this) else this
+inline fun String?.ifNullEmptyDef(defaultValue: String? = ""): String? = if (isNullOrEmpty()) defaultValue else this
 
 /**
  * 小数 四舍五入 19.0->19.0    返回Double
@@ -157,18 +162,22 @@ object StringUtils {
                 sb.append(value.toString())
                 0
             }
+
             value < 1048576L -> {
                 sb.append(String.format("%.1f", value / 1024.0))
                 1
             }
+
             value < 1073741824L -> {
                 sb.append(String.format("%.2f", value / 1048576.0))
                 2
             }
+
             value < 1099511627776L -> {
                 sb.append(String.format("%.3f", value / 1073741824.0))
                 3
             }
+
             else -> {
                 sb.append(String.format("%.4f", value / 1099511627776.0))
                 4
