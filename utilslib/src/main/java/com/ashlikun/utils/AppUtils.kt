@@ -79,10 +79,11 @@ object AppUtils {
         myApp.registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
         //解决一些疑难杂症
         BugUtils.init()
-        //监听FPS
-        if (isDebug) {
-            FPSFrameCallback.init()
-        }
+        //会导致主线程一直占用
+//        //监听FPS
+//        if (isDebug) {
+//            FPSFrameCallback.init()
+//        }
     }
 
     /**
