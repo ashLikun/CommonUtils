@@ -6,6 +6,7 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.coroutineContext
 
 /**
  * 作者　　: 李坤
@@ -133,6 +134,48 @@ inline fun <T> taskBlock(
 }
 
 /**
+ * 携程内部异步执行
+ */
+suspend inline fun <T> asyncSuspend(
+    noinline cache: ((Throwable) -> Unit)? = null,
+    noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
+    delayTime: Long = 0,
+    noinline job: suspend () -> T
+): Deferred<T> {
+    val handleContext = CoroutineExceptionHandler(coroutineContext, exception = cache, exception2 = cache2)
+    return coroutineScope {
+        async(handleContext) {
+            delay(delayTime)
+            //自己实现异常，防止异常会跑到外层
+            runCatching {
+                job()
+            }.onFailure {
+                if (handleContext is CoroutineExceptionHandler) handleContext.handleException(coroutineContext, it)
+            }.getOrNull() as T
+        }
+    }
+}
+
+/**
+ * 携程内部异步执行
+ * 不嵌套捕获Catch
+ */
+suspend inline fun <T> asyncSuspendNoCatch(
+    noinline cache: ((Throwable) -> Unit)? = null,
+    noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
+    delayTime: Long = 0,
+    noinline job: suspend () -> T
+): Deferred<T> {
+    val handleContext = CoroutineExceptionHandler(coroutineContext, exception = cache, exception2 = cache2)
+    return coroutineScope {
+        async(handleContext) {
+            delay(delayTime)
+            job()
+        }
+    }
+}
+
+/**
  * 异步执行，常用于最外层 [Dispatchers.Default] 线程
  * 多个 async 任务是并行的
  * 特点带返回值 async 返回的是一个Deferred<T>，需要调用其await()方法获取结果。
@@ -147,7 +190,7 @@ inline fun <T> taskAsync(
     val handleContext = CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)
     return DefaultScope().async(handleContext) {
         delay(delayTime)
-        //自己实现异常，防止根异常无法捕获
+        //自己实现异常，防止异常会跑到外层或者无法捕获
         runCatching {
             job()
         }.onFailure {
