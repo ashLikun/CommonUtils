@@ -38,7 +38,7 @@ object PermissionUtils {
     const val SP_REQUEST_FLAG_NAME = "Permissions Request Flag"
 
     // 在以后的框架版本中引入的危险权限的映射。用于有条件地绕过旧设备上的权限保留检查。
-    // 参考：https://developer.android.comreferenceceandroidManifest.permission
+    // 参考：https://developer.android.com/reference/android/Manifest.permission
     private var MIN_SDK_PERMISSIONS: SimpleArrayMap<String, Int> = SimpleArrayMap()
 
     init {
@@ -55,6 +55,7 @@ object PermissionUtils {
         MIN_SDK_PERMISSIONS.put("android.permission.ACTIVITY_RECOGNITION", 29)
         MIN_SDK_PERMISSIONS.put("android.permission.ACCESS_MEDIA_LOCATION", 29)
         MIN_SDK_PERMISSIONS.put("android.permission.ACCESS_BACKGROUND_LOCATION", 29)
+        MIN_SDK_PERMISSIONS.put("android.permission.POST_NOTIFICATIONS", 33)
     }
 
     private fun PermissionUtils() {}
@@ -66,7 +67,7 @@ object PermissionUtils {
      * @return 如果已授予所有权限，则返回true。
      */
     fun verifyPermissions(vararg grantResults: Int): Boolean {
-        if (grantResults.size == 0) {
+        if (grantResults.isEmpty()) {
             return false
         }
         for (result in grantResults) {
@@ -83,7 +84,7 @@ object PermissionUtils {
      * @param permission permission
      * @return 如果此SDK版本中存在权限，则返回true
      */
-    private fun permissionExists(permission: String): Boolean {
+    fun permissionExists(permission: String): Boolean {
         // 检查此设备上是否可能缺少权限
         val minVersion = MIN_SDK_PERMISSIONS[permission]
         // 如果上述调用返回null，则无需对权限进行设备API级检查；
