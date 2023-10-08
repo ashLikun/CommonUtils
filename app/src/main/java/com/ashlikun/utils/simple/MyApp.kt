@@ -19,7 +19,7 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AppUtils.init(this)
+        AppUtils.init(this, "utilsSimple")
         AppUtils.isDebug = true
     }
 }

@@ -432,7 +432,7 @@ object BitmapUtil {
         mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
         desc: String = "App Save Image",
         currentTime: Long = System.currentTimeMillis(),
-        relativePath: String = Environment.DIRECTORY_DCIM
+        relativePath: String = Environment.DIRECTORY_DCIM + if (AppUtils.simpleName.isNotEmpty()) File.separator + AppUtils.simpleName else ""
     ) =
         ContentValues().apply {
             put(MediaStore.Images.Media.TITLE, file.name)

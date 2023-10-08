@@ -43,6 +43,9 @@ object AppUtils {
      * 编辑模式的Context
      */
     var editModeContext: Context? = null
+
+    //应用简称，一般用于文件目录等标识
+    var simpleName = ""
     fun View.initAppEditMode() {
         if (isInEditMode) {
             AppUtils.base = context
@@ -72,8 +75,9 @@ object AppUtils {
      * 一定要在Application里面调用
      * 在全部库的最前面调用
      */
-    fun init(myApp: Application, isDebug: Boolean = false) {
+    fun init(myApp: Application, simpleName: String, isDebug: Boolean = false) {
         this.isDebug = isDebug
+        this.simpleName = simpleName
         app = myApp
         base = myApp
         myApp.registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
