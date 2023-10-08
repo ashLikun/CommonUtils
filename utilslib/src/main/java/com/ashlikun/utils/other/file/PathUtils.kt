@@ -31,10 +31,34 @@ inline val File.toUri
 inline val Uri.toFileData
     get() = PathUtils.getFileData(this)
 
+//如果没有文件管理权限，就使用Uri 复制文件
+inline val Uri.uriCopyFile
+    get() = toFileData?.fileFromUri
+
 inline val File.toFileData
     get() = FileData(name, length(), path, MediaFile.getFileType(path)?.mimeType.orEmpty(), uri = toUri)
 
 object PathUtils {
+    /**
+     * 如果没有文件管理权限，就使用Uri 复制文件
+     */
+    fun uriCopyFile(uri: Uri, name: String): File? {
+        if (name.isEmpty()) return null
+        //把文件复制到内部沙盒
+        val ins = AppUtils.app.contentResolver.openInputStream(uri)
+        val dir = File(internalAppCache + File.separator + "copy")
+        if (!dir.exists()) dir.mkdirs()
+        val file = File(dir.path + File.separator + name)
+        //如果文件都一样就不用复制了
+        return if (file.exists() && file.length() > 0 && file.length().toInt() == ins?.available()) {
+            file
+        } else {
+            if (file.exists()) file.delete()
+            file.createNewFile()
+            if (FileIOUtils.copyFile(ins, file)) file else null
+        }
+    }
+
     /**
      * 获取照片选择的文件路径
      */

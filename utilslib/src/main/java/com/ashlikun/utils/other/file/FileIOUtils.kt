@@ -155,6 +155,7 @@ object FileIOUtils {
         deleteSrc: Boolean = false
     ): Boolean {
         if (!srcFile.exists() || !srcFile.isFile) return false
+        if (!destFile.exists()) destFile.createNewFile()
         var ins: InputStream? = null
         var out: OutputStream? = null
         try {
@@ -168,6 +169,32 @@ object FileIOUtils {
             }
             if (deleteSrc) {
                 srcFile.delete()
+            }
+        } catch (e: Exception) {
+            return false
+        } finally {
+            close(out)
+            close(ins)
+        }
+        return true
+    }
+
+    /**
+     * 复制文件
+     */
+    fun copyFile(
+        ins: InputStream?, destFile: File,
+    ): Boolean {
+        if (ins == null) return false
+        if (!destFile.exists()) destFile.createNewFile()
+        var out: OutputStream? = null
+        try {
+            out = FileOutputStream(destFile)
+            val buffer = ByteArray(1024)
+            var i = -1
+            while (ins.read(buffer).also { i = it } > 0) {
+                out.write(buffer, 0, i)
+                out.flush()
             }
         } catch (e: Exception) {
             return false
