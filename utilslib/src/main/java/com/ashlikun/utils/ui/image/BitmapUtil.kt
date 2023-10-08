@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import com.ashlikun.utils.AppUtils
@@ -424,23 +425,28 @@ object BitmapUtil {
 
     /**
      * 获取 图片 ContentValue
+     * @param relativePath 文件位置
      */
     fun getImageContentValues(
         file: File,
         mimeType: String = MediaFile.getFileType(file.absolutePath)?.mimeType ?: "image/jpeg",
         desc: String = "App Save Image",
-        currentTime: Long = System.currentTimeMillis()
+        currentTime: Long = System.currentTimeMillis(),
+        relativePath: String = Environment.DIRECTORY_DCIM
     ) =
         ContentValues().apply {
             put(MediaStore.Images.Media.TITLE, file.name)
             put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
-            put(MediaStore.Images.Media.DATE_ADDED, currentTime)
-            put(MediaStore.Images.Media.DATE_MODIFIED, currentTime)
+            put(MediaStore.Images.Media.DATE_ADDED, currentTime / 1000)
+            put(MediaStore.Images.Media.DATE_MODIFIED, currentTime / 1000)
             put(MediaStore.Images.Media.DATE_TAKEN, currentTime)
             put(MediaStore.Images.Media.MIME_TYPE, mimeType)
             put(MediaStore.Images.Media.DESCRIPTION, desc)
             put(MediaStore.Images.Media.ORIENTATION, 0)
-            put(MediaStore.Images.Media.DATA, file.absolutePath)
+            //这个在Android 10.0 会导致插入相册失败
+            //put(MediaStore.Images.Media.DATA, file.absolutePath)
+            //文件保存位置
+            put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
             put(MediaStore.Images.Media.SIZE, file.length())
         }
 
