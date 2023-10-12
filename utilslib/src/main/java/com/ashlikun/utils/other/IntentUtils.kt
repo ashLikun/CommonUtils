@@ -2,13 +2,14 @@ package com.ashlikun.utils.other
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.Settings
 import androidx.fragment.app.Fragment
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.AppUtils.app
-import com.ashlikun.utils.ui.ActivityManager
+import com.ashlikun.utils.main.ActivityUtils
 import com.ashlikun.utils.ui.fActivity
 import java.io.File
 import java.io.IOException
@@ -143,4 +144,20 @@ object IntentUtils {
      * 系统设置界面
      */
     fun startSysSetting() = jump(Intent(Settings.ACTION_SETTINGS))
+
+    /**
+     * 返回启动应用程序的意图。
+     *
+     * @param pkgName 程序包的名称。
+     * @return 启动应用程序的意图
+     */
+    fun getLaunchAppIntent(pkgName: String): Intent? {
+        val launcherActivity = ActivityUtils.getLauncherActivity(pkgName)
+        if (launcherActivity.isEmpty()) return null
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.setClassName(pkgName, launcherActivity)
+        return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
 }

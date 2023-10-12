@@ -120,4 +120,17 @@ object ActivityUtils {
             if (isHoutTai) 1 else 2
         } else 0
     }
+
+    /**
+     * 返回启动Activity的名称。
+     */
+    fun getLauncherActivity(pkg: String): String {
+        if (pkg.isEmpty()) return ""
+        val intent = Intent(Intent.ACTION_MAIN, null)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        intent.setPackage(pkg)
+        val pm: PackageManager = AppUtils.app.getPackageManager()
+        val info = pm.queryIntentActivities(intent, 0)
+        return info.getOrNull(0)?.activityInfo?.name.orEmpty()
+    }
 }

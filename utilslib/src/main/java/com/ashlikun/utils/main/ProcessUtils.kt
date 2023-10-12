@@ -4,11 +4,15 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Process
 import android.text.TextUtils
+import android.util.Log
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.ClassUtils
+import com.ashlikun.utils.other.IntentUtils
+import com.ashlikun.utils.other.LogUtils
 import java.util.*
 
 /**
@@ -221,5 +225,33 @@ object ProcessUtils {
             }
         }
         return true
+    }
+
+    /**
+     * 重新启动应用程序。
+     *
+     * @param isKillProcess True表示终止进程，否则为false。
+     */
+    fun relaunchApp(isKillProcess: Boolean) {
+        val intent = IntentUtils.getLaunchAppIntent(AppUtils.packageName)
+        if (intent == null) {
+            LogUtils.e("Didn't exist launcher activity.")
+            return
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        AppUtils.app.startActivity(intent)
+        if (!isKillProcess) return
+        killProcess(false)
+    }
+
+    /**
+     * 退出应用
+     */
+    fun killProcess(isExitActivity: Boolean = true) {
+        if (isExitActivity) {
+            com.ashlikun.utils.ui.ActivityManager.get().exitAllActivity()
+        }
+        Process.killProcess(Process.myPid())
+        System.exit(0)
     }
 }
