@@ -298,11 +298,12 @@ class MainActivity : AppCompatActivity() {
 //        //        imageView.setDrawingCacheEnabled(true);
 //        //        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
 //        //        imageView.setDrawingCacheEnabled(false);
-        val bitmap =
-            BitmapUtil.decodeResource(R.mipmap.timg, ScreenUtils.width, ScreenUtils.height)
-        LogUtils.e("aaaaaaaaaa${bitmap!!.saveImageToGallery(newImage())}")
+//        val bitmap =
+//            BitmapUtil.decodeResource(R.mipmap.timg, ScreenUtils.width, ScreenUtils.height)
+//        LogUtils.e("aaaaaaaaaa${bitmap!!.saveImageToGallery(newImage())}")
 //        binding.imageView.setImageBitmap(BitmapUtil.getWaterMaskImage(bitmap, logo))
 
+        //协程异常测试
     }
 
     /**

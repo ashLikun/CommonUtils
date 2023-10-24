@@ -225,6 +225,20 @@ inline fun <T> CoroutineScope.asyncXNoCache(
 }
 
 /**
+ * 携程内部异步执行 launchX 方式
+ */
+suspend inline fun launchSuspend(
+    context: CoroutineContext = EmptyCoroutineContext,
+    noinline cache: ((Throwable) -> Unit)? = null,
+    noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
+    delayTime: Long = 0,
+    noinline job: suspend () -> Unit
+) = coroutineScope {
+    //coroutineScope launch 的时候 必须 SupervisorJob() 解决异常捕获
+    launchX(context + SupervisorJob(), cache, cache2, delayTime, job)
+}
+
+/**
  * 执行，常用于最外层 [Dispatchers.Default] 线程
  * 无阻塞的
  */
