@@ -2,6 +2,7 @@ package com.ashlikun.utils.other.coroutines
 
 import com.ashlikun.utils.other.LogUtils
 import com.ashlikun.utils.other.ThreadPoolManage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -9,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -362,3 +364,9 @@ suspend inline fun <T> withContextThreadPoll(noinline block: suspend () -> T) =
  * 切换到当前作用域
  */
 suspend fun <R> currentScope(block: suspend CoroutineScope.() -> R) = coroutineScope(block)
+
+/**
+ * 取消作用域,捕获异常
+ * 被取消的作用域不可后续的任何任务执行，必须重新初始化
+ */
+fun CoroutineScope.cancelX(cause: CancellationException? = null) = runCatching { cancel(cause) }
