@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
@@ -370,3 +371,13 @@ suspend fun <R> currentScope(block: suspend CoroutineScope.() -> R) = coroutineS
  * 被取消的作用域不可后续的任何任务执行，必须重新初始化
  */
 fun CoroutineScope.cancelX(cause: CancellationException? = null) = runCatching { cancel(cause) }
+
+/**
+ * 判断作用域是否取消
+ */
+val CoroutineScope.isCancelled: Boolean
+    get() {
+        val job = coroutineContext[Job]
+        //没有Job 就是认为取消
+        return job?.isCancelled ?: true
+    }
