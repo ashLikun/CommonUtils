@@ -244,6 +244,8 @@ inline fun CoroutineScope.launchXCache(
 
 /**
  * coroutineScope launch 的时候 必须 SupervisorJob() 解决异常捕获
+ * SupervisorJob() 这个会导致这个协程在一个新的作用域
+ * 所以自己实现了异常
  * 执行，常用于最外层 [Dispatchers.Default] 线程
  * 无阻塞的
  */
@@ -253,9 +255,17 @@ inline fun CoroutineScope.launchX(
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
     noinline job: suspend () -> Unit
-) = launch(SupervisorJob() + CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
-    delay(delayTime)
-    job()
+): Job {
+    val handleContext = CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)
+    return launch(handleContext) {
+        delay(delayTime)
+        //自己实现异常，防止异常会跑到外层或者无法捕获
+        runCatching {
+            job()
+        }.onFailure {
+            if (handleContext is CoroutineExceptionHandler) handleContext.handleException(context, it)
+        }
+    }
 }
 
 
