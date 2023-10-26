@@ -139,37 +139,10 @@ inline fun <T> taskBlock(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
+    noinline job: suspend CoroutineScope.() -> T
 ): T = runBlocking(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
-}
-
-/**
- * 携程内部异步执行
- */
-suspend inline fun <T> asyncSuspend(
-    context: CoroutineContext = EmptyCoroutineContext,
-    noinline cache: ((Throwable) -> Unit)? = null,
-    noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    delayTime: Long = 0,
-    noinline job: suspend () -> T
-) = coroutineScope {
-    asyncX(context, cache, cache2, delayTime, job)
-}
-
-/**
- * 携程内部异步执行
- * 不嵌套捕获Catch
- */
-suspend inline fun <T> asyncSuspendNoCatch(
-    context: CoroutineContext = EmptyCoroutineContext,
-    noinline cache: ((Throwable) -> Unit)? = null,
-    noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
-    delayTime: Long = 0,
-    noinline job: suspend () -> T
-) = coroutineScope {
-    asyncXNoCache(context, cache, cache2, delayTime, job)
 }
 
 /**
@@ -182,7 +155,7 @@ inline fun <T> taskAsync(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
+    noinline job: suspend CoroutineScope.() -> T
 ) = DefaultScope().asyncX(context, cache, cache2, delayTime, job)
 
 /**
@@ -195,7 +168,7 @@ inline fun <T> CoroutineScope.asyncX(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
+    noinline job: suspend CoroutineScope.() -> T
 ): Deferred<T> {
     val handleContext = CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)
     return async(handleContext) {
@@ -219,7 +192,7 @@ inline fun <T> CoroutineScope.asyncXNoCache(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> T
+    noinline job: suspend CoroutineScope.() -> T
 ): Deferred<T> {
     return async(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
         delay(delayTime)
@@ -235,10 +208,10 @@ suspend inline fun launchSuspend(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
+    noinline job: suspend CoroutineScope.() -> Unit
 ) = coroutineScope {
     //coroutineScope launch 的时候 必须 SupervisorJob() 解决异常捕获
-    launchX(context + SupervisorJob(), cache, cache2, delayTime, job)
+    launchXCache(context + SupervisorJob(), cache, cache2, delayTime, job)
 }
 
 /**
@@ -250,10 +223,27 @@ inline fun taskLaunch(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
-) = DefaultScope().launchX(context, cache, cache2, delayTime, job)
+    noinline job: suspend CoroutineScope.() -> Unit
+) = DefaultScope().launchXCache(context, cache, cache2, delayTime, job)
 
 /**
+ * 执行，常用于最外层 [Dispatchers.Default] 线程
+ * 无阻塞的
+ * 这里异常会被上层捕获
+ */
+inline fun CoroutineScope.launchXCache(
+    context: CoroutineContext = EmptyCoroutineContext,
+    noinline cache: ((Throwable) -> Unit)? = null,
+    noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
+    delayTime: Long = 0,
+    noinline job: suspend CoroutineScope.() -> Unit
+) = launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
+    delay(delayTime)
+    job()
+}
+
+/**
+ * coroutineScope launch 的时候 必须 SupervisorJob() 解决异常捕获
  * 执行，常用于最外层 [Dispatchers.Default] 线程
  * 无阻塞的
  */
@@ -262,8 +252,8 @@ inline fun CoroutineScope.launchX(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
-) = launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
+    noinline job: suspend CoroutineScope.() -> Unit
+) = launch(SupervisorJob() + CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
     job()
 }
@@ -278,8 +268,8 @@ inline fun taskLaunchMain(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
-) = MainScopeX().launchX(context, cache, cache2, delayTime, job)
+    noinline job: suspend CoroutineScope.() -> Unit
+) = MainScopeX().launchXCache(context, cache, cache2, delayTime, job)
 
 
 /**
@@ -291,8 +281,8 @@ inline fun taskLaunchIO(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
-) = IoScope().launchX(context, cache, cache2, delayTime, job)
+    noinline job: suspend CoroutineScope.() -> Unit
+) = IoScope().launchXCache(context, cache, cache2, delayTime, job)
 
 /**
  * 执行，在ThreadPoolDispatcher线程中执行，可以用于最外层
@@ -303,8 +293,8 @@ inline fun taskLaunchThreadPoll(
     noinline cache: ((Throwable) -> Unit)? = null,
     noinline cache2: ((CoroutineContext, Throwable) -> Unit)? = null,
     delayTime: Long = 0,
-    noinline job: suspend () -> Unit
-) = ThreadPoolScope().launchX(context, cache, cache2, delayTime, job)
+    noinline job: suspend CoroutineScope.() -> Unit
+) = ThreadPoolScope().launchXCache(context, cache, cache2, delayTime, job)
 
 /**
  * 心跳执行 默认重复次数1次，可用于最外层
