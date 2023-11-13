@@ -254,7 +254,9 @@ object FileUtils {
             }
         }
     }
-
+    fun openRes(resId: Int) {
+        AppUtils.app.resources.openRawResource(resId)
+    }
     /**
      * 删除文件或者目录
      */

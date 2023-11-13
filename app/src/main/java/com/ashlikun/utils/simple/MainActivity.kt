@@ -1,27 +1,22 @@
 package com.ashlikun.utils.simple
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.location.*
 import android.os.Bundle
-import android.os.Environment
-import android.text.StaticLayout
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ComponentActivity
 import androidx.core.app.NotificationCompat
+import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.assist.WakeLock
-import com.ashlikun.utils.encryption.AESUtils
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
@@ -33,15 +28,13 @@ import com.ashlikun.utils.other.file.PathUtils
 import com.ashlikun.utils.other.file.toFileData
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
+import com.ashlikun.utils.other.svg.SvgUtils
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.ActivityManager
 import com.ashlikun.utils.ui.NotificationUtil
-import com.ashlikun.utils.ui.ScreenUtils
 import com.ashlikun.utils.ui.extend.*
-import com.ashlikun.utils.ui.image.BitmapUtil
 import com.ashlikun.utils.ui.image.DrawableUtils
-import com.ashlikun.utils.ui.image.saveImageToGallery
 import com.ashlikun.utils.ui.modal.SuperToast
 import com.ashlikun.utils.ui.modal.ToastUtils
 import com.ashlikun.utils.ui.resources.ResUtils
@@ -50,6 +43,7 @@ import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 import com.ashlikun.utils.ui.text.SpannableUtils
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
+import org.xmlpull.v1.XmlPullParser
 import java.io.File
 import java.io.IOException
 import java.lang.Runnable
@@ -287,10 +281,36 @@ class MainActivity : AppCompatActivity() {
         recreate()
     }
 
+    @SuppressLint("ResourceType")
     fun onView4Click(view: View) {
-        taskLaunch {
-
+        val parser = AppUtils.app.resources.getXml(R.drawable.main_ic_ebike_button_laba_def_item1)
+        //4.循环解析
+        var type: Int = parser.getEventType()
+        while (type != XmlPullParser.END_DOCUMENT) {
+            LogUtils.e("rrrrrrrrrrrr ${type}, ${parser.getName()}")
+            // 循环解析
+            if (type == XmlPullParser.START_TAG) {                // 判断如果遇到开始标签事件
+                if(parser.name == "path"){
+                    parser.getAttributeValue(0)
+                }
+//                if ("person" == parser.getName()) {        // 标签名为person
+//                    p = Person() // 创建Person对象
+//                    val id: String = parser.getAttributeValue(0) // 获取属性
+//                    p.setId(id.toInt()) // 设置ID
+//                    persons.add(p) // 把Person对象装入集合
+//                } else if ("name" == parser.getName()) {    // 标签名为name
+//                    val name: String = parser.nextText() // 获取下一个文本
+//                    p.setName(name) // 设置name
+//                } else if ("age" == parser.getName()) {    // 标签名为age
+//                    val age: String = parser.nextText() // 获取下一个文本
+//                    p.setAge(age.toInt()) // 设置age
+//                }
+            }
+            type = parser.next()
         }
+        val result = SvgUtils.getVectorData(R.drawable.main_ic_ebike_button_laba_def_item1)
+        LogUtils.e("dddddwww ${R.color.colorPrimary.resColor}")
+        LogUtils.e("ddddd ${result}")
         FileUtils.formetFileSize(14457260, FileUtils.SIZETYPE_MB)
 //        Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
 //        ThreadUtils.execute {

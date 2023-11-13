@@ -5,12 +5,12 @@
     android:viewportWidth="33"
     android:viewportHeight="30">
     <path
-        android:fillColor="#00000000"
+        android:fillColor="@color/colorPrimary"
         android:pathData="M13.5,2.297V27.703L8.507,23.054C7.952,22.537 7.222,22.25 6.463,22.25H2C1.448,22.25 1,21.802 1,21.25V8.75C1,8.198 1.448,7.75 2,7.75H6.463C7.222,7.75 7.952,7.463 8.507,6.946L13.5,2.297Z"
         android:strokeWidth="2"
         android:strokeColor="@color/icon_def_color_fan" />
     <path
-        android:fillColor="#00000000"
+        android:fillColor="#99000000"
         android:pathData="M18.75,7.537C22.54,7.913 25.5,11.111 25.5,15C25.5,18.889 22.54,22.087 18.75,22.463"
         android:strokeWidth="2"
         android:strokeColor="@color/icon_def_color_fan"
