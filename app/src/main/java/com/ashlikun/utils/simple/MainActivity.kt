@@ -283,31 +283,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     fun onView4Click(view: View) {
-        val parser = AppUtils.app.resources.getXml(R.drawable.main_ic_ebike_button_laba_def_item1)
-        //4.循环解析
-        var type: Int = parser.getEventType()
-        while (type != XmlPullParser.END_DOCUMENT) {
-            LogUtils.e("rrrrrrrrrrrr ${type}, ${parser.getName()}")
-            // 循环解析
-            if (type == XmlPullParser.START_TAG) {                // 判断如果遇到开始标签事件
-                if(parser.name == "path"){
-                    parser.getAttributeValue(0)
-                }
-//                if ("person" == parser.getName()) {        // 标签名为person
-//                    p = Person() // 创建Person对象
-//                    val id: String = parser.getAttributeValue(0) // 获取属性
-//                    p.setId(id.toInt()) // 设置ID
-//                    persons.add(p) // 把Person对象装入集合
-//                } else if ("name" == parser.getName()) {    // 标签名为name
-//                    val name: String = parser.nextText() // 获取下一个文本
-//                    p.setName(name) // 设置name
-//                } else if ("age" == parser.getName()) {    // 标签名为age
-//                    val age: String = parser.nextText() // 获取下一个文本
-//                    p.setAge(age.toInt()) // 设置age
-//                }
-            }
-            type = parser.next()
-        }
         val result = SvgUtils.getVectorData(R.drawable.main_ic_ebike_button_laba_def_item1)
         LogUtils.e("dddddwww ${R.color.colorPrimary.resColor}")
         LogUtils.e("ddddd ${result}")

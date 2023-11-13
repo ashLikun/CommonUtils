@@ -25,25 +25,6 @@ import java.io.InputStreamReader
  */
 object SvgUtils {
     const val android = "http://schemas.android.com/apk/res/android"
-    fun readRawFile(context: Context, fileName: String?): String? {
-        try {
-            val resources = context.resources
-            val packageName = context.packageName
-            val resourceId = resources.getIdentifier(fileName, "drawable", packageName)
-            val inputStream = resources.openRawResource(resourceId)
-            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-            val stringBuilder = StringBuilder()
-            var line: String?
-            while (bufferedReader.readLine().also { line = it } != null) {
-                stringBuilder.append(line).append("\n")
-            }
-            bufferedReader.close()
-            return stringBuilder.toString()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
 
     fun parseSize(size: String?) = runCatching {
         if (size == null) {
@@ -57,19 +38,20 @@ object SvgUtils {
         }
     }.getOrNull()
 
-    fun parseColor(colorStr: String): Int {
-        var result = Color.TRANSPARENT
-        runCatching {
-            if (colorStr == "#0") {
-                result = Color.TRANSPARENT
-            } else if (colorStr.startsWith("#")) {
-                result = Color.parseColor(colorStr)
-            } else if (colorStr.startsWith("@")) {
-                result = colorStr.replace("@", "").toInt().resColor
-            }
+    fun parseColor(colorStr: String?) = runCatching {
+        if (colorStr.isNullOrEmpty()) {
+            Color.BLACK
+        } else if (colorStr == "#0") {
+            Color.TRANSPARENT
+        } else if (colorStr.startsWith("#")) {
+            Color.parseColor(colorStr)
+        } else if (colorStr.startsWith("@")) {
+            colorStr.replace("@", "").toInt().resColor
+        } else {
+            //默认颜色黑色
+            Color.RED
         }
-        return result
-    }
+    }.getOrNull() ?: Color.RED
 
     fun parseStrokeLineCap(sta: String) = runCatching {
         if (sta.equals("BUTT", true)) {
@@ -81,7 +63,7 @@ object SvgUtils {
         } else null
     }.getOrNull()
 
-    fun parsePath(str: String) = runCatching { PathParser.createPathFromPathData(str) }.getOrNull()
+    fun parsePath(str: String?) = runCatching { if (str.isNullOrEmpty()) null else PathParser.createPathFromPathData(str) }.getOrNull()
 
     /**
      * 解析vector svg xml
@@ -91,11 +73,10 @@ object SvgUtils {
             val vectorData = VectorData()
             val parser = AppUtils.app.resources.getXml(resId)
             //4.循环解析
-            var type: Int = parser.getEventType()
+            var type: Int = parser.eventType
             while (type != XmlPullParser.END_DOCUMENT) {
-                LogUtils.e("rrrrrrrrrrrr ${type}, ${parser.getName()}")
-                // 循环解析
-                if (type == XmlPullParser.START_TAG) {                // 判断如果遇到开始标签事件
+                // 判断如果遇到开始标签事件
+                if (type == XmlPullParser.START_TAG) {
                     if (parser.name == "vector") {
                         vectorData.width = parseSize(parser.getAttributeValue(android, "width")) ?: 0f
                         vectorData.height = parseSize(parser.getAttributeValue(android, "height")) ?: 0f
