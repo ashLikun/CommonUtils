@@ -61,7 +61,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         motorAnim = false
-        LogUtils.e("gggggggggggg${svgData}")
+//        LogUtils.e("gggggggggggg${svgData}")
 //        LogUtils.e("gggggggggggg${svgData.scale}")
         svgData.pathDatas.forEachIndexed { index, it ->
             canvas.save()

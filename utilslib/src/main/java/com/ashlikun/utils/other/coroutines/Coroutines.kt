@@ -39,23 +39,44 @@ val MainDispatcher = Dispatchers.Main.immediate
 
 /**
  * 运行在IO线程中
+ * CoroutineDispatcher，用于将阻塞IO任务卸载到共享线程池。 此池中的其他线程将被创建并按需关闭。此调度程序中的任务使用的线程数受“kotlinx.coroutines.ioparallelism”
+ * io_PARALLELIM_PROPERTY_NAME）系统属性值的限制。它默认限制为64个线程或内核数量（以较大者为准）。
+ * 此外，最大可配置线程数由kotlin.coroutines.scheduler.max.pool.size系统属性限制。如果需要更多的并行线程，则应该使用由自己的线程池支持的自定义调度器。
+ * 实施说明 此调度程序与Default调度程序共享线程，因此当已经在Default调度程序上运行时使用withContext（Dispatchers.IO）｛…｝不会导致实际切换到另一个线程——通常在同一线程中继续执行。
+ * 由于线程共享，在IO调度器的操作过程中可以创建（但不使用）超过64个（默认并行度）线程
  */
 val IODispatcher = Dispatchers.IO
 
 /**
  * 将会获取默认调度器,使用共享的后台线程池
+ * 默认的CoroutineDispatcher，由所有标准构建程序（如启动、异步等）使用，如果在它们的上下文中没有指定调度器或任何其他ContinuationInterceptor。
+ * 它由JVM上的共享线程池支持。默认情况下，此调度器使用的最大并行级别等于CPU核的数量，但至少为两个。并行级别X保证在此调度器中并行执行的任务不超过X个。
+ *
  */
 val DefaultDispatcher = Dispatchers.Default
 
 /**
  * 跟随当前线程 特点： 如果在主线程中执行调用delay以后便会切换到子线程kotlinx.coroutines.DefaultExecutor中执行
+ * 一个不局限于任何特定线程的协同程序调度器。它在当前调用帧中执行协同程序的初始延续，并允许协同程序在相应的挂起函数使用的任何线程中恢复，而无需强制执行任何特定的线程策略。
+ *  在此调度程序中启动的嵌套协程形成一个事件循环，以避免堆栈溢出。 事件循环 事件循环语义是一个纯粹的内部概念，除了所有排队的协程都将在最外层的无约束协程的词法范围内的当前线程上执行之外，它对执行顺序没有任何保证。
+ *  例如，以下代码： withContext（调度程序.未定义）{ println（1） withContext（Dispatchers.Uncoined）
+ *  ｛//嵌套的无约束 println（2） } println（3） } println（“完成”） 可以打印“1 2 3”和“1 3 2”，这是一个可以更改的实现细节。但可以保证的是，
+ *  只有当两个withContext都完成时，才会打印“完成”。 请注意，如果您需要在恢复后将协程限制在特定的线程或线程池中，但仍然希望在当前调用帧中执行它，直到它第一次挂起，
+ *  那么您可以在协程生成器中使用可选的CoroutineStart参数，如launch和async，将其设置为CoroutineStart。未修补。
  */
 val UnconfinedDispatcher = Dispatchers.Unconfined
 
 /**
  * 利用自定义线程池
+ * 最小64个
  */
 val ThreadPoolDispatcher = ThreadPoolManage.get().asCoroutineDispatcher()
+
+//几个全局的作用域
+val globalDefaultScope = DefaultScope()
+val globalIoScope = IoScope()
+val globalMainScope = MainScopeX()
+val globalThreadPoolScope = ThreadPoolScope()
 
 
 /**
@@ -90,21 +111,24 @@ inline fun CoroutineExceptionHandler(
 /**
  * 异常处理
  */
-inline fun CException(crossinline handler: (CoroutineContext, Throwable) -> Unit) = CoroutineExceptionHandler(handler)
+inline fun CException(crossinline handler: (CoroutineContext, Throwable) -> Unit) =
+    CoroutineExceptionHandler(handler)
 
 /**
  * 异常处理
  */
-inline fun CException(crossinline handler: (Throwable) -> Unit) = CoroutineExceptionHandler { coroutineContext, throwable ->
-    handler.invoke(throwable)
-}
+inline fun CException(crossinline handler: (Throwable) -> Unit) =
+    CoroutineExceptionHandler { coroutineContext, throwable ->
+        handler.invoke(throwable)
+    }
 
 /**
  * 异常处理
  */
-inline fun CException(crossinline handler: () -> Unit) = CoroutineExceptionHandler { coroutineContext, throwable ->
-    handler.invoke()
-}
+inline fun CException(crossinline handler: () -> Unit) =
+    CoroutineExceptionHandler { coroutineContext, throwable ->
+        handler.invoke()
+    }
 
 /**
  * 默认作用域
@@ -184,7 +208,10 @@ inline fun <T> CoroutineScope.asyncX(
             MainHandle.printTest("Scope asyncX", startTime)
             result
         }.onFailure {
-            if (handleContext is CoroutineExceptionHandler) handleContext.handleException(context, it)
+            if (handleContext is CoroutineExceptionHandler) handleContext.handleException(
+                context,
+                it
+            )
         }.getOrNull() as T
     }
 }
@@ -277,7 +304,10 @@ inline fun CoroutineScope.launchX(
             job()
             MainHandle.printTest("Scope", startTime)
         }.onFailure {
-            if (handleContext is CoroutineExceptionHandler) handleContext.handleException(context, it)
+            if (handleContext is CoroutineExceptionHandler) handleContext.handleException(
+                context,
+                it
+            )
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.ashlikun.utils.other
 
 import java.util.concurrent.*
+import kotlin.math.max
 
 /**
  * @author　　: 李坤
@@ -12,18 +13,20 @@ import java.util.concurrent.*
  *          推荐使用kotlin协成
  */
 
-class ThreadPoolManage private constructor(
-    POOL_SIZE: Int = Runtime.getRuntime().availableProcessors() / 2
-) :
+class ThreadPoolManage private constructor() :
 //仿照okhttp
     ThreadPoolExecutor(
-        POOL_SIZE, POOL_SIZE * 2, 0, TimeUnit.SECONDS,
-        SynchronousQueue(), threadFactory("thread_pool_manage", false)
+        AVAILABLE_PROCESSORS,
+        max(AVAILABLE_PROCESSORS * 32, 64),
+        0,
+        TimeUnit.SECONDS,
+        SynchronousQueue(),
+        threadFactory("thread_pool_manage", false)
 
     ) {
     companion object {
         private val instance by lazy { ThreadPoolManage() }
-
+        val AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors()
         fun get(): ThreadPoolManage = instance
 
         /**

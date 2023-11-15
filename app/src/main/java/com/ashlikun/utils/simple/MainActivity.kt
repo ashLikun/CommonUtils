@@ -15,20 +15,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.assist.WakeLock
 import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.DefaultDispatcher
+import com.ashlikun.utils.other.coroutines.IODispatcher
+import com.ashlikun.utils.other.coroutines.asyncX
+import com.ashlikun.utils.other.coroutines.currentScope
 import com.ashlikun.utils.other.coroutines.taskAsync
 import com.ashlikun.utils.other.coroutines.taskLaunch
-import com.ashlikun.utils.other.file.FileUtils
+import com.ashlikun.utils.other.coroutines.taskLaunchThreadPoll
 import com.ashlikun.utils.other.file.PathUtils
 import com.ashlikun.utils.other.file.toFileData
 import com.ashlikun.utils.other.spannable.XClickableSpan
 import com.ashlikun.utils.other.store.StoreUtils
-import com.ashlikun.utils.other.svg.SvgUtils
 import com.ashlikun.utils.other.worker.WorkFlow
 import com.ashlikun.utils.simple.databinding.MainViewgroupActivityBinding
 import com.ashlikun.utils.ui.ActivityManager
@@ -43,7 +44,6 @@ import com.ashlikun.utils.ui.text.FocusLinkMovementMethod
 import com.ashlikun.utils.ui.text.SpannableUtils
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
-import org.xmlpull.v1.XmlPullParser
 import java.io.File
 import java.io.IOException
 import java.lang.Runnable
@@ -283,10 +283,37 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     fun onView4Click(view: View) {
-        val result = SvgUtils.getVectorData(R.drawable.main_ic_ebike_button_laba_def_item1)
-        LogUtils.e("dddddwww ${R.color.colorPrimary.resColor}")
-        LogUtils.e("ddddd ${result}")
-        FileUtils.formetFileSize(14457260, FileUtils.SIZETYPE_MB)
+        LogUtils.e("dddddddd${DefaultDispatcher::class.java}")
+        LogUtils.e("dddddddd${IODispatcher.getFieldValue("parallelism")}")
+        LogUtils.e("dddddddd${Runtime.getRuntime().availableProcessors()}")
+        GlobalScope.launch {
+            currentScope {
+                (0..19000).map { itt ->
+                    it.asyncX {
+                        val aa = 5000 - itt/10
+                        delay(aa.toLong())
+                        LogUtils.e("bbbbb ${itt}")
+                    }
+                }.forEach { it.await() }
+                LogUtils.e("GGGGGGGGGGG")
+            }
+        }
+        taskLaunchThreadPoll {
+//            (0..99999).forEach {
+//                taskLaunch {
+////                LogUtils.e("aaaaa ${it}")
+//                    while (true) {
+//                        delay(5000)
+//                        LogUtils.e("bbbbb ${it}")
+//                    }
+//                }
+//            }
+
+        }
+//        val result = SvgUtils.getVectorData(R.drawable.main_ic_ebike_button_laba_def_item1)
+//        LogUtils.e("dddddwww ${R.color.colorPrimary.resColor}")
+//        LogUtils.e("ddddd ${result}")
+//        FileUtils.formetFileSize(14457260, FileUtils.SIZETYPE_MB)
 //        Toast.makeText(this.application, "wwwwww", Toast.LENGTH_SHORT).show()
 //        ThreadUtils.execute {
 ////            ToastUtils.showLong("aaaaaaaaaaaaaaaaaa")
