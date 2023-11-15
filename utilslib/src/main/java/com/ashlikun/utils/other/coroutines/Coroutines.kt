@@ -1,6 +1,7 @@
 package com.ashlikun.utils.other.coroutines
 
 import com.ashlikun.utils.other.LogUtils
+import com.ashlikun.utils.other.MainHandle
 import com.ashlikun.utils.other.ThreadPoolManage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -142,7 +143,10 @@ inline fun <T> taskBlock(
     noinline job: suspend () -> T
 ): T = runBlocking(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
-    job()
+    val startTime = System.currentTimeMillis()
+    val result = job()
+    MainHandle.printTest("Scope taskBlock", startTime)
+    result
 }
 
 /**
@@ -175,7 +179,10 @@ inline fun <T> CoroutineScope.asyncX(
         delay(delayTime)
         //自己实现异常，防止异常会跑到外层或者无法捕获
         runCatching {
-            job()
+            val startTime = System.currentTimeMillis()
+            val result = job()
+            MainHandle.printTest("Scope asyncX", startTime)
+            result
         }.onFailure {
             if (handleContext is CoroutineExceptionHandler) handleContext.handleException(context, it)
         }.getOrNull() as T
@@ -196,7 +203,10 @@ inline fun <T> CoroutineScope.asyncXNoCache(
 ): Deferred<T> {
     return async(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
         delay(delayTime)
-        job()
+        val startTime = System.currentTimeMillis()
+        val result = job()
+        MainHandle.printTest("Scope asyncXNoCache", startTime)
+        result
     }
 }
 
@@ -239,7 +249,9 @@ inline fun CoroutineScope.launchXCache(
     noinline job: suspend () -> Unit
 ) = launch(CoroutineExceptionHandler(context, exception = cache, exception2 = cache2)) {
     delay(delayTime)
+    val startTime = System.currentTimeMillis()
     job()
+    MainHandle.printTest("Scope launchXCache", startTime)
 }
 
 /**
@@ -261,7 +273,9 @@ inline fun CoroutineScope.launchX(
         delay(delayTime)
         //自己实现异常，防止异常会跑到外层或者无法捕获
         runCatching {
+            val startTime = System.currentTimeMillis()
             job()
+            MainHandle.printTest("Scope", startTime)
         }.onFailure {
             if (handleContext is CoroutineExceptionHandler) handleContext.handleException(context, it)
         }
@@ -328,7 +342,9 @@ suspend inline fun taskRepeatSus(
     crossinline job: () -> Unit
 ) = repeat(repeat) {
     delay(delayTime)
+    val startTime = System.currentTimeMillis()
     job()
+    MainHandle.printTest("Scope taskRepeatSus", startTime)
 }
 
 /**

@@ -131,7 +131,10 @@ class MainHandle private constructor(looper: Looper) {
     companion object {
         private val instance by lazy { MainHandle(Looper.getMainLooper()) }
         fun get(): MainHandle = instance
-        var isLog = false
+        var printTestCall: ((type: String, startTime: Long) -> Unit)? = null
+        fun printTest(type: String, startTime: Long) {
+            printTestCall?.invoke(type, startTime)
+        }
 
         /**
          * 这个方法会造成Activity内存泄露
@@ -149,9 +152,7 @@ class MainHandle private constructor(looper: Looper) {
             val startTime = System.currentTimeMillis()
             if (isMain) {
                 val result = runnable()
-                if (isLog) {
-                    LogUtils.i("postSync a ${System.currentTimeMillis() - startTime}")
-                }
+                printTest("postSync a", startTime)
                 return result
             } else {
                 //主线程处理数据，然后同步返回
@@ -166,9 +167,7 @@ class MainHandle private constructor(looper: Looper) {
                     }
                 }
                 synchronized(lock) { if (!hasVal) lock.wait() }
-                if (isLog) {
-                    LogUtils.i("postSync b ${System.currentTimeMillis() - startTime}")
-                }
+                printTest("postSync b", startTime)
                 return res as T
             }
 
