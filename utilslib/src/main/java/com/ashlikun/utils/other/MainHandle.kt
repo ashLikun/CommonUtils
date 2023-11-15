@@ -131,6 +131,7 @@ class MainHandle private constructor(looper: Looper) {
     companion object {
         private val instance by lazy { MainHandle(Looper.getMainLooper()) }
         fun get(): MainHandle = instance
+        var isLog = false
 
         /**
          * 这个方法会造成Activity内存泄露
@@ -145,8 +146,13 @@ class MainHandle private constructor(looper: Looper) {
          * 同步主线程返回
          */
         fun <T> postSync(lifecycleOwner: LifecycleOwner? = null, runnable: () -> T): T {
+            val startTime = System.currentTimeMillis()
             if (isMain) {
-                return runnable()
+                val result = runnable()
+                if (isLog) {
+                    LogUtils.i("postSync a ${System.currentTimeMillis() - startTime}")
+                }
+                return result
             } else {
                 //主线程处理数据，然后同步返回
                 val lock = Object()
@@ -160,8 +166,13 @@ class MainHandle private constructor(looper: Looper) {
                     }
                 }
                 synchronized(lock) { if (!hasVal) lock.wait() }
+                if (isLog) {
+                    LogUtils.i("postSync b ${System.currentTimeMillis() - startTime}")
+                }
                 return res as T
             }
+
+
         }
 
         /**
