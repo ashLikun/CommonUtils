@@ -36,7 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:visibility="gone"
         android:src="@mipmap/timg"></ImageView>
+
+    <com.ashlikun.utils.simple.MyView
+        android:layout_width="275dp"
+        android:layout_height="275dp" />
 
     <Button
         android:id="@+id/buttonJump"
@@ -77,6 +82,7 @@
         android:onClick="onView5Click"
         android:padding="10dp"
         android:text="测试通知" />
+
     <Button
         android:id="@+id/buttonJob"
         android:layout_width="match_parent"

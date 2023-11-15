@@ -29,8 +29,8 @@ object SvgUtils {
     fun parseSize(size: String?) = runCatching {
         if (size == null) {
             null
-        } else if (size.contains("dp", true)) {
-            size.replace("dp", "").toFloat().dp.toFloat()
+        } else if (size.contains("dip", true)) {
+            size.replace("dip", "").toFloat().dp.toFloat()
         } else if (size.contains("px", true)) {
             size.replace("px", "").toFloat()
         } else {
@@ -87,6 +87,7 @@ object SvgUtils {
                         val pathData = VectorData.PathData(
                             parseColor(parser.getAttributeValue(android, "fillColor")),
                             pathStr = parser.getAttributeValue(android, "pathData"),
+                            name = parser.getAttributeValue(android, "name").orEmpty(),
                             strokeWidth = parseSize(parser.getAttributeValue(android, "strokeWidth")),
                             strokeColor = parseColor(parser.getAttributeValue(android, "strokeColor")),
                             strokeLineCap = parser.getAttributeValue(android, "strokeLineCap")?.let {

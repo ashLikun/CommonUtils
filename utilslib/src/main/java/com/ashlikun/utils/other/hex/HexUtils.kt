@@ -326,7 +326,7 @@ object HexUtils {
         var result = ""
         for (it in res) {
             if (isSub00 && it.toInt() == 0) break
-            if (isRemoveControl && it < 32) continue
+            if (isRemoveControl && (it < 32 || it > 126)) continue
             result += it.toInt().toChar()
         }
         return result

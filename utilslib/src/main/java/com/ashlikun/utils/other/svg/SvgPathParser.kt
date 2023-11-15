@@ -6,6 +6,7 @@ import java.text.ParseException
 
 /**
  * 用于解析Android SDK可理解的[Path]项的Svg路径的实体。获得 以避免重写。
+ * 请使用官方的PathParser.createPathFromPathData(str)
  */
 class SvgPathParser {
     private var mCurrentToken = 0
@@ -13,13 +14,6 @@ class SvgPathParser {
     private var mLength = 0
     private var mIndex = 0
     private var mPathString: String? = null
-    protected fun transformX(x: Float): Float {
-        return x
-    }
-
-    protected fun transformY(y: Float): Float {
-        return y
-    }
 
     @Throws(ParseException::class)
     fun parsePath(s: String?): Path {
@@ -38,8 +32,7 @@ class SvgPathParser {
             val relative = mCurrentToken == TOKEN_RELATIVE_COMMAND
             when (command) {
                 'M', 'm' -> {
-
-                    // move command
+                    // move命令
                     var firstPoint = true
                     while (advanceToNextToken() == TOKEN_VALUE) {
                         consumeAndTransformPoint(tempPoint1, relative && mCurrentPoint.x != Float.NaN)
@@ -58,8 +51,7 @@ class SvgPathParser {
                 }
 
                 'C', 'c' -> {
-
-                    // curve command
+                    // 曲线命令
                     if (mCurrentPoint.x == Float.NaN) {
                         throw ParseException("Relative commands require current point", mIndex)
                     }
@@ -76,8 +68,7 @@ class SvgPathParser {
                 }
 
                 'L', 'l' -> {
-
-                    // line command
+                    // 行命令
                     if (mCurrentPoint.x == Float.NaN) {
                         throw ParseException("Relative commands require current point", mIndex)
                     }
@@ -89,13 +80,12 @@ class SvgPathParser {
                 }
 
                 'H', 'h' -> {
-
-                    // horizontal line command
+                    // 水平行命令
                     if (mCurrentPoint.x == Float.NaN) {
                         throw ParseException("Relative commands require current point", mIndex)
                     }
                     while (advanceToNextToken() == TOKEN_VALUE) {
-                        var x = transformX(consumeValue())
+                        var x = consumeValue()
                         if (relative) {
                             x += mCurrentPoint.x
                         }
@@ -105,13 +95,12 @@ class SvgPathParser {
                 }
 
                 'V', 'v' -> {
-
-                    // vertical line command
+                    // 垂直线命令
                     if (mCurrentPoint.x == Float.NaN) {
                         throw ParseException("Relative commands require current point", mIndex)
                     }
                     while (advanceToNextToken() == TOKEN_VALUE) {
-                        var y = transformY(consumeValue())
+                        var y = consumeValue()
                         if (relative) {
                             y += mCurrentPoint.y
                         }
@@ -121,8 +110,7 @@ class SvgPathParser {
                 }
 
                 'Z', 'z' -> {
-
-                    // close command
+                    // 关闭命令
                     p.close()
                 }
             }
@@ -133,15 +121,14 @@ class SvgPathParser {
     private fun advanceToNextToken(): Int {
         while (mIndex < mLength) {
             val c = mPathString!![mIndex]
-            if ('a' <= c && c <= 'z') {
+            if (c in 'a'..'z') {
                 return TOKEN_RELATIVE_COMMAND.also { mCurrentToken = it }
-            } else if ('A' <= c && c <= 'Z') {
+            } else if (c in 'A'..'Z') {
                 return TOKEN_ABSOLUTE_COMMAND.also { mCurrentToken = it }
-            } else if ('0' <= c && c <= '9' || c == '.' || c == '-') {
+            } else if (c in '0'..'9' || c == '.' || c == '-') {
                 return TOKEN_VALUE.also { mCurrentToken = it }
             }
-
-            // skip unrecognized character
+            // 跳过无法识别的字符
             ++mIndex
         }
         return TOKEN_EOF.also { mCurrentToken = it }
@@ -158,8 +145,8 @@ class SvgPathParser {
 
     @Throws(ParseException::class)
     private fun consumeAndTransformPoint(out: PointF, relative: Boolean) {
-        out.x = transformX(consumeValue())
-        out.y = transformY(consumeValue())
+        out.x = consumeValue()
+        out.y = consumeValue()
         if (relative) {
             out.x += mCurrentPoint.x
             out.y += mCurrentPoint.y
@@ -177,8 +164,8 @@ class SvgPathParser {
         var index = mIndex
         while (index < mLength) {
             val c = mPathString!![index]
-            if (!('0' <= c && c <= '9') && (c != '.' || seenDot) && (c != '-' || !start)) {
-                // end of value
+            if (!(c in '0'..'9') && (c != '.' || seenDot) && (c != '-' || !start)) {
+                // 价值终结
                 break
             }
             if (c == '.') {

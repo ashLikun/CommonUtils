@@ -9,7 +9,7 @@ import android.graphics.Path
  * 创建时间: 2023/11/10　18:27
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：
+ * 功能介绍：对应SVG xml 文件
  */
 data class VectorData(
     var width: Float = 0f,
@@ -23,6 +23,7 @@ data class VectorData(
     data class PathData(
         val fillColor: Int,
         val pathStr: String,
+        val name: String = "",
         val strokeWidth: Float? = null,
         val strokeColor: Int? = null,
         val strokeLineCap: Paint.Cap? = null,
@@ -34,6 +35,20 @@ data class VectorData(
         val path: Path? by lazy {
             SvgUtils.parsePath(pathStr)
         }
+    }
+
+    /**
+     * 把所有Path合成一个
+     */
+    val path by lazy {
+        val pp = Path()
+        pathDatas.forEach {
+            it.path?.let { it1 -> pp.addPath(it1) }
+        }
+        pp
+    }
+    val scale by lazy {
+        (width / viewportWidth.toFloat()) to (height / viewportHeight.toFloat())
     }
 
 }
