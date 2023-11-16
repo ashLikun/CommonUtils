@@ -73,10 +73,18 @@ val UnconfinedDispatcher = Dispatchers.Unconfined
 val ThreadPoolDispatcher = ThreadPoolManage.get().asCoroutineDispatcher()
 
 //几个全局的作用域
-val globalDefaultScope = DefaultScope()
-val globalIoScope = IoScope()
-val globalMainScope = MainScopeX()
-val globalThreadPoolScope = ThreadPoolScope()
+val globalDefaultScope by lazy {
+    DefaultScope()
+}
+val globalIoScope by lazy {
+    IoScope()
+}
+val globalMainScope by lazy {
+    MainScopeX()
+}
+val globalThreadPoolScope by lazy {
+    ThreadPoolScope()
+}
 
 
 /**

@@ -5,6 +5,10 @@ import android.content.Context
 import android.os.Looper
 import com.ashlikun.utils.AppUtils
 import com.ashlikun.utils.other.LogUtils
+import com.ashlikun.utils.other.coroutines.DefaultDispatcher
+import com.ashlikun.utils.other.coroutines.DefaultScope
+import com.ashlikun.utils.other.coroutines.defaultCoroutineExceptionHandler
+import com.ashlikun.utils.other.coroutines.globalDefaultScope
 
 /**
  * 作者　　: 李坤
@@ -21,6 +25,9 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        LogUtils.e("aaa$globalDefaultScope")
+        LogUtils.e("bbb$defaultCoroutineExceptionHandler")
+        DefaultScope()
         AppUtils.init(this, "utilsSimple")
         AppUtils.isDebug = true
         Looper.getMainLooper().setMessageLogging {
