@@ -132,6 +132,16 @@ class MainHandle private constructor(looper: Looper) {
         private val instance by lazy { MainHandle(Looper.getMainLooper()) }
         fun get(): MainHandle = instance
         var printTestCall: ((type: String, startTime: Long) -> Unit)? = null
+
+        /**
+         * 断言主线程运行
+         */
+        fun assertMainThread(msg: String? = null) {
+            if (!isMain) {
+                throw RuntimeException(msg ?: "Must run on the main thread")
+            }
+        }
+
         fun printTest(type: String, startTime: Long) {
             printTestCall?.invoke(type, startTime)
         }
