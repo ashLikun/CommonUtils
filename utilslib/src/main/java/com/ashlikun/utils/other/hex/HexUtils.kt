@@ -200,8 +200,14 @@ object HexUtils {
             return ""
         }
         val b = StringBuilder()
-        for (i in src.indices) {
-            b.append(String.format("%02X", src[i] and 0xFF.toByte()))
+        for (element in src) {
+            //String.format 性能低下
+//            b.append(String.format("%02X", src[i] and 0xFF.toByte()))
+            var hex = Integer.toHexString(element.toInt() and 0xFF)
+            if (hex.length == 1) {
+                b.append("0")
+            }
+            b.append(hex)
             if (joint != null) {
                 b.append(joint)
             }

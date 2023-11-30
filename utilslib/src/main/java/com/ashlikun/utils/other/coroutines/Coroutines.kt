@@ -31,6 +31,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  * 1. 同一线程可以有多个协程
  * 2. 同一协程可以运行在不同上下文中 通过runBlocking 包子协程 run 实现 ： runBlocking(ctx1){ run(ctx2){ }  }
  */
+inline operator fun CoroutineContext.plus(context: CoroutineContext?) = if (context != null) this + context else this
 
 /**
  * 运行在主线程中
@@ -138,29 +139,31 @@ inline fun CException(crossinline handler: () -> Unit) =
         handler.invoke()
     }
 
+
 /**
  * 默认作用域
  */
-fun DefaultScope(): CoroutineScope =
-    CoroutineScope(SupervisorJob() + DefaultDispatcher + defaultCoroutineExceptionHandler)
+fun DefaultScope(context: CoroutineContext? = null): CoroutineScope =
+    CoroutineScope(SupervisorJob() + DefaultDispatcher + defaultCoroutineExceptionHandler + context)
+
 
 /**
  * IO作用域
  */
-fun IoScope(): CoroutineScope =
-    CoroutineScope(SupervisorJob() + IODispatcher + defaultCoroutineExceptionHandler)
+fun IoScope(context: CoroutineContext? = null): CoroutineScope =
+    CoroutineScope(SupervisorJob() + IODispatcher + defaultCoroutineExceptionHandler + context)
 
 /**
  * 自定义线程池作用域
  */
-fun ThreadPoolScope(): CoroutineScope =
-    CoroutineScope(SupervisorJob() + ThreadPoolDispatcher + defaultCoroutineExceptionHandler)
+fun ThreadPoolScope(context: CoroutineContext? = null): CoroutineScope =
+    CoroutineScope(SupervisorJob() + ThreadPoolDispatcher + defaultCoroutineExceptionHandler + context)
 
 /**
  * 主线程作用域，顶级处理异常
  */
-fun MainScopeX(): CoroutineScope =
-    CoroutineScope(SupervisorJob() + MainDispatcher + defaultCoroutineExceptionHandler)
+fun MainScopeX(context: CoroutineContext? = null): CoroutineScope =
+    CoroutineScope(SupervisorJob() + MainDispatcher + defaultCoroutineExceptionHandler + context)
 
 /**
  * 在主线程中顺序执行，属于顶级协程函数，一般用于最外层 [Dispatchers.Default] 线程

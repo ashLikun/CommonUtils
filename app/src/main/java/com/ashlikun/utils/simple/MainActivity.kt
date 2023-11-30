@@ -20,6 +20,7 @@ import com.ashlikun.utils.encryption.Md5Utils
 import com.ashlikun.utils.main.ProcessUtils
 import com.ashlikun.utils.other.*
 import com.ashlikun.utils.other.coroutines.DefaultDispatcher
+import com.ashlikun.utils.other.coroutines.DefaultScope2
 import com.ashlikun.utils.other.coroutines.IODispatcher
 import com.ashlikun.utils.other.coroutines.asyncX
 import com.ashlikun.utils.other.coroutines.currentScope
@@ -46,6 +47,7 @@ import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
+import java.lang.NullPointerException
 import java.lang.Runnable
 import java.util.*
 
@@ -286,18 +288,18 @@ class MainActivity : AppCompatActivity() {
         LogUtils.e("dddddddd${DefaultDispatcher::class.java}")
         LogUtils.e("dddddddd${IODispatcher.getFieldValue("parallelism")}")
         LogUtils.e("dddddddd${Runtime.getRuntime().availableProcessors()}")
-        GlobalScope.launch {
-            currentScope {
-                (0..19000).map { itt ->
-                    it.asyncX {
-                        val aa = 5000 - itt/10
-                        delay(aa.toLong())
-                        LogUtils.e("bbbbb ${itt}")
-                    }
-                }.forEach { it.await() }
-                LogUtils.e("GGGGGGGGGGG")
-            }
-        }
+//        GlobalScope.launch {
+//            currentScope {
+//                (0..19000).map { itt ->
+//                    it.asyncX {
+//                        val aa = 5000 - itt/10
+//                        delay(aa.toLong())
+//                        LogUtils.e("bbbbb ${itt}")
+//                    }
+//                }.forEach { it.await() }
+//                LogUtils.e("GGGGGGGGGGG")
+//            }
+//        }
         taskLaunchThreadPoll {
 //            (0..99999).forEach {
 //                taskLaunch {
